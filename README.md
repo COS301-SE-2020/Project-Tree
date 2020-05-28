@@ -4,6 +4,7 @@
 The project entails the development of a project management system. The system represents a project visually as a tree structure, with each “leaf” being a project task, and each branch being a task dependency. The core idea of the system is to allow for all task dependencies to be captured accurately and clearly, to ensure effective project management.
 
 ## Links
+| Document                          | Links                                                                                         |
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
 | SRS                              	| [Software Requirements Specification](SRS Link)                                      	        |
 | Project management tool (Asana)   | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |                                    
