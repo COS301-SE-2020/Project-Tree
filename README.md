@@ -10,7 +10,7 @@ The project entails the development of a project management system. The system r
 | Project management tool (Asana)   | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |                                    
 
 ## Demos
-| Demo                          	| Link                                                                                        	|
+| Demo                          	  | Link                                                                                        	|
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
 | Demo 1                            | N/A                                      	                                                    |
 | Demo 2                            | N/A                                                                                           |
@@ -19,11 +19,20 @@ The project entails the development of a project management system. The system r
 
 ## Group Members
 
-### William Agar - Team Leader (u18052071) [GitHub Profile](https://github.com/Will-A897), [CV](https://will-a897.github.io/online-cv/), [LinkedIn](https://www.linkedin.com/in/william-agar-1b57521a7/)
+### William Agar - Team Leader (u18052071)
 
 #### Description
 
 Computer Science Student at The University of Pretoria
+
+<details><summary>Links</summary>
+
+- [GitHub Profile](https://github.com/Will-A897)
+- [CV](https://will-a897.github.io/online-cv/)
+- [LinkedIn](https://www.linkedin.com/in/william-agar-1b57521a7/)
+
+</details>
+
 
 
 
