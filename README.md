@@ -25,7 +25,7 @@ The project entails the development of a project management system. The system r
 
 Computer Science Student at The University of Pretoria
 
-<details><summary>Links</summary>
+<details><summary>Profile Links</summary>
 
 - [GitHub Profile](https://github.com/Will-A897)
 - [CV](https://will-a897.github.io/online-cv/)
@@ -33,7 +33,16 @@ Computer Science Student at The University of Pretoria
 
 </details>
 
+### Damian Venter (u18076514)
 
+#### Description
 
+Undergraduate student studying BIT. Proficient in C++, Java, HTML, CSS, Javascript, LAMP stack, Node.js, Assembly and Android Development
 
+<details><summary>Profile Links</summary>
 
+- [GitHub Profile](https://github.com/Damian-Venter)
+- [CV](https://damian-venter.github.io/cv/)
+- [LinkedIn](https://www.linkedin.com/in/damian-venter-954429167/)
+
+</details>
