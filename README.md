@@ -60,3 +60,17 @@ Final year undergraduate student studying Computer Science at The University of 
 - [LinkedIn](https://www.linkedin.com/in/dayne-moonsamy-192a971a6/)
 
 </details>
+
+### Brandon Robinson (u18021353)
+
+#### Description
+
+Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
+
+<details><summary>Profile Links</summary>
+
+- [GitHub Profile](https://github.com/u18021353)
+- [CV](https://u18021353.github.io)
+- [LinkedIn](https://www.linkedin.com/in/brandon-robinson-6ab4751a5/)
+
+</details>
