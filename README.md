@@ -46,3 +46,17 @@ Undergraduate student studying BIT. Proficient in C++, Java, HTML, CSS, Javascri
 - [LinkedIn](https://www.linkedin.com/in/damian-venter-954429167/)
 
 </details>
+
+### Dayne Moonsamy (u16148721)
+
+#### Description
+
+Final year undergraduate student studying Computer Science at The University of Pretoria
+
+<details><summary>Profile Links</summary>
+
+- [GitHub Profile](https://github.com/DayneSilver)
+- [CV](https://daynesilver.github.io)
+- [LinkedIn](https://www.linkedin.com/in/dayne-moonsamy-192a971a6/)
+
+</details>
