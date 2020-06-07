@@ -3,6 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var neo4j = require('neo4j-driver');
+var tq = require('./api/taskQueries')
 
 var app = express();
 
@@ -38,6 +39,10 @@ app.get('/', function(req,res){
             console.log(err);
         });
 });
+
+/*Add requests here*/
+
+
 
 app.listen(3030);
 console.log('Server started on port 3030');
