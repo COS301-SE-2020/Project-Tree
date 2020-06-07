@@ -27,7 +27,7 @@ app.get('/', function(req,res){
             result.records.forEach(function(record){
                 taskArr.push({
                     id: record._fields[0].identity.low,
-                    name: record._fields[0].properties.taskName
+                    name: record._fields[0].properties.name
                 });										
 
             });
