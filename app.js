@@ -28,7 +28,8 @@ app.get('/', function(req,res){
                 taskArr.push({
                     id: record._fields[0].identity.low,
                     name: record._fields[0].properties.taskName
-                });
+                });										
+
             });
 
             res.render('index', {
@@ -41,6 +42,9 @@ app.get('/', function(req,res){
 });
 
 /*Add requests here*/
+
+app.post('/task/delete', tq.deleteTask);
+
 
 
 

@@ -1,6 +1,13 @@
+<form action="/task/delete" method="post" 
+    <label for="fname">Name to delete:</label><br>
+    <input type="input" name="task_name"/><br/>
+    <input type="submit" value="Submit">
+ </form>
+
 <h3>Tasks</h3>
 <ul>
 <% tasks.forEach(function(task){ %>
     <li><%= task.name %></li>
 <% }) %>
 </ul>
+
