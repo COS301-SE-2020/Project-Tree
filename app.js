@@ -33,6 +33,7 @@ app.get('/', function(req,res){
 
             res.render(__dirname + '/views/index.html', {
                 tasks: taskArr,
+                req
             });
         })
         .catch(function(err){

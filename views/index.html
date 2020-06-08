@@ -32,7 +32,9 @@
             <input type="submit" value="Submit">
         </form>
 
+        <p style="color: red;"><%= req.query.error %></p>
         <h3>Update Task</h3>
+        <p>Leave a field blank to not change it</p>
         <form action="/task/update" method="post">
             <label for="id">Select Task by ID:</label><br/>
             <input name="id" type="number" min="0"/>

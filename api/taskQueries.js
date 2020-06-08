@@ -36,28 +36,45 @@ async function deleteTask(req,res){
     res.redirect('/');
 }
 
-async function updateTask(req,res){
-    console.log(req.body)
+async function updateTask(req,res){ //update a task with a certain ID with specified fields
     let result = await session.run(
         `MATCH (a) WHERE ID(a) = ${req.body.id}
         RETURN (a)`
     )
     if(result.records.length == 0){
-        res.body.error = "no record of that "
-        res.redirect('/')
+        res.redirect('/?error=no record of that id')
     }else{
+        let props = '';
+        let check = false
+        if(req.body.name != ''){
+            check = true
+            props += `name:"${req.body.name}"`
+        }
+        if(req.body.startDate != ''){
+            if(check) props += ','
+            else check = true
+            props += `startDate: date("${req.body.startDate}")`
+        }
+        if(req.body.endDate != ''){
+            if(check) props += ','
+            else check = true
+            props += `endDate: date("${req.body.endDate}")`
+        }
+        if(req.body.duration != ''){
+            if(check) props += ','
+            else check = true
+            props += `duration: ${req.body.duration}`
+        }
+        if(req.body.description != ''){
+            if(check) props += ','
+            else check = true
+            props += `description: "${req.body.description}`
+        }
         result = await session.run(
             `MATCH (a) WHERE ID(a) = ${req.body.id}
-            SET a = {name:"${req.body.name}", 
-                startDate: date("${req.body.startDate}"), 
-                endDate: date("${req.body.endDate}"), 
-                duration: ${req.body.duration},
-                description: "${req.body.description}"}
+            SET a += {${props}}
             RETURN (a)`
         )
-        let singleRecord = result.records[0]
-        let node = singleRecord.get(0)
-
         res.redirect('/')
     }
 }
