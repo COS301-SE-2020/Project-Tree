@@ -71,8 +71,17 @@
 
         <h3>Delete Task</h3>
         <form action="/task/delete" method="post">
-            <label for="task_name">Enter name to delete:</label><br>
-            <input type="input" name="task_name"/><br/>
+
+            <label for="fname">Enter ID to delete:</label><br>
+            <input type="number" name="id"/><br/>
+        </form>
+		
+		<h3>Delete Dependency</h3>
+		<form action="/dependency/delete" method="post">
+			<label for="fname">Enter 1st ID dependency to delete:</label><br>
+            <input type="number" name="dep1"/><br/>
+			<label for="fname">Enter 2nd ID dependency to delete:</label><br>
+            <input type="number" name="dep2"/><br/>
             <input type="submit" value="Submit">
         </form>
 

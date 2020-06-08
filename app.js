@@ -4,6 +4,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var neo4j = require('neo4j-driver');
 var tq = require('./api/taskQueries')
+var dq = require('./api/dependencyQueries')
 
 var app = express();
 
@@ -46,6 +47,9 @@ app.post('/task/add', tq.createTask);
 app.post('/task/delete', tq.deleteTask);
 app.post("/task/update", tq.updateTask)
 app.post("/dependency/add", tq.createDependency)
+app.post("/dependency/update", dq.updateDependency)
+app.post('/dependency/delete', dq.deleteDependency);
+
 
 app.listen(3030);
 console.log('Server started on port 3030');

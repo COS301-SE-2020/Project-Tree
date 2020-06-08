@@ -31,9 +31,13 @@ async function createDependency(req,res){
 }
 
 async function deleteTask(req,res){
-    var delTask = req.body.task_name;
+    var delTask = req.body.id;
     await session
-        .run('MATCH (n:TASK{ name: $del }) DETACH DELETE n', {del:delTask})
+        .run
+		(`
+			MATCH (n) WHERE ID(n)=${req.body.id} DETACH DELETE (n)		
+			
+		`)
         .catch(function(err){
             console.log(err);
         });
@@ -47,7 +51,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
         RETURN (a)`
     )
     if(result.records.length == 0){
-        res.redirect('/?error=no record of that id')
+        res.redirect('/?error=no task of that id')
     }else{
         let props = '';
         let check = false
@@ -77,8 +81,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
         }
         result = await session.run(
             `MATCH (a) WHERE ID(a) = ${req.body.id}
-            SET a += {${props}}
-            RETURN (a)`
+            SET a += {${props}}`
         )
         res.redirect('/')
     }
