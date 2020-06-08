@@ -45,7 +45,7 @@ app.get('/', function(req,res){
 app.post('/task/add', tq.createTask);
 app.post('/task/delete', tq.deleteTask);
 app.post("/task/update", tq.updateTask)
-
+app.post("/dependency/add", tq.createDependency)
 
 app.listen(3030);
 console.log('Server started on port 3030');
