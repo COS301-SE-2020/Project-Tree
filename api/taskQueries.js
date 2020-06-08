@@ -38,40 +38,42 @@ async function deleteTask(req,res){
 
 async function updateTask(req,res){ //update a task with a certain ID with specified fields
     let result = await session.run(
-        `MATCH (a) WHERE ID(a) = ${req.body.id}
+        `MATCH (a) WHERE ID(a) = ${req.body.ut_id}
         RETURN (a)`
     )
     if(result.records.length == 0){
         res.redirect('/?error=no task of that id')
     }else{
+        console.log()
         let props = '';
         let check = false
-        if(req.body.name != ''){
+        if(req.body.ut_name != ''){
             check = true
-            props += `name:"${req.body.name}"`
+            props += `name:"${req.body.ut_name}"`
         }
-        if(req.body.startDate != ''){
+        if(req.body.ut_startDate != ''){
             if(check) props += ','
             else check = true
-            props += `startDate: date("${req.body.startDate}")`
+            props += `startDate: date("${req.body.ut_startDate}")`
         }
-        if(req.body.endDate != ''){
+        if(req.body.ut_endDate != ''){
             if(check) props += ','
             else check = true
-            props += `endDate: date("${req.body.endDate}")`
+            props += `endDate: date("${req.body.ut_endDate}")`
         }
-        if(req.body.duration != ''){
+        if(req.body.ut_duration != ''){
             if(check) props += ','
             else check = true
-            props += `duration: ${req.body.duration}`
+            props += `duration: ${req.body.ut_duration}`
         }
-        if(req.body.description != ''){
+        if(req.body.ut_description != ''){
             if(check) props += ','
             else check = true
-            props += `description: "${req.body.description}`
+            props += `description: "${req.body.ut_description}`
         }
+        console.log(props)
         result = await session.run(
-            `MATCH (a) WHERE ID(a) = ${req.body.id}
+            `MATCH (a) WHERE ID(a) = ${req.body.ut_id}
             SET a += {${props}}`
         )
         res.redirect('/')

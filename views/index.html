@@ -3,6 +3,7 @@
         <title>Project Tree</title>
     </head>
     <body>
+        <p style="color: red;"><%= req.query.error %></p>
         <h3>Tasks</h3>
         <ul>
         <% tasks.forEach(function(task){ %>
@@ -32,27 +33,46 @@
             <input type="submit" value="Submit">
         </form>
 
-        <p style="color: red;"><%= req.query.error %></p>
         <h3>Update Task</h3>
         <p>Leave a field blank to not change it</p>
         <form action="/task/update" method="post">
-            <label for="id">Select Task by ID:</label><br/>
-            <input name="id" type="number" min="0"/>
+            <label for="ut_id">Select Task by ID:</label><br/>
+            <input name="ut_id" type="number" min="0"/>
             <br/><br/>
-            <label for="name">Name:</label><br/>
-            <input name="name" type="text"/>
+            <label for="ut_name">Name:</label><br/>
+            <input name="ut_name" type="text"/>
             <br/><br/>
-            <label for="startDate">Start Date:</label><br/>
-            <input name="startDate" type="date"/>
+            <label for="ut_startDate">Start Date:</label><br/>
+            <input name="ut_startDate" type="date"/>
             <br/><br/>
-            <label for="endDate">End Date:</label><br/>
-            <input name="endDate" type="date"/>
+            <label for="ut_endDate">End Date:</label><br/>
+            <input name="ut_endDate" type="date"/>
             <br/><br/>
-            <label for="duration">Duration:</label><br/>
-            <input name="duration" type="number" min="0"/>
+            <label for="ut_duration">Duration:</label><br/>
+            <input name="ut_duration" type="number" min="0"/>
             <br/><br/>
-            <label for="description">Description:</label><br/>
-            <textarea name="description" cols="30" rows="10"></textarea>
+            <label for="ut_description">Description:</label><br/>
+            <textarea name="ut_description" cols="30" rows="10"></textarea>
+            <br/>
+            <button type="submit">Submit</button>
+        </form>
+
+        <h3>Update Task Dependency</h3>
+        <p>Leave a field blank to not change it</p>
+        <form action="/dependency/update" method="post">
+            <label for="ud_id">Select Task Dependency by ID:</label><br/>
+            <input name="ud_id" type="number" min="0"/>
+            <br/><br/>
+            <label for="ud_relationshipType">Select Relationship Type:</label><br/>
+            <select name="ud_relationshipType">
+                <option value="ss">Start->Start</option>
+                <option value="sf">Start->Finish</option>
+                <option value="fs">Finish->Start</option>
+                <option value="ff">Finish->Finish</option>
+            </select>
+            <br/><br/>
+            <label for="ud_duration">Duration:</label><br/>
+            <input name="ud_duration" type="number" min="0"/>
             <br/>
             <button type="submit">Submit</button>
         </form>

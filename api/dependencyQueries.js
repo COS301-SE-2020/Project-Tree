@@ -4,7 +4,7 @@ var session = driver.session();
 
 async function updateDependency(req,res){ //update a Dependency with a certain ID with specified fields
     let result = await session.run(
-        `MATCH ()-[r]-() WHERE ID(r) = ${req.body.id}
+        `MATCH ()-[r]-() WHERE ID(r) = ${req.body.ud_id}
         RETURN r`
     )
     if(result.records.length == 0){
@@ -12,18 +12,18 @@ async function updateDependency(req,res){ //update a Dependency with a certain I
     }else{
         let props = '';
         let check = false
-        if(req.body.duration != ''){
+        if(req.body.ud_duration != ''){
             check = true
-            props += `duration:${req.body.duration}`
+            props += `duration:${req.body.ud_duration}`
         }
-        if(req.body.relationshipType != ''){
+        if(req.body.ud_relationshipType != ''){
             if(check) props += ','
             else check = true
-            props += `relationshipType: "${req.body.relationshipType}"`
+            props += `relationshipType: "${req.body.ud_relationshipType}"`
         }
         result = await session.run(
             `MATCH ()-[r]-() 
-            WHERE id(r)=${req.body.id}
+            WHERE id(r)=${req.body.ud_id}
             SET r += {${props}}`
         )
         res.redirect('/')
