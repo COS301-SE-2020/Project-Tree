@@ -47,6 +47,7 @@ app.post('/task/add', tq.createTask);
 app.post('/task/delete', tq.deleteTask);
 app.post("/task/update", tq.updateTask)
 app.post("/dependency/update", dq.updateDependency)
+app.post('/dependency/delete', dq.deleteDependency);
 
 
 app.listen(3030);
