@@ -4,6 +4,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var neo4j = require('neo4j-driver');
 var tq = require('./api/taskQueries')
+var dq = require('./api/dependencyQueries')
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.get('/', function(req,res){
 app.post('/task/add', tq.createTask);
 app.post('/task/delete', tq.deleteTask);
 app.post("/task/update", tq.updateTask)
+app.post("/dependency/update", dq.updateDependency)
 
 
 app.listen(3030);
