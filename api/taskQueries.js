@@ -42,7 +42,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
         RETURN (a)`
     )
     if(result.records.length == 0){
-        res.redirect('/?error=no record of that id')
+        res.redirect('/?error=no task of that id')
     }else{
         let props = '';
         let check = false
@@ -72,8 +72,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
         }
         result = await session.run(
             `MATCH (a) WHERE ID(a) = ${req.body.id}
-            SET a += {${props}}
-            RETURN (a)`
+            SET a += {${props}}`
         )
         res.redirect('/')
     }
