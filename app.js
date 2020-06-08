@@ -7,8 +7,7 @@ var tq = require('./api/taskQueries')
 
 var app = express();
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -32,7 +31,7 @@ app.get('/', function(req,res){
 
             });
 
-            res.render('index', {
+            res.render(__dirname + '/views/index.html', {
                 tasks: taskArr,
             });
         })

@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>Project Tree</title>
+    </head>
+    <body>
+        <h3>Tasks</h3>
+        <ul>
+        <% tasks.forEach(function(task){ %>
+            <li><%= task.id %> <%= task.name %></li>
+        <% }) %>
+        </ul>
+
+        <h3>Create Task</h3>
+        <form method='post' action='/task/add'>
+            <label> Name of task</label><br>
+            <input type='text' name='task_name'> <br><br>
+            <label> Start Date</label><br>
+            <input type='date' name='start_date'> <br><br>
+            <label> End date </label><br>
+            <input type='date' name='end_date'> <br><br>
+            <label> Duration </label><br>
+            <input type='text' name='duration'> <br><br>
+            <label> Description </label><br>
+            <input type='text' name='description'> <br>
+            <input type='submit' value='submit'>
+        </form>
+
+        <h3>Delete Task</h3>
+        <form action="/task/delete" method="post">
+            <label for="fname">Enter name to delete:</label><br>
+            <input type="input" name="task_name"/><br/>
+            <input type="submit" value="Submit">
+        </form>
+
+        <h3>Update Task</h3>
+        <form action="/task/update" method="post">
+            <label for="id">Select Task by ID:</label><br/>
+            <input name="id" type="number" min="0"/>
+            <br/><br/>
+            <label for="name">Name:</label><br/>
+            <input name="name" type="text"/>
+            <br/><br/>
+            <label for="startDate">Start Date:</label><br/>
+            <input name="startDate" type="date"/>
+            <br/><br/>
+            <label for="endDate">End Date:</label><br/>
+            <input name="endDate" type="date"/>
+            <br/><br/>
+            <label for="duration">Duration:</label><br/>
+            <input name="duration" type="number" min="0"/>
+            <br/><br/>
+            <label for="description">Description:</label><br/>
+            <textarea name="description" cols="30" rows="10"></textarea>
+            <br/>
+            <button type="submit">Submit</button>
+        </form>
+    </body>
+</html>
