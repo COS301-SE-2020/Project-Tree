@@ -30,7 +30,22 @@ async function updateDependency(req,res){ //update a Dependency with a certain I
     }
 }
 
+async function deleteDependency(req,res){
+    var delTask = req.body.dep1;
+    await session
+        .run
+		(`
+			MATCH (a:TASK)-[r:DEPENDENCY]->(b:TASK) WHERE (ID(a)=${req.body.dep1} AND ID(b)=${req.body.dep2}) OR (ID(a)=${req.body.dep2} AND ID(b)=${req.body.dep1}) DELETE r	
+		`)
+        .catch(function(err){
+            console.log(err);
+        });
+    console.log(delTask);
+    res.redirect('/');
+}
+
 module.exports =
 {
-    updateDependency
+    updateDependency,
+	deleteDependency
 };

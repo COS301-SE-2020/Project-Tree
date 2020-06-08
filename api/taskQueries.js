@@ -28,7 +28,11 @@ async function createTask(req,res){
 async function deleteTask(req,res){
     var delTask = req.body.id;
     await session
-        .run(`MATCH (n) WHERE ID(n)=${req.body.id} DETACH DELETE (n)`)
+        .run
+		(`
+			MATCH (n) WHERE ID(n)=${req.body.id} DETACH DELETE (n)		
+			
+		`)
         .catch(function(err){
             console.log(err);
         });
