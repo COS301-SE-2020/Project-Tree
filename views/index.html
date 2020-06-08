@@ -27,8 +27,13 @@
 
         <h3>Delete Task</h3>
         <form action="/task/delete" method="post">
-            <label for="fname">Enter name to delete:</label><br>
-            <input type="input" name="task_name"/><br/>
+            <label for="fname">Enter id to delete:</label><br>
+            <input type="number" name="id"/><br/>
+			<label for="fname">Enter id dependency to delete:</label><br>
+            <input type="number" name="task_name"/><br/>
+			<label for="fname">Enter id dependency to delete:</label><br>
+            <input type="number" name="task_name"/><br/>
+
             <input type="submit" value="Submit">
         </form>
 
