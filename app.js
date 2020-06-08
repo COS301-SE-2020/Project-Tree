@@ -7,8 +7,7 @@ var tq = require('./api/taskQueries')
 
 var app = express();
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -29,10 +28,12 @@ app.get('/', function(req,res){
                     id: record._fields[0].identity.low,
                     name: record._fields[0].properties.name
                 });
+
             });
 
-            res.render('index', {
+            res.render(__dirname + '/views/index.html', {
                 tasks: taskArr,
+                req
             });
         })
         .catch(function(err){
@@ -40,8 +41,10 @@ app.get('/', function(req,res){
         });
 });
 
-/*Add requests here*/
+
 app.post('/task/add', tq.createTask);
+app.post('/task/delete', tq.deleteTask);
+app.post("/task/update", tq.updateTask)
 
 
 app.listen(3030);
