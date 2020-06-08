@@ -29,6 +29,7 @@ app.get('/', function(req,res){
                     id: record._fields[0].identity.low,
                     name: record._fields[0].properties.name
                 });
+
             });
 
             res.render('index', {
@@ -40,8 +41,10 @@ app.get('/', function(req,res){
         });
 });
 
-/*Add requests here*/
+
 app.post('/task/add', tq.createTask);
+
+app.post('/task/delete', tq.deleteTask);
 
 
 app.listen(3030);
