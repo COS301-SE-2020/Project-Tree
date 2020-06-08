@@ -1,9 +1,3 @@
-<form action="/task/delete" method="post" 
-    <label for="fname">Enter name to delete:</label><br>
-    <input type="input" name="task_name"/><br/>
-    <input type="submit" value="Submit">
- </form>
-
 <h3>Tasks</h3>
 <ul>
 <% tasks.forEach(function(task){ %>
@@ -25,3 +19,19 @@
     <input type='submit' value='submit'>
 </form>
 
+<form action="/task/delete" method="post">
+    <label for="fname">Enter name to delete:</label><br>
+    <input type="input" name="task_name"/><br/>
+    <input type="submit" value="Submit">
+</form>
+
+<h3>Update Task</h3>
+<form action="/task/update" method="post">
+    <label for="id">Select Task by ID: </label><input name="id" type="number" min="0"/><br/>
+    <label for="name">Name: </label><input name="name" type="text"/><br/>
+    <label for="startDate">Start Date: </label><input name="startDate" type="date"/><br/>
+    <label for="endDate">End Date: </label><input name="endDate" type="date"/><br/>
+    <label for="duration">Duration: </label><input name="duration" type="number" min="0"/><br/>
+    <label for="description">description: </label><textarea name="description" cols="30" rows="10"></textarea><br/>
+    <button type="submit">Submit</button>
+</form>

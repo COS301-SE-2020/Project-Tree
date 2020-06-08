@@ -36,8 +36,35 @@ async function deleteTask(req,res){
     res.redirect('/');
 }
 
+async function updateTask(req,res){
+    console.log(req.body)
+    let result = await session.run(
+        `MATCH (a) WHERE ID(a) = ${req.body.id}
+        RETURN (a)`
+    )
+    if(result.records.length == 0){
+        res.body.error = "no record of that "
+        res.redirect('/')
+    }else{
+        result = await session.run(
+            `MATCH (a) WHERE ID(a) = ${req.body.id}
+            SET a = {name:"${req.body.name}", 
+                startDate: date("${req.body.startDate}"), 
+                endDate: date("${req.body.endDate}"), 
+                duration: ${req.body.duration},
+                description: "${req.body.description}"}
+            RETURN (a)`
+        )
+        let singleRecord = result.records[0]
+        let node = singleRecord.get(0)
+
+        res.redirect('/')
+    }
+}
+
 module.exports =
 {
-	deleteTask,
-  createTask
+    createTask,
+    deleteTask,
+    updateTask
 };
