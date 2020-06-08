@@ -43,8 +43,8 @@ app.get('/', function(req,res){
 
 
 app.post('/task/add', tq.createTask);
-
 app.post('/task/delete', tq.deleteTask);
+app.post("/task/update", tq.updateTask)
 
 
 app.listen(3030);
