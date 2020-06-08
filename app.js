@@ -4,11 +4,11 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var neo4j = require('neo4j-driver');
 var tq = require('./api/taskQueries')
+var dq = require('./api/dependencyQueries')
 
 var app = express();
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -32,8 +32,9 @@ app.get('/', function(req,res){
 
             });
 
-            res.render('index', {
+            res.render(__dirname + '/views/index.html', {
                 tasks: taskArr,
+                req
             });
         })
         .catch(function(err){
@@ -43,8 +44,9 @@ app.get('/', function(req,res){
 
 
 app.post('/task/add', tq.createTask);
-
 app.post('/task/delete', tq.deleteTask);
+app.post("/task/update", tq.updateTask)
+app.post("/dependency/update", dq.updateDependency)
 
 
 app.listen(3030);
