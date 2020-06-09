@@ -2,9 +2,10 @@ var neo4j = require('neo4j-driver');
 var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
 var session = driver.session();
 
-async function updateDependency(req,res){ //update a Dependency with a certain ID with specified fields
+async function updateDependency(req,res){ //update a Dependency between 2 nodes with specified fields
     let result = await session.run(
-        `MATCH ()-[r]-() WHERE ID(r) = ${req.body.ud_id}
+        `MATCH (a)-[r]->(b) 
+        WHERE ID(a) = ${req.body.ud_Fid} AND ID(b) = ${req.body.ud_Sid}
         RETURN r`
     )
     if(result.records.length == 0){
@@ -22,10 +23,11 @@ async function updateDependency(req,res){ //update a Dependency with a certain I
             props += `relationshipType: "${req.body.ud_relationshipType}"`
         }
         result = await session.run(
-            `MATCH ()-[r]-() 
-            WHERE id(r)=${req.body.ud_id}
+            `MATCH (a)-[r]->(b) 
+            WHERE ID(a) = ${req.body.ud_Fid} AND ID(b) = ${req.body.ud_Sid}
             SET r += {${props}}`
         )
+        await updateDependencies(req.body.ud_Sid)
         res.redirect('/')
     }
 }

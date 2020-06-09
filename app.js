@@ -22,9 +22,10 @@ var session = driver.session();
 
 app.get('/', function(req,res){
     session
-        .run('MATCH(n) RETURN n LIMIT 25')
+        .run('MATCH (n) RETURN n LIMIT 25')
         .then(function(result){
             var taskArr = [];
+            var updateobj = [];
             result.records.forEach(function(record){
                 taskArr.push({
                     id: record._fields[0].identity.low,
@@ -32,11 +33,44 @@ app.get('/', function(req,res){
                 });
 
             });
+            if(req.query.ut_id_select != undefined){
+                session
+                    .run(`MATCH (n) WHERE ID(n) = ${req.query.ut_id_select} RETURN n`)
+                    .then(function(result){
+                        console.log(result.records[0]._fields[0].properties.name)
+                        result.records.forEach(function(record){
+                            updateobj.push({
+                                id: record._fields[0].identity.low,
+                                name: record._fields[0].properties.name,
+                                startDate: record._fields[0].properties.startDate,
+                                duration: record._fields[0].properties.duration,
+                                endDate: record._fields[0].properties.endDate,
+                                description: record._fields[0].properties.description,
+                            });
 
-            res.render(__dirname + '/views/index.html', {
-                tasks: taskArr,
-                req
-            });
+                        });
+                        
+                        res.render(__dirname + '/views/index.html', {
+                            tasks: taskArr,
+                            updateobj: updateobj,
+                            req
+                        });
+                    })
+            }else{
+                updateobj.push({
+                    id: 0,
+                    name: '',
+                    startDate: null,
+                    duration: 0,
+                    endDate: null,
+                    description: '',
+                });
+                res.render(__dirname + '/views/index.html', {
+                    tasks: taskArr,
+                    updateobj: updateobj,
+                    req
+                });
+            }
         })
         .catch(function(err){
             console.log(err);

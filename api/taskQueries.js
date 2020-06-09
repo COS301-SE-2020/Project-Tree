@@ -73,7 +73,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
         if(req.body.ut_description != ''){
             if(check) props += ','
             else check = true
-            props += `description: "${req.body.ut_description}`
+            props += `description: "${req.body.ut_description}"`
         }
         console.log(props)
         result = await session.run(
@@ -82,7 +82,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
         )
 
         if(upDep == true){
-            await dependencyFunctions.updateDependencies(req.body.id)
+            await dependencyFunctions.updateDependencies(req.body.ut_id)
         }
 
         res.redirect('/')
