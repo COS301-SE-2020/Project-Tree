@@ -3,32 +3,41 @@ var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.
 var session = driver.session();
 
 async function createTask(req,res){
-    var Tname = req.body.task_name;
-    var Sdate = req.body.start_date;
-    var Edate = req.body.end_date;
-    var Dur = req.body.duration;
-    var Desc = req.body.description;
+    var Tname = req.body.ct_taskName;
+    var Sdate = req.body.ct_startDate;
+    var Edate = req.body.ct_endDate;
+    var Dur = req.body.ct_duration;
+    var Desc = req.body.ct_description;
     await session
-        .run('CREATE(n:TASK {name:$taskName, startDate: $startDate, endDate:$endDate, duration:$duration, description:$desc}) RETURN n', {taskName:Tname, startDate:Sdate, endDate:Edate, duration:Dur, desc:Desc})
+        .run('CREATE(n:Task {name:$taskName, startDate: date($startDate), endDate:date($endDate), duration:$duration, description:$desc}) RETURN n', {taskName:Tname, startDate:Sdate, endDate:Edate, duration:Dur, desc:Desc})
         .catch(function(err){
             console.log(err);
         });
-    console.log(Tname);
     res.redirect('/');
-   /* CREATE (:TASK 
-        {
-            name:"task B", 
-            startDate: date("2018-06-13"),
-            endDate: date("2018-09-19"),
-            duration: 6
-            description:""
-        }) */
+}
+
+async function createDependency(req,res){
+    var firstTask = parseInt(req.body.cd_firstTaskId)
+    var secondTask = parseInt(req.body.cd_secondTaskId)
+    var relationshipType = req.body.cd_relationshipType
+    var Dduration = req.body.cd_dependencyDuration
+
+    await session
+        .run('MATCH (a),(b) WHERE ID(a) = $Ftask AND ID(b) = $Stask CREATE(a)-[n:DEPENDENCY{relationshipType:$Rtype, duration:$duration}]->(b) RETURN type(n)',{Ftask:firstTask,Stask:secondTask, Rtype:relationshipType, duration:Dduration})
+        .catch(function(err){
+            console.log(err);
+        });
+    res.redirect('/');
 }
 
 async function deleteTask(req,res){
-    var delTask = req.body.task_name;
+    var delTask = req.body.id;
     await session
-        .run('MATCH (n:TASK{ name: $del }) DETACH DELETE n', {del:delTask})
+        .run
+		(`
+			MATCH (n) WHERE ID(n)=${req.body.id} DETACH DELETE (n)		
+			
+		`)
         .catch(function(err){
             console.log(err);
         });
@@ -36,28 +45,44 @@ async function deleteTask(req,res){
     res.redirect('/');
 }
 
-async function updateTask(req,res){
-    console.log(req.body)
+async function updateTask(req,res){ //update a task with a certain ID with specified fields
     let result = await session.run(
         `MATCH (a) WHERE ID(a) = ${req.body.id}
         RETURN (a)`
     )
     if(result.records.length == 0){
-        res.body.error = "no record of that "
-        res.redirect('/')
+        res.redirect('/?error=no task of that id')
     }else{
+        let props = '';
+        let check = false
+        if(req.body.name != ''){
+            check = true
+            props += `name:"${req.body.name}"`
+        }
+        if(req.body.startDate != ''){
+            if(check) props += ','
+            else check = true
+            props += `startDate: date("${req.body.startDate}")`
+        }
+        if(req.body.endDate != ''){
+            if(check) props += ','
+            else check = true
+            props += `endDate: date("${req.body.endDate}")`
+        }
+        if(req.body.duration != ''){
+            if(check) props += ','
+            else check = true
+            props += `duration: ${req.body.duration}`
+        }
+        if(req.body.description != ''){
+            if(check) props += ','
+            else check = true
+            props += `description: "${req.body.description}`
+        }
         result = await session.run(
             `MATCH (a) WHERE ID(a) = ${req.body.id}
-            SET a = {name:"${req.body.name}", 
-                startDate: date("${req.body.startDate}"), 
-                endDate: date("${req.body.endDate}"), 
-                duration: ${req.body.duration},
-                description: "${req.body.description}"}
-            RETURN (a)`
+            SET a += {${props}}`
         )
-        let singleRecord = result.records[0]
-        let node = singleRecord.get(0)
-
         res.redirect('/')
     }
 }
@@ -278,6 +303,7 @@ module.exports =
 {
     createTask,
     deleteTask,
-    updateTask
+    updateTask,
+    createDependency
 };
 
