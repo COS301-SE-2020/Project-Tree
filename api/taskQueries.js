@@ -78,7 +78,6 @@ module.exports =
 {
     createTask,
     deleteTask,
-    updateTask,
-    createDependency
+    updateTask
 };
 
