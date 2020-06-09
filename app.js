@@ -1,3 +1,4 @@
+var PORT = process.env.PORT || 3030
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -51,7 +52,7 @@ app.post("/dependency/update", dq.updateDependency)
 app.post('/dependency/delete', dq.deleteDependency);
 
 
-app.listen(3030);
-console.log('Server started on port 3030');
+app.listen(PORT);
+console.log('Server started on port ' + PORT);
 
 module.exports = app;
