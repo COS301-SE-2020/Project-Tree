@@ -19,6 +19,8 @@ async function createTask(req,res){
 
 async function deleteTask(req,res){
     var delTask = req.body.id;
+    var successors = await dependencyFunctions.getSuccessorNodes(delTask)
+    console.log(successors)
     await session
         .run
 		(`
@@ -28,7 +30,11 @@ async function deleteTask(req,res){
         .catch(function(err){
             console.log(err);
         });
-    console.log(delTask);
+    
+    for(var x = 0; x < successors.length; x++)
+    {
+        await dependencyFunctions.updateDependencies(successors[x].identity.low)
+    }
     res.redirect('/');
 }
 
@@ -40,6 +46,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
     if(result.records.length == 0){
         res.redirect('/?error=no task of that id')
     }else{
+        let upDep = false;
         let props = '';
         let check = false
         if(req.body.name != ''){
@@ -50,6 +57,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
             if(check) props += ','
             else check = true
             props += `startDate: date("${req.body.startDate}")`
+            upDep = true
         }
         if(req.body.endDate != ''){
             if(check) props += ','
@@ -60,6 +68,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
             if(check) props += ','
             else check = true
             props += `duration: ${req.body.duration}`
+            upDep = true
         }
         if(req.body.description != ''){
             if(check) props += ','
@@ -70,6 +79,11 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
             `MATCH (a) WHERE ID(a) = ${req.body.id}
             SET a += {${props}}`
         )
+
+        if(upDep == true){
+            await dependencyFunctions.updateDependencies(req.body.id)
+        }
+
         res.redirect('/')
     }
 }
