@@ -46,7 +46,20 @@
         <h3>Tasks</h3>
         <ul>
         <% tasks.forEach(function(task){ %>
-            <li><%= task.id %> <%= task.name %></li>
+            <li>(<%= task.id %>) <%= task.name %></li>
+            <ul>
+                <li>Start Date: <%= task.startDate %></li>
+                <li>End Date: <%= task.endDate %></li>
+                <li>Duration (in days): <%= task.duration %></li>
+                <li>Description: <%= task.description %></li>
+            </ul>
+        <% }) %>
+        </ul>
+
+        <h3>Dependencies</h3>
+        <ul>
+        <% dependencies.forEach(function(dependency){ %>
+            <li><%= dependency.startId %> --(duration: <%=dependency.duration %>, relationshipType: "<%= dependency.relType %>")--> <%= dependency.endId %></li>
         <% }) %>
         </ul>
 
@@ -74,8 +87,6 @@
             <label for='cd_relationshipType'> Relationship Type</label> <br> 
             <select name='cd_relationshipType'> <br>
                 <option value='ss'>Start->Start</option>
-                <option value='sf'>Start->Finish</option>
-                <option value='ff'>Finish->Finish</option>
                 <option value='fs'>Finish->Start</option>
             </select> <br> <br>
             <label for='cd_dependencyDuration'> Dependency Duration</label> <br>
