@@ -28,15 +28,33 @@ app.get('/', function(req,res){
             result.records.forEach(function(record){
                 taskArr.push({
                     id: record._fields[0].identity.low,
-                    name: record._fields[0].properties.name
+                    name: record._fields[0].properties.name,
+                    startDate: record._fields[0].properties.startDate,
+                    endDate: record._fields[0].properties.endDate,
+                    duration: record._fields[0].properties.duration,
+                    description: record._fields[0].properties.description
                 });
 
             });
 
-            res.render(__dirname + '/views/index.html', {
-                tasks: taskArr,
-                req
-            });
+            session
+                .run(' MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) RETURN r')
+                .then(function(result){
+                    var dependencyArr = [];
+                    result.records.forEach(function(record){
+                        dependencyArr.push({
+                            startId: record.get(0).start.low,
+                            endId: record.get(0).end.low,
+                            duration: record.get(0).properties.duration,
+                            relType: record.get(0).properties.relationshipType
+                        });
+                    });
+                    res.render(__dirname + '/views/index.html', {
+                        tasks: taskArr,
+                        req,
+                        dependencies: dependencyArr
+                    });
+                });
         })
         .catch(function(err){
             console.log(err);
