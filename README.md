@@ -37,7 +37,7 @@ Computer Science Student at The University of Pretoria
 
 #### Description
 
-Undergraduate student studying BIT. Proficient in C++, Java, HTML, CSS, Javascript, LAMP stack, Node.js, Assembly and Android Development
+Undergraduate student studying BIT at the University of Pretoria.
 
 <details><summary>Profile Links</summary>
 
@@ -72,5 +72,19 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
 - [GitHub Profile](https://github.com/u18021353)
 - [CV](https://u18021353.github.io)
 - [LinkedIn](https://www.linkedin.com/in/brandon-robinson-6ab4751a5/)
+
+</details>
+
+### Amber Grill (u18164022)
+
+#### Description
+
+Final year student studying BSc IT at the University of Pretoria.
+
+<details><summary>Profile Links</summary>
+
+- [GitHub Profile](https://github.com/u18164022)
+- [CV](https://u18164022.github.io/online-cv)
+- [LinkedIn](https://www.linkedin.com/in/amber-grill-49259a1a6/)
 
 </details>
