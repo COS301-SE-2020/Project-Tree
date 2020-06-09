@@ -35,12 +35,13 @@ async function deleteDependency(req,res){
     await session
         .run
 		(`
-			MATCH (a:TASK)-[r:DEPENDENCY]->(b:TASK) WHERE (ID(a)=${req.body.dep1} AND ID(b)=${req.body.dep2}) OR (ID(a)=${req.body.dep2} AND ID(b)=${req.body.dep1}) DELETE r	
+			MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE (ID(a)=${req.body.dep1} AND ID(b)=${req.body.dep2}) OR (ID(a)=${req.body.dep2} AND ID(b)=${req.body.dep1}) DELETE r	
 		`)
         .catch(function(err){
             console.log(err);
         });
-    console.log(delTask);
+    await updateDependencies(req.body.dep1)
+    await updateDependencies(req.body.dep2)
     res.redirect('/');
 }
 
@@ -57,6 +58,7 @@ async function createDependency(req,res){
         .catch(function(err){
             console.log(err);
         });
+    await updateDependencies(secondTask)
     res.redirect('/');
 }
 
@@ -64,7 +66,7 @@ async function getSuccessorNodes(nodeID)        //gets successsor nodes
 {
     var nodes = [];
     const result = await session.run(
-        'MATCH (a:TASK)-[r:DEPENDENCY]->(b:TASK) WHERE ID(a) = ' + nodeID +' RETURN b'
+        'MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE ID(a) = ' + nodeID +' RETURN b'
     )
 
     if(result.records.length == 0)
@@ -85,7 +87,7 @@ async function getPredecessorNodes(nodeID)      //gets predecessor nodes
 {
     var nodes = [];
     const result = await session.run(
-        'MATCH (a:TASK)-[r:DEPENDENCY]->(b:TASK) WHERE ID(b) = ' + nodeID +' RETURN a'
+        'MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE ID(b) = ' + nodeID +' RETURN a'
     )
 
     if(result.records.length == 0)
@@ -106,7 +108,7 @@ async function getDependencies(nodeID)  //gets relationships in the form x---dep
 {
     var dependencies = [];
     const result = await session.run(
-        'MATCH (a:TASK)-[r:DEPENDENCY]->(b:TASK) WHERE ID(b) = ' + nodeID +' RETURN r'
+        'MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE ID(b) = ' + nodeID +' RETURN r'
     )
 
     if(result.records.length == 0)
@@ -155,8 +157,14 @@ function addDays(year, month, day, duration) {      //adds days to a date to gen
 async function setStartDate(newDate, nodeID)    //provided with a date, sets a new start date
 {
     var year = newDate[0];
+    if(newDate[0]<10)
+        year = "0"+ newDate[0]
     var month = newDate[1];
+    if(newDate[0]<10)
+        month = "0"+newDate[1]
     var day = newDate[2];
+    if(newDate[0]<10)
+        day = "0"+newDate[2]
     const result = await session.run(
         'MATCH(n) WHERE ID(n) = '+nodeID+' SET n.startDate = date("'+year+'-'+month+'-'+day+'")'
     )
@@ -171,13 +179,20 @@ async function setEndDate(nodeID)   //sets end date based on a nodes start date 
     )
 
     startDate = [result1.records[0].get(0).properties.startDate.year.low, result1.records[0].get(0).properties.startDate.month.low, result1.records[0].get(0).properties.startDate.day.low];
-    duration = result1.records[0].get(0).properties.duration.low;
-
+    duration = parseInt(result1.records[0].get(0).properties.duration);
+    
     endDate = addDays(startDate[0], startDate[1], startDate[2], duration);
     
     var year = endDate[0];
+    if(endDate[0]<10)
+        year = "0"+endDate[0]
     var month = endDate[1];
+    if(endDate[0]<10)
+        month = "0"+endDate[1]
     var day = endDate[2];
+    if(endDate[0]<10)
+        day = "0"+endDate[2]
+    var finaldate = year+"-"+month+"-"+day
     const result2 = await session.run(
         'MATCH(n) WHERE ID(n) = '+nodeID+' SET n.endDate = date("'+year+'-'+month+'-'+day+'")'
     )
@@ -196,7 +211,7 @@ async function updateDependencies(currentNodeID)
         for(var x=0; x<predecessors.length; x++)
         {
             var relType = dependencies[x].properties.relationshipType;
-            var relDuration = dependencies[x].properties.duration.low;
+            var relDuration = parseInt(dependencies[x].properties.duration);
             var relativeDate;
 
             if(relType == "fs")
@@ -210,7 +225,6 @@ async function updateDependencies(currentNodeID)
             }
             
             var newTempDate = addDays(relativeDate.year.low, relativeDate.month.low, relativeDate.day.low, relDuration)
-
             if(compareDates(tempLatestDate[0], tempLatestDate[1], tempLatestDate[2], newTempDate[0], newTempDate[1], newTempDate[2]) == 1)
             {
                 tempLatestDate = newTempDate;
