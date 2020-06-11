@@ -55,18 +55,18 @@
                     targetElement.style.display = 'none';
                 } 
                 
-                if(document.getElementById(id).nextSibling.nextSibling.nodeName == "FORM")
+                if(id == "form5")
                 {
-                    targetElement = targetElement.nextElementSibling;
+                    var extraForm = document.getElementById("extraForm");
 
-                    if(targetElement.style.display == "none")
+                    if(extraForm.style.display == "none")
                     {
-                        targetElement.style.display = 'block';
+                        extraForm.style.display = 'block';
                     }
 
                     else
                     {
-                        targetElement.style.display = 'none';
+                        extraForm.style.display = 'none';
                     }
                 }
             }
@@ -130,7 +130,7 @@
                     <input name="ut_id_select" id="ut_id_select" type="number" value='<%= updateobj[0].id %>' min="0" onchange="selectTask()"/>
                     <button type="submit">Select</button>
                 </form>
-                <form action="/task/update" method="post" style="display:none">
+                <form id="extraForm" action="/task/update" method="post" style="display:none">
                     <input name="ut_id" id="ut_id" type="number" min="0" value='<%= updateobj[0].id %>' hidden/>
                     <label for="ut_name">Name:</label><br/>
                     <input name="ut_name" id="ut_name" type="text" value='<%= updateobj[0].name %>'/>
