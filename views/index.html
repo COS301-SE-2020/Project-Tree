@@ -11,7 +11,7 @@
                 return dateWithDuration
             }
             
-            function setDuration(event)
+            function setDuration()
             {
 				var ct = false;
 				var duration
@@ -81,9 +81,9 @@
                     <label for='ct_taskName'> Name of task</label><br>
                     <input type='text' name='ct_taskName'> <br><br>
                     <label for='ct_startDate'> Start Date</label><br>
-                    <input type='date' name='ct_startDate' id='ct_startDate' onchange='setDuration(event)'>  <br><br>
+                    <input type='date' name='ct_startDate' id='ct_startDate' onchange='setDuration()'>  <br><br>
                     <label for='ct_duration'> Duration (Days) </label><br>
-                    <input type='number' name='ct_duration' id='ct_duration' value="0" onchange='setDuration(event)'> <br><br>
+                    <input type='number' name='ct_duration' id='ct_duration' value="0" onchange='setDuration()'> <br><br>
                     <label for='ct_endDate'> End date </label><br>
                     <input type='date' name='ct_endDate' id='ct_endDate' readonly> <br><br>
                     <label for='ct_description'> Description </label><br>
@@ -136,16 +136,16 @@
                     <input name="ut_name" id="ut_name" type="text" value='<%= updateobj[0].name %>'/>
                     <br/><br/>
                     <label for="ut_startDate">Start Date:</label><br/>
-                    <input name="ut_startDate" id="ut_startDate" type="date" value='<%= updateobj[0].startDate %>' onchange='setDuration(event)'/>
+                    <input name="ut_startDate" id="ut_startDate" type="date" value='<%= updateobj[0].startDate %>' onchange='setDuration()'/>
                     <br/><br/>
                     <label for="ut_duration">Duration:</label><br/>
-                    <input name="ut_duration" id="ut_duration" type="number" value='<%= updateobj[0].duration %>' onchange='setDuration(event)'/>
+                    <input name="ut_duration" id="ut_duration" type="number" value='<%= updateobj[0].duration %>' onchange='setDuration()'/>
                     <br/><br/>
                     <label for="ut_endDate">End Date:</label><br/>
                     <input name="ut_endDate" id="ut_endDate" type="date" value='<%= updateobj[0].endDate %>' readonly/>
                     <br/><br/>
                     <label for="ut_description">Description:</label><br/>
-                    <textarea name="ut_description" id="ut_description" cols="30" rows="10" value='<%= updateobj[0].description %>'></textarea>
+                    <textarea name="ut_description" id="ut_description" cols="30" rows="10"><%= updateobj[0].description %></textarea>
                     <br/>
                     <button type="submit">Submit</button>
                 </form>
