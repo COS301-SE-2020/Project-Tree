@@ -7,7 +7,8 @@ The project entails the development of a project management system. The system r
 | Document                          | Links                                                                                         |
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
 | SRS                              	| [Software Requirements Specification](https://drive.google.com/file/d/1l6Cgjnm5o0mMwBth8ciSjw5qBNZSv1nR/view?usp=sharing)                                      	        |
-| Project management tool (Asana)   | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |                                    
+| Project management tool        | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |  
+| Project Tree Application        | [Prototype](https://projecttree.herokuapp.com/)     |
 
 ## Demos
 | Demo                          	  | Link                                                                                        	|
@@ -23,13 +24,20 @@ The project entails the development of a project management system. The system r
 
 #### Description
 
-Computer Science Student at The University of Pretoria
+I am currently a Computer Science Student at The University of Pretoria
 
 <details><summary>Profile Links</summary>
 
 - [GitHub Profile](https://github.com/Will-A897)
 - [CV](https://will-a897.github.io/online-cv/)
 - [LinkedIn](https://www.linkedin.com/in/william-agar-1b57521a7/)
+
+</details>
+
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implemented update dependencies function
+  - Implemented helper functions for above function (getSuccessorNodes, getPredecessorNodes, getDependencies, compareDates, addDays)
 
 </details>
 
@@ -44,6 +52,13 @@ Undergraduate student studying BIT at the University of Pretoria.
 - [GitHub Profile](https://github.com/Damian-Venter)
 - [CV](https://damian-venter.github.io/cv/)
 - [LinkedIn](https://www.linkedin.com/in/damian-venter-954429167/)
+
+</details>
+
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implementation of API server
+  - Set up hosting on grapheneDB and Heroku
 
 </details>
 
