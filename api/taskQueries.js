@@ -40,48 +40,28 @@ async function deleteTask(req,res){
 
 async function updateTask(req,res){ //update a task with a certain ID with specified fields
     let result = await session.run(
-        `MATCH (a) WHERE ID(a) = ${req.body.id}
+        `MATCH (a) WHERE ID(a) = ${req.body.ut_id}
         RETURN (a)`
     )
     if(result.records.length == 0){
         res.redirect('/?error=no task of that id')
     }else{
         let upDep = false;
-        let props = '';
-        let check = false
-        if(req.body.name != ''){
-            check = true
-            props += `name:"${req.body.name}"`
-        }
-        if(req.body.startDate != ''){
-            if(check) props += ','
-            else check = true
-            props += `startDate: date("${req.body.startDate}")`
-            upDep = true
-        }
-        if(req.body.endDate != ''){
-            if(check) props += ','
-            else check = true
-            props += `endDate: date("${req.body.endDate}")`
-        }
-        if(req.body.duration != ''){
-            if(check) props += ','
-            else check = true
-            props += `duration: ${req.body.duration}`
-            upDep = true
-        }
-        if(req.body.description != ''){
-            if(check) props += ','
-            else check = true
-            props += `description: "${req.body.description}`
-        }
+        if(result.records[0]._fields[0].properties.startDate != req.body.ut_startDate ||
+            result.records[0]._fields[0].properties.duration != req.body.ut_duration ) upDep = true;
         result = await session.run(
-            `MATCH (a) WHERE ID(a) = ${req.body.id}
-            SET a += {${props}}`
+            `MATCH (a) WHERE ID(a) = ${req.body.ut_id}
+            SET a += {
+                name:"${req.body.ut_name}",
+                startDate: date("${req.body.ut_startDate}"),
+                duration: ${req.body.ut_duration},
+                endDate: date("${req.body.ut_endDate}"),
+                description: "${req.body.ut_description}"
+            }`
         )
 
         if(upDep == true){
-            await dependencyFunctions.updateDependencies(req.body.id)
+            await dependencyFunctions.updateDependencies(req.body.ut_id)
         }
 
         res.redirect('/')
