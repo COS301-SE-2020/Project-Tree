@@ -60,12 +60,6 @@ Final year undergraduate student studying Computer Science at The University of 
 - [LinkedIn](https://www.linkedin.com/in/dayne-moonsamy-192a971a6/)
 
 </details>
-<details><summary> What I did for Demo 1</summary>
-  
-  - Implementation of deleting tasks
-  - Implementation of deleting dependencies
-
-</details>
 
 ### Brandon Robinson (u18021353)
 
@@ -78,6 +72,14 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
 - [GitHub Profile](https://github.com/u18021353)
 - [CV](https://u18021353.github.io)
 - [LinkedIn](https://www.linkedin.com/in/brandon-robinson-6ab4751a5/)
+
+</details>
+
+
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implementation of Update Tasks
+  - Implementation of Update Task Dependencies
 
 </details>
 
@@ -96,7 +98,7 @@ Final year student studying BSc IT at the University of Pretoria.
 </details>
 <details><summary> What I did for Demo 1</summary>
   
-  - Implementation of creating tasks
-  - Implementation of creating dependencies
+  - Implementation of Create Tasks
+  - Implementation of Create Dependencies
 
 </details>
