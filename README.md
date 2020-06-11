@@ -60,6 +60,12 @@ Final year undergraduate student studying Computer Science at The University of 
 - [LinkedIn](https://www.linkedin.com/in/dayne-moonsamy-192a971a6/)
 
 </details>
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implementation of deleting tasks
+  - Implementation of deleting dependencies
+
+</details>
 
 ### Brandon Robinson (u18021353)
 
