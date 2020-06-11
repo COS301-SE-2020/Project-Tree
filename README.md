@@ -75,6 +75,14 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
 
 </details>
 
+
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implementation of Update Tasks
+  - Implementation of Update Task Dependencies
+
+</details>
+
 ### Amber Grill (u18164022)
 
 #### Description
