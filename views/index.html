@@ -2,18 +2,26 @@
     <head>
         <title>Project Tree</title>
         <script>
-            function addDays(duration){
-                var initialDate = new Date(document.getElementById("ct_startDate").value);
-                const copy = new Date(Number(initialDate))
-                copy.setDate(initialDate.getDate() + duration)
-                dateWithDuration = [copy.getFullYear(), copy.getMonth()+1, copy.getDate()]
+            function addDays(duration,ct){
+				var initialDate
+				if(ct) initialDate = new Date(document.getElementById("ct_startDate").value);
+				else initialDate = new Date(document.getElementById("ut_startDate").value);
+				var endDate = new Date(initialDate.getTime()+1000*60*60*24*duration);
+                dateWithDuration = [endDate.getFullYear(), endDate.getMonth()+1, endDate.getDate()]
                 return dateWithDuration
             }
             
-            function setDuration()
+            function setDuration(event)
             {
-                var duration = parseInt(document.getElementById("ct_duration").value);
-                var edate = addDays(duration);
+				var ct = false;
+				var duration
+				if(event.target == document.getElementById("ct_duration") || event.target == document.getElementById("ct_startDate")){
+					duration = document.getElementById("ct_duration").value;
+					ct = true;
+				}else{	
+					duration = document.getElementById("ut_duration").value;
+				}
+                var edate = addDays(duration,ct);
                 var formatMonth = edate[1];
                 if(edate[1]<10){
                     formatMonth = "0"+edate[1]
@@ -23,93 +31,172 @@
                     formatDay = "0"+edate[2]
                 }
             
-                var formatDate = edate[0]+"-"+formatMonth+"-"+formatDay;
-                document.getElementById("ct_endDate").value= formatDate;
+				var formatDate = edate[0]+"-"+formatMonth+"-"+formatDay;
+				if(ct) document.getElementById("ct_endDate").value= formatDate;
+				else document.getElementById("ut_endDate").value= formatDate;
+			}
+			
+			function selectTask(){
+                document.getElementById("ut_id").value = parseInt(document.getElementById("ut_id_select").value);
+			}
+
+            function showForm()
+            {
+                var target = event.srcElement;
+                var id = target.id;
+                var targetElement = document.getElementById(id).nextElementSibling;
+
+                if(targetElement.style.display == "none")
+                {
+                    targetElement.style.display = 'block';
+                }
+                else
+                {
+                    targetElement.style.display = 'none';
+                } 
+                
+                if(id == "form5")
+                {
+                    var extraForm = document.getElementById("extraForm");
+
+                    if(extraForm.style.display == "none")
+                    {
+                        extraForm.style.display = 'block';
+                    }
+
+                    else
+                    {
+                        extraForm.style.display = 'none';
+                    }
+                }
             }
         </script>
     </head>
     <body>
-        <h3>Tasks</h3>
-        <ul>
-        <% tasks.forEach(function(task){ %>
-            <li><%= task.id %> <%= task.name %></li>
-        <% }) %>
-        </ul>
 
-        <h3>Create Task</h3>
-        <form method='post' action='/task/add'>
-            <label for='ct_taskName'> Name of task</label><br>
-            <input type='text' name='ct_taskName'> <br><br>
-            <label for='ct_startDate'> Start Date</label><br>
-            <input type='date' name='ct_startDate' id='ct_startDate'>  <br><br>
-            <label for='ct_duration'> Duration (Days) </label><br>
-            <input type='text' name='ct_duration' id='ct_duration' onchange='setDuration()'> <br><br>
-            <label for='ct_endDate'> End date </label><br>
-            <input type='date' name='ct_endDate' id='ct_endDate' readonly> <br><br>
-            <label for='ct_description'> Description </label><br>
-            <textarea name="ct_description" cols='30' rows='10'></textarea><br>
-            <input type='submit' value='Submit'>
-        </form>
+        <div>
+            <div style="display: inline-block; vertical-align:top; padding-right:100px">
+                <h3 id="form1" onclick="showForm()">Create Task &#9662;</h3>
+                <form method='post' action='/task/add' style="display:none">
+                    <label for='ct_taskName'> Name of task</label><br>
+                    <input type='text' name='ct_taskName'> <br><br>
+                    <label for='ct_startDate'> Start Date</label><br>
+                    <input type='date' name='ct_startDate' id='ct_startDate' onchange='setDuration(event)'>  <br><br>
+                    <label for='ct_duration'> Duration (Days) </label><br>
+                    <input type='number' name='ct_duration' id='ct_duration' value="0" onchange='setDuration(event)'> <br><br>
+                    <label for='ct_endDate'> End date </label><br>
+                    <input type='date' name='ct_endDate' id='ct_endDate' readonly> <br><br>
+                    <label for='ct_description'> Description </label><br>
+                    <textarea name="ct_description" cols='30' rows='10'></textarea><br>
+                    <input type='submit' value='Submit'>
+                </form>
 
-        <h3>Create Task Dependency</h3>
-        <form method='post' action='/dependency/add'>
-            <label for='cd_firstTaskId'> First Task ID</label> <br>
-            <input type='number' min="0" name='cd_firstTaskId'> <br> <br>
-            <label for='cd_secondTaskId'> Second Task ID</label> <br>
-            <input type='number' min="0" name='cd_secondTaskId'> <br> <br>
-            <label for='cd_relationshipType'> Relationship Type</label> <br> 
-            <select name='cd_relationshipType'> <br>
-                <option value='ss'>Start->Start</option>
-                <option value='sf'>Start->Finish</option>
-                <option value='ff'>Finish->Finish</option>
-                <option value='fs'>Finish->Start</option>
-            </select> <br> <br>
-            <label for='cd_dependencyDuration'> Dependency Duration</label> <br>
-            <input type='number' name='cd_dependencyDuration' value='0'> <br>
-            <input type='submit' value='Submit'>
-        </form>
+                <h3 id="form2" onclick="showForm()">Create Task Dependency &#9662;</h3>
+                <form method='post' action='/dependency/add' style="display:none">
+                    <label for='cd_firstTaskId'> First Task ID</label> <br>
+                    <input type='number' min="0" name='cd_firstTaskId'> <br> <br>
+                    <label for='cd_secondTaskId'> Second Task ID</label> <br>
+                    <input type='number' min="0" name='cd_secondTaskId'> <br> <br>
+                    <label for='cd_relationshipType'> Relationship Type</label> <br> 
+                    <select name='cd_relationshipType'> <br>
+                        <option value='ss'>Start->Start</option>
+                        <option value='fs'>Finish->Start</option>
+                    </select> <br> <br>
+                    <label for='cd_dependencyDuration'> Dependency Duration</label> <br>
+                    <input type='number' name='cd_dependencyDuration' value='0'> <br>
+                    <input type='submit' value='Submit'>
+                </form>
 
-        <h3>Delete Task</h3>
-        <form action="/task/delete" method="post">
+                <h3 id="form3" onclick="showForm()">Delete Task &#9662;</h3>
+                <form action="/task/delete" method="post" style="display:none">
 
-            <label for="fname">Enter ID to delete:</label><br>
-            <input type="number" name="id"/><br/>
-            <input type="submit" value="Submit">
-        </form>
-		
-		<h3>Delete Dependency</h3>
-		<form action="/dependency/delete" method="post">
-			<label for="fname">Enter 1st ID dependency to delete:</label><br>
-            <input type="number" name="dep1"/><br/>
-			<label for="fname">Enter 2nd ID dependency to delete:</label><br>
-            <input type="number" name="dep2"/><br/>
-            <input type="submit" value="Submit">
-        </form>
+                    <label for="fname">Enter ID to delete:</label><br>
+                    <input type="number" name="id"/><br/>
+                    <input type="submit" value="Submit">
+                </form>
+                
+                <h3 id="form4" onclick="showForm()">Delete Dependency &#9662;</h3>
+                <form action="/dependency/delete" method="post" style="display:none">
+                    <label for="fname">Enter 1st ID dependency to delete:</label><br>
+                    <input type="number" name="dep1"/><br/>
+                    <label for="fname">Enter 2nd ID dependency to delete:</label><br>
+                    <input type="number" name="dep2"/><br/>
+                    <input type="submit" value="Submit">
+                </form>
 
-        <p style="color: red;"><%= req.query.error %></p>
-        <h3>Update Task</h3>
-        <p>Leave a field blank to not change it</p>
-        <form action="/task/update" method="post">
-            <label for="id">Select Task by ID:</label><br/>
-            <input name="id" type="number" min="0"/>
-            <br/><br/>
-            <label for="name">Name:</label><br/>
-            <input name="name" type="text"/>
-            <br/><br/>
-            <label for="startDate">Start Date:</label><br/>
-            <input name="startDate" type="date"/>
-            <br/><br/>
-            <label for="duration">Duration:</label><br/>
-            <input name="duration" type="number" min="0"/>
-            <br/><br/>
-            <label for="endDate">End Date:</label><br/>
-            <input name="endDate" type="date"/>
-            <br/><br/>
-            
-            <label for="description">Description:</label><br/>
-            <textarea name="description" cols="30" rows="10"></textarea>
-            <br/>
-            <button type="submit">Submit</button>
-        </form>
+                <h3 id="form5" onclick="showForm()">Update Task &#9662;</h3>
+                <form action="/" method="get" style="display:none">
+                    <label for="ut_id_select">Select Task by ID:</label><br/>
+                    <input name="ut_id_select" id="ut_id_select" type="number" value='<%= updateobj[0].id %>' min="0" onchange="selectTask()"/>
+                    <button type="submit">Select</button>
+                </form>
+                <form id="extraForm" action="/task/update" method="post" style="display:none">
+                    <input name="ut_id" id="ut_id" type="number" min="0" value='<%= updateobj[0].id %>' hidden/>
+                    <label for="ut_name">Name:</label><br/>
+                    <input name="ut_name" id="ut_name" type="text" value='<%= updateobj[0].name %>'/>
+                    <br/><br/>
+                    <label for="ut_startDate">Start Date:</label><br/>
+                    <input name="ut_startDate" id="ut_startDate" type="date" value='<%= updateobj[0].startDate %>' onchange='setDuration(event)'/>
+                    <br/><br/>
+                    <label for="ut_duration">Duration:</label><br/>
+                    <input name="ut_duration" id="ut_duration" type="number" value='<%= updateobj[0].duration %>' onchange='setDuration(event)'/>
+                    <br/><br/>
+                    <label for="ut_endDate">End Date:</label><br/>
+                    <input name="ut_endDate" id="ut_endDate" type="date" value='<%= updateobj[0].endDate %>' readonly/>
+                    <br/><br/>
+                    <label for="ut_description">Description:</label><br/>
+                    <textarea name="ut_description" id="ut_description" cols="30" rows="10" value='<%= updateobj[0].description %>'></textarea>
+                    <br/>
+                    <button type="submit">Submit</button>
+                </form>
+
+                <h3 id="form6" onclick="showForm()">Update Task Dependency &#9662;</h3>
+                <form action="/dependency/update" method="post" style="display:none">
+                    <p>Leave a field blank to not change it</p>
+                    <label for="ud_Fid">Select First Task by ID:</label><br/>
+                    <input name="ud_Fid" type="number" min="0"/>
+                    <br/><br/>
+                    <label for="ud_Sid">Select Second Task by ID:</label><br/>
+                    <input name="ud_Sid" type="number" min="0"/>
+                    <br/><br/>
+                    <label for="ud_relationshipType">Select Relationship Type:</label><br/>
+                    <select name="ud_relationshipType">
+                        <option value="ss">Start->Start</option>
+                        <option value="sf">Start->Finish</option>
+                        <option value="fs">Finish->Start</option>
+                        <option value="ff">Finish->Finish</option>
+                    </select>
+                    <br/><br/>
+                    <label for="ud_duration">Duration:</label><br/>
+                    <input name="ud_duration" type="number" min="0"/>
+                    <br/>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div style="display:inline-block; vertical-align:top; padding-right:100px">
+                <p style="color: red;"><%= req.query.error %></p>
+                <h3>Tasks</h3>
+                <ul>
+                <% tasks.forEach(function(task){ %>
+                    <li>(<%= task.id %>) <%= task.name %></li>
+                    <ul>
+                        <li>Start Date: <%= task.startDate %></li>
+                        <li>End Date: <%= task.endDate %></li>
+                        <li>Duration (in days): <%= task.duration %></li>
+                        <li>Description: <%= task.description %></li>
+                    </ul>
+                <% }) %>
+                </ul>
+            </div>
+
+            <div style="display:inline-block; vertical-align:top;">
+                <h3>Dependencies</h3>
+                <ul>
+                <% dependencies.forEach(function(dependency){ %>
+                    <li><%= dependency.startId %> --(duration: <%=dependency.duration %>, relationshipType: "<%= dependency.relType %>")--> <%= dependency.endId %></li>
+                <% }) %>
+                </ul>
+            </div>
+        </div>
     </body>
 </html>
