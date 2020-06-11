@@ -90,7 +90,7 @@ Final year student studying BSc IT at the University of Pretoria.
 </details>
 <details><summary> What I did for Demo 1</summary>
   
-  - Implementation of creating of tasks
-  - Implementation of creating of dependencies
+  - Implementation of creating tasks
+  - Implementation of creating dependencies
 
 </details>
