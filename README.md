@@ -87,7 +87,9 @@ Final year student studying BSc IT at the University of Pretoria.
 - [CV](https://u18164022.github.io/online-cv)
 - [LinkedIn](https://www.linkedin.com/in/amber-grill-49259a1a6/)
 
-<details><summary> What I did</summary>
+</details>
+<details><summary> What I did for Demo 1</summary>
+  
   - Implementation of creating of tasks
   - Implementation of creating of dependencies
 
