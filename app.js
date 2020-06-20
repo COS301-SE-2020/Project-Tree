@@ -19,7 +19,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 //var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', '123456'));
 var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
 var session = driver.session();
-
+app.get('/home', function(req,res){
+    session
+        .run('MATCH (n:Project) RETURN n LIMIT 25')
+        .then(function(result){
+            var projectArr = [];
+            result.records.forEach(function(record){
+                projectArr.push({
+                    id: record._fields[0].identity.low,
+                    name: record._fields[0].properties.name,
+                    description: record._fields[0].properties.description
+                });
+            });
+            res.render(__dirname + '/views/home.html', {
+                projects: projectArr,
+                req
+            });
+        })
+        .catch(function(err){
+            console.log(err);
+        });
+})
 app.get('/', function(req,res){
     session
         .run('MATCH (n) RETURN n LIMIT 25')
