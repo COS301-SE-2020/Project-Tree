@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var neo4j = require('neo4j-driver');
 var tq = require('./api/taskQueries')
 var dq = require('./api/dependencyQueries')
+var pq = require('./api/projectQueries')
 
 var app = express();
 
@@ -129,6 +130,7 @@ app.get('/', function(req,res){
 
 
 app.post('/task/add', tq.createTask);
+app.post('/project/add', pq.createProject);
 app.post('/task/delete', tq.deleteTask);
 app.post("/task/update", tq.updateTask)
 app.post("/dependency/add", dq.createDependency)
