@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <title>Project Tree</title>
+        <script>			
+			function selectTask(){
+                document.getElementById("ut_id").value = parseInt(document.getElementById("ut_id_select").value);
+			}
+
+            function showForm()
+            {
+                var target = event.srcElement;
+                var id = target.id;
+                var targetElement = document.getElementById(id).nextElementSibling;
+
+                if(targetElement.style.display == "none")
+                {
+                    targetElement.style.display = 'block';
+                }
+                else
+                {
+                    targetElement.style.display = 'none';
+                } 
+                
+                if(id == "form5")
+                {
+                    var extraForm = document.getElementById("extraForm");
+
+                    if(extraForm.style.display == "none")
+                    {
+                        extraForm.style.display = 'block';
+                    }
+
+                    else
+                    {
+                        extraForm.style.display = 'none';
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1><u>Project Tree</u></h1>
+        <a href="/">Task and Dependency</a>
+        <div>
+            <div style="display: inline-block; vertical-align:top; padding-right:100px">
+                <h3 id="form1" onclick="showForm()">Select Project &#9662;</h3>
+                <form method='post' action='/' style="display:none">
+                    <label> ID of project<br /><input type="number" id="sp_id"/></label><br>
+                    <input type='submit' value='Submit'>
+                </form>
+
+                <h3 id="form2" onclick="showForm()">Create Project &#9662;</h3>
+                <form method='post' action='/project/add' style="display:none">
+                    <label> Name of project<br /><input type='text' id="cp_projectName"></label><br><br>
+                    <label> Description of project<br /><textarea id="cp_projectDescription" cols='30' rows='10'></textarea></label><br>
+                    <br />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="4"><u>Project Permisions</u></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td>Create Task/Dependency</td>
+                                <td>Delete Task/Dependency</td>
+                                <td>Update Task/Dependency</td>
+                            </tr>
+                            <tr>
+                                <td>Package Manager</td>
+                                <td><input type="checkbox" id=cp_pm_Create/></td>
+                                <td><input type="checkbox" id=cp_pm_Delete/></td>
+                                <td><input type="checkbox" id=cp_pm_Update/></td>
+                            </tr>
+                            <tr>
+                                <td>Responsible Person</td>
+                                <td><input type="checkbox" id=cp_rp_Create/></td>
+                                <td><input type="checkbox" id=cp_rp_Delete/></td>
+                                <td><input type="checkbox" id=cp_rp_Update/></td>
+                            </tr>
+                            <tr>
+                                <td>Resource</td>
+                                <td><input type="checkbox" id=cp_r_Create/></td>
+                                <td><input type="checkbox" id=cp_r_Delete/></td>
+                                <td><input type="checkbox" id=cp_r_Update/></td>
+                            </tr>
+                        </tbody>
+                    </table><br />
+                    <input type='submit' value='Submit'>
+                </form>
+
+                <h3 id="form3" onclick="showForm()">Delete Project &#9662;</h3>
+                <form action="/project/delete" method="post" style="display:none">
+
+                    <label>Enter ID to delete:<br/><input type="number" id="dp_id"/></label><br>
+                    <input type="submit" value="Submit">
+                </form>
+
+                <h3 id="form4" onclick="showForm()">Update Project &#9662;</h3>
+                <form method='post' action='/project/update' style="display:none">
+                    <label>Enter ID to delete:<br/><input type="number" id="up_id"/></label><br>
+                    <label> Name of project<br /><input type='text' id="up_projectName"></label><br><br>
+                    <label> Description of project<br /><textarea id="up_projectDescription" cols='30' rows='10'></textarea></label><br>
+                    <br />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="4"><u>Project Permisions</u></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td>Create Task/Dependency</td>
+                                <td>Delete Task/Dependency</td>
+                                <td>Update Task/Dependency</td>
+                            </tr>
+                            <tr>
+                                <td>Package Manager</td>
+                                <td><input type="checkbox" id=up_pm_Create/></td>
+                                <td><input type="checkbox" id=up_pm_Delete/></td>
+                                <td><input type="checkbox" id=up_pm_Update/></td>
+                            </tr>
+                            <tr>
+                                <td>Responsible Person</td>
+                                <td><input type="checkbox" id=up_rp_Create/></td>
+                                <td><input type="checkbox" id=up_rp_Delete/></td>
+                                <td><input type="checkbox" id=up_rp_Update/></td>
+                            </tr>
+                            <tr>
+                                <td>Resource</td>
+                                <td><input type="checkbox" id=up_r_Create/></td>
+                                <td><input type="checkbox" id=up_r_Delete/></td>
+                                <td><input type="checkbox" id=up_r_Update/></td>
+                            </tr>
+                        </tbody>
+                    </table><br />
+                    <input type='submit' value='Submit'>
+                </form>
+            </div>
+            <div style="display:inline-block; vertical-align:top;">
+                <p style="color: red;"><%= req.query.error %></p>
+                <h3>Projects</h3>
+                <ul>
+                <% projects.forEach(function(project){ %>
+                    <li>(<%= project.id %>) <%= project.name %><br />
+                        Description: <%= project.description %>
+                    </li>
+                <% }) %>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
