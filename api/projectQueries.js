@@ -5,29 +5,18 @@ var session = driver.session();
 async function createProject(req,res)
 {
     var Pname = req.body.cp_Name;
-	console.log(Pname);
     var Desc = req.body.cp_Description;
-	var pmC = req.body.cp_pm_Create;
-	var pmD = req.body.cp_pm_Delete;
-	var pmU = req.body.cp_pm_Update	;		
-    var rpC = req.body.cp_rp_Create  ;           
-    var rpD = req.body.cp_rp_Delete   ;        
-    var rpU = req.body.cp_rp_Update  ;
-	var rC = req.body.cp_r_Create ;
-	var rD = req.body.cp_r_Delete ;
-	var rU = req.body.cp_r_Update	;
-	console.log(rU)	
-	console.log(pmC)	
     let result = await session
         .run('CREATE(n:Project {name:$projectName, description:$desc}) RETURN ID(n)', {projectName:Pname, desc:Desc})
         .catch(function(err){
             console.log(err);
         });
-	createPermissions(projectID, req.body);
+	await createPermissions(result.records[0].get(0).low, req.body);
     res.redirect('/home');
 }
 
 async function updateProject(req,res){ //update a Project with a certain ID with specified fields
+    console.log(req.body)
     let result = await session.run(
         `MATCH (a) WHERE ID(a) = ${req.body.up_id}
         RETURN (a)`
@@ -35,45 +24,52 @@ async function updateProject(req,res){ //update a Project with a certain ID with
     if(result.records.length == 0){
         res.redirect('/?error=no project of that id')
     }else{
-        /*result = await session.run(
+        result = await session.run(
             `MATCH (a) WHERE ID(a) = ${req.body.up_id}
             SET a += {
-                name:"${req.body.up_name}"
-                description: "${req.body.up_description}"
+                name:"${req.body.up_name}",
+                description:"${req.body.up_description}"
             }`
-        )*/
-        updatePermissions(req.body)
+        )
+        await updatePermissions(req.body)
         res.redirect('/home')
     }
 }
 async function createPermissions(projectID, data)
 {
+    data.cp_pm_Create != undefined ? cp_pm_Create = true: cp_pm_Create = false;
+    data.cp_pm_Delete != undefined ? cp_pm_Delete = true: cp_pm_Delete = false;
+    data.cp_pm_Update != undefined ? cp_pm_Update = true: cp_pm_Update = false;
+    data.cp_rp_Create != undefined ? cp_rp_Create = true: cp_rp_Create = false;
+    data.cp_rp_Delete != undefined ? cp_rp_Delete = true: cp_rp_Delete = false;
+    data.cp_rp_Update != undefined ? cp_rp_Update = true: cp_rp_Update = false;
+    data.cp_r_Create != undefined ? cp_r_Create = true: cp_r_Create = false;
+    data.cp_r_Delete != undefined ? cp_r_Delete = true: cp_r_Delete = false;
+    data.cp_r_Update != undefined ? cp_r_Update = true: cp_r_Update = false;
     await session.run(
-        "MATCH (a:Project) WHERE ID(a)= "+projectID+" CREATE (a)<-[r:PERMISSIONREL]-(b: PermissionTable {projManCT:true, projManDT:true, projManUT:true, packManCT:"+data.cp_pm_Create+", packManDT:"+data.cp_pm_Delete+", packManUT:"+data.cp_pm_Update+", resPerCT:"+data.cp_rp_Create+", resPerDT:"+data.cp_rp_Delete+", resPerUT:"+data.cp_rp_Update+", resourceCT:"+data.cp_r_Create+", resourceDT:"+data.cp_r_Delete+", resourceUT:"+data.cp_r_Update+"})"
+        "MATCH (a:Project) WHERE ID(a)= "+projectID+" CREATE (a)<-[r:PERMISSIONREL]-(b:PermissionTable {projManCT:true, projManDT:true, projManUT:true, packManCT:"+cp_pm_Create+", packManDT:"+cp_pm_Delete+", packManUT:"+cp_pm_Update+", resPerCT:"+cp_rp_Create+", resPerDT:"+cp_rp_Delete+", resPerUT:"+cp_rp_Update+", resourceCT:"+cp_r_Create+", resourceDT:"+cp_r_Delete+", resourceUT:"+cp_r_Update+"})"
     )
 }
 
 async function updatePermissions(data)
 {
-    for(var x=3; x<12; x++)
-    {
-        if(data[`${Object.keys(data)[x]}`] == "on")
-        {
-            data[`${Object.keys(data)[x]}`] = true; 
-        }
-
-        else{
-            data[`${Object.keys(data)[x]}`] = false; 
-        }
-    }console.log
-    /*await session.run(
-        "Match (a)-[r:PERMISSIONREL]->(b) WHERE ID(b) = "+data.up_id +"SET a+={projManCT:true, projManDT:true, projManUT:true, packManCT:"+data.up_pm_Create+", packManDT:"+data.up_pm_Delete+", packManUT:"+data.up_pm_Update+", resPerCT:"+data.up_rp_Create+", resPerDT:"+data.up_rp_Delete+", resPerUT:"+data.up_rp_Update+", resourceCT:"+data.up_r_Create+", resourceDT:"+data.up_r_Delete+", resourceUT:"+data.up_r_Update+"}"
-    )*/
+    data.up_pm_Create != undefined ? up_pm_Create = true: up_pm_Create = false;
+    data.up_pm_Delete != undefined ? up_pm_Delete = true: up_pm_Delete = false;
+    data.up_pm_Update != undefined ? up_pm_Update = true: up_pm_Update = false;
+    data.up_rp_Create != undefined ? up_rp_Create = true: up_rp_Create = false;
+    data.up_rp_Delete != undefined ? up_rp_Delete = true: up_rp_Delete = false;
+    data.up_rp_Update != undefined ? up_rp_Update = true: up_rp_Update = false;
+    data.up_r_Create != undefined ? up_r_Create = true: up_r_Create = false;
+    data.up_r_Delete != undefined ? up_r_Delete = true: up_r_Delete = false;
+    data.up_r_Update != undefined ? up_r_Update = true: up_r_Update = false;
+    await session.run(
+        "Match (a)-[r:PERMISSIONREL]->(b) WHERE ID(b) = "+data.up_id +" SET a+={projManCT:true, projManDT:true, projManUT:true, packManCT:"+up_pm_Create+", packManDT:"+up_pm_Delete+", packManUT:"+up_pm_Update+", resPerCT:"+up_rp_Create+", resPerDT:"+up_rp_Delete+", resPerUT:"+up_rp_Update+", resourceCT:"+up_r_Create+", resourceDT:"+up_r_Delete+", resourceUT:"+up_r_Update+"}"
+    )
 }
 
 module.exports =
 {
     createProject,
-    deleteProject,
+    //deleteProject,
     updateProject
 };

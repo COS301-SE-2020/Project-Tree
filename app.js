@@ -129,8 +129,9 @@ app.get('/', function(req,res){
 });
 
 
-app.post('/task/add', tq.createTask);
 app.post('/project/add', pq.createProject);
+app.post('/project/update', pq.updateProject);
+app.post('/task/add', tq.createTask);
 app.post('/task/delete', tq.deleteTask);
 app.post("/task/update", tq.updateTask)
 app.post("/dependency/add", dq.createDependency)
