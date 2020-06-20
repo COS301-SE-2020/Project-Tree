@@ -51,8 +51,8 @@
 
                 <h3 id="form2" onclick="showForm()">Create Project &#9662;</h3>
                 <form method='post' action='/project/add' style="display:none">
-                    <label> Name of project<br /><input type='text' id="cp_projectName"></label><br><br>
-                    <label> Description of project<br /><textarea id="cp_projectDescription" cols='30' rows='10'></textarea></label><br>
+                    <label> Name of project<br /><input type='text' id="cp_Name" name="cp_Name"></label><br><br>
+                    <label> Description of project<br /><textarea id="cp_Description" cols='30' rows='10' name="cp_Description"></textarea></label><br>
                     <br />
                     <table>
                         <thead>
@@ -69,21 +69,21 @@
                             </tr>
                             <tr>
                                 <td>Package Manager</td>
-                                <td><input type="checkbox" id=cp_pm_Create/></td>
-                                <td><input type="checkbox" id=cp_pm_Delete/></td>
-                                <td><input type="checkbox" id=cp_pm_Update/></td>
+                                <td><input type="checkbox" id=cp_pm_Create name="cp_pm_Create"/></td>
+                                <td><input type="checkbox"  id=cp_pm_Delete name="cp_pm_Delete"/></td>
+                                <td><input type="checkbox" id=cp_pm_Update name="cp_pm_Update"/></td>
                             </tr>
                             <tr>
                                 <td>Responsible Person</td>
-                                <td><input type="checkbox" id=cp_rp_Create/></td>
-                                <td><input type="checkbox" id=cp_rp_Delete/></td>
-                                <td><input type="checkbox" id=cp_rp_Update/></td>
+                                <td><input type="checkbox" id=cp_rp_Create name="cp_rp_Create"/></td>
+                                <td><input type="checkbox" id=cp_rp_Delete name="cp_rp_Delete"/></td>
+                                <td><input type="checkbox" id=cp_rp_Update name="cp_rp_Update"/></td>
                             </tr>
                             <tr>
                                 <td>Resource</td>
-                                <td><input type="checkbox" id=cp_r_Create/></td>
-                                <td><input type="checkbox" id=cp_r_Delete/></td>
-                                <td><input type="checkbox" id=cp_r_Update/></td>
+                                <td><input type="checkbox" id=cp_r_Create name="cp_r_Create"/></td>
+                                <td><input type="checkbox" id=cp_r_Delete name="cp_r_Delete"/></td>
+                                <td><input type="checkbox" id=cp_r_Update name="cp_r_Update"/></td>
                             </tr>
                         </tbody>
                     </table><br />
