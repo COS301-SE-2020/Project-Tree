@@ -6,13 +6,14 @@ The project entails the development of a project management system. The system r
 ## Links
 | Document                          | Links                                                                                         |
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
-| SRS                              	| [Software Requirements Specification](SRS Link)                                      	        |
-| Project management tool (Asana)   | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |                                    
+| SRS                              	| [Software Requirements Specification](https://drive.google.com/file/d/1l6Cgjnm5o0mMwBth8ciSjw5qBNZSv1nR/view?usp=sharing)                                      	        |
+| Project management tool        | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |  
+| Project Tree Application        | [Prototype](https://projecttree.herokuapp.com/)     |
 
 ## Demos
 | Demo                          	  | Link                                                                                        	|
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
-| Demo 1                            | N/A                                      	                                                    |
+| Demo 1                            | https://drive.google.com/file/d/17IvRjiCgk0UrZ-0tS3sZzuLqDuC2974h/view?usp=sharing                     	                                                    |
 | Demo 2                            | N/A                                                                                           |
 | Demo 3                            | N/A                                                                                     	    |
 | Demo 4                            | N/A                                                                                           |
@@ -23,13 +24,20 @@ The project entails the development of a project management system. The system r
 
 #### Description
 
-Computer Science Student at The University of Pretoria
+I am currently a Computer Science Student at The University of Pretoria
 
 <details><summary>Profile Links</summary>
 
 - [GitHub Profile](https://github.com/Will-A897)
 - [CV](https://will-a897.github.io/online-cv/)
 - [LinkedIn](https://www.linkedin.com/in/william-agar-1b57521a7/)
+
+</details>
+
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implemented update dependencies function
+  - Implemented helper functions for above function (getSuccessorNodes, getPredecessorNodes, getDependencies, compareDates, addDays)
 
 </details>
 
@@ -47,6 +55,13 @@ Undergraduate student studying BIT at the University of Pretoria.
 
 </details>
 
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implementation of API server
+  - Set up hosting on grapheneDB and Heroku
+
+</details>
+
 ### Dayne Moonsamy (u16148721)
 
 #### Description
@@ -58,6 +73,12 @@ Final year undergraduate student studying Computer Science at The University of 
 - [GitHub Profile](https://github.com/DayneSilver)
 - [CV](https://daynesilver.github.io)
 - [LinkedIn](https://www.linkedin.com/in/dayne-moonsamy-192a971a6/)
+
+</details>
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implementation of deleting tasks
+  - Implementation of deleting dependencies
 
 </details>
 
@@ -75,6 +96,14 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
 
 </details>
 
+
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implementation of Update Tasks
+  - Implementation of Update Task Dependencies
+
+</details>
+
 ### Amber Grill (u18164022)
 
 #### Description
@@ -86,5 +115,11 @@ Final year student studying BSc IT at the University of Pretoria.
 - [GitHub Profile](https://github.com/u18164022)
 - [CV](https://u18164022.github.io/online-cv)
 - [LinkedIn](https://www.linkedin.com/in/amber-grill-49259a1a6/)
+
+</details>
+<details><summary> What I did for Demo 1</summary>
+  
+  - Implementation of Create Tasks
+  - Implementation of Create Dependencies
 
 </details>
