@@ -9,12 +9,16 @@
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
+    "@projectstorm/react-diagrams": "^6.0.1-beta.7",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "joint": "0.0.1",
+    "jointjs": "^3.2.0",
     "neo4j-driver": "^4.0.2",
     "path": "^0.12.7",
     "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "storm-react-diagrams": "^5.2.1"
   },
   "devDependencies": {
     "concurrently": "^4.1.2"
