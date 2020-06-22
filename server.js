@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path')
 var neo4j = require('neo4j-driver');
 var tq = require('./api/taskQueries')
 var dq = require('./api/dependencyQueries')
@@ -15,8 +16,7 @@ var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.
 var session = driver.session();
 
 app.get('/api/hello', (req, res) => {
-  
-  	res.send('Hello');
+	res.send({ express: 'Hello From Express' });
 });
 
 app.post('/api/world', async function(req, res){
