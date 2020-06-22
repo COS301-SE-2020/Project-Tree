@@ -74,7 +74,7 @@ app.get('/', function(req,res){
                             });
                         });
                         session
-                          .run(' MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) RETURN r')
+                          .run('MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) RETURN r')
                           .then(function(result){
                               var dependencyArr = [];
                               result.records.forEach(function(record){

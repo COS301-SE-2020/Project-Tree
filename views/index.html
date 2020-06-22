@@ -85,11 +85,17 @@
                     <label for='ct_startDate'> Start Date</label><br>
                     <input type='date' name='ct_startDate' id='ct_startDate' onchange='setDuration()'>  <br><br>
                     <label for='ct_duration'> Duration (Days) </label><br>
-                    <input type='number' name='ct_duration' id='ct_duration' value="0" onchange='setDuration()'> <br><br>
+                    <input type='number' name='ct_duration' id='ct_duration' value="0" min="0" onchange='setDuration()'> <br><br>
                     <label for='ct_endDate'> End date </label><br>
                     <input type='date' name='ct_endDate' id='ct_endDate' readonly> <br><br>
                     <label for='ct_description'> Description </label><br>
-                    <textarea name="ct_description" cols='30' rows='10'></textarea><br>
+                    <textarea name="ct_description" cols='30' rows='10'></textarea><br><br>
+                    <label for='ct_resPersonId'> Responsible Person </label><br>
+                    <input type='number' min='0' name="ct_resPersonId"><br><br>
+                    <label for='ct_pacManId'> Package Manager </label><br>
+                    <input type='number' min='0' name="ct_pacManId"><br><br>
+                    <label for='ct_resourceId'> Resources </label><br>
+                    <input type='text' min='0' name="ct_resourceId"><br>
                     <input type='submit' value='Submit'>
                 </form>
 

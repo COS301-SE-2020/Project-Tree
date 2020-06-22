@@ -55,6 +55,12 @@ async function createDependency(req,res){
     var relationshipType = req.body.cd_relationshipType
     var Dduration = req.body.cd_dependencyDuration
 
+    if(firstTask == secondTask)
+    {
+        //display error
+        return;
+    }
+
     await session
         .run('MATCH (a),(b) WHERE ID(a) = $Ftask AND ID(b) = $Stask CREATE(a)-[n:DEPENDENCY{relationshipType:$Rtype, duration:$duration}]->(b) RETURN type(n)',{Ftask:firstTask,Stask:secondTask, Rtype:relationshipType, duration:Dduration})
         .catch(function(err){

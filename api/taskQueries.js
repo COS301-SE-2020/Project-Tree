@@ -2,6 +2,7 @@ var neo4j = require('neo4j-driver');
 var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
 var session = driver.session();
 var dependencyFunctions = require('./dependencyQueries');
+var peopleFunctions = require('./personQueries')
 
 async function createTask(req,res){
     var Tname = req.body.ct_taskName;
@@ -9,18 +10,31 @@ async function createTask(req,res){
     var Edate = req.body.ct_endDate;
     var Dur = req.body.ct_duration;
     var Desc = req.body.ct_description;
+    var resPersonId = parseInt(req.body.ct_resPersonId);
+    var pacManId = parseInt(req.body.ct_pacManId);
+    var resourceId = req.body.ct_resourceId;
+    var taskId = null;
     await session
         .run('CREATE(n:Task {name:$taskName, startDate: date($startDate), endDate:date($endDate), duration:$duration, description:$desc}) RETURN n', {taskName:Tname, startDate:Sdate, endDate:Edate, duration:Dur, desc:Desc})
+        .then(function(result){
+            taskId = result.records[0]._fields[0].identity.low
+        })
         .catch(function(err){
             console.log(err);
         });
+
+    if(resPersonId != undefined)
+        await peopleFunctions.addResponsiblePerson(taskId,resPersonId)
+    if(pacManId != undefined)
+        await peopleFunctions.addPackageManager(taskId,pacManId)
+    if(resourceId != undefined)
+        await peopleFunctions.addResources(taskId,resourceId)
     res.redirect('/');
 }
 
 async function deleteTask(req,res){
     var delTask = req.body.id;
     var successors = await dependencyFunctions.getSuccessorNodes(delTask)
-    console.log(successors)
     await session
         .run
 		(`
