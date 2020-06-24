@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Home from './Home'
 import Graph from './Graph'
+import ProjectPage from './ProjectPage'
 
 
 class Routes extends Component {  
@@ -20,7 +21,7 @@ class Routes extends Component {
 						<Link to="/">Home</Link>
 						</li>
 						<li>
-						<Link to="/graph">Graph</Link>
+						<Link to="/project">Projects</Link>
 						</li>
 					</ul>
 					</nav>
@@ -28,8 +29,8 @@ class Routes extends Component {
 					{/* A <Switch> looks through its children <Route>s and
 						renders the first one that matches the current URL. */}
 					<Switch>
-					<Route path="/graph">
-						<Graph />
+					<Route path="/project">
+						<ProjectPage />
 					</Route>
 					<Route path="/">
 						<Home />

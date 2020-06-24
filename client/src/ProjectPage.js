@@ -1,10 +1,12 @@
 import React from 'react';
 
+
 class ProjectPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {form1:true, form2:true, form3:true, form4:true};
-        this.toggle2 = this.toggle.bind(this);
+        this.state = {form1:true, form2:true, form3:true, form4:true, projectInfo:null, projectId:null};
+        //this.toggle2 = this.toggle.bind(this);
+        this.projectList = this.projectList.bind(this);
     }
 
     toggle(form){
@@ -30,10 +32,32 @@ class ProjectPage extends React.Component{
         }   
     }
 
+    async componentDidMount() {
+		const response = await fetch('/projectInfo');
+		const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+
+        this.setState({projectInfo: body})
+    }
+
+    projectList(){
+        if(this.state.projectInfo === null){return null;}
+        const projectInfo = this.state.projectInfo;
+        const listItems = projectInfo.nodes.map((project, i) =>
+          <li key={i}>
+            ({project.id}) {project.name}
+          </li>
+        );
+
+        return (
+          <ul>{listItems}</ul>
+        );
+      }
+
     render(){
         return(
             <React.Fragment>
-                <h1><u>Project Tree</u></h1>
+                <h1 onClick={this.clickProject}><u>Project Tree</u></h1>
                 <div>
                     <h3 id="form1" onClick={() => this.toggle(1)}>Select Project {this.state.form1 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form1 ? null : <SelectProjectForm />}
@@ -44,6 +68,7 @@ class ProjectPage extends React.Component{
                     <h3 id="form4" onClick={() => this.toggle(4)}>Update Project {this.state.form4 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form4 ? null : <UpdateProjectForm />}
                 </div>
+                <this.projectList />
             </React.Fragment>
         )
     }

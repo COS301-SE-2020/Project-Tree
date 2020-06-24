@@ -67,9 +67,30 @@ async function updatePermissions(data)
     )
 }
 
+async function getProjects(req, res){
+	var taskArr = [];
+	await session
+			.run('MATCH (n:Project) RETURN n')
+			.then(function(result){
+				result.records.forEach(function(record){
+					taskArr.push({
+						id: record._fields[0].identity.low,
+                        name: record._fields[0].properties.name,
+                        description: record._fields[0].properties.description
+					});
+
+				});
+			})
+			.catch(function(err){
+				console.log(err);
+			});
+	res.send({nodes: taskArr});
+};
+
 module.exports =
 {
     createProject,
     //deleteProject,
-    updateProject
+    updateProject,
+    getProjects
 };
