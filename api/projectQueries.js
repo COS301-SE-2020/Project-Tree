@@ -12,7 +12,7 @@ async function createProject(req,res)
             console.log(err);
         });
 	await createPermissions(result.records[0].get(0).low, req.body);
-    res.redirect('/home');
+    res.send({ret: result});
 }
 
 async function updateProject(req,res){ //update a Project with a certain ID with specified fields

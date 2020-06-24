@@ -1,12 +1,24 @@
 import React from 'react';
 
+function stringifyFormData(fd) {
+    const data = {};
+      for (let key of fd.keys()) {
+        data[key] = fd.get(key);
+    }
+    return JSON.stringify(data, null, 2);
+}
 
 class ProjectPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {form1:true, form2:true, form3:true, form4:true, projectInfo:null, projectId:null};
+        this.state = {form1:true, form2:true, form3:true, form4:true, projectInfo:null, projectId:null, refresh:false};
         //this.toggle2 = this.toggle.bind(this);
         this.projectList = this.projectList.bind(this);
+        this.refreshComponent = this.refreshComponent.bind(this)
+    }
+
+    refreshComponent(){
+        this.setState({refresh:!this.state.refresh})
     }
 
     toggle(form){
@@ -37,13 +49,13 @@ class ProjectPage extends React.Component{
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
 
-        this.setState({projectInfo: body})
+        this.setState({projectInfo: body.nodes})
     }
 
     projectList(){
         if(this.state.projectInfo === null){return null;}
         const projectInfo = this.state.projectInfo;
-        const listItems = projectInfo.nodes.map((project, i) =>
+        const listItems = projectInfo.map((project, i) =>
           <li key={i}>
             ({project.id}) {project.name}
           </li>
@@ -62,7 +74,7 @@ class ProjectPage extends React.Component{
                     <h3 id="form1" onClick={() => this.toggle(1)}>Select Project {this.state.form1 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form1 ? null : <SelectProjectForm />}
                     <h3 id="form2" onClick={() => this.toggle(2)}>Create Project {this.state.form2 ? "\u25BE" : "\u25B4"}</h3>
-                    {this.state.form2 ? null : <CreateProjectForm />}
+                    {this.state.form2 ? null : <CreateProjectForm handler={this.refreshComponent} />}
                     <h3 id="form3" onClick={() => this.toggle(3)}>Delete Project {this.state.form3 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form3 ? null : <DeleteProjectForm />}
                     <h3 id="form4" onClick={() => this.toggle(4)}>Update Project {this.state.form4 ? "\u25BE" : "\u25B4"}</h3>
@@ -75,12 +87,34 @@ class ProjectPage extends React.Component{
 }
 
 class CreateProjectForm extends React.Component{
+    constructor() {
+        super();
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        let data = new FormData(event.target);
+        data = await stringifyFormData(data)
+
+        const response = await fetch('/project/add', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: data,
+        });
+        console.log(response)
+        this.props.handler()
+      }
+
     render()
     {
         return(
-            <form>
-                <label> Name of project<br /><input type='text' id="cp_Name" name="cp_Name"/></label><br/><br/>
-                <label> Description of project<br /><textarea id="cp_Description" cols='30' rows='10' name="cp_Description"></textarea></label><br/>
+            <form onSubmit={this.handleSubmit}>
+                <label> Name of project<br /><input type='text' id="cp_Name" name="cp_Name" required/></label><br/><br/>
+                <label> Description of project<br /><textarea id="cp_Description" cols='30' rows='10' name="cp_Description" required></textarea></label><br/>
                 <br />
                 <table>
                     <thead>

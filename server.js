@@ -9,8 +9,8 @@ var pq = require('./api/projectQueries')
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
 var session = driver.session();
@@ -56,6 +56,7 @@ app.post('/api/world', async function(req, res){
 });
 
 app.get('/projectInfo', pq.getProjects);
+app.post('/project/add', pq.createProject);
 
 if (process.env.NODE_ENV === 'production') {
 	// Serve any static files

@@ -6,7 +6,6 @@ import {
 	Link
 } from "react-router-dom";
 import Home from './Home'
-import Graph from './Graph'
 import ProjectPage from './ProjectPage'
 
 
