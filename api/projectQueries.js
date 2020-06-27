@@ -12,7 +12,7 @@ async function createProject(req,res)
             console.log(err);
         });
 	await createPermissions(result.records[0].get(0).low, req.body);
-    res.redirect('/home');
+    res.send({ret: result});
 }
 
 async function updateProject(req,res){ //update a Project with a certain ID with specified fields
@@ -67,9 +67,30 @@ async function updatePermissions(data)
     )
 }
 
+async function getProjects(req, res){
+	var taskArr = [];
+	await session
+			.run('MATCH (n:Project) RETURN n')
+			.then(function(result){
+				result.records.forEach(function(record){
+					taskArr.push({
+						id: record._fields[0].identity.low,
+                        name: record._fields[0].properties.name,
+                        description: record._fields[0].properties.description
+					});
+
+				});
+			})
+			.catch(function(err){
+				console.log(err);
+			});
+	res.send({nodes: taskArr});
+};
+
 module.exports =
 {
     createProject,
     //deleteProject,
-    updateProject
+    updateProject,
+    getProjects
 };
