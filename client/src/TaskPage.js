@@ -1,5 +1,14 @@
 import React from 'react';
 
+
+function stringifyFormData(fd) {
+    const data = {};
+      for (let key of fd.keys()) {
+        data[key] = fd.get(key);
+    }
+    return JSON.stringify(data, null, 2);
+}
+
 class TaskPage extends React.Component{
     constructor(props) {
         super(props);
@@ -113,10 +122,32 @@ class CreateDependencyForm extends React.Component{
 }
 
 class DeleteTaskForm extends React.Component{
-    render()
+    constructor() {
+        super();
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        let data = new FormData(event.target);
+        data = await stringifyFormData(data)
+
+        const response = await fetch('/task/delete', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: data,
+        });
+        console.log(response)
+       // this.props.handler()
+      }
+	
+	render()
     {
         return(
-            <form action="/task/delete" method="post">
+            <form onSubmit={this.handleSubmit}>
                 <label for="fname">Enter ID to delete:</label><br/>
                 <input type="number" name="id"/><br/>
                 <input type="submit" value="Submit"/>
@@ -126,10 +157,33 @@ class DeleteTaskForm extends React.Component{
 }
 
 class DeleteDependencyForm extends React.Component{
-    render()
+    constructor() {
+        super();
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        let data = new FormData(event.target);
+        data = await stringifyFormData(data)
+
+        const response = await fetch('/dependency/delete', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: data,
+        });
+        console.log(response)
+        //this.props.handler()
+      }
+	  
+	  
+	  render()
     {
         return(
-            <form action="/dependency/delete" method="post">
+            <form onSubmit={this.handleSubmit}>
                 <label for="fname">Enter 1st ID dependency to delete:</label><br/>
                 <input type="number" name="dep1"/><br/>
                 <label for="fname">Enter 2nd ID dependency to delete:</label><br/>

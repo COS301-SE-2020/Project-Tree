@@ -34,19 +34,15 @@ async function updateDependency(req,res){ //update a Dependency between 2 nodes 
 
 async function deleteDependency(req,res){
     var delTask = req.body.dep1;
-    await session
-        .run
-		(`
-			MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE (ID(a)=${req.body.dep1} AND ID(b)=${req.body.dep2}) OR (ID(a)=${req.body.dep2} AND ID(b)=${req.body.dep1}) DELETE r	
-		`)
+    let result = await session
+        .run('MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE (ID(a)='+req.body.dep1+' AND ID(b)='+req.body.dep2+') OR (ID(a)='+req.body.dep2+' AND ID(b)='+req.body.dep1+') DELETE r')
         .catch(function(err){
             console.log(err);
         });
     await updateDependencies(req.body.dep1)
     await updateDependencies(req.body.dep2)
-    res.redirect('/');
+    res.send({ret: result});
 }
-
 
 
 async function createDependency(req,res){

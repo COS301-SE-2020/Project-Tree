@@ -34,13 +34,10 @@ async function createTask(req,res){
 
 async function deleteTask(req,res){
     var delTask = req.body.id;
+	//console.log(delTask)
     var successors = await dependencyFunctions.getSuccessorNodes(delTask)
-    await session
-        .run
-		(`
-			MATCH (n) WHERE ID(n)=${req.body.id} DETACH DELETE (n)		
-			
-		`)
+	let result = await session
+        .run('MATCH (n) WHERE ID(n)='+delTask+' DETACH DELETE (n)')
         .catch(function(err){
             console.log(err);
         });
@@ -49,7 +46,8 @@ async function deleteTask(req,res){
     {
         await dependencyFunctions.updateDependencies(successors[x].identity.low)
     }
-    res.redirect('/');
+	//console.log(result)
+	res.send({ret: result});
 }
 
 async function updateTask(req,res){ //update a task with a certain ID with specified fields
