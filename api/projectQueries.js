@@ -14,6 +14,15 @@ async function createProject(req,res)
 	await createPermissions(result.records[0].get(0).low, req.body);
     res.send({ret: result});
 }
+async function deleteProject(req, res){
+    var Pid = req.body.dp_id
+    let result = await session
+        .run('MATCH(n:Project) WHERE ID(n)= '+Pid+' DETACH DELETE n RETURN n')
+        .catch(function(err){
+            console.log(err);
+        });
+        res.send({ret: result});
+}
 
 async function updateProject(req,res){ //update a Project with a certain ID with specified fields
     console.log(req.body)
@@ -90,7 +99,7 @@ async function getProjects(req, res){
 module.exports =
 {
     createProject,
-    //deleteProject,
+    deleteProject,
     updateProject,
     getProjects
 };
