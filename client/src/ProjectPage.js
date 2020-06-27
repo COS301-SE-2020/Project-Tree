@@ -11,14 +11,22 @@ function stringifyFormData(fd) {
 class ProjectPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {form1:true, form2:true, form3:true, form4:true, projectInfo:null, projectId:null, refresh:false};
-        //this.toggle2 = this.toggle.bind(this);
+        this.state = {form1:true, form2:true, form3:true, form4:true, projects:null, project:null};
         this.projectList = this.projectList.bind(this);
-        this.refreshComponent = this.refreshComponent.bind(this)
+        this.toggleSideBar = this.toggleSideBar.bind(this);
     }
 
-    refreshComponent(){
-        this.setState({refresh:!this.state.refresh})
+    toggleSideBar(newProject)
+    {
+        if(this.state.project === newProject)
+        {
+            this.setState({project:null})
+        }
+
+        else
+        {
+            this.setState({project:newProject})
+        }
     }
 
     toggle(form){
@@ -49,38 +57,50 @@ class ProjectPage extends React.Component{
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
 
-        this.setState({projectInfo: body.nodes})
+        this.setState({projects: body.nodes})
     }
 
     projectList(){
-        if(this.state.projectInfo === null){return null;}
-        const projectInfo = this.state.projectInfo;
-        const listItems = projectInfo.map((project, i) =>
-          <li key={i}>
-            ({project.id}) {project.name}
-          </li>
+        if(this.state.projects === null){return null;}
+        const projects = this.state.projects;
+        const listItems = projects.map((project, i) =>
+          <button key={i} onClick={() => this.toggleSideBar(project)}>
+            {project.name}
+          </button>
         );
 
         return (
           <ul>{listItems}</ul>
         );
-      }
+    }
 
     render(){
         return(
             <React.Fragment>
-                <h1 onClick={this.clickProject}><u>Project Tree</u></h1>
-                <div>
+                {/* <div>
                     <h3 id="form1" onClick={() => this.toggle(1)}>Select Project {this.state.form1 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form1 ? null : <SelectProjectForm />}
-                    <h3 id="form2" onClick={() => this.toggle(2)}>Create Project {this.state.form2 ? "\u25BE" : "\u25B4"}</h3>
-                    {this.state.form2 ? null : <CreateProjectForm handler={this.refreshComponent} />}
                     <h3 id="form3" onClick={() => this.toggle(3)}>Delete Project {this.state.form3 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form3 ? null : <DeleteProjectForm />}
                     <h3 id="form4" onClick={() => this.toggle(4)}>Update Project {this.state.form4 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form4 ? null : <UpdateProjectForm />}
-                </div>
+                </div> */}
                 <this.projectList />
+                <h3 id="form2" onClick={() => this.toggle(2)}>Create Project {this.state.form2 ? "\u25BE" : "\u25B4"}</h3>
+                {this.state.form2 ? null : <CreateProjectForm />}
+                {this.state.project != null ? <Sidebar project={this.state.project}/> : null} 
+            </React.Fragment>
+        )
+    }
+}
+
+class Sidebar extends React.Component{
+    render()
+    {
+        return(
+            <React.Fragment>
+                <h1>{this.props.project.name}</h1>
+                <p>{this.props.project.description}</p>
             </React.Fragment>
         )
     }
@@ -105,8 +125,6 @@ class CreateProjectForm extends React.Component{
             },
             body: data,
         });
-        console.log(response)
-        this.props.handler()
       }
 
     render()
@@ -152,18 +170,6 @@ class CreateProjectForm extends React.Component{
                 <input type='submit' value='Submit'/>
             </form>
         )
-    }
-}
-
-class SelectProjectForm extends React.Component{
-    render()
-    {
-        return(
-            <form>
-                <label> ID of project<br /><input type="number" id="sp_id" name="sp_id"/></label><br/>
-                <input type='submit' value='Submit' />
-            </form>
-        );
     }
 }
 
