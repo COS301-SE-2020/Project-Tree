@@ -168,9 +168,24 @@ class SelectProjectForm extends React.Component{
 }
 
 class DeleteProjectForm extends React.Component{
+    async handleSubmit(event) {
+        event.preventDefault();
+        let data = new FormData(event.target);
+        data = await stringifyFormData(data)
+
+        const response = await fetch('/project/delete', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: data,
+        });
+      }
+      
     render(){
         return(
-            <form>
+            <form onSubmit={this.handleSubmit}>
                 <label>Enter ID to delete:<br/><input type="number" id="dp_id" name="dp_id"/></label><br/>
                 <input type="submit" value="Submit" />
             </form>
