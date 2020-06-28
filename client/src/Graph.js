@@ -57,6 +57,41 @@ class Graph extends React.Component {
 			this.graph.addCells([rect]);
 			nodes.push(rect)
 		}
+		//console.log(nodes)
+		for(var y = 0; y < body.rels.length; y++)
+		{
+			var label = body.rels[y].record._fields[0].properties.relationshipType
+			var from = body.rels[y].record._fields[0].start.low
+			var to = body.rels[y].record._fields[0].end.low
+			var startRec;
+			var endRec;
+			for(var i = 0; i < nodes.length; i++)
+			{
+				//console.log(from , nodes[i].attributes.attrs.ownId.id)
+				if(from === nodes[i].attributes.attrs.ownId.id)
+				{
+					startRec = nodes[i]
+					console.log(startRec)
+				}
+
+				if(to === nodes[i].attributes.attrs.ownId.id)
+				{
+					endRec = nodes[i]
+				}
+			}
+			var link = new joint.shapes.standard.Link();
+			link.source(startRec);
+			link.target(endRec);
+			link.appendLabel({
+				attrs: {
+					text: {
+						text: label
+					}
+				}
+			});
+			link.addTo(this.graph);
+		}
+
     }
 
     render() {

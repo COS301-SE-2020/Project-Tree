@@ -6,7 +6,7 @@ async function getProjectTasks(req,res)
 {
     var projID = req.body.id;
 	var taskArr = [];
-
+	var relArr = [];
 	await session
 			.run('MATCH (n {projId:'+projID+'}) RETURN n')
 			.then(function(result){
@@ -20,7 +20,21 @@ async function getProjectTasks(req,res)
 			.catch(function(err){
 				console.log(err);
 			});
-	res.send({tasks: taskArr});
+	await session
+			.run('MATCH (n)-[r {projId: 1}]->(m) RETURN r')
+			.then(function(result){
+                var x = 0;
+				result.records.forEach(function(record){
+					relArr.push({
+                        record
+                    });
+				});
+				
+			})
+			.catch(function(err){
+				console.log(err);
+            });
+	res.send({tasks: taskArr, rels: relArr});
 }
 
 module.exports = {
