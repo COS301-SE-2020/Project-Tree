@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, Container, Row, Col} from 'react-bootstrap'
 
-
 function stringifyFormData(fd) {
     const data = {};
       for (let key of fd.keys()) {
@@ -66,7 +65,7 @@ class ProjectPage extends React.Component{
         if(this.state.projects === null){return null;}
         const projects = this.state.projects;
         const listItems = projects.map((project, i) =>
-          <Button key={i} onClick={() => this.toggleSideBar(project)} variant="secondary" size="sl" block>
+          <Button key={i} onClick={() => this.toggleSideBar(project)} variant="secondary" size="sm" block>
             {project.name}
           </Button>
         );
@@ -92,11 +91,13 @@ class ProjectPage extends React.Component{
                 {/* <this.projectList /> */}
                 {/* <h3 id="form2" onClick={() => this.toggle(2)}>Create Project {this.state.form2 ? "\u25BE" : "\u25B4"}</h3> */}
                 {/* {this.state.form2 ? null : <CreateProjectForm />} */}
-                <Container>
+                <Container fluid>
                     <Row>
-                        <Col> <br/> <this.projectList /> <br/> <Button variant="outline-dark" size="lg" block> Create Project</Button> </Col>
-                        <Col className="text-center">Under construction - JointJS</Col>
-                        <Col className="text-center">{this.state.project != null ? <Sidebar project={this.state.project}/> : null} </Col>
+                        <Col className="text-center"> <br/> <this.projectList /> <br/> 
+                        <Button variant="outline-dark" size="lg" block> Create Project</Button> </Col>
+                         <Col xs={6} className="text-center"> <br/>Under construction - JointJS</Col>
+                        <Col className="text-center"> <br/> {this.state.project != null ? 
+                        <Sidebar project={this.state.project}/> : null} </Col>
                     </Row>
                 </Container>
             </React.Fragment>
@@ -155,10 +156,33 @@ class Sidebar extends React.Component{
     {
         return(
             <React.Fragment>
-                <h1>{this.props.project.name}</h1>
-                <p>{this.props.project.description}</p>
-                <button onClick={this.togglePermissions}>Permissions {this.state.permissions ? "\u25B4":"\u25BE"}</button>
-                {this.state.permissions? <this.permissionsTable /> : null}
+                <Container className="block-example border border-secondary">
+                    <Row className="align-items-center bg-dark">
+                        <Col className="text-center"> <Button className="btn-dark">< i className="fa fa-trash"></i></Button> </Col>
+                        <Col className="text-white"> {this.props.project.name}  </Col>
+                        <Col className="text-center" ><Button className="btn-dark"><i className="fa fa-close"></i></Button></Col>
+                    </Row> 
+                    <Row className="align-items-center">
+                        <Col><p>{this.props.project.description}</p> </Col>
+                    </Row> 
+                    <Row className="align-items-center" >
+                        <Col className="text-center" >
+                        <Button variant="secondary" onClick={this.togglePermissions}>Permissions {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
+                        {this.state.permissions? <this.permissionsTable /> : null}</Col>
+                    </Row> <br/>
+                    <Row className="align-items-center">
+                        <Col> </Col>
+                        <Col className="text-center"><Button variant="outline-dark" size="md">View Project</Button></Col>
+                        <Col></Col>
+                    </Row> <br/>
+                    <Row className="align-items-center">
+                        <Col> </Col>
+                        <Col className="text-center">
+                        <Button className="btn-dark"><i className="fa fa-edit"> </i> Update </Button></Col>
+                        <Col></Col>
+                    </Row>
+                    <br/> 
+                </Container>
             </React.Fragment>
         )
     }
