@@ -95,12 +95,60 @@ class ProjectPage extends React.Component{
 }
 
 class Sidebar extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {permissions:false};
+        this.togglePermissions = this.togglePermissions.bind(this);
+        this.permissionsTable = this.permissionsTable.bind(this);
+    }
+
+    togglePermissions(){
+        this.setState({permissions:!this.state.permissions})
+    }
+
+    permissionsTable(){
+        console.log(this.props.project)
+
+        return(
+            <table>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>Create</td>
+                        <td>Delete</td>
+                        <td>Update</td>
+                    </tr>
+                    <tr>
+                        <td>Package Manager</td>
+                        <td>x</td>
+                        <td></td>
+                        <td>x</td>
+                    </tr>
+                    <tr>
+                        <td>Responsible Person</td>
+                        <td></td>
+                        <td>x</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Resource</td>
+                        <td>x</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        )
+    }
+
     render()
     {
         return(
             <React.Fragment>
                 <h1>{this.props.project.name}</h1>
                 <p>{this.props.project.description}</p>
+                <button onClick={this.togglePermissions}>Permissions {this.state.permissions ? "\u25B4":"\u25BE"}</button>
+                {this.state.permissions? <this.permissionsTable /> : null}
             </React.Fragment>
         )
     }
