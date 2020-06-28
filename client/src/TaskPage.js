@@ -1,4 +1,7 @@
 import React from 'react';
+import {
+	Link
+} from "react-router-dom";
 
 class TaskPage extends React.Component{
     constructor(props) {
@@ -39,6 +42,11 @@ class TaskPage extends React.Component{
     }
 
     render(){
+        if(this.props.projectID == null)
+        {
+            return null;
+        }
+
         return(
             <React.Fragment>
                 <h1><u>Project Tree</u></h1>
@@ -55,6 +63,8 @@ class TaskPage extends React.Component{
                     {this.state.form5 ? null : <UpdateTaskForm />}
                     <h3 id="form6" onClick={() => this.toggle(6)}>Update Dependency {this.state.form6 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form6 ? null : <UpdateDependencyForm />}
+                    <h3>{this.props.projectID}</h3>
+                    <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
                 </div>
             </React.Fragment>
         )
