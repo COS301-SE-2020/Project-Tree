@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, Button, Container, Row, Col} from 'react-bootstrap'
+import {Modal, Button, Container, Row, Col, Table} from 'react-bootstrap'
 
 import {
 	BrowserRouter as Router,
@@ -127,13 +127,13 @@ class Sidebar extends React.Component{
     
     permissionsTable(){
         return(
-            <table>
+            <Table striped bordered size="sm" variant="light">
                 <tbody>
                     <tr>
                         <td></td>
-                        <td>Create</td>
-                        <td>Delete</td>
-                        <td>Update</td>
+                        <td>Create </td>
+                        <td>Delete </td>
+                        <td>Update </td>
                     </tr>
                     <tr>
                         <td>Package Manager</td>
@@ -154,7 +154,7 @@ class Sidebar extends React.Component{
                         <td>{this.props.project.permissions[8] ? "X" : null}</td>
                     </tr>
                 </tbody>
-            </table>
+            </Table>
         );
     }
 
@@ -178,18 +178,18 @@ class Sidebar extends React.Component{
                     </Row> 
                     <Row className="align-items-center" >
                         <Col className="text-center" >
-                        <Button variant="secondary" onClick={this.togglePermissions}>Permissions {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
+                        <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button> <br/> <br/> 
                         {this.state.permissions? <this.permissionsTable /> : null}</Col>
-                    </Row> <br/>
+                    </Row> 
                     <Row className="align-items-center">
                         <Col> </Col>
-                        <Col className="text-center"><Button variant="outline-dark" size="md">View Project</Button></Col>
+                        <Col xs={6} className="text-center"><Button variant="outline-dark" size="md">View Project</Button></Col>
                         <Col></Col>
                     </Row> <br/>
                     <Row className="align-items-center">
                         <Col> </Col>
-                        <Col className="text-center">
-                        <Button className="btn-dark"><i className="fa fa-edit"> </i> Update </Button></Col>
+                        <Col xs={6} className="text-center">
+                        <Button className="btn-dark" size="md"><i className="fa fa-edit"> </i> Update </Button></Col>
                         <Col></Col>
                     </Row>
                     <br/> 
