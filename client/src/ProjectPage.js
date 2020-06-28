@@ -16,8 +16,7 @@ function stringifyFormData(fd) {
 class ProjectPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {form1:true, form2:true, form3:true, form4:true, projects:null, project:null, refresh:false};
-        this.projectList = this.projectList.bind(this);
+        this.state = {projects:null, project:null};
         this.toggleSideBar = this.toggleSideBar.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
     }
@@ -35,29 +34,6 @@ class ProjectPage extends React.Component{
         }
     }
 
-    toggle(form){
-        switch(form){
-            case 1:
-                this.setState({form1 : !this.state.form1});
-            break;
-
-            case 2:
-                this.setState({form2 : !this.state.form2});
-            break;
-
-            case 3:
-                this.setState({form3 : !this.state.form3});
-            break;
-
-            case 4:
-                this.setState({form4 : !this.state.form4});
-            break;
-    
-            default:
-                return;
-        }   
-    }
-
     async componentDidMount() {
 		const response = await fetch('/projectInfo');
 		const body = await response.json();
@@ -72,22 +48,6 @@ class ProjectPage extends React.Component{
         if (response.status !== 200) throw Error(body.message);
 
         this.setState({projects: body.nodes})
-    }
-
-    projectList(){
-        if(this.state.projects === null){return null;}
-        const projects = this.state.projects;
-        const listItems = projects.map((project, i) =>
-          <Button key={i} onClick={() => this.toggleSideBar(project)} variant="secondary" size="sm" block>
-            {project.name}
-          </Button>
-        );
-
-        return (
-            <Container>
-                <Row> {listItems} </Row>
-            </Container>
-        );
     }
 
     render(){
@@ -233,7 +193,8 @@ class CreateProject extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-
+        console.log(data);
+        
         const response = await fetch('/project/add', {
             method: 'POST',
             headers: {
@@ -264,7 +225,7 @@ class CreateProject extends React.Component{
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Description of project</Form.Label>
-                                <Form.Control as="textarea" rows="3"type='text' id="cp_Description" name="cp_cp_DescriptionName" required/>
+                                <Form.Control as="textarea" rows="3"type='text' id="cp_Description" name="cp_Description" required/>
                             </Form.Group>
                             <Table>
                                 <thead>
@@ -322,15 +283,15 @@ class UpdateProject extends React.Component{
                         id: this.props.project.id,
                         name: this.props.project.name, 
                         description: this.props.project.description,
-                        up_pm_Create: this.props.project.permissions[0] == 'true',
-                        up_pm_Delete: this.props.project.permissions[1] == 'true',
-                        up_pm_Update: this.props.project.permissions[2] == 'true',
-                        up_rp_Create: this.props.project.permissions[3] == 'true',
-                        up_rp_Delete: this.props.project.permissions[4] == 'true',
-                        up_rp_Update: this.props.project.permissions[5] == 'true',
-                        up_r_Create: this.props.project.permissions[6] == 'true',
-                        up_r_Delete: this.props.project.permissions[7] == 'true',
-                        up_r_Update: this.props.project.permissions[8] == 'true'
+                        up_pm_Create: this.props.project.permissions[0] === 'true',
+                        up_pm_Delete: this.props.project.permissions[1] === 'true',
+                        up_pm_Update: this.props.project.permissions[2] === 'true',
+                        up_rp_Create: this.props.project.permissions[3] === 'true',
+                        up_rp_Delete: this.props.project.permissions[4] === 'true',
+                        up_rp_Update: this.props.project.permissions[5] === 'true',
+                        up_r_Create: this.props.project.permissions[6] === 'true',
+                        up_r_Delete: this.props.project.permissions[7] === 'true',
+                        up_r_Update: this.props.project.permissions[8] === 'true'
                     };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
@@ -368,27 +329,29 @@ class UpdateProject extends React.Component{
             <React.Fragment>
                 <Button className="btn-dark" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Update </Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
-                    <form onSubmit={this.handleSubmit}>
+                    <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Update Project</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <input hidden type="number" id="up_id" name="up_id" value={this.state.id} onChange={()=>{}}/>
-                            <label> Name of project<br /><input type='text' id="up_name" name="up_name" value={this.state.name}
+                            <Form.Label>Name of project</Form.Label>
+                            <Form.Control type='text' id="up_name" name="up_name" value={this.state.name}
                                                                                                         onChange={e => {
                                                                                                             this.setState({ name: e.target.value });
                                                                                                             this.value = this.state.name;
-                                                                                                        }}/></label><br/><br/>
-                            <label> Description of project<br /><textarea id="up_description" name="up_description" cols='30' rows='10' value={this.state.description}
+                                                                                                        }}/>
+                            <Form.Label>Description of project</Form.Label>
+                            <Form.Control as="textarea" id="up_description" name="up_description" rows='3' value={this.state.description}
                                                                                                         onChange={e => {
                                                                                                             this.setState({ description: e.target.value });
                                                                                                             this.value = this.state.description;
-                                                                                                        }}></textarea></label><br/>
+                                                                                                        }}/>
                             <br />
-                            <table>
+                            <Table>
                                 <thead>
                                     <tr>
-                                        <th colSpan="4"><u>Project Permisions</u></th>
+                                        <td colSpan="4">Project Permisions</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -453,7 +416,7 @@ class UpdateProject extends React.Component{
                                                                                                             }}/></td>
                                     </tr>
                                 </tbody>
-                            </table><br />
+                            </Table><br />
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={this.HideModal}>
@@ -463,7 +426,7 @@ class UpdateProject extends React.Component{
                             Update Project
                             </Button>
                         </Modal.Footer>
-                    </form>
+                    </Form>
                 </Modal>
             </React.Fragment>
         );
@@ -526,7 +489,7 @@ class DeleteProject extends React.Component{
                             <Button variant="secondary" onClick={this.HideModal}>
                             Cancel
                             </Button>
-                            <Button type="submit" variant="primary">
+                            <Button  type="submit" variant="dark">
                             Delete Project
                             </Button>
                         </Modal.Footer>
@@ -535,33 +498,6 @@ class DeleteProject extends React.Component{
             </React.Fragment>
         );
     }
-  }
-
-class DeleteProjectForm extends React.Component{
-    async handleSubmit(event) {
-        event.preventDefault();
-        let data = new FormData(event.target);
-        data = await stringifyFormData(data)
-
-        const response = await fetch('/project/delete', {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: data,
-        });
-      }
-      
-    render(){
-        return(
-            <form onSubmit={this.handleSubmit}>
-                <label>Enter ID to delete:<br/><input type="number" id="dp_id" name="dp_id"/></label><br/>
-                <input type="submit" value="Submit" />
-            </form>
-        );
-    }
 }
 
 export default ProjectPage;
-
