@@ -103,7 +103,7 @@ class ProjectPage extends React.Component{
                         <Col> <br/> <this.projectList /> <br/> <CreateProject/> </Col>
                         <Col xs={6} className="text-center"> <br/>Under construction - JointJS</Col>
                         <Col className="text-center"> <br/> {this.state.project != null ? 
-                        <Sidebar project={this.state.project}/> : null} </Col>
+                        <Sidebar toggleSideBar={this.toggleSideBar} project={this.state.project}/> : null} </Col>
 
                     </Row>
                 </Container>
@@ -171,7 +171,7 @@ class Sidebar extends React.Component{
                     <Row className="align-items-center bg-dark">
                         <Col className="text-center"> <Button className="btn-dark">< i className="fa fa-trash"></i></Button> </Col>
                         <Col className="text-white"> {this.props.project.name}  </Col>
-                        <Col className="text-center" ><Button className="btn-dark"><i className="fa fa-close"></i></Button></Col>
+                        <Col className="text-center" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
                     </Row> 
                     <Row className="align-items-center">
                         <Col><p>{this.props.project.description}</p> </Col>
@@ -236,7 +236,7 @@ class CreateProject extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button onClick={this.ShowModal}>Create Project</Button>
+                <Button variant="outline-dark" onClick={this.ShowModal} block>Create Project</Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
