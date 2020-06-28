@@ -20,6 +20,7 @@ class ProjectPage extends React.Component{
         this.projectList = this.projectList.bind(this);
         this.toggleSideBar = this.toggleSideBar.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
+        
     }
 
     toggleSideBar(newProject)
@@ -179,7 +180,7 @@ class Sidebar extends React.Component{
         
         return(
             <React.Fragment>
-                <Container className="block-example border border-secondary">
+                <Container className="block-example border border-secondary bg-light">
                     <Row className="align-items-center bg-dark">
                         <Col className="text-center"> <DeleteProject project={this.props.project}/> </Col>
                         <Col className="text-white"> {this.props.project.name}  </Col>
