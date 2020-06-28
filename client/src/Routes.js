@@ -8,10 +8,21 @@ import {
 import Home from './Home'
 import User from './User'
 import ProjectPage from './ProjectPage'
+import TaskPage from './TaskPage'
 import {Navbar, Nav} from 'react-bootstrap'
 
 
 class Routes extends Component {  
+	constructor(props) {
+		super(props);
+		this.state = {project:null}
+		this.toggleGraphPage = this.toggleGraphPage.bind(this);
+	}
+
+	toggleGraphPage(id){
+		this.setState({project:id});
+	}
+
 	render() {
 		return (
 			<Router>
@@ -28,8 +39,11 @@ class Routes extends Component {
 					{/* A <Switch> looks through its children <Route>s and
 						renders the first one that matches the current URL. */}
 					<Switch>
+					<Route path="/graph">
+						<TaskPage projectID={this.state.project} toggleGraphPage={this.toggleGraphPage}/>
+					</Route>
 					<Route path="/project">
-						<ProjectPage />
+						<ProjectPage toggleGraphPage={this.toggleGraphPage}/>
 					</Route>
 					<Route path="/">
 						<Home />

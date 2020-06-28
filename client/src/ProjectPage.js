@@ -2,9 +2,6 @@ import React from 'react';
 import {Form, Table, Modal, Button, Container, Row, Col} from 'react-bootstrap'
 
 import {
-	BrowserRouter as Router,
-	Switch,
-	Route,
 	Link
 } from "react-router-dom";
 
@@ -19,9 +16,10 @@ function stringifyFormData(fd) {
 class ProjectPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {form1:true, form2:true, form3:true, form4:true, projects:null, project:null};
+        this.state = {form1:true, form2:true, form3:true, form4:true, projects:null, project:null, refresh:false};
         this.projectList = this.projectList.bind(this);
         this.toggleSideBar = this.toggleSideBar.bind(this);
+        this.setProjectInfo = this.setProjectInfo.bind(this);
     }
 
     toggleSideBar(newProject)
@@ -68,6 +66,14 @@ class ProjectPage extends React.Component{
         this.setState({projects: body.nodes})
     }
 
+    async setProjectInfo(){
+        const response = await fetch('/projectInfo');
+		const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+
+        this.setState({projects: body.nodes})
+    }
+
     projectList(){
         if(this.state.projects === null){return null;}
         const projects = this.state.projects;
@@ -89,15 +95,32 @@ class ProjectPage extends React.Component{
             <React.Fragment>
                 <Container fluid>
                     <Row>
-                        <Col> <br/> <this.projectList /> <br/> <CreateProject/> </Col>
+                        <Col> <br/> <ProjectList projects={this.state.projects} toggleSideBar={this.toggleSideBar} /> <br/> <CreateProject setProjectInfo={this.setProjectInfo}/> </Col>
                         <Col xs={6} className="text-center"> <br/>Under construction - JointJS</Col>
                         <Col className="text-center"> <br/> {this.state.project != null ? 
-                        <Sidebar project={this.state.project}/> : null} </Col>
-
+                        <Sidebar toggleGraphPage={this.props.toggleGraphPage} toggleSideBar={this.toggleSideBar} project={this.state.project}/> : null} </Col>
                     </Row>
                 </Container>
             </React.Fragment>
         )
+    }
+}
+
+class ProjectList extends React.Component{
+    render(){
+        if(this.props.projects === null){return null;}
+        const projects = this.props.projects;
+        const listItems = projects.map((project, i) =>
+          <Button key={i} onClick={() => this.props.toggleSideBar(project)} variant="secondary" size="sm" block>
+            {project.name}
+          </Button>
+        );
+
+        return (
+            <Container>
+                <Row> {listItems} </Row>
+            </Container>
+        );
     }
 }
 
@@ -116,13 +139,13 @@ class Sidebar extends React.Component{
     
     permissionsTable(){
         return(
-            <table>
+            <Table striped bordered size="sm" variant="light">
                 <tbody>
                     <tr>
                         <td></td>
-                        <td>Create</td>
-                        <td>Delete</td>
-                        <td>Update</td>
+                        <td>Create </td>
+                        <td>Delete </td>
+                        <td>Update </td>
                     </tr>
                     <tr>
                         <td>Package Manager</td>
@@ -143,7 +166,7 @@ class Sidebar extends React.Component{
                         <td>{this.props.project.permissions[8] ? "X" : null}</td>
                     </tr>
                 </tbody>
-            </table>
+            </Table>
         );
     }
 
@@ -160,24 +183,26 @@ class Sidebar extends React.Component{
                     <Row className="align-items-center bg-dark">
                         <Col className="text-center"> <DeleteProject project={this.props.project}/> </Col>
                         <Col className="text-white"> {this.props.project.name}  </Col>
-                        <Col className="text-center" ><Button className="btn-dark"><i className="fa fa-close"></i></Button></Col>
+                        <Col className="text-center" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
                     </Row> 
                     <Row className="align-items-center">
                         <Col><p>{this.props.project.description}</p> </Col>
                     </Row> 
                     <Row className="align-items-center" >
                         <Col className="text-center" >
-                        <Button variant="secondary" onClick={this.togglePermissions}>Permissions {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
+                        <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button> <br/> <br/> 
                         {this.state.permissions? <this.permissionsTable /> : null}</Col>
-                    </Row> <br/>
+                    </Row> 
                     <Row className="align-items-center">
                         <Col> </Col>
-                        <Col className="text-center"><Button variant="outline-dark" size="md">View Project</Button></Col>
+                        <Col xs={6} className="text-center"><Link to="/graph"><Button onClick={()=>this.props.toggleGraphPage(this.props.project.id)} variant="outline-dark" size="md">View Project</Button></Link></Col>
                         <Col></Col>
                     </Row> <br/>
                     <Row className="align-items-center">
                         <Col> </Col>
-                        <Col className="text-center"><UpdateProject project={this.props.project}/></Col>
+
+                        <Col xs={6} className="text-center">
+                        <UpdateProject project={this.props.project}/></Col>
                         <Col></Col>
                     </Row>
                     <br/> 
@@ -219,12 +244,14 @@ class CreateProject extends React.Component{
         });
         this.setState({ Show:false })
         console.log(response)
+
+        this.props.setProjectInfo();
     }
 
     render(){
         return (
             <React.Fragment>
-                <Button variant="outline-dark" onClick={this.ShowModal}>Create Project</Button>
+                <Button variant="outline-dark" onClick={this.ShowModal} block>Create Project</Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
