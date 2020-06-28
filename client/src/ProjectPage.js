@@ -98,7 +98,7 @@ class ProjectPage extends React.Component{
                         <Col> <br/> <ProjectList projects={this.state.projects} toggleSideBar={this.toggleSideBar} /> <br/> <CreateProject setProjectInfo={this.setProjectInfo}/> </Col>
                         <Col xs={6} className="text-center"> <br/>Under construction - JointJS</Col>
                         <Col className="text-center"> <br/> {this.state.project != null ? 
-                        <Sidebar toggleGraphPage={this.props.toggleGraphPage} toggleSideBar={this.toggleSideBar} project={this.state.project}/> : null} </Col>
+                        <Sidebar toggleSideBar={this.toggleSideBar} setProjectInfo={this.setProjectInfo} toggleGraphPage={this.props.toggleGraphPage} toggleSideBar={this.toggleSideBar} project={this.state.project}/> : null} </Col>
                     </Row>
                 </Container>
             </React.Fragment>
@@ -181,7 +181,7 @@ class Sidebar extends React.Component{
             <React.Fragment>
                 <Container className="block-example border border-secondary">
                     <Row className="align-items-center bg-dark">
-                        <Col className="text-center"> <DeleteProject project={this.props.project}/> </Col>
+                        <Col className="text-center"> <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} toggleSideBar={this.props.toggleSideBar}/> </Col>
                         <Col className="text-white"> {this.props.project.name}  </Col>
                         <Col className="text-center" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
                     </Row> 
@@ -202,7 +202,7 @@ class Sidebar extends React.Component{
                         <Col> </Col>
 
                         <Col xs={6} className="text-center">
-                        <UpdateProject project={this.props.project}/></Col>
+                        <UpdateProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} toggleSideBar={this.props.toggleSideBar}/></Col>
                         <Col></Col>
                     </Row>
                     <br/> 
@@ -264,7 +264,7 @@ class CreateProject extends React.Component{
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Description of project</Form.Label>
-                                <Form.Control as="textarea" rows="3"type='text' id="cp_Description" name="cp_cp_DescriptionName" required/>
+                                <Form.Control as="textarea" rows="3"type='text' id="cp_Description" name="cp_DescriptionName" required/>
                             </Form.Group>
                             <Table>
                                 <thead>
@@ -360,6 +360,8 @@ class UpdateProject extends React.Component{
             body: data,
         });
         this.setState({ Show:false })
+        this.props.setProjectInfo()
+        this.props.toggleSideBar(null)
         console.log(response.body)
     }
 
@@ -504,6 +506,8 @@ class DeleteProject extends React.Component{
             body: data,
         });
         this.setState({ Show:false })
+        this.props.setProjectInfo()
+        this.props.toggleSideBar(null);
         console.log(response.body)
     }
 
