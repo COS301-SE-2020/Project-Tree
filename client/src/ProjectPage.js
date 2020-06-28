@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Container, Row, Col} from 'react-bootstrap'
+import {Modal, Button, Container, Row, Col} from 'react-bootstrap'
 
 
 function stringifyFormData(fd) {
@@ -94,7 +94,7 @@ class ProjectPage extends React.Component{
                 {/* {this.state.form2 ? null : <CreateProjectForm />} */}
                 <Container>
                     <Row>
-                        <Col> <br/> <this.projectList /> <br/> <Button variant="outline-dark" size="lg" block> Create Project</Button> </Col>
+                        <Col> <br/> <this.projectList /> <br/> <CreateProject/> </Col>
                         <Col className="text-center">Under construction - JointJS</Col>
                         <Col className="text-center">{this.state.project != null ? <Sidebar project={this.state.project}/> : null} </Col>
                     </Row>
@@ -164,10 +164,21 @@ class Sidebar extends React.Component{
     }
 }
 
-class CreateProjectForm extends React.Component{
+class CreateProject extends React.Component{
     constructor() {
         super();
+        this.state = { Show:false };
+        this.ShowModal = this.ShowModal.bind(this);
+        this.HideModal = this.HideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    ShowModal(){
+        this.setState({ Show:true });
+    }
+
+    HideModal(){
+        this.setState({ Show:false });
     }
 
     async handleSubmit(event) {
@@ -183,53 +194,72 @@ class CreateProjectForm extends React.Component{
             },
             body: data,
         });
-      }
-
-    render()
-    {
-        return(
-            <form onSubmit={this.handleSubmit}>
-                <label> Name of project<br /><input type='text' id="cp_Name" name="cp_Name" required/></label><br/><br/>
-                <label> Description of project<br /><textarea id="cp_Description" cols='30' rows='10' name="cp_Description" required></textarea></label><br/>
-                <br />
-                <table>
-                    <thead>
-                        <tr>
-                            <th colSpan="4"><u>Project Permisions</u></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td>Create</td>
-                            <td>Delete</td>
-                            <td>Update</td>
-                        </tr>
-                        <tr>
-                            <td>Package Manager</td>
-                            <td><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
-                            <td><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
-                            <td><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
-                        </tr>
-                        <tr>
-                            <td>Responsible Person</td>
-                            <td><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
-                            <td><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
-                            <td><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
-                        </tr>
-                        <tr>
-                            <td>Resource</td>
-                            <td><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
-                            <td><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
-                            <td><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
-                        </tr>
-                    </tbody>
-                </table><br />
-                <input type='submit' value='Submit'/>
-            </form>
-        )
+        this.setState({ Show:false })
+        console.log(response)
     }
-}
+
+    render(){
+        return (
+            <React.Fragment>
+                <Button onClick={this.ShowModal}>Create Project</Button>
+                <Modal show={this.state.Show} onHide={this.HideModal}>
+                    <form onSubmit={this.handleSubmit}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Create Project</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <label> Name of project<br /><input type='text' id="cp_Name" name="cp_Name" required/></label><br/><br/>
+                            <label> Description of project<br /><textarea id="cp_Description" cols='30' rows='10' name="cp_Description" required></textarea></label><br/>
+                            <br />
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colSpan="4"><u>Project Permisions</u></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td>Create</td>
+                                        <td>Delete</td>
+                                        <td>Update</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Package Manager</td>
+                                        <td><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
+                                        <td><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
+                                        <td><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Responsible Person</td>
+                                        <td><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
+                                        <td><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
+                                        <td><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resource</td>
+                                        <td><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
+                                        <td><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
+                                        <td><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
+                                    </tr>
+                                </tbody>
+                            </table><br />
+                            {/*<input type='submit' value='Submit'/>*/}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={this.HideModal}>
+                            Cancel
+                            </Button>
+                            <Button type="submit" variant="primary">
+                            Create Project
+                            </Button>
+                        </Modal.Footer>
+                    </form>
+                </Modal>
+            </React.Fragment>
+        );
+    }
+  }
 
 class DeleteProjectForm extends React.Component{
     async handleSubmit(event) {
