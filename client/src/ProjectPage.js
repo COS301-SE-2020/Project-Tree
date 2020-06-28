@@ -1,6 +1,13 @@
 import React from 'react';
 import {Button, Container, Row, Col} from 'react-bootstrap'
 
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link
+} from "react-router-dom";
+
 
 function stringifyFormData(fd) {
     const data = {};
@@ -92,11 +99,12 @@ class ProjectPage extends React.Component{
                 {/* <this.projectList /> */}
                 {/* <h3 id="form2" onClick={() => this.toggle(2)}>Create Project {this.state.form2 ? "\u25BE" : "\u25B4"}</h3> */}
                 {/* {this.state.form2 ? null : <CreateProjectForm />} */}
-                <Container>
+                <Container fluid>
                     <Row>
-                        <Col> <br/> <this.projectList /> <br/> <Button variant="outline-dark" size="lg" block> Create Project</Button> </Col>
+                        <Col className="text-center"> <br/> <this.projectList /> <br/> 
+                        <Button variant="outline-dark" size="lg" block> Create Project</Button> </Col>
                         <Col className="text-center">Under construction - JointJS</Col>
-                        <Col className="text-center">{this.state.project != null ? <Sidebar project={this.state.project}/> : null} </Col>
+                        <Col className="text-center"><Sidebar project={this.state.project} toggleSideBar={this.toggleSideBar}/></Col>
                     </Row>
                 </Container>
             </React.Fragment>
@@ -107,18 +115,17 @@ class ProjectPage extends React.Component{
 class Sidebar extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {permissions:false};
+        this.state = {permissions:false, hidden:false};
         this.togglePermissions = this.togglePermissions.bind(this);
         this.permissionsTable = this.permissionsTable.bind(this);
     }
 
     togglePermissions(){
         this.setState({permissions:!this.state.permissions})
+        console.log(this.props.project.permissions[8]);
     }
-
+    
     permissionsTable(){
-        console.log(this.props.project)
-
         return(
             <table>
                 <tbody>
@@ -130,35 +137,44 @@ class Sidebar extends React.Component{
                     </tr>
                     <tr>
                         <td>Package Manager</td>
-                        <td>x</td>
-                        <td></td>
-                        <td>x</td>
+                        <td>{this.props.project.permissions[0] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[1] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[2] ? "X" : null}</td>
                     </tr>
                     <tr>
                         <td>Responsible Person</td>
-                        <td></td>
-                        <td>x</td>
-                        <td></td>
+                        <td>{this.props.project.permissions[3] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[4] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[5] ? "X" : null}</td>
                     </tr>
                     <tr>
                         <td>Resource</td>
-                        <td>x</td>
-                        <td></td>
-                        <td></td>
+                        <td>{this.props.project.permissions[6] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[7] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[8] ? "X" : null}</td>
                     </tr>
                 </tbody>
             </table>
-        )
+        );
     }
 
     render()
     {
+        if(this.props.project == null)
+        {
+            return null;
+        }
+        
         return(
             <React.Fragment>
                 <h1>{this.props.project.name}</h1>
+                <button>Delete Project</button>
+                <button onClick={()=>this.props.toggleSideBar(null)}>Close Sidebar</button>
                 <p>{this.props.project.description}</p>
                 <button onClick={this.togglePermissions}>Permissions {this.state.permissions ? "\u25B4":"\u25BE"}</button>
-                {this.state.permissions? <this.permissionsTable /> : null}
+                {this.state.permissions ? <this.permissionsTable/> : null}
+                <button>View Project</button>
+                <button>Update Project</button>
             </React.Fragment>
         )
     }
