@@ -14,6 +14,7 @@ async function createProject(req,res)
 	await createPermissions(result.records[0].get(0).low, req.body);
     res.send({ret: result});
 }
+
 async function deleteProject(req, res){
     var Pid = req.body.dp_id
     let result = await session

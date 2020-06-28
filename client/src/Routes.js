@@ -7,7 +7,8 @@ import {
 } from "react-router-dom";
 import Home from './Home'
 import ProjectPage from './ProjectPage'
-
+import TaskPage from './TaskPage'
+import Graph from './Graph'
 
 class Routes extends Component {  
 	render() {
@@ -22,6 +23,9 @@ class Routes extends Component {
 						<li>
 						<Link to="/project">Projects</Link>
 						</li>
+						<li>
+						<Link to="/graph">Graph</Link>
+						</li>
 					</ul>
 					</nav>
 
@@ -30,6 +34,9 @@ class Routes extends Component {
 					<Switch>
 					<Route path="/project">
 						<ProjectPage />
+					</Route>
+					<Route path="/graph">
+						<Graph />
 					</Route>
 					<Route path="/">
 						<Home />
