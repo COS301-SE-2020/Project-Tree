@@ -1,5 +1,12 @@
 import React from 'react';
-import {Button, Container, Row, Col} from 'react-bootstrap'
+import {Modal, Button, Container, Row, Col} from 'react-bootstrap'
+
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link
+} from "react-router-dom";
 
 function stringifyFormData(fd) {
     const data = {};
@@ -93,11 +100,11 @@ class ProjectPage extends React.Component{
                 {/* {this.state.form2 ? null : <CreateProjectForm />} */}
                 <Container fluid>
                     <Row>
-                        <Col className="text-center"> <br/> <this.projectList /> <br/> 
-                        <Button variant="outline-dark" size="lg" block> Create Project</Button> </Col>
-                         <Col xs={6} className="text-center"> <br/>Under construction - JointJS</Col>
+                        <Col> <br/> <this.projectList /> <br/> <CreateProject/> </Col>
+                        <Col xs={6} className="text-center"> <br/>Under construction - JointJS</Col>
                         <Col className="text-center"> <br/> {this.state.project != null ? 
                         <Sidebar project={this.state.project}/> : null} </Col>
+
                     </Row>
                 </Container>
             </React.Fragment>
@@ -108,18 +115,17 @@ class ProjectPage extends React.Component{
 class Sidebar extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {permissions:false};
+        this.state = {permissions:false, hidden:false};
         this.togglePermissions = this.togglePermissions.bind(this);
         this.permissionsTable = this.permissionsTable.bind(this);
     }
 
     togglePermissions(){
         this.setState({permissions:!this.state.permissions})
+        console.log(this.props.project.permissions[8]);
     }
-
+    
     permissionsTable(){
-        console.log(this.props.project)
-
         return(
             <table>
                 <tbody>
@@ -131,29 +137,34 @@ class Sidebar extends React.Component{
                     </tr>
                     <tr>
                         <td>Package Manager</td>
-                        <td>x</td>
-                        <td></td>
-                        <td>x</td>
+                        <td>{this.props.project.permissions[0] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[1] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[2] ? "X" : null}</td>
                     </tr>
                     <tr>
                         <td>Responsible Person</td>
-                        <td></td>
-                        <td>x</td>
-                        <td></td>
+                        <td>{this.props.project.permissions[3] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[4] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[5] ? "X" : null}</td>
                     </tr>
                     <tr>
                         <td>Resource</td>
-                        <td>x</td>
-                        <td></td>
-                        <td></td>
+                        <td>{this.props.project.permissions[6] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[7] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[8] ? "X" : null}</td>
                     </tr>
                 </tbody>
             </table>
-        )
+        );
     }
 
     render()
     {
+        if(this.props.project == null)
+        {
+            return null;
+        }
+        
         return(
             <React.Fragment>
                 <Container className="block-example border border-secondary">
@@ -188,10 +199,21 @@ class Sidebar extends React.Component{
     }
 }
 
-class CreateProjectForm extends React.Component{
+class CreateProject extends React.Component{
     constructor() {
         super();
+        this.state = { Show:false };
+        this.ShowModal = this.ShowModal.bind(this);
+        this.HideModal = this.HideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    ShowModal(){
+        this.setState({ Show:true });
+    }
+
+    HideModal(){
+        this.setState({ Show:false });
     }
 
     async handleSubmit(event) {
@@ -207,53 +229,72 @@ class CreateProjectForm extends React.Component{
             },
             body: data,
         });
-      }
-
-    render()
-    {
-        return(
-            <form onSubmit={this.handleSubmit}>
-                <label> Name of project<br /><input type='text' id="cp_Name" name="cp_Name" required/></label><br/><br/>
-                <label> Description of project<br /><textarea id="cp_Description" cols='30' rows='10' name="cp_Description" required></textarea></label><br/>
-                <br />
-                <table>
-                    <thead>
-                        <tr>
-                            <th colSpan="4"><u>Project Permisions</u></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td>Create</td>
-                            <td>Delete</td>
-                            <td>Update</td>
-                        </tr>
-                        <tr>
-                            <td>Package Manager</td>
-                            <td><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
-                            <td><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
-                            <td><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
-                        </tr>
-                        <tr>
-                            <td>Responsible Person</td>
-                            <td><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
-                            <td><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
-                            <td><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
-                        </tr>
-                        <tr>
-                            <td>Resource</td>
-                            <td><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
-                            <td><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
-                            <td><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
-                        </tr>
-                    </tbody>
-                </table><br />
-                <input type='submit' value='Submit'/>
-            </form>
-        )
+        this.setState({ Show:false })
+        console.log(response)
     }
-}
+
+    render(){
+        return (
+            <React.Fragment>
+                <Button onClick={this.ShowModal}>Create Project</Button>
+                <Modal show={this.state.Show} onHide={this.HideModal}>
+                    <form onSubmit={this.handleSubmit}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Create Project</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <label> Name of project<br /><input type='text' id="cp_Name" name="cp_Name" required/></label><br/><br/>
+                            <label> Description of project<br /><textarea id="cp_Description" cols='30' rows='10' name="cp_Description" required></textarea></label><br/>
+                            <br />
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colSpan="4"><u>Project Permisions</u></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td>Create</td>
+                                        <td>Delete</td>
+                                        <td>Update</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Package Manager</td>
+                                        <td><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
+                                        <td><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
+                                        <td><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Responsible Person</td>
+                                        <td><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
+                                        <td><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
+                                        <td><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resource</td>
+                                        <td><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
+                                        <td><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
+                                        <td><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
+                                    </tr>
+                                </tbody>
+                            </table><br />
+                            {/*<input type='submit' value='Submit'/>*/}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={this.HideModal}>
+                            Cancel
+                            </Button>
+                            <Button type="submit" variant="primary">
+                            Create Project
+                            </Button>
+                        </Modal.Footer>
+                    </form>
+                </Modal>
+            </React.Fragment>
+        );
+    }
+  }
 
 class DeleteProjectForm extends React.Component{
     async handleSubmit(event) {

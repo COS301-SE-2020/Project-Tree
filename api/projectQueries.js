@@ -6,12 +6,22 @@ async function createProject(req,res)
 {
     var Pname = req.body.cp_Name;
     var Desc = req.body.cp_Description;
+    var data = req.body;
+    data.cp_pm_Create != undefined ? cp_pm_Create = true: cp_pm_Create = false;
+    data.cp_pm_Delete != undefined ? cp_pm_Delete = true: cp_pm_Delete = false;
+    data.cp_pm_Update != undefined ? cp_pm_Update = true: cp_pm_Update = false;
+    data.cp_rp_Create != undefined ? cp_rp_Create = true: cp_rp_Create = false;
+    data.cp_rp_Delete != undefined ? cp_rp_Delete = true: cp_rp_Delete = false;
+    data.cp_rp_Update != undefined ? cp_rp_Update = true: cp_rp_Update = false;
+    data.cp_r_Create != undefined ? cp_r_Create = true: cp_r_Create = false;
+    data.cp_r_Delete != undefined ? cp_r_Delete = true: cp_r_Delete = false;
+    data.cp_r_Update != undefined ? cp_r_Update = true: cp_r_Update = false;
+
     let result = await session
-        .run('CREATE(n:Project {name:$projectName, description:$desc}) RETURN ID(n)', {projectName:Pname, desc:Desc})
+        .run('CREATE(n:Project {name:$projectName, description:$desc, projManCT:true, projManDT:true, projManUT:true, packManCT:'+cp_pm_Create+', packManDT:'+cp_pm_Delete+', packManUT:'+cp_pm_Update+', resPerCT:'+cp_rp_Create+', resPerDT:'+cp_rp_Delete+', resPerUT:'+cp_rp_Update+', resourceCT:'+cp_r_Create+', resourceDT:'+cp_r_Delete+', resourceUT:'+cp_r_Update+'}) RETURN ID(n)', {projectName:Pname, desc:Desc})
         .catch(function(err){
             console.log(err);
         });
-	await createPermissions(result.records[0].get(0).low, req.body);
     res.send({ret: result});
 }
 async function deleteProject(req, res){
@@ -25,7 +35,6 @@ async function deleteProject(req, res){
 }
 
 async function updateProject(req,res){ //update a Project with a certain ID with specified fields
-    console.log(req.body)
     let result = await session.run(
         `MATCH (a) WHERE ID(a) = ${req.body.up_id}
         RETURN (a)`
@@ -43,21 +52,6 @@ async function updateProject(req,res){ //update a Project with a certain ID with
         await updatePermissions(req.body)
         res.redirect('/home')
     }
-}
-async function createPermissions(projectID, data)
-{
-    data.cp_pm_Create != undefined ? cp_pm_Create = true: cp_pm_Create = false;
-    data.cp_pm_Delete != undefined ? cp_pm_Delete = true: cp_pm_Delete = false;
-    data.cp_pm_Update != undefined ? cp_pm_Update = true: cp_pm_Update = false;
-    data.cp_rp_Create != undefined ? cp_rp_Create = true: cp_rp_Create = false;
-    data.cp_rp_Delete != undefined ? cp_rp_Delete = true: cp_rp_Delete = false;
-    data.cp_rp_Update != undefined ? cp_rp_Update = true: cp_rp_Update = false;
-    data.cp_r_Create != undefined ? cp_r_Create = true: cp_r_Create = false;
-    data.cp_r_Delete != undefined ? cp_r_Delete = true: cp_r_Delete = false;
-    data.cp_r_Update != undefined ? cp_r_Update = true: cp_r_Update = false;
-    await session.run(
-        "MATCH (a:Project) WHERE ID(a)= "+projectID+" CREATE (a)<-[r:PERMISSIONREL]-(b:PermissionTable {projManCT:true, projManDT:true, projManUT:true, packManCT:"+cp_pm_Create+", packManDT:"+cp_pm_Delete+", packManUT:"+cp_pm_Update+", resPerCT:"+cp_rp_Create+", resPerDT:"+cp_rp_Delete+", resPerUT:"+cp_rp_Update+", resourceCT:"+cp_r_Create+", resourceDT:"+cp_r_Delete+", resourceUT:"+cp_r_Update+"})"
-    )
 }
 
 async function updatePermissions(data)
@@ -85,7 +79,8 @@ async function getProjects(req, res){
 					taskArr.push({
 						id: record._fields[0].identity.low,
                         name: record._fields[0].properties.name,
-                        description: record._fields[0].properties.description
+                        description: record._fields[0].properties.description,
+                        permissions: [record._fields[0].properties.packManCT, record._fields[0].properties.packManDT, record._fields[0].properties.packManUT, record._fields[0].properties.resPerCT, record._fields[0].properties.resPerDT, record._fields[0].properties.resPerUT, record._fields[0].properties.resourceCT, record._fields[0].properties.resourceDT, record._fields[0].properties.resourceUT]
 					});
 
 				});
