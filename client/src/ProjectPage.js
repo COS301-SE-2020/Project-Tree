@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, Button, Container, Row, Col} from 'react-bootstrap'
+import {Form, Table, Modal, Button, Container, Row, Col} from 'react-bootstrap'
 
 import {
 	BrowserRouter as Router,
@@ -87,17 +87,6 @@ class ProjectPage extends React.Component{
     render(){
         return(
             <React.Fragment>
-                {/* <div>
-                    <h3 id="form1" onClick={() => this.toggle(1)}>Select Project {this.state.form1 ? "\u25BE" : "\u25B4"}</h3>
-                    {this.state.form1 ? null : <SelectProjectForm />}
-                    <h3 id="form3" onClick={() => this.toggle(3)}>Delete Project {this.state.form3 ? "\u25BE" : "\u25B4"}</h3>
-                    {this.state.form3 ? null : <DeleteProjectForm />}
-                    <h3 id="form4" onClick={() => this.toggle(4)}>Update Project {this.state.form4 ? "\u25BE" : "\u25B4"}</h3>
-                    {this.state.form4 ? null : <UpdateProjectForm />}
-                </div> */}
-                {/* <this.projectList /> */}
-                {/* <h3 id="form2" onClick={() => this.toggle(2)}>Create Project {this.state.form2 ? "\u25BE" : "\u25B4"}</h3> */}
-                {/* {this.state.form2 ? null : <CreateProjectForm />} */}
                 <Container fluid>
                     <Row>
                         <Col> <br/> <this.projectList /> <br/> <CreateProject/> </Col>
@@ -169,7 +158,7 @@ class Sidebar extends React.Component{
             <React.Fragment>
                 <Container className="block-example border border-secondary">
                     <Row className="align-items-center bg-dark">
-                        <Col className="text-center"> <Button className="btn-dark">< i className="fa fa-trash"></i></Button> </Col>
+                        <Col className="text-center"> <DeleteProject project={this.props.project}/> </Col>
                         <Col className="text-white"> {this.props.project.name}  </Col>
                         <Col className="text-center" ><Button className="btn-dark"><i className="fa fa-close"></i></Button></Col>
                     </Row> 
@@ -188,8 +177,7 @@ class Sidebar extends React.Component{
                     </Row> <br/>
                     <Row className="align-items-center">
                         <Col> </Col>
-                        <Col className="text-center">
-                        <Button className="btn-dark"><i className="fa fa-edit"> </i> Update </Button></Col>
+                        <Col className="text-center"><UpdateProject project={this.props.project}/></Col>
                         <Col></Col>
                     </Row>
                     <br/> 
@@ -236,20 +224,25 @@ class CreateProject extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button onClick={this.ShowModal}>Create Project</Button>
+                <Button variant="outline-dark" onClick={this.ShowModal}>Create Project</Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
-                    <form onSubmit={this.handleSubmit}>
+                    <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create Project</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <label> Name of project<br /><input type='text' id="cp_Name" name="cp_Name" required/></label><br/><br/>
-                            <label> Description of project<br /><textarea id="cp_Description" cols='30' rows='10' name="cp_Description" required></textarea></label><br/>
-                            <br />
-                            <table>
+                            <Form.Group>
+                                <Form.Label>Name of project</Form.Label>
+                                <Form.Control type='text' id="cp_Name" name="cp_Name" required/>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Description of project</Form.Label>
+                                <Form.Control as="textarea" rows="3"type='text' id="cp_Description" name="cp_cp_DescriptionName" required/>
+                            </Form.Group>
+                            <Table>
                                 <thead>
                                     <tr>
-                                        <th colSpan="4"><u>Project Permisions</u></th>
+                                        <td colSpan="4">Project Permisions</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -278,18 +271,239 @@ class CreateProject extends React.Component{
                                         <td><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
                                     </tr>
                                 </tbody>
+                            </Table>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={this.HideModal}>
+                            Cancel
+                            </Button>
+                            <Button  type="submit" variant="dark">
+                            Create Project
+                            </Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal>
+            </React.Fragment>
+        );
+    }
+}
+
+class UpdateProject extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = { Show:false, 
+                        id: this.props.project.id,
+                        name: this.props.project.name, 
+                        description: this.props.project.description,
+                        up_pm_Create: this.props.project.permissions[0] == 'true',
+                        up_pm_Delete: this.props.project.permissions[1] == 'true',
+                        up_pm_Update: this.props.project.permissions[2] == 'true',
+                        up_rp_Create: this.props.project.permissions[3] == 'true',
+                        up_rp_Delete: this.props.project.permissions[4] == 'true',
+                        up_rp_Update: this.props.project.permissions[5] == 'true',
+                        up_r_Create: this.props.project.permissions[6] == 'true',
+                        up_r_Delete: this.props.project.permissions[7] == 'true',
+                        up_r_Update: this.props.project.permissions[8] == 'true'
+                    };
+        this.ShowModal = this.ShowModal.bind(this);
+        this.HideModal = this.HideModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    ShowModal(){
+        this.setState({ Show:true});
+    }
+
+    HideModal(){
+        this.setState({ Show:false});
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        let data = new FormData(event.target);
+        data = await stringifyFormData(data)
+        console.log(data)
+
+        const response = await fetch('/project/update', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: data,
+        });
+        this.setState({ Show:false })
+        console.log(response.body)
+    }
+
+    render(){
+        return (
+            <React.Fragment>
+                <Button className="btn-dark" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Update </Button>
+                <Modal show={this.state.Show} onHide={this.HideModal}>
+                    <form onSubmit={this.handleSubmit}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Update Project</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <input hidden type="number" id="up_id" name="up_id" value={this.state.id} onChange={()=>{}}/>
+                            <label> Name of project<br /><input type='text' id="up_name" name="up_name" value={this.state.name}
+                                                                                                        onChange={e => {
+                                                                                                            this.setState({ name: e.target.value });
+                                                                                                            this.value = this.state.name;
+                                                                                                        }}/></label><br/><br/>
+                            <label> Description of project<br /><textarea id="up_description" name="up_description" cols='30' rows='10' value={this.state.description}
+                                                                                                        onChange={e => {
+                                                                                                            this.setState({ description: e.target.value });
+                                                                                                            this.value = this.state.description;
+                                                                                                        }}></textarea></label><br/>
+                            <br />
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colSpan="4"><u>Project Permisions</u></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td>Create</td>
+                                        <td>Delete</td>
+                                        <td>Update</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Package Manager</td>
+                                        <td><input type="checkbox" id='up_pm_Create' name='up_pm_Create' checked={this.state.up_pm_Create}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_pm_Create: e.target.checked });
+                                                                                                                this.checked = this.state.up_pm_Create;
+                                                                                                            }}/></td>
+                                        <td><input type="checkbox" id='up_pm_Delete' name='up_pm_Delete' checked={this.state.up_pm_Delete}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_pm_Delete: e.target.checked });
+                                                                                                                this.checked = this.state.up_pm_Delete;
+                                                                                                            }}/></td>
+                                        <td><input type="checkbox" id='up_pm_Update' name='up_pm_Update' checked={this.state.up_pm_Update}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_pm_Update: e.target.checked });
+                                                                                                                this.checked = this.state.up_pm_Update;
+                                                                                                            }}/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Responsible Person</td>
+                                        <td><input type="checkbox" id='up_rp_Create' name='up_rp_Create' checked={this.state.up_rp_Create}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_rp_Create: e.target.checked });
+                                                                                                                this.checked = this.state.up_rp_Create;
+                                                                                                            }}/></td>
+                                        <td><input type="checkbox" id='up_rp_Delete' name='up_rp_Delete' checked={this.state.up_rp_Delete}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_rp_Delete: e.target.checked });
+                                                                                                                this.checked = this.state.up_rp_Delete;
+                                                                                                            }}/></td>
+                                        <td><input type="checkbox" id='up_rp_Update' name='up_rp_Update' checked={this.state.up_rp_Update}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_rp_Update: e.target.checked });
+                                                                                                                this.checked = this.state.up_rp_Update;
+                                                                                                            }}/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resource</td>
+                                        <td><input type="checkbox" id='up_r_Create' name='up_r_Create' checked={this.state.up_r_Create}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_r_Create: e.target.checked });
+                                                                                                                this.checked = this.state.up_r_Create;
+                                                                                                            }}/></td>
+                                        <td><input type="checkbox" id='up_r_Delete' name='up_r_Delete' checked={this.state.up_r_Delete}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_r_Delete: e.target.checked });
+                                                                                                                this.checked = this.state.up_r_Delete;
+                                                                                                            }}/></td>
+                                        <td><input type="checkbox" id='up_r_Update' name='up_r_Update' checked={this.state.up_r_Update}
+                                                                                                            onChange={e => {
+                                                                                                                this.setState({ up_r_Update: e.target.checked });
+                                                                                                                this.checked = this.state.up_r_Update;
+                                                                                                            }}/></td>
+                                    </tr>
+                                </tbody>
                             </table><br />
-                            {/*<input type='submit' value='Submit'/>*/}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={this.HideModal}>
+                            Cancel
+                            </Button>
+                            <Button  type="submit" variant="dark">
+                            Update Project
+                            </Button>
+                        </Modal.Footer>
+                    </form>
+                </Modal>
+            </React.Fragment>
+        );
+    }
+}
+
+class DeleteProject extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = { Show:false, 
+                        id: this.props.project.id
+                    };
+        this.ShowModal = this.ShowModal.bind(this);
+        this.HideModal = this.HideModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    ShowModal(){
+        this.setState({ Show:true});
+    }
+
+    HideModal(){
+        this.setState({ Show:false});
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        let data = new FormData(event.target);
+        data = await stringifyFormData(data)
+        console.log(data)
+
+        const response = await fetch('/project/delete', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: data,
+        });
+        this.setState({ Show:false })
+        console.log(response.body)
+    }
+
+    render(){
+        return (
+            <React.Fragment>
+                <Button className="btn-dark" onClick={this.ShowModal}>< i className="fa fa-trash"></i></Button>
+                <Modal show={this.state.Show} onHide={this.HideModal}>
+                    <Form onSubmit={this.handleSubmit}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Delete Project</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form.Group>
+                                <input hidden type="number" id="dp_id" name="dp_id" value={this.state.id} onChange={()=> {}}/>
+                                <p>Are you sure you want to delete this project</p>
+                            </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={this.HideModal}>
                             Cancel
                             </Button>
                             <Button type="submit" variant="primary">
-                            Create Project
+                            Delete Project
                             </Button>
                         </Modal.Footer>
-                    </form>
+                    </Form>
                 </Modal>
             </React.Fragment>
         );
@@ -321,54 +535,6 @@ class DeleteProjectForm extends React.Component{
         );
     }
 }
-
-class UpdateProjectForm extends React.Component{
-    render(){
-        return(
-            <form>
-                <label>Enter ID to update:<br/><input type="number" id="up_id" name="up_id"/></label><br/>
-                <label> Name of project<br /><input type='text' id="up_name" name="up_name"/></label><br/><br/>
-                <label> Description of project<br /><textarea id="up_description" name="up_description" cols='30' rows='10'></textarea></label><br/>
-                <br />
-                <table>
-                    <thead>
-                        <tr>
-                            <th colSpan="4"><u>Project Permisions</u></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td>Create</td>
-                            <td>Delete</td>
-                            <td>Update</td>
-                        </tr>
-                        <tr>
-                            <td>Package Manager</td>
-                            <td><input type="checkbox" id='up_pm_Create' name='up_pm_Create'/></td>
-                            <td><input type="checkbox" id='up_pm_Delete' name='up_pm_Delete'/></td>
-                            <td><input type="checkbox" id='up_pm_Update' name='up_pm_Update'/></td>
-                        </tr>
-                        <tr>
-                            <td>Responsible Person</td>
-                            <td><input type="checkbox" id='up_rp_Create' name='up_rp_Create'/></td>
-                            <td><input type="checkbox" id='up_rp_Delete' name='up_rp_Delete'/></td>
-                            <td><input type="checkbox" id='up_rp_Update' name='up_rp_Update'/></td>
-                        </tr>
-                        <tr>
-                            <td>Resource</td>
-                            <td><input type="checkbox" id='up_r_Create' name='up_r_Create'/></td>
-                            <td><input type="checkbox" id='up_r_Delete' name='up_r_Delete'/></td>
-                            <td><input type="checkbox" id='up_r_Update' name='up_r_Update'/></td>
-                        </tr>
-                    </tbody>
-                </table><br />
-                <input type='submit' value='Submit' />
-            </form>
-        );
-    }
-}
-
 
 export default ProjectPage;
 
