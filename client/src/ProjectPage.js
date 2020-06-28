@@ -1,4 +1,6 @@
 import React from 'react';
+import {Button, Container, Row, Col} from 'react-bootstrap'
+
 
 function stringifyFormData(fd) {
     const data = {};
@@ -64,13 +66,15 @@ class ProjectPage extends React.Component{
         if(this.state.projects === null){return null;}
         const projects = this.state.projects;
         const listItems = projects.map((project, i) =>
-          <button key={i} onClick={() => this.toggleSideBar(project)}>
+          <Button key={i} onClick={() => this.toggleSideBar(project)} variant="secondary" size="sl" block>
             {project.name}
-          </button>
+          </Button>
         );
 
         return (
-          <ul>{listItems}</ul>
+            <Container>
+                <Row> {listItems} </Row>
+            </Container>
         );
     }
 
@@ -85,10 +89,16 @@ class ProjectPage extends React.Component{
                     <h3 id="form4" onClick={() => this.toggle(4)}>Update Project {this.state.form4 ? "\u25BE" : "\u25B4"}</h3>
                     {this.state.form4 ? null : <UpdateProjectForm />}
                 </div> */}
-                <this.projectList />
-                <h3 id="form2" onClick={() => this.toggle(2)}>Create Project {this.state.form2 ? "\u25BE" : "\u25B4"}</h3>
-                {this.state.form2 ? null : <CreateProjectForm />}
-                {this.state.project != null ? <Sidebar project={this.state.project}/> : null} 
+                {/* <this.projectList /> */}
+                {/* <h3 id="form2" onClick={() => this.toggle(2)}>Create Project {this.state.form2 ? "\u25BE" : "\u25B4"}</h3> */}
+                {/* {this.state.form2 ? null : <CreateProjectForm />} */}
+                <Container>
+                    <Row>
+                        <Col> <br/> <this.projectList /> <br/> <Button variant="outline-dark" size="lg" block> Create Project</Button> </Col>
+                        <Col className="text-center">Under construction - JointJS</Col>
+                        <Col className="text-center">{this.state.project != null ? <Sidebar project={this.state.project}/> : null} </Col>
+                    </Row>
+                </Container>
             </React.Fragment>
         )
     }
