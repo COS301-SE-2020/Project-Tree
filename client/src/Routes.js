@@ -15,7 +15,7 @@ class Routes extends Component {
 	render() {
 		return (
 			<Router>
-					<Navbar bg="dark" variant="dark">
+					<Navbar sticky="top" bg="dark" variant="dark">
 						<Nav className="mr-auto" >
 						<Nav.Link href="/">Home</Nav.Link>
 						<Nav.Link href="/project">Projects</Nav.Link>
