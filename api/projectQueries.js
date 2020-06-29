@@ -53,15 +53,15 @@ async function updateProject(req,res){ //update a Project with a certain ID with
             projManCT:true, 
             projManDT:true, 
             projManUT:true, 
-            packManCT:"${up_pm_Create}", 
-            packManDT:"${up_pm_Delete}", 
-            packManUT:"${up_pm_Update}", 
-            resPerCT:"${up_rp_Create}", 
-            resPerDT:"${up_rp_Delete}", 
-            resPerUT:"${up_rp_Update}", 
-            resourceCT:"${up_r_Create}", 
-            resourceDT:"${up_r_Delete}", 
-            resourceUT:"${up_r_Update}"
+            packManCT:${up_pm_Create}, 
+            packManDT:${up_pm_Delete}, 
+            packManUT:${up_pm_Update}, 
+            resPerCT:${up_rp_Create}, 
+            resPerDT:${up_rp_Delete}, 
+            resPerUT:${up_rp_Update}, 
+            resourceCT:${up_r_Create}, 
+            resourceDT:${up_r_Delete}, 
+            resourceUT:${up_r_Update}
         } RETURN a`
     )
     res.send({ret: result});

@@ -104,21 +104,21 @@ class Sidebar extends React.Component{
                     </tr>
                     <tr>
                         <td>Package Manager</td>
-                        <td>{this.props.project.permissions[0] ? "X" : null}</td>
-                        <td>{this.props.project.permissions[1] ? "X" : null}</td>
-                        <td>{this.props.project.permissions[2] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[0] === true ? "X" : null}</td>
+                        <td>{this.props.project.permissions[1] === true ? "X" : null}</td>
+                        <td>{this.props.project.permissions[2] === true ? "X" : null}</td>
                     </tr>
                     <tr>
                         <td>Responsible Person</td>
-                        <td>{this.props.project.permissions[3] ? "X" : null}</td>
-                        <td>{this.props.project.permissions[4] ? "X" : null}</td>
-                        <td>{this.props.project.permissions[5] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[3] === true ? "X" : null}</td>
+                        <td>{this.props.project.permissions[4] === true ? "X" : null}</td>
+                        <td>{this.props.project.permissions[5] === true ? "X" : null}</td>
                     </tr>
                     <tr>
                         <td>Resource</td>
-                        <td>{this.props.project.permissions[6] ? "X" : null}</td>
-                        <td>{this.props.project.permissions[7] ? "X" : null}</td>
-                        <td>{this.props.project.permissions[8] ? "X" : null}</td>
+                        <td>{this.props.project.permissions[6] === true ? "X" : null}</td>
+                        <td>{this.props.project.permissions[7] === true ? "X" : null}</td>
+                        <td>{this.props.project.permissions[8] === true ? "X" : null}</td>
                     </tr>
                 </tbody>
             </Table>
