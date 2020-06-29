@@ -4,7 +4,7 @@ var session = driver.session();
 
 async function getProjectTasks(req,res)
 {
-    var projID = req.body.id;
+	var projID = parseInt(req.body.id);
 	var taskArr = [];
 	var relArr = [];
 	await session
@@ -21,7 +21,7 @@ async function getProjectTasks(req,res)
 				console.log(err);
 			});
 	await session
-			.run('MATCH (n)-[r {projId: 1}]->(m) RETURN r')
+			.run('MATCH (n)-[r {projId: '+projID+'}]->(m) RETURN r')
 			.then(function(result){
                 var x = 0;
 				result.records.forEach(function(record){

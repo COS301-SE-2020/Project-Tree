@@ -1,102 +1,132 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
 import * as joint from 'jointjs'
+import _ from 'lodash'
+import $ from 'jquery'
+import dagre from 'dagre';
+import graphlib from 'graphlib';
 
-function stringifyFormData(fd) {
-    const data = {};
-      for (let key of fd.keys()) {
-        data[key] = fd.get(key);
-    }
-    return JSON.stringify(data, null, 2);
+function makeLink(edge) {
+    var lnk = new joint.dia.Link({
+        source: { id: edge[0].source },
+        target: { id: edge[0].target },
+        attrs: {
+            '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' }
+        },
+        labels: [{
+            position: 0.5,
+            attrs: {
+                text: {
+                    text: edge[0].label
+                }
+            }
+        }],
+        connector: {name: 'normal'}
+    });
+    return lnk;
 }
 
+function makeElement(node) {
+    var maxLineLength = _.max(node[0].name.split('\n'), function(l) { return l.length; }).length;
+
+    var letterSize = 12;
+    var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+    var height = 2 * ((node[0].name.split('\n').length + 1) * letterSize);
+
+    return new joint.shapes.basic.Rect({
+        id: node[0].id,
+        size: { width: 100, height: height },
+        attrs: {
+            text: { 
+              text: node[0].name, 
+              'font-size': letterSize, 
+              'font-family': 'monospace' },
+            rect: {
+                width: width, height: height,
+                rx: 5, ry: 5,
+                stroke: '#555'
+            }
+        }
+    });
+}
+
+function buildGraph(nodes,rels) {
+    var elements = [];
+    var links = [];
+      
+    _.each(nodes, function(node) {
+      elements.push(makeElement(node));
+    })
+    
+    _.each(rels, function(edge) {
+      links.push(makeLink(edge)); 
+    })
+    return elements.concat(links);
+  }
+
 class Graph extends React.Component {
-
-    constructor(props) {
-        super(props);
-		this.graph = new joint.dia.Graph();
-    }
-
     async componentDidMount() {
-		const response = await fetch('/getProject',{
+        const response = await fetch('/getProject',{
             method: 'POST',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             },
-            body:JSON.stringify({ id: 0 })
+            body:JSON.stringify({ id: 101 })
         });
 		const body = await response.json();
 		//console.log(body)
-		if (response.status !== 200) throw Error(body.message);
+        if (response.status !== 200) throw Error(body.message);
+        
+        let nodes=[]
+        for(var x = 0; x < body.tasks.length; x++){
+            nodes.push([
+                {
+                    name:body.tasks[x].record._fields[0].properties.name,
+                    id:body.tasks[x].record._fields[0].identity.low,
+                }
+            ])
+        }
 
-       	this.paper = new joint.dia.Paper({
-            el: ReactDOM.findDOMNode(this.refs.placeholder),
-            width: 1800,
-            height: 600,
-            model: this.graph,
-            gridSize: 1
-		});
-		
-		let nodes = []
+        let links = []
+        for(var y = 0; y < body.rels.length; y++){
+            links.push([
+                {
+                    source:body.rels[y].record._fields[0].start.low,
+                    target:body.rels[y].record._fields[0].end.low,
+                    label:body.rels[y].record._fields[0].properties.relationshipType
+                }
+            ])
+        }
 
-		let rect = []
-		for(var x = 0; x < body.tasks.length; x++)
-		{
-			var str = body.tasks[x].record._fields[0].properties.name
-			rect = new joint.shapes.basic.Rect({
-				position: { x: 100 + (x*120), y: 30 },
-				size: { width: 100, height: 30 },
-				attrs: {
-					rect: { fill: 'blue' },
-					text: { text: str, fill: 'white' },
-					ownId: {id: body.tasks[x].record._fields[0].identity.low}
-				}
-			});
+        var graph = new joint.dia.Graph();
+        this.paper = new joint.dia.Paper({
+            el: $('#paper'),
+            width: 2000,
+            height: 2000,
+            gridSize: 1,
+            model: graph
+        });
 
-			this.graph.addCells([rect]);
-			nodes.push(rect)
-		}
-		//console.log(nodes)
-		for(var y = 0; y < body.rels.length; y++)
-		{
-			var label = body.rels[y].record._fields[0].properties.relationshipType
-			var from = body.rels[y].record._fields[0].start.low
-			var to = body.rels[y].record._fields[0].end.low
-			var startRec;
-			var endRec;
-			for(var i = 0; i < nodes.length; i++)
-			{
-				//console.log(from , nodes[i].attributes.attrs.ownId.id)
-				if(from === nodes[i].attributes.attrs.ownId.id)
-				{
-					startRec = nodes[i]
-					console.log(startRec)
-				}
-
-				if(to === nodes[i].attributes.attrs.ownId.id)
-				{
-					endRec = nodes[i]
-				}
-			}
-			var link = new joint.shapes.standard.Link();
-			link.source(startRec);
-			link.target(endRec);
-			link.appendLabel({
-				attrs: {
-					text: {
-						text: label
-					}
-				}
-			});
-			link.addTo(this.graph);
-		}
-
+        var cells = buildGraph(nodes,links);
+        graph.resetCells(cells);
+        joint.layout.DirectedGraph.layout(graph, {
+            dagre: dagre,
+            graphlib: graphlib,
+            setLinkVertices: false,
+            rankDir: "TB",
+            nodeSep: 100,
+            rankSep: 100
+        })
     }
 
-    render() {
-        return <div ref="placeholder" ></div>;
+    render(){
+        return(
+            <React.Fragment>
+                <div id="paper"></div>
+            </React.Fragment>
+        )
     }
+
 }
 
-export default Graph;
+export default Graph
