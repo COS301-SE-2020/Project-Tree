@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import {
 	BrowserRouter as Router,
 	Switch,
-	Route,
-	Link
+	Route
 } from "react-router-dom";
-import Home from './Home'
-import User from './User'
-import ProjectPage from './ProjectPage'
-import TaskPage from './TaskPage'
+import Home from './Home/Home'
+import User from './User/User'
+import ProjectPage from './Project/ProjectPage'
+import TaskPage from './Task/TaskPage'
 import {Navbar, Nav} from 'react-bootstrap'
 
 
