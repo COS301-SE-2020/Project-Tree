@@ -35,7 +35,7 @@ async function deleteProject(req, res){
 }
 
 async function updateProject(req,res){ //update a Project with a certain ID with specified fields
-    res.send({ret: req.body});
+    //res.send({ret: req.body});
     req.body.up_pm_Create != undefined ? up_pm_Create = true: up_pm_Create = false;
     req.body.up_pm_Delete != undefined ? up_pm_Delete = true: up_pm_Delete = false;
     req.body.up_pm_Update != undefined ? up_pm_Update = true: up_pm_Update = false;
