@@ -7,6 +7,7 @@ import graphlib from 'graphlib';
 
 function makeLink(edge) {
     var lnk = new joint.dia.Link({
+        id:edge[0].id,
         source: { id: edge[0].source },
         target: { id: edge[0].target },
         attrs: {
@@ -93,6 +94,7 @@ class Graph extends React.Component {
                 {
                     source:body.rels[y].record._fields[0].start.low,
                     target:body.rels[y].record._fields[0].end.low,
+                    id:body.rels[y].record._fields[0].identity.low,
                     label:body.rels[y].record._fields[0].properties.relationshipType
                 }
             ])
@@ -106,6 +108,11 @@ class Graph extends React.Component {
             gridSize: 1,
             model: graph
         });
+        this.paper.on('cell:pointerclick', 
+            function(clickedNode) { 
+                alert('Node ID: ' + clickedNode.model.id); 
+            }
+        );
 
         var cells = buildGraph(nodes,links);
         graph.resetCells(cells);
