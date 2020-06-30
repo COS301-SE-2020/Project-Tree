@@ -51,7 +51,7 @@ class DeleteProject extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button className="btn-dark" onClick={this.ShowModal}>< i className="fa fa-trash"></i></Button>
+                <Button className="btn-danger" onClick={this.ShowModal}>< i className="fa fa-trash"></i></Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
