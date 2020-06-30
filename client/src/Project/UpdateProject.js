@@ -73,10 +73,10 @@ class UpdateProject extends React.Component{
             },
             body: data,
         });
-        console.log(response);
+        const body = await response.json();
         this.setState({ Show:false })
         this.props.setProjectInfo()
-        this.props.toggleSideBar(null)
+        this.props.toggleSideBar(body.nodes);
     }
 
     render(){

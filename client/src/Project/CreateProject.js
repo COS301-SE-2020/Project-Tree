@@ -40,10 +40,10 @@ class CreateProject extends React.Component{
             },
             body: data,
         });
+        const body = await response.json();
         this.setState({ Show:false })
-        console.log(response)
-
-        this.props.setProjectInfo();
+        this.props.setProjectInfo()
+        this.props.toggleSideBar(body.nodes);
     }
 
     render(){

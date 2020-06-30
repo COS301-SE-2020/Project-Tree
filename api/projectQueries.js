@@ -1,9 +1,10 @@
 var neo4j = require('neo4j-driver');
 var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
-var session = driver.session();
 
 async function createProject(req,res)
 {
+    var session = driver.session();
+    var taskArr = [];
     var Pname = req.body.cp_Name;
     var Desc = req.body.cp_Description;
     var data = req.body;
@@ -18,13 +19,25 @@ async function createProject(req,res)
     data.cp_r_Update != undefined ? cp_r_Update = true: cp_r_Update = false;
 
     let result = await session
-        .run('CREATE(n:Project {name:$projectName, description:$desc, projManCT:true, projManDT:true, projManUT:true, packManCT:'+cp_pm_Create+', packManDT:'+cp_pm_Delete+', packManUT:'+cp_pm_Update+', resPerCT:'+cp_rp_Create+', resPerDT:'+cp_rp_Delete+', resPerUT:'+cp_rp_Update+', resourceCT:'+cp_r_Create+', resourceDT:'+cp_r_Delete+', resourceUT:'+cp_r_Update+'}) RETURN ID(n)', {projectName:Pname, desc:Desc})
+        .run('CREATE(n:Project {name:$projectName, description:$desc, projManCT:true, projManDT:true, projManUT:true, packManCT:'+cp_pm_Create+', packManDT:'+cp_pm_Delete+', packManUT:'+cp_pm_Update+', resPerCT:'+cp_rp_Create+', resPerDT:'+cp_rp_Delete+', resPerUT:'+cp_rp_Update+', resourceCT:'+cp_r_Create+', resourceDT:'+cp_r_Delete+', resourceUT:'+cp_r_Update+'}) RETURN n', {projectName:Pname, desc:Desc})
+        .then(function(result){
+            result.records.forEach(function(record){
+                taskArr.push({
+                    id: record._fields[0].identity.low,
+                    name: record._fields[0].properties.name,
+                    description: record._fields[0].properties.description,
+                    permissions: [record._fields[0].properties.packManCT, record._fields[0].properties.packManDT, record._fields[0].properties.packManUT, record._fields[0].properties.resPerCT, record._fields[0].properties.resPerDT, record._fields[0].properties.resPerUT, record._fields[0].properties.resourceCT, record._fields[0].properties.resourceDT, record._fields[0].properties.resourceUT]
+                });
+    
+            });
+        })
         .catch(function(err){
             console.log(err);
         });
-    res.send({ret: result});
+        res.send({nodes: taskArr[0]});
 }
 async function deleteProject(req, res){
+    var session = driver.session();
     var Pid = req.body.dp_id
     let result = await session
         .run('MATCH(n:Project) WHERE ID(n)= '+Pid+' DETACH DELETE n RETURN n')
@@ -34,8 +47,9 @@ async function deleteProject(req, res){
         res.send({ret: result});
 }
 
-async function updateProject(req,res){ //update a Project with a certain ID with specified fields
-    //res.send({ret: req.body});
+async function updateProject(req,res){
+    var session = driver.session();
+    var taskArr = [];
     req.body.up_pm_Create != undefined ? up_pm_Create = true: up_pm_Create = false;
     req.body.up_pm_Delete != undefined ? up_pm_Delete = true: up_pm_Delete = false;
     req.body.up_pm_Update != undefined ? up_pm_Update = true: up_pm_Update = false;
@@ -64,10 +78,25 @@ async function updateProject(req,res){ //update a Project with a certain ID with
             resourceUT:${up_r_Update}
         } RETURN a`
     )
-    res.send({ret: result});
+    .then(function(result){
+        result.records.forEach(function(record){
+            taskArr.push({
+                id: record._fields[0].identity.low,
+                name: record._fields[0].properties.name,
+                description: record._fields[0].properties.description,
+                permissions: [record._fields[0].properties.packManCT, record._fields[0].properties.packManDT, record._fields[0].properties.packManUT, record._fields[0].properties.resPerCT, record._fields[0].properties.resPerDT, record._fields[0].properties.resPerUT, record._fields[0].properties.resourceCT, record._fields[0].properties.resourceDT, record._fields[0].properties.resourceUT]
+            });
+
+        });
+    })
+    .catch(function(err){
+        console.log(err);
+    });
+    res.send({nodes: taskArr[0]});
 }
 
 async function getProjects(req, res){
+    var session = driver.session();
 	var taskArr = [];
 	await session
 			.run('MATCH (n:Project) RETURN n')
