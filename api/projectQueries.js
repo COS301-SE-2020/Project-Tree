@@ -36,6 +36,7 @@ async function createProject(req,res)
         });
         res.send({nodes: taskArr[0]});
 }
+
 async function deleteProject(req, res){
     var session = driver.session();
     var Pid = req.body.dp_id
@@ -115,6 +116,28 @@ async function getProjects(req, res){
 				console.log(err);
 			});
 	res.send({nodes: taskArr});
+};
+
+async function getProject(req, res){
+    var session = driver.session();
+	var taskArr = [];
+	// await session
+	// 		.run('MATCH (n:Task {projId:'+projectID+'}) RETURN n')
+	// 		.then(function(result){
+	// 			result.records.forEach(function(record){
+	// 				taskArr.push({
+	// 					id: record._fields[0].identity.low,
+    //                     name: record._fields[0].properties.name,
+    //                     description: record._fields[0].properties.description,
+    //                     permissions: [record._fields[0].properties.packManCT, record._fields[0].properties.packManDT, record._fields[0].properties.packManUT, record._fields[0].properties.resPerCT, record._fields[0].properties.resPerDT, record._fields[0].properties.resPerUT, record._fields[0].properties.resourceCT, record._fields[0].properties.resourceDT, record._fields[0].properties.resourceUT]
+	// 				});
+
+	// 			});
+	// 		})
+	// 		.catch(function(err){
+	// 			console.log(err);
+	// 		});
+	res.send("hello");
 };
 
 module.exports =

@@ -8,6 +8,7 @@ import Home from './Home/Home'
 import User from './User/User'
 import ProjectPage from './Project/ProjectPage'
 import TaskPage from './Task/TaskPage'
+import GraphPage from './Graph/GraphPage'
 import {Navbar, Nav} from 'react-bootstrap'
 
 
@@ -18,8 +19,8 @@ class Routes extends Component {
 		this.toggleGraphPage = this.toggleGraphPage.bind(this);
 	}
 
-	toggleGraphPage(id){
-		this.setState({project:id});
+	toggleGraphPage(newProject){
+		this.setState({project:newProject});
 	}
 
 	render() {
@@ -39,7 +40,7 @@ class Routes extends Component {
 						renders the first one that matches the current URL. */}
 					<Switch>
 					<Route path="/graph">
-						<TaskPage projectID={this.state.project} toggleGraphPage={this.toggleGraphPage}/>
+						<GraphPage project={this.state.project} toggleGraphPage={this.toggleGraphPage}/>
 					</Route>
 					<Route path="/project">
 						<ProjectPage toggleGraphPage={this.toggleGraphPage}/>

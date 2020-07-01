@@ -103,7 +103,7 @@ class ProjectList extends React.Component{
 class Sidebar extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {permissions:false, hidden:false};
+        this.state = {permissions:false};
         this.togglePermissions = this.togglePermissions.bind(this);
         this.permissionsTable = this.permissionsTable.bind(this);
     }
@@ -170,7 +170,7 @@ class Sidebar extends React.Component{
                     </Row> 
                     <Row className="align-items-center py-2">
                         <Col> </Col>
-                        <Col xs={6} className="text-center"><Link to="/graph"><Button onClick={()=>this.props.toggleGraphPage(this.props.project.id)} variant="outline-dark" size="md">View Project</Button></Link></Col>
+                        <Col xs={6} className="text-center"><Link to="/graph"><Button onClick={()=>this.props.toggleGraphPage(this.props.project)} variant="outline-dark" size="md">View Project</Button></Link></Col>
                         <Col></Col>
                     </Row>
                     <Row className="align-items-center py-2">
