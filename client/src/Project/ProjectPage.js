@@ -64,11 +64,17 @@ class ProjectPage extends React.Component{
         return(
             <React.Fragment>
                 <Container fluid>
-                    <Row>
-                        <Col> <br/> <ProjectList projects={this.state.projects} toggleSideBar={this.toggleSideBar} /> <br/> <CreateProject setProjectInfo={this.setProjectInfo}/> </Col>
-                        <Col xs={6} className="text-center"> <br/>Under construction - JointJS</Col>
-                        <Col className="text-center"> <br/> {this.state.project != null ? 
-                        <Sidebar toggleSideBar={this.toggleSideBar} setProjectInfo={this.setProjectInfo} toggleGraphPage={this.props.toggleGraphPage} project={this.state.project}/> : null} </Col>
+                    <Row className="py-4">
+                        <Col>
+                            <ProjectList projects={this.state.projects} toggleSideBar={this.toggleSideBar} />
+                            <CreateProject setProjectInfo={this.setProjectInfo} toggleSideBar={this.toggleSideBar}/> 
+                        </Col>
+                        <Col xs={6} className="text-center"> 
+                            Under construction - JointJS
+                        </Col>
+                        <Col className="text-center">
+                            {this.state.project != null ? <Sidebar toggleSideBar={this.toggleSideBar} setProjectInfo={this.setProjectInfo} toggleGraphPage={this.props.toggleGraphPage} project={this.state.project}/> : null}
+                        </Col>
                     </Row>
                 </Container>
             </React.Fragment>
@@ -108,7 +114,7 @@ class Sidebar extends React.Component{
     
     permissionsTable(){
         return(
-            <Table striped bordered size="sm" variant="light">
+            <Table className="mt-2" striped bordered size="sm" variant="light">
                 <tbody>
                     <tr>
                         <td></td>
@@ -149,32 +155,31 @@ class Sidebar extends React.Component{
         return(
             <React.Fragment>
                 <Container className="block-example border border-secondary bg-light">
-                    <Row className="align-items-center bg-dark">
-                        <Col className="text-center"> <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} toggleSideBar={this.props.toggleSideBar}/> </Col>
+                    <Row className="align-items-center bg-dark py-2">
+                        <Col className="text-left"> <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} toggleSideBar={this.props.toggleSideBar}/> </Col>
                         <Col className="text-white"> {this.props.project.name}  </Col>
-                        <Col className="text-center" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
+                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
                     </Row> 
-                    <Row className="align-items-center">
+                    <Row className="align-items-center py-2">
                         <Col><p>{this.props.project.description}</p> </Col>
                     </Row> 
-                    <Row className="align-items-center" >
+                    <Row className="align-items-center py-2" >
                         <Col className="text-center" >
-                        <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button> <br/> <br/> 
+                        <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
                         {this.state.permissions? <this.permissionsTable /> : null}</Col>
                     </Row> 
-                    <Row className="align-items-center">
+                    <Row className="align-items-center py-2">
                         <Col> </Col>
                         <Col xs={6} className="text-center"><Link to="/graph"><Button onClick={()=>this.props.toggleGraphPage(this.props.project.id)} variant="outline-dark" size="md">View Project</Button></Link></Col>
                         <Col></Col>
-                    </Row> <br/>
-                    <Row className="align-items-center">
+                    </Row>
+                    <Row className="align-items-center py-2">
                         <Col> </Col>
 
                         <Col xs={6} className="text-center">
                         <UpdateProject project={this.props.project} setProjectInfo={this.props.setProjectInfo}/></Col>
                         <Col></Col>
                     </Row>
-                    <br/> 
                 </Container>
             </React.Fragment>
         )

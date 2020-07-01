@@ -48,7 +48,7 @@ class CreateProject extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button variant="outline-dark" onClick={this.ShowModal} block>Create Project</Button>
+                <Button className="my-2" variant="outline-dark" onClick={this.ShowModal} block>Create Project</Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
@@ -63,36 +63,36 @@ class CreateProject extends React.Component{
                                 <Form.Label>Description of project</Form.Label>
                                 <Form.Control as="textarea" rows="3"type='text' id="cp_Description" name="cp_Description" required/>
                             </Form.Group>
-                            <Table>
+                            <Table bordered hover>
                                 <thead>
                                     <tr>
-                                        <td colSpan="4">Project Permisions</td>
+                                        <td className="text-center" colSpan="4">Project Permisions</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td className="text-center">Create</td>
+                                        <td className="text-center">Delete</td>
+                                        <td className="text-center">Update</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td></td>
-                                        <td>Create</td>
-                                        <td>Delete</td>
-                                        <td>Update</td>
-                                    </tr>
-                                    <tr>
                                         <td>Package Manager</td>
-                                        <td><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
-                                        <td><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
-                                        <td><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
+                                        <td className="text-center"><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
+                                        <td className="text-center"><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
+                                        <td className="text-center"><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
                                     </tr>
                                     <tr>
                                         <td>Responsible Person</td>
-                                        <td><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
-                                        <td><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
-                                        <td><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
+                                        <td className="text-center"><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
+                                        <td className="text-center"><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
+                                        <td className="text-center"><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
                                     </tr>
                                     <tr>
                                         <td>Resource</td>
-                                        <td><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
-                                        <td><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
-                                        <td><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
+                                        <td className="text-center"><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
+                                        <td className="text-center"><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
+                                        <td className="text-center"><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
                                     </tr>
                                 </tbody>
                             </Table>

@@ -105,32 +105,32 @@ class UpdateProject extends React.Component{
                                                                                                             this.value = this.state.description;
                                                                                                         }}/>
                             <br />
-                            <Table>
+                            <Table bordered hover>
                                 <thead>
                                     <tr>
-                                        <td colSpan="4">Project Permisions</td>
+                                        <td className="text-center" colSpan="4">Project Permisions</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td className="text-center">Create</td>
+                                        <td className="text-center">Delete</td>
+                                        <td className="text-center">Update</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td></td>
-                                        <td>Create</td>
-                                        <td>Delete</td>
-                                        <td>Update</td>
-                                    </tr>
-                                    <tr>
                                         <td>Package Manager</td>
-                                        <td><input type="checkbox" id='up_pm_Create' name='up_pm_Create' checked={this.state.up_pm_Create}
+                                        <td className="text-center"><input type="checkbox" id='up_pm_Create' name='up_pm_Create' checked={this.state.up_pm_Create}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_pm_Create: e.target.checked });
                                                                                                                 this.checked = this.state.up_pm_Create;
                                                                                                             }}/></td>
-                                        <td><input type="checkbox" id='up_pm_Delete' name='up_pm_Delete' checked={this.state.up_pm_Delete}
+                                        <td className="text-center"><input type="checkbox" id='up_pm_Delete' name='up_pm_Delete' checked={this.state.up_pm_Delete}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_pm_Delete: e.target.checked });
                                                                                                                 this.checked = this.state.up_pm_Delete;
                                                                                                             }}/></td>
-                                        <td><input type="checkbox" id='up_pm_Update' name='up_pm_Update' checked={this.state.up_pm_Update}
+                                        <td className="text-center"><input type="checkbox" id='up_pm_Update' name='up_pm_Update' checked={this.state.up_pm_Update}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_pm_Update: e.target.checked });
                                                                                                                 this.checked = this.state.up_pm_Update;
@@ -138,17 +138,17 @@ class UpdateProject extends React.Component{
                                     </tr>
                                     <tr>
                                         <td>Responsible Person</td>
-                                        <td><input type="checkbox" id='up_rp_Create' name='up_rp_Create' checked={this.state.up_rp_Create}
+                                        <td className="text-center"><input type="checkbox" id='up_rp_Create' name='up_rp_Create' checked={this.state.up_rp_Create}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_rp_Create: e.target.checked });
                                                                                                                 this.checked = this.state.up_rp_Create;
                                                                                                             }}/></td>
-                                        <td><input type="checkbox" id='up_rp_Delete' name='up_rp_Delete' checked={this.state.up_rp_Delete}
+                                        <td className="text-center"><input type="checkbox" id='up_rp_Delete' name='up_rp_Delete' checked={this.state.up_rp_Delete}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_rp_Delete: e.target.checked });
                                                                                                                 this.checked = this.state.up_rp_Delete;
                                                                                                             }}/></td>
-                                        <td><input type="checkbox" id='up_rp_Update' name='up_rp_Update' checked={this.state.up_rp_Update}
+                                        <td className="text-center"><input type="checkbox" id='up_rp_Update' name='up_rp_Update' checked={this.state.up_rp_Update}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_rp_Update: e.target.checked });
                                                                                                                 this.checked = this.state.up_rp_Update;
@@ -156,17 +156,17 @@ class UpdateProject extends React.Component{
                                     </tr>
                                     <tr>
                                         <td>Resource</td>
-                                        <td><input type="checkbox" id='up_r_Create' name='up_r_Create' checked={this.state.up_r_Create}
+                                        <td className="text-center"><input type="checkbox" id='up_r_Create' name='up_r_Create' checked={this.state.up_r_Create}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_r_Create: e.target.checked });
                                                                                                                 this.checked = this.state.up_r_Create;
                                                                                                             }}/></td>
-                                        <td><input type="checkbox" id='up_r_Delete' name='up_r_Delete' checked={this.state.up_r_Delete}
+                                        <td className="text-center"><input type="checkbox" id='up_r_Delete' name='up_r_Delete' checked={this.state.up_r_Delete}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_r_Delete: e.target.checked });
                                                                                                                 this.checked = this.state.up_r_Delete;
                                                                                                             }}/></td>
-                                        <td><input type="checkbox" id='up_r_Update' name='up_r_Update' checked={this.state.up_r_Update}
+                                        <td className="text-center"><input type="checkbox" id='up_r_Update' name='up_r_Update' checked={this.state.up_r_Update}
                                                                                                             onChange={e => {
                                                                                                                 this.setState({ up_r_Update: e.target.checked });
                                                                                                                 this.checked = this.state.up_r_Update;
