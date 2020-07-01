@@ -50,7 +50,7 @@ class CreateDependency extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button className="my-2" variant="outline-dark" onClick={this.ShowModal} block>Create Dependency</Button>
+                <Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>

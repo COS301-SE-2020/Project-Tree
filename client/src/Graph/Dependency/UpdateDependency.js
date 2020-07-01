@@ -51,7 +51,7 @@ class UpdateDependency extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button className="btn-dark" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Update </Button>
+                <Button className="btn-light" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
