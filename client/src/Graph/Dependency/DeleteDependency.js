@@ -43,7 +43,6 @@ class DeleteDependency extends React.Component{
             body: data,
         });
         const body = await response.json();
-        console.log(body);
         this.setState({ Show:false })
     }
 

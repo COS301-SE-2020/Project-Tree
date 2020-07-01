@@ -80,7 +80,7 @@ class GraphPage extends React.Component{
                             <CreateDependency project={ this.props.project } />
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
                             <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task}/> : null}
-                            {this.state.dependency !== null ? <DependencySidebar dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
+                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
                         </Col>
                         <Col xs={9} className="align-items-center text-center">
                             <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleSidebar={this.toggleSidebar}/>:null}

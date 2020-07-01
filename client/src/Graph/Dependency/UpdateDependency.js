@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Table, Modal, Button} from 'react-bootstrap'
+import {Form, Modal, Button} from 'react-bootstrap'
 
 function stringifyFormData(fd) {
     const data = {};
