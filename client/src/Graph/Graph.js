@@ -89,7 +89,7 @@ class Graph extends React.Component {
         var graph = new joint.dia.Graph();
         var paper = new joint.dia.Paper({
             el: $('#paper'),
-            width: 2000,
+            width: 1000,
             height: 2000,
             gridSize: 1,
             model: graph

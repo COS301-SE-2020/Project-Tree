@@ -76,13 +76,11 @@ class GraphPage extends React.Component{
                             <Button size="sm" variant="secondary" block >Create Task</Button>
                             <Button size="sm" variant="secondary" block >Create Dependency</Button>
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
-                            <Button size="sm" variant="secondary" block  onClick={()=>this.toggleSidebar(1, null)}>View Task</Button> 
-                            <Button size="sm" variant="secondary" block  onClick={()=>this.toggleSidebar(null, 1)}>View Dependency </Button>
-                            <br/> {this.state.task !== null ? <TaskSidebar /> : null}
-                            <br/> {this.state.dependency !== null ? <DependencySidebar /> : null}
+                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task}/> : null}
+                            <br/> {this.state.dependency !== null ? <DependencySidebar dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
                         </Col>
                         <Col xs={9} className="align-items-center text-center">
-                            <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links}/>:null}
+                            <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleSidebar={this.toggleSidebar}/>:null}
                         </Col>
                     </Row>
                 </Container>
