@@ -5,6 +5,7 @@ var neo4j = require('neo4j-driver');
 var tq = require('./api/taskQueries')
 var dq = require('./api/dependencyQueries')
 var pq = require('./api/projectQueries')
+var gq = require('./api/graphQueries')
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -58,6 +59,8 @@ app.post('/api/world', async function(req, res){
 app.get('/projectInfo', pq.getProjects);
 app.post('/project/add', pq.createProject);
 app.post('/project/delete', pq.deleteProject);
+app.post('/task/add', tq.createTask);
+app.post('/getProject', gq.getProjectTasks)
 
 if (process.env.NODE_ENV === 'production') {
 	// Serve any static files
