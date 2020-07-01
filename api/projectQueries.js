@@ -1,9 +1,10 @@
-var neo4j = require('neo4j-driver');
-var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
+const { includes } = require("lodash");
+
+const db = require('./DB') 
 
 async function createProject(req,res)
 {
-    var session = driver.session();
+    var session = db.getSession();
     var taskArr = [];
     var Pname = req.body.cp_Name;
     var Desc = req.body.cp_Description;
@@ -38,7 +39,7 @@ async function createProject(req,res)
 }
 
 async function deleteProject(req, res){
-    var session = driver.session();
+    var session = db.getSession();
     var Pid = req.body.dp_id
     let result = await session
         .run('MATCH(n:Project) WHERE ID(n)= '+Pid+' DETACH DELETE n RETURN n')
@@ -49,7 +50,7 @@ async function deleteProject(req, res){
 }
 
 async function updateProject(req,res){
-    var session = driver.session();
+    var session = db.getSession();
     var taskArr = [];
     req.body.up_pm_Create != undefined ? up_pm_Create = true: up_pm_Create = false;
     req.body.up_pm_Delete != undefined ? up_pm_Delete = true: up_pm_Delete = false;
@@ -97,7 +98,7 @@ async function updateProject(req,res){
 }
 
 async function getProjects(req, res){
-    var session = driver.session();
+    var session = db.getSession();
 	var taskArr = [];
 	await session
 			.run('MATCH (n:Project) RETURN n')

@@ -1,8 +1,7 @@
-var neo4j = require('neo4j-driver');
-var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
-var session = driver.session();
+const db = require('./DB') 
 
 async function updateDependency(req,res){ //update a Dependency between 2 nodes with specified fields
+    var session = db.getSession();
     let result = await session.run(
         `MATCH (a)-[r]->(b) 
         WHERE ID(a) = ${req.body.ud_Fid} AND ID(b) = ${req.body.ud_Sid}
@@ -33,6 +32,7 @@ async function updateDependency(req,res){ //update a Dependency between 2 nodes 
 }
 
 async function deleteDependency(req,res){
+    var session = db.getSession();
     var delTask = req.body.dep1;
     await session
         .run
@@ -50,6 +50,7 @@ async function deleteDependency(req,res){
 
 
 async function createDependency(req,res){
+    var session = db.getSession();
     var firstTask = parseInt(req.body.cd_firstTaskId)
     var secondTask = parseInt(req.body.cd_secondTaskId)
     var relationshipType = req.body.cd_relationshipType
@@ -72,6 +73,7 @@ async function createDependency(req,res){
 
 async function getSuccessorNodes(nodeID)        //gets successsor nodes
 {
+    var session = db.getSession();
     var nodes = [];
     const result = await session.run(
         'MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE ID(a) = ' + nodeID +' RETURN b'
@@ -93,6 +95,7 @@ async function getSuccessorNodes(nodeID)        //gets successsor nodes
 
 async function getPredecessorNodes(nodeID)      //gets predecessor nodes
 {
+    var session = db.getSession();
     var nodes = [];
     const result = await session.run(
         'MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE ID(b) = ' + nodeID +' RETURN a'
@@ -114,6 +117,7 @@ async function getPredecessorNodes(nodeID)      //gets predecessor nodes
 
 async function getDependencies(nodeID)  //gets relationships in the form x---dependency--->nodeID
 {
+    var session = db.getSession();
     var dependencies = [];
     const result = await session.run(
         'MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE ID(b) = ' + nodeID +' RETURN r'
@@ -164,6 +168,7 @@ function addDays(year, month, day, duration) {      //adds days to a date to gen
 
 async function setStartDate(newDate, nodeID)    //provided with a date, sets a new start date
 {
+    var session = db.getSession();
     var year = newDate[0];
     if(newDate[0]<10)
         year = "0"+ newDate[0]
@@ -181,6 +186,7 @@ async function setStartDate(newDate, nodeID)    //provided with a date, sets a n
 
 async function setEndDate(nodeID)   //sets end date based on a nodes start date and duration 
 {
+    var session = db.getSession();
     var endDate;
     const result1 = await session.run(
         'MATCH(n) WHERE ID(n) = '+nodeID+' return n'
