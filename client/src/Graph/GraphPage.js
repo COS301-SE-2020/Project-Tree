@@ -79,16 +79,18 @@ class GraphPage extends React.Component{
                             <ProjectDetails project={this.props.project}/> <br/>
                             <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
                             <button>Create Task</button>
+                            <button>Create Dependency</button>
                             <button>Display Critical Path - Under Construction</button>
                             <button onClick={()=>this.toggleSidebar(1, null)}>View Task Sidebar</button> 
                             <button onClick={()=>this.toggleSidebar(null, 1)}>View Dependency Sidebar</button>
+                            <br/><br/>
+                            <hr/>
+                            <br/><br/>
+                            {this.state.task !== null ? <TaskSidebar /> : null}
+                            {this.state.dependency !== null ? <DependencySidebar /> : null}
                         </Col>
                         <Col>
                             {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links}/>:null}
-                        </Col>
-                        <Col>
-                            {this.state.task !== null ? <TaskSidebar /> : null}
-                            {this.state.dependency !== null ? <DependencySidebar /> : null}
                         </Col>
                     </Row>
                 </Container>
