@@ -61,6 +61,7 @@ app.post('/project/add', pq.createProject);
 app.post('/project/delete', pq.deleteProject);
 app.post('/task/add', tq.createTask);
 app.post('/getProject', gq.getProjectTasks)
+app.post('/project/update', pq.updateProject);
 
 if (process.env.NODE_ENV === 'production') {
 	// Serve any static files

@@ -4,7 +4,6 @@ class Home extends Component{
     render(){
         return(
             <React.Fragment>
-                <h1>Project Tree</h1>
             </React.Fragment>
         )
     }

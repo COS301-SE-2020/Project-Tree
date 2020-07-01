@@ -2,38 +2,47 @@ import React, { Component } from 'react';
 import {
 	BrowserRouter as Router,
 	Switch,
-	Route,
-	Link
+	Route
 } from "react-router-dom";
-import Home from './Home'
-import ProjectPage from './ProjectPage'
-import TaskPage from './TaskPage'
-import Graph from './Graph'
+import Home from './Home/Home'
+import User from './User/User'
+import ProjectPage from './Project/ProjectPage'
+import GraphPage from './Graph/GraphPage'
+import {Navbar, Nav} from 'react-bootstrap'
+
 
 class Routes extends Component {  
+	constructor(props) {
+		super(props);
+		this.state = {project:null}
+		this.toggleGraphPage = this.toggleGraphPage.bind(this);
+	}
+
+	toggleGraphPage(newProject){
+		this.setState({project:newProject});
+	}
+
 	render() {
 		return (
 			<Router>
-				<div>
-					<nav>
-					<ul>
-						<li>
-						<Link to="/">Home</Link>
-						</li>
-						<li>
-						<Link to="/project">Projects</Link>
-						</li>
-						<li>
-						<Link to="/graph">Graph</Link>
-						</li>
-					</ul>
-					</nav>
+					<Navbar sticky="top" bg="dark" variant="dark">
+						<Nav className="mr-auto" >
+						<Nav.Link href="/">Home</Nav.Link>
+						<Nav.Link href="/project">Projects</Nav.Link>
+						</Nav>
+						<Nav>
+						<Nav.Link className="form-inline"  href="/user">Login</Nav.Link>
+						</Nav>
+					</Navbar>
 
 					{/* A <Switch> looks through its children <Route>s and
 						renders the first one that matches the current URL. */}
 					<Switch>
+					<Route path="/graph">
+						<GraphPage project={this.state.project} toggleGraphPage={this.toggleGraphPage}/>
+					</Route>
 					<Route path="/project">
-						<ProjectPage />
+						<ProjectPage toggleGraphPage={this.toggleGraphPage}/>
 					</Route>
 					<Route path="/graph">
 						<Graph />
@@ -41,8 +50,10 @@ class Routes extends Component {
 					<Route path="/">
 						<Home />
 					</Route>
+					<Route path="/user">
+						<User />
+					</Route>
 					</Switch>
-				</div>
 			</Router>
 		);
 	}
