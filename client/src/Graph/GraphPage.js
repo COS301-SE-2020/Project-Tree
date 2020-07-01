@@ -3,15 +3,23 @@ import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 
 class GraphPage extends React.Component{
-    // async componentDidMount() {
-    //     const response = await fetch('/project');
-    //     const body = await response.json();
-    //     if (response.status !== 200) throw Error(body.message);
+    constructor(props) {
+        super(props);
+        this.state = {task:null, dependency:null};
+        this.toggleSidebar = this.toggleSidebar.bind(this);
+    }
 
-    //     console.log(body)
+    toggleSidebar(newTask, newDependency){
+        if(newTask === this.state.task){
+            newTask = null;
+        }
+        if(newDependency === this.state.dependency){
+            newDependency = null;
+        }
 
-    //     // this.setState({projects: body.nodes})
-    // }
+        this.setState({task:newTask, dependency:newDependency});
+    }
+
 
     render(){
         if(this.props.project == null){
@@ -25,8 +33,25 @@ class GraphPage extends React.Component{
 
         return(
             <React.Fragment>
-                <ProjectDetails project={this.props.project}/> <br/>
-                <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
+                <Container>
+                    <Row>
+                        <Col>
+                            <ProjectDetails project={this.props.project}/> <br/>
+                            <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
+                            <button>Create Task</button>
+                            <button>Display Critical Path - Under Construction</button>
+                            <button onClick={()=>this.toggleSidebar(1, null)}>View Task Sidebar</button> 
+                            <button onClick={()=>this.toggleSidebar(null, 1)}>View Dependency Sidebar</button>
+                        </Col>
+                            <div><h1>Under Construction</h1></div>
+                        <Col>
+                        </Col>
+                        <Col>
+                            {this.state.task !== null ? <TaskSidebar /> : null}
+                            {this.state.dependency !== null ? <DependencySidebar /> : null}
+                        </Col>
+                    </Row>
+                </Container>
             </React.Fragment>
         )
     }
@@ -85,6 +110,36 @@ class ProjectDetails extends React.Component{
                 <p>{this.props.project.description}</p>
                 <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
                         {this.state.permissions? <this.permissionsTable /> : null}
+            </React.Fragment>
+        )
+    }
+}
+
+class TaskSidebar extends React.Component{
+    render(){
+        return(
+            <React.Fragment>
+                <h1>Task A</h1>
+                <p>Description</p>
+                <p>Start Date</p>
+                <p>Start Date</p>
+                <p>Duration</p>
+                <button>Edit Task</button>
+                <button>Delete Task</button>
+            </React.Fragment>
+        )
+    }
+}
+
+class DependencySidebar extends React.Component{
+    render(){
+        return(
+            <React.Fragment>
+                <h1>Task A-Task B</h1>
+                <p>fs</p>
+                <p>Duration</p>
+                <button>Edit Dependency</button>
+                <button>Delete Dependency</button>
             </React.Fragment>
         )
     }
