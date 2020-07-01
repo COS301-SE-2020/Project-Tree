@@ -66,31 +66,29 @@ class GraphPage extends React.Component{
             return(
                 <React.Fragment>
                     <h1>You shouldn't be here</h1>
-                    <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
+                    <Link to="/project"><Button onClick={()=>this.props.toggleGraphPage(null)}>Back</Button></Link>
                 </React.Fragment>
             )
         }
 
         return(
             <React.Fragment>
-                <Container>
-                    <Row>
-                        <Col>
-                            <ProjectDetails project={this.props.project}/> <br/>
-                            <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
-                            <button>Create Task</button>
-                            <button>Create Dependency</button>
-                            <button>Display Critical Path - Under Construction</button>
-                            <button onClick={()=>this.toggleSidebar(1, null)}>View Task Sidebar</button> 
-                            <button onClick={()=>this.toggleSidebar(null, 1)}>View Dependency Sidebar</button>
-                            <br/><br/>
-                            <hr/>
-                            <br/><br/>
-                            {this.state.task !== null ? <TaskSidebar /> : null}
-                            {this.state.dependency !== null ? <DependencySidebar /> : null}
+                <Container fluid >
+                <Row> 
+                        <Col className="text-center block-example border border-secondary bg-light">
+                            <br/> 
+                            <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
+                            <Button size="sm" variant="secondary" block >Create Task</Button>
+                            <Button size="sm" variant="secondary" block >Create Task</Button>
+                            <Button size="sm" variant="secondary" block >Create Dependency</Button>
+                            <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
+                            <Button size="sm" variant="secondary" block  onClick={()=>this.toggleSidebar(1, null)}>View Task</Button> 
+                            <Button size="sm" variant="secondary" block  onClick={()=>this.toggleSidebar(null, 1)}>View Dependency </Button>
+                            <br/> {this.state.task !== null ? <TaskSidebar /> : null}
+                            <br/> {this.state.dependency !== null ? <DependencySidebar /> : null}
                         </Col>
-                        <Col>
-                            {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links}/>:null}
+                        <Col xs={9} className="align-items-center text-center">
+                            <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links}/>:null}
                         </Col>
                     </Row>
                 </Container>
@@ -148,10 +146,22 @@ class ProjectDetails extends React.Component{
     render(){
         return(
             <React.Fragment>
-                <h3>{this.props.project.name}</h3>
-                <p>{this.props.project.description}</p>
-                <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
-                        {this.state.permissions? <this.permissionsTable /> : null}
+                <Container>
+                    <Row>
+                        <Col>
+                            <br/> <Link to="/project"><Button variant="light" size="sm" className="text-left align-items-top" onClick={()=>this.props.toggleGraphPage(null)}><i className="fa fa-arrow-left"></i></Button></Link> 
+                        </Col>
+                        <Col xs={6} className="text-center">
+                            <h3>{this.props.project.name}</h3>
+                            <p>{this.props.project.description}</p>
+                        </Col>
+                        <Col>
+                        </Col>
+                    </Row>
+                </Container>
+                
+                <Button variant="secondary" block size="sm" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>  
+                        {this.state.permissions? <this.permissionsTable /> : null} 
             </React.Fragment>
         )
     }
@@ -161,13 +171,31 @@ class TaskSidebar extends React.Component{
     render(){
         return(
             <React.Fragment>
-                <h1>Task A</h1>
-                <p>Description</p>
-                <p>Start Date</p>
-                <p>Start Date</p>
-                <p>Duration</p>
-                <button>Edit Task</button>
-                <button>Delete Task</button>
+                <Container className="text-center block-example border border-secondary bg-light">
+                    <Row>
+                        <Col><h1>Task A</h1></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>Description</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>Start Date</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>End Date</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>Duration</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><Button variant="outline-dark">Edit Task</Button> </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col><Button variant="outline-dark">Delete Task</Button> </Col>
+                    </Row>
+                    <br/>
+                </Container>
             </React.Fragment>
         )
     }
@@ -177,11 +205,25 @@ class DependencySidebar extends React.Component{
     render(){
         return(
             <React.Fragment>
-                <h1>Task A-Task B</h1>
-                <p>fs</p>
-                <p>Duration</p>
-                <button>Edit Dependency</button>
-                <button>Delete Dependency</button>
+                <Container className="text-center block-example border border-secondary bg-light">
+                    <Row>
+                        <Col><h1>Task A-Task B</h1></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>fs</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>Duration</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><Button variant="outline-dark">Edit Dependency</Button> </Col>
+                    </Row>
+                    <br/>
+                    <Row>
+                        <Col><Button variant="outline-dark">Delete Dependency</Button> </Col>
+                    </Row>
+                    <br/>
+                </Container>
             </React.Fragment>
         )
     }
