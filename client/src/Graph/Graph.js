@@ -66,40 +66,6 @@ function buildGraph(nodes,rels) {
 
 class Graph extends React.Component {
     async componentDidMount() {
-        const response = await fetch('/getProject',{
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ id: 101 })
-        });
-		const body = await response.json();
-		//console.log(body)
-        if (response.status !== 200) throw Error(body.message);
-        
-        let nodes=[]
-        for(var x = 0; x < body.tasks.length; x++){
-            nodes.push([
-                {
-                    name:body.tasks[x].record._fields[0].properties.name,
-                    id:body.tasks[x].record._fields[0].identity.low,
-                }
-            ])
-        }
-
-        let links = []
-        for(var y = 0; y < body.rels.length; y++){
-            links.push([
-                {
-                    source:body.rels[y].record._fields[0].start.low,
-                    target:body.rels[y].record._fields[0].end.low,
-                    id:body.rels[y].record._fields[0].identity.low,
-                    label:body.rels[y].record._fields[0].properties.relationshipType
-                }
-            ])
-        }
-
         var graph = new joint.dia.Graph();
         this.paper = new joint.dia.Paper({
             el: $('#paper'),
@@ -114,7 +80,7 @@ class Graph extends React.Component {
             }
         );
 
-        var cells = buildGraph(nodes,links);
+        var cells = buildGraph(this.props.nodes,this.props.links);
         graph.resetCells(cells);
         joint.layout.DirectedGraph.layout(graph, {
             dagre: dagre,

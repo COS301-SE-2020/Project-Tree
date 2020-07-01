@@ -11,8 +11,8 @@
   "dependencies": {
     "@projectstorm/react-diagrams": "^6.0.1-beta.7",
     "body-parser": "^1.18.3",
-    "dagre": "^0.8.5",
     "bootstrap": "^4.5.0",
+    "dagre": "^0.8.5",
     "express": "^4.16.4",
     "graphlib": "^2.1.8",
     "joint": "0.0.1",

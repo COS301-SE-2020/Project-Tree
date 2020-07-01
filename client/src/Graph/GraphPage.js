@@ -1,12 +1,52 @@
 import React from 'react';
 import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
+import Graph from './Graph'
 
 class GraphPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {task:null, dependency:null};
+        this.state = {task:null, dependency:null, nodes:null, links:null};
         this.toggleSidebar = this.toggleSidebar.bind(this);
+    }
+
+    async componentDidMount(){
+        if(this.props.project===null) return
+        const response = await fetch('/getProject',{
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({ id:this.props.project.id })
+        });
+		const body = await response.json();
+		//console.log(body)
+        if (response.status !== 200) throw Error(body.message);
+        
+        let nodes=[]
+        for(var x = 0; x < body.tasks.length; x++){
+            nodes.push([
+                {
+                    name:body.tasks[x].record._fields[0].properties.name,
+                    id:body.tasks[x].record._fields[0].identity.low,
+                }
+            ])
+        }
+
+        let links = []
+        for(var y = 0; y < body.rels.length; y++){
+            links.push([
+                {
+                    source:body.rels[y].record._fields[0].start.low,
+                    target:body.rels[y].record._fields[0].end.low,
+                    id:body.rels[y].record._fields[0].identity.low,
+                    label:body.rels[y].record._fields[0].properties.relationshipType
+                }
+            ])
+        }
+
+        this.setState({nodes:nodes, links:links})
     }
 
     toggleSidebar(newTask, newDependency){
@@ -43,8 +83,8 @@ class GraphPage extends React.Component{
                             <button onClick={()=>this.toggleSidebar(1, null)}>View Task Sidebar</button> 
                             <button onClick={()=>this.toggleSidebar(null, 1)}>View Dependency Sidebar</button>
                         </Col>
-                            <div><h1>Under Construction</h1></div>
                         <Col>
+                            {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links}/>:null}
                         </Col>
                         <Col>
                             {this.state.task !== null ? <TaskSidebar /> : null}
