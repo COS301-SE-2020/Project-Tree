@@ -7,17 +7,18 @@ import graphlib from 'graphlib';
 
 function makeLink(edge) {
     var lnk = new joint.dia.Link({
-        id:edge[0].id,
-        source: { id: edge[0].source },
-        target: { id: edge[0].target },
+        id:edge.id,
+        source: { id: edge.source },
+        target: { id: edge.target },
         attrs: {
-            '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' }
+            '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' },
+            type:'link',
         },
         labels: [{
             position: 0.5,
             attrs: {
                 text: {
-                    text: edge[0].label
+                    text: edge.relationshipType
                 }
             }
         }],
@@ -27,18 +28,19 @@ function makeLink(edge) {
 }
 
 function makeElement(node) {
-    var maxLineLength = _.max(node[0].name.split('\n'), function(l) { return l.length; }).length;
+    var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
 
     var letterSize = 12;
     var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-    var height = 2 * ((node[0].name.split('\n').length + 1) * letterSize);
+    var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
 
     return new joint.shapes.basic.Rect({
-        id: node[0].id,
+        id: node.id,
         size: { width: 100, height: height },
         attrs: {
+            type:'node',
             text: { 
-              text: node[0].name, 
+              text: node.name, 
               'font-size': letterSize, 
               'font-family': 'monospace' },
             rect: {
@@ -65,20 +67,34 @@ function buildGraph(nodes,rels) {
   }
 
 class Graph extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this)
+    }
+
+    handleClick(clickedNode){
+        if(clickedNode.model.attributes.attrs.type === 'node')
+        {
+            this.props.toggleSidebar(clickedNode.model.id, null);
+        }
+
+        else if(clickedNode.model.attributes.attrs.type === 'link')
+        {
+            this.props.toggleSidebar(null, clickedNode.model.id);
+        }
+        
+    }
+
     async componentDidMount() {
         var graph = new joint.dia.Graph();
-        this.paper = new joint.dia.Paper({
+        var paper = new joint.dia.Paper({
             el: $('#paper'),
-            width: 2000,
+            width: 1000,
             height: 2000,
             gridSize: 1,
             model: graph
         });
-        this.paper.on('cell:pointerclick', 
-            function(clickedNode) { 
-                alert('Node ID: ' + clickedNode.model.id); 
-            }
-        );
+        paper.on('cell:pointerclick', this.handleClick);
 
         var cells = buildGraph(this.props.nodes,this.props.links);
         graph.resetCells(cells);

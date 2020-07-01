@@ -24,43 +24,38 @@ class GraphPage extends React.Component{
             body:JSON.stringify({ id:this.props.project.id })
         });
 		const body = await response.json();
-		//console.log(body)
         if (response.status !== 200) throw Error(body.message);
-        
-        let nodes=[]
-        for(var x = 0; x < body.tasks.length; x++){
-            nodes.push([
-                {
-                    name:body.tasks[x].record._fields[0].properties.name,
-                    id:body.tasks[x].record._fields[0].identity.low,
-                }
-            ])
-        }
 
-        let links = []
-        for(var y = 0; y < body.rels.length; y++){
-            links.push([
-                {
-                    source:body.rels[y].record._fields[0].start.low,
-                    target:body.rels[y].record._fields[0].end.low,
-                    id:body.rels[y].record._fields[0].identity.low,
-                    label:body.rels[y].record._fields[0].properties.relationshipType
-                }
-            ])
-        }
-
-        this.setState({nodes:nodes, links:links})
+        this.setState({nodes:body.tasks, links:body.rels})
     }
 
-    toggleSidebar(newTask, newDependency){
-        if(newTask === this.state.task){
-            newTask = null;
-        }
-        if(newDependency === this.state.dependency){
-            newDependency = null;
+    toggleSidebar(newTaskID, newDependencyID){
+        var newTask = null;
+        var newDependency = null;
+        var x;
+
+        if(newTaskID != null)
+        {
+            for(x=0; x<this.state.nodes.length; x++)
+            {
+                if(this.state.nodes[x].id === newTaskID){
+                    newTask = this.state.nodes[x];
+                }
+            }
+            
+            this.setState({task:newTask, dependency:newDependency});
         }
 
-        this.setState({task:newTask, dependency:newDependency});
+        else if(newDependencyID != null)
+        {
+            for(x=0; x<this.state.links.length; x++)
+            {
+                if(this.state.links[x].id === newDependencyID){
+                    newDependency = this.state.links[x];  
+                }
+            }
+            this.setState({task:newTask, dependency:newDependency});
+        }
     }
 
 
@@ -69,31 +64,26 @@ class GraphPage extends React.Component{
             return(
                 <React.Fragment>
                     <h1>You shouldn't be here</h1>
-                    <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
+                    <Link to="/project"><Button onClick={()=>this.props.toggleGraphPage(null)}>Back</Button></Link>
                 </React.Fragment>
             )
         }
 
         return(
             <React.Fragment>
-                <Container>
-                    <Row>
-                        <Col>
-                            <ProjectDetails project={this.props.project}/> <br/>
-                            <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
-                            <button>Create Task</button>
+                <Container fluid >
+                <Row> 
+                        <Col className="text-center block-example border border-secondary bg-light">
+                            <br/> 
+                            <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
+                            <Button size="sm" variant="secondary" block >Create Task</Button>
                             <CreateDependency project={ this.props.project } />
-                            <button>Display Critical Path - Under Construction</button>
-                            <button onClick={()=>this.toggleSidebar(1, null)}>View Task Sidebar</button> 
-                            <button onClick={()=>this.toggleSidebar(null, 1)}>View Dependency Sidebar</button>
-                            <br/><br/>
-                            <hr/>
-                            <br/><br/>
-                            {this.state.task !== null ? <TaskSidebar /> : null}
-                            {this.state.dependency !== null ? <DependencySidebar /> : null}
+                            <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
+                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task}/> : null}
+                            {this.state.dependency !== null ? <DependencySidebar dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
                         </Col>
-                        <Col>
-                            {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links}/>:null}
+                        <Col xs={9} className="align-items-center text-center">
+                            <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleSidebar={this.toggleSidebar}/>:null}
                         </Col>
                     </Row>
                 </Container>
@@ -151,10 +141,22 @@ class ProjectDetails extends React.Component{
     render(){
         return(
             <React.Fragment>
-                <h3>{this.props.project.name}</h3>
-                <p>{this.props.project.description}</p>
-                <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
-                        {this.state.permissions? <this.permissionsTable /> : null}
+                <Container>
+                    <Row>
+                        <Col>
+                            <br/> <Link to="/project"><Button variant="light" size="sm" className="text-left align-items-top" onClick={()=>this.props.toggleGraphPage(null)}><i className="fa fa-arrow-left"></i></Button></Link> 
+                        </Col>
+                        <Col xs={6} className="text-center">
+                            <h3>{this.props.project.name}</h3>
+                            <p>{this.props.project.description}</p>
+                        </Col>
+                        <Col>
+                        </Col>
+                    </Row>
+                </Container>
+                
+                <Button variant="secondary" block size="sm" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>  
+                        {this.state.permissions? <this.permissionsTable /> : null} 
             </React.Fragment>
         )
     }
@@ -162,15 +164,33 @@ class ProjectDetails extends React.Component{
 
 class TaskSidebar extends React.Component{
     render(){
+        let startDate = this.props.task.startDate.year.low+"-"+this.props.task.startDate.month.low+"-"+this.props.task.startDate.day.low
+        let endDate = this.props.task.endDate.year.low+"-"+this.props.task.endDate.month.low+"-"+this.props.task.endDate.day.low
+    
         return(
             <React.Fragment>
-                <h1>Task A</h1>
-                <p>Description</p>
-                <p>Start Date</p>
-                <p>Start Date</p>
-                <p>Duration</p>
-                <button>Edit Task</button>
-                <button>Delete Task</button>
+                <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
+                    <Row>
+                        <Col> <Button className="btn-danger"><i className="fa fa-trash"></i></Button></Col>
+                        <Col xs={8}><h1>{this.props.task.name}</h1></Col>
+                        <Col></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>{this.props.task.description}</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>Start Date: {startDate}</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>End Date: {endDate}</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>Duration: {this.props.task.duration}</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><Button className="btn-light" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button></Col>
+                    </Row>
+                </Container>
             </React.Fragment>
         )
     }
@@ -178,13 +198,44 @@ class TaskSidebar extends React.Component{
 
 class DependencySidebar extends React.Component{
     render(){
+
+        var start;
+        var end;
+
+        for(var x=0; x<this.props.nodes.length; x++)
+        {
+            if(this.props.nodes[x].id === this.props.dependency.source){
+                start = this.props.nodes[x].name
+            }
+
+            else if(this.props.nodes[x].id === this.props.dependency.target){
+                end = this.props.nodes[x].name
+            }
+        }
+
+
         return(
             <React.Fragment>
-                <h1>Task A-Task B</h1>
-                <p>fs</p>
-                <p>Duration</p>
-                <UpdateDependency project={this.props.project} dependency={this.props.dependency}/>
-                <DeleteDependency dependency={this.props.dependency} />
+                <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
+                    <Row>
+                        <Col> 
+                            <DeleteDependency dependency={this.props.dependency} />
+                        </Col>
+                        <Col xs={8} ><h2>{start+"→"+end}</h2></Col>
+                        <Col></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>{this.props.dependency.relationshipType === "fs" ? "Finish-Start" : "Start-Start"}</p></Col>
+                    </Row>
+                    <Row>
+                        <Col><p>Duration: {this.props.dependency.duration}</p></Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <UpdateDependency project={this.props.project} dependency={this.props.dependency}/>
+                        </Col>
+                    </Row>
+                </Container>
             </React.Fragment>
         )
     }
