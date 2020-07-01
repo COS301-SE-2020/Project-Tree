@@ -166,9 +166,11 @@ class TaskSidebar extends React.Component{
     
         return(
             <React.Fragment>
-                <Container className="text-center block-example border border-secondary bg-light">
+                <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
                     <Row>
-                        <Col><h1>{this.props.task.name}</h1></Col>
+                        <Col> <Button className="btn-danger"><i className="fa fa-trash"></i></Button></Col>
+                        <Col xs={8}><h1>{this.props.task.name}</h1></Col>
+                        <Col></Col>
                     </Row>
                     <Row>
                         <Col><p>{this.props.task.description}</p></Col>
@@ -183,13 +185,8 @@ class TaskSidebar extends React.Component{
                         <Col><p>Duration: {this.props.task.duration}</p></Col>
                     </Row>
                     <Row>
-                        <Col><Button variant="outline-dark">Edit Task</Button> </Col>
+                        <Col><Button className="btn-light" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button></Col>
                     </Row>
-                    <br/>
-                    <Row>
-                        <Col><Button variant="outline-dark">Delete Task</Button> </Col>
-                    </Row>
-                    <br/>
                 </Container>
             </React.Fragment>
         )
@@ -216,9 +213,11 @@ class DependencySidebar extends React.Component{
 
         return(
             <React.Fragment>
-                <Container className="text-center block-example border border-secondary bg-light">
+                <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
                     <Row>
-                        <Col><h1>{start+"→"+end}</h1></Col>
+                        <Col> <Button className="btn-danger"><i className="fa fa-trash"></i></Button></Col>
+                        <Col xs={8} ><h2>{start+"→"+end}</h2></Col>
+                        <Col></Col>
                     </Row>
                     <Row>
                         <Col><p>{this.props.dependency.relationshipType === "fs" ? "Finish-Start" : "Start-Start"}</p></Col>
@@ -227,13 +226,8 @@ class DependencySidebar extends React.Component{
                         <Col><p>Duration: {this.props.dependency.duration}</p></Col>
                     </Row>
                     <Row>
-                        <Col><Button variant="outline-dark">Edit Dependency</Button> </Col>
+                        <Col><Button className="btn-light" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button></Col>
                     </Row>
-                    <br/>
-                    <Row>
-                        <Col><Button variant="outline-dark">Delete Dependency</Button> </Col>
-                    </Row>
-                    <br/>
                 </Container>
             </React.Fragment>
         )
