@@ -1,9 +1,8 @@
-var neo4j = require('neo4j-driver');
-var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
-var session = driver.session();
+const db = require('./DB') 
 
 async function getProjectTasks(req,res)
 {
+    var session = db.getSession();
 	var projID = parseInt(req.body.id);
 	var taskArr = [];
 	var relArr = [];

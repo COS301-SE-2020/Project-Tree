@@ -45,7 +45,7 @@ class Routes extends Component {
 						<ProjectPage toggleGraphPage={this.toggleGraphPage}/>
 					</Route>
 					<Route path="/graph">
-						<Graph />
+						{/*<Graph />*/}
 					</Route>
 					<Route path="/">
 						<Home />

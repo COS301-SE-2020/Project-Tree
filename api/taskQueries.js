@@ -1,10 +1,9 @@
-var neo4j = require('neo4j-driver');
-var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
-var session = driver.session();
+const db = require('./DB') 
 var dependencyFunctions = require('./dependencyQueries');
 var peopleFunctions = require('./personQueries')
 
 async function createTask(req,res){
+    var session = db.getSession();
     var Tname = req.body.ct_taskName;
     var Sdate = req.body.ct_startDate;
     var Edate = req.body.ct_endDate;
@@ -33,6 +32,7 @@ async function createTask(req,res){
 }
 
 async function deleteTask(req,res){
+    var session = db.getSession();
     var delTask = req.body.id;
     var successors = await dependencyFunctions.getSuccessorNodes(delTask)
     await session
@@ -53,6 +53,7 @@ async function deleteTask(req,res){
 }
 
 async function updateTask(req,res){ //update a task with a certain ID with specified fields
+    var session = db.getSession();
     let result = await session.run(
         `MATCH (a) WHERE ID(a) = ${req.body.ut_id}
         RETURN (a)`
