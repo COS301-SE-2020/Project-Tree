@@ -37,12 +37,27 @@ class ProjectPage extends React.Component{
         this.setState({projects: body.nodes})
     }
 
-    async setProjectInfo(){
+    async setProjectInfo(newProject){
         const response = await fetch('/projectInfo');
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
 
-        this.setState({projects: body.nodes})
+        if(newProject !== undefined){
+            var index;
+            for(var x=0; x<body.nodes.length; x++)
+            {
+                if(body.nodes[x].id === newProject)
+                {
+                    index = x;
+                }
+            }
+
+            this.setState({projects: body.nodes, project: body.nodes[index]})
+        }
+
+        else{
+            this.setState({projects: body.nodes}) 
+        }       
     }
 
     render(){
@@ -50,7 +65,7 @@ class ProjectPage extends React.Component{
             <React.Fragment>
                 <Container fluid>
                     <Row>
-                        <Col> <br/> <ProjectList projects={this.state.projects} toggleSideBar={this.toggleSideBar} /> <br/> <CreateProject setProjectInfo={this.setProjectInfo} toggleSideBar={this.toggleSideBar}/> </Col>
+                        <Col> <br/> <ProjectList projects={this.state.projects} toggleSideBar={this.toggleSideBar} /> <br/> <CreateProject setProjectInfo={this.setProjectInfo}/> </Col>
                         <Col xs={6} className="text-center"> <br/>Under construction - JointJS</Col>
                         <Col className="text-center"> <br/> {this.state.project != null ? 
                         <Sidebar toggleSideBar={this.toggleSideBar} setProjectInfo={this.setProjectInfo} toggleGraphPage={this.props.toggleGraphPage} project={this.state.project}/> : null} </Col>
@@ -89,7 +104,6 @@ class Sidebar extends React.Component{
 
     togglePermissions(){
         this.setState({permissions:!this.state.permissions})
-        console.log(this.props.project.permissions[8]);
     }
     
     permissionsTable(){
@@ -157,7 +171,7 @@ class Sidebar extends React.Component{
                         <Col> </Col>
 
                         <Col xs={6} className="text-center">
-                        <UpdateProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} toggleSideBar={this.props.toggleSideBar}/></Col>
+                        <UpdateProject project={this.props.project} setProjectInfo={this.props.setProjectInfo}/></Col>
                         <Col></Col>
                     </Row>
                     <br/> 
