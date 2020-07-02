@@ -67,7 +67,7 @@ class DeleteTask extends React.Component{
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
-                            Delete Project
+                            Delete Task
                             </Button>
                         </Modal.Footer>
                     </Form>
