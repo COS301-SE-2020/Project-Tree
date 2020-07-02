@@ -72,8 +72,10 @@ function buildGraph(nodes,rels) {
 class Graph extends React.Component {
     constructor(props) {
         super(props);
+        this.state={graph:null}
         this.handleClick = this.handleClick.bind(this)
         this.handleDblClick = this.handleDblClick.bind(this)
+        this.drawGraph = this.drawGraph.bind(this)
         this.createDependency = this.createDependency.bind(this)
         this.hideModal = this.hideModal.bind(this)
         this.state = {createDep:false, source:null, target:null}
@@ -92,9 +94,12 @@ class Graph extends React.Component {
     }
 
     createDependency(cellView) {
-        if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
+        if(cellView.model.attributes.target !== undefined)
         {
-            this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
+            if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
+            {
+                this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
+            }
         }
     }
 
@@ -103,7 +108,7 @@ class Graph extends React.Component {
         this.props.toggleCreateDependency(clickedNode.model.id)
     }
 
-    async componentDidMount() {
+    componentDidMount(){
         var graph = new joint.dia.Graph();
         var paper = new joint.dia.Paper({
             el: $('#paper'),
@@ -136,13 +141,20 @@ class Graph extends React.Component {
                 if (dragStartPosition)
                     paper.translate(
                         event.offsetX - dragStartPosition.x, 
-                        event.offsetY - dragStartPosition.y
-                        );
-            });
+                        event.offsetY - dragStartPosition.y);
+        });
 
+        this.setState({graph: graph});
+    }
+
+    async drawGraph() {
+        if(this.state.graph === null || this.state.graph === undefined){
+            return;
+        }
+        
         var cells = buildGraph(this.props.nodes,this.props.links);
-        graph.resetCells(cells);
-        joint.layout.DirectedGraph.layout(graph, {
+        this.state.graph.resetCells(cells);
+        joint.layout.DirectedGraph.layout(this.state.graph, {
             dagre: dagre,
             graphlib: graphlib,
             setLinkVertices: false,
@@ -157,6 +169,8 @@ class Graph extends React.Component {
     }
 
     render(){
+        this.drawGraph();
+
         return(
             <React.Fragment>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>

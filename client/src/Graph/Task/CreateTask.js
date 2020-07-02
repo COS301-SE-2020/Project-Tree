@@ -40,8 +40,6 @@ class CreateTask extends React.Component{
     {
         var duration
         var startDate
-        console.log("TARGET:    ",e.target.value) 
-        console.log(e.target)
         if(e.target.id === "ct_startDate")
         {
             startDate = e.target.value;
@@ -52,7 +50,6 @@ class CreateTask extends React.Component{
             startDate = this.state.startDate;
             duration = e.target.value;
         }
-        console.log("DURATION:  ",duration)
 
         var initialDate
         initialDate = new Date(startDate);
@@ -69,17 +66,15 @@ class CreateTask extends React.Component{
         }
     
         var formatDate = edate[0]+"-"+formatMonth+"-"+formatDay;
-        console.log(formatDate)
-       // this.setState({ endDate: formatDate })
         return formatDate
-        //.state.endDate= formatDate;
     }
 
     async handleSubmit(event) {
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        await fetch('/task/add', {
+        
+        const response = await fetch('/task/add', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -87,8 +82,9 @@ class CreateTask extends React.Component{
             },
             body: data,
         }); 
+        const body = await response.json();
+        this.props.setTaskInfo();
         this.setState({ Show:false })
-       // this.props.setProjectInfo(body.nodes.id);
     }
 
     
