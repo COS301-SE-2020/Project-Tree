@@ -120,7 +120,7 @@ class GraphPage extends React.Component{
 
         return(
             <React.Fragment>
-                <Container fluid >
+                <Container fluid className="Container">
                 <Row> 
                         <Col className="text-center block-example border border-secondary bg-light">
                             <br/> 
@@ -197,17 +197,17 @@ class ProjectDetails extends React.Component{
                         <Col>
                             <br/> <Link to="/project"><Button variant="light" size="sm" className="text-left align-items-top" onClick={()=>this.props.toggleGraphPage(null)}><i className="fa fa-arrow-left"></i></Button></Link> 
                         </Col>
-                        <Col xs={6} className="text-center">
+                        <Col xs={6} md={6} lg={6} xl={6} className="text-center">
                             <h3>{this.props.project.name}</h3>
                             <p>{this.props.project.description}</p>
                         </Col>
-                        <Col>
-                        </Col>
+                        <Col></Col>
                     </Row>
                 </Container>
                 
-                <Button variant="secondary" block size="sm" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>  
+                <Button variant="dark" block size="sm" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>  
                         {this.state.permissions? <this.permissionsTable /> : null} 
+                        <hr></hr>
             </React.Fragment>
         )
     }
@@ -221,12 +221,12 @@ class TaskSidebar extends React.Component{
         return(
             <React.Fragment>
                 <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
-                    <Row>
+                    <Row className="text-center">
                         <Col> <Button className="btn-danger"><i className="fa fa-trash"></i></Button></Col>
-                        <Col xs={8}><h1>{this.props.task.name}</h1></Col>
-                        <Col></Col>
+                        <Col xs={6}><h1>{this.props.task.name}</h1></Col>
+                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
                     </Row>
-                    <Row>
+                    <Row className="text-center">
                         <Col><p>{this.props.task.description}</p></Col>
                     </Row>
                     <Row>
@@ -272,8 +272,8 @@ class DependencySidebar extends React.Component{
                         <Col> 
                             <DeleteDependency dependency={this.props.dependency} />
                         </Col>
-                        <Col xs={8} ><h2>{start+"→"+end}</h2></Col>
-                        <Col></Col>
+                        <Col xs={6} ><h3>{start+"→"+end}</h3></Col>
+                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
                     </Row>
                     <Row>
                         <Col><p>{this.props.dependency.relationshipType === "fs" ? "Finish-Start" : "Start-Start"}</p></Col>
