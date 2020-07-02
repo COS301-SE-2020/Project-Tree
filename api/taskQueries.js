@@ -28,7 +28,8 @@ async function createTask(req,res){
         await peopleFunctions.addPackageManager(taskId,pacManId)
     if(resourceId != undefined)
         await peopleFunctions.addResources(taskId,resourceId)
-    res.redirect('/');
+    console.log(Tname)
+    res.redirect({ret: result});
 }
 
 async function deleteTask(req,res){
@@ -49,7 +50,7 @@ async function deleteTask(req,res){
     {
         await dependencyFunctions.updateDependencies(successors[x].identity.low)
     }
-    res.redirect('/');
+    res.redirect({ret: result});
 }
 
 async function updateTask(req,res){ //update a task with a certain ID with specified fields
@@ -79,7 +80,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
             await dependencyFunctions.updateDependencies(req.body.ut_id)
         }
 
-        res.redirect('/')
+        res.redirect({ret: result})
     }
 }
 

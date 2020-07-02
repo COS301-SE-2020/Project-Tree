@@ -1,7 +1,10 @@
 import React from 'react';
 import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
-import Graph from './Graph'
+import Graph from './Graph';
+import CreateTask from './Task/CreateTask';
+import DeleteTask from './Task/DeleteTask';
+import UpdateTask from './Task/UpdateTask';
 import CreateDependency from './Dependency/CreateDependency'
 import UpdateDependency from './Dependency/UpdateDependency'
 import DeleteDependency from './Dependency/DeleteDependency'
@@ -15,7 +18,6 @@ class GraphPage extends React.Component{
     }
 
     async componentDidMount(){
-        if(this.props.project===null) return
         const response = await fetch('/getProject',{
             method: 'POST',
             headers: {
@@ -96,15 +98,6 @@ class GraphPage extends React.Component{
 
 
     render(){
-        if(this.props.project == null){
-            return(
-                <React.Fragment>
-                    <h1>You shouldn't be here</h1>
-                    <Link to="/project"><Button onClick={()=>this.props.toggleGraphPage(null)}>Back</Button></Link>
-                </React.Fragment>
-            )
-        }
-
         var dependency;
         if(this.state.source !== null && this.state.target !== null){
             dependency = this.state.source.name+"→"+this.state.target.name;
@@ -126,12 +119,12 @@ class GraphPage extends React.Component{
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
                             <Button size="sm" variant="secondary" block >Create Task</Button>
-                            <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/>
+                            <CreateDependency project={this.props.project} source={this.state.source} target={this.state.target}/>
                             {dependency}
                             {this.state.source != null ? <Button onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
-                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task}/> : null}
-                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
+                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar}/> : null}
+                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} toggleSidebar={this.toggleSidebar}/> : null}
                         </Col>
                         <Col xs={9} className="align-items-center text-center">
                             <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
@@ -195,7 +188,7 @@ class ProjectDetails extends React.Component{
                 <Container>
                     <Row>
                         <Col>
-                            <br/> <Link to="/project"><Button variant="light" size="sm" className="text-left align-items-top" onClick={()=>this.props.toggleGraphPage(null)}><i className="fa fa-arrow-left"></i></Button></Link> 
+                            <br/> <Link to="/project"><Button variant="light" size="sm" className="text-left align-items-top"><i className="fa fa-arrow-left"></i></Button></Link> 
                         </Col>
                         <Col xs={6} md={6} lg={6} xl={6} className="text-center">
                             <h3>{this.props.project.name}</h3>
