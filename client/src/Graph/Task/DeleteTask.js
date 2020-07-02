@@ -14,7 +14,7 @@ class DeleteTask extends React.Component{
         super(props);
         this.state = 
         { Show:false, 
-            //id: this.props.project.id
+            id: this.props.task.id
         };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
@@ -52,16 +52,16 @@ class DeleteTask extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button className="btn-danger" onClick={this.ShowModal}>< i className="fa fa-trash"></i></Button>
+                <Button className="btn-danger"><i className="fa fa-trash" onClick={this.ShowModal}></i></Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Delete Project</Modal.Title>
+                            <Modal.Title>Delete Task</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form.Group>        
-                                <Form.Label>Enter Task ID to delete</Form.Label>
-                                <Form.Control type='number' id="id" name="id" required/>
+                                <input hidden type="number" name="t_id" value={this.state.id} onChange={()=> {}}/>
+                                <p> Are you Sure </p>
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>

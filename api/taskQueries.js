@@ -4,7 +4,7 @@ var peopleFunctions = require('./personQueries')
 
 async function createTask(req,res){
     var session = db.getSession();
-    var Tname = req.body.ct_taskName;
+    var Tname = req.body.ct_Name;
     var Sdate = req.body.ct_startDate;
     var Edate = req.body.ct_endDate;
     var Dur = req.body.ct_duration;
@@ -34,12 +34,12 @@ async function createTask(req,res){
 
 async function deleteTask(req,res){
     var session = db.getSession();
-    var delTask = req.body.id;
+    var delTask = req.body.t_id;
     var successors = await dependencyFunctions.getSuccessorNodes(delTask)
     await session
         .run
 		(`
-			MATCH (n) WHERE ID(n)=${req.body.id} DETACH DELETE (n)		
+			MATCH (n) WHERE ID(n)=${req.body.t_id} DETACH DELETE (n)		
 			
 		`)
         .catch(function(err){

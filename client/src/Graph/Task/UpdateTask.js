@@ -53,12 +53,12 @@ class UpdateTask extends React.Component{
         var startDate
         console.log("TARGET:    ",e.target.value) 
         console.log(e.target)
-        if(e.target.id == "up_startDate")
+        if(e.target.id == "ut_startDate")
         {
             startDate = e.target.value;
             duration = this.state.duration;
         }         
-        else if(e.target.id == "up_duration")
+        else if(e.target.id == "ut_duration")
         {
             startDate = this.state.startDate;
             duration = e.target.value;
@@ -111,7 +111,7 @@ class UpdateTask extends React.Component{
 
         return (
             <React.Fragment>
-                <Button className="btn-dark" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Update </Button>
+                <Button className="btn-light" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
@@ -119,31 +119,31 @@ class UpdateTask extends React.Component{
                         </Modal.Header>
                         <Modal.Body>
                         <Form.Group>
-                            <input hidden type="number" id="up_id" name="up_id" value={this.state.id} onChange={()=>{}}/>
+                            <input hidden type="number" id="ut_id" name="ut_id" value={this.state.id} onChange={()=>{}}/>
                         </Form.Group>
                         <Form.Group>  
                             <Form.Label>Name of task</Form.Label>
-                            <Form.Control type='text' id="up_name" name="up_name" value={this.state.name} onChange={e => {  this.setState({ name: e.target.value }); this.value = this.state.name;}}/>
+                            <Form.Control type='text' id="ut_name" name="ut_name" value={this.state.name} onChange={e => {  this.setState({ name: e.target.value }); this.value = this.state.name;}}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Start date</Form.Label>
-                            <Form.Control type='date' id="up_startDate" name="up_startDate"onChange= {e=> {this.setState({ startDate: e.target.value })
+                            <Form.Control type='date' id="ut_startDate" name="ut_startDate"onChange= {e=> {this.setState({ startDate: e.target.value })
                                     this.value = this.state.startDate 
                                     this.setState({ endDate: this.setDuration(e)})}} value={this.state.startDate} required/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label> Duration</Form.Label>
-                            <Form.Control type='number' id="up_duration" name="up_duration" value={this.state.duration}  onChange= {e=> {this.setState({ duration: e.target.value })
+                            <Form.Control type='number' id="ut_duration" name="ut_duration" value={this.state.duration}  onChange= {e=> {this.setState({ duration: e.target.value })
                                 this.value = this.state.duration 
                                 this.setState({ endDate: this.setDuration(e)})}} value={this.state.duration} min='0' required/>
                         </Form.Group>
                         <Form.Group>
                              <Form.Label>End Date</Form.Label>
-                            <Form.Control type='date' id="up_endDate" name="up_endDate" value={this.state.endDate} readOnly required/>
+                            <Form.Control type='date' id="ut_endDate" name="ut_endDate" value={this.state.endDate} readOnly required/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Description of task</Form.Label>
-                            <Form.Control as="textarea" id="up_description" name="up_description" rows='3' value={this.state.description}
+                            <Form.Control as="textarea" id="ut_description" name="ut_description" rows='3' value={this.state.description}
                             onChange={e => {
                                 this.setState({ description: e.target.value });
                                 this.value = this.state.description;

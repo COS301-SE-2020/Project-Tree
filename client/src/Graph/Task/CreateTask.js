@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Table, Modal, Button} from 'react-bootstrap';
+import {Form, Modal, Button} from 'react-bootstrap';
 
 
 function stringifyFormData(fd) {
@@ -119,7 +119,7 @@ class CreateTask extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button className="my-2" variant="outline-dark" onClick={this.ShowModal} block>Create Task</Button>
+                <Button className="my-2" size="sm" variant="secondary" onClick={this.ShowModal} block >Create Task</Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
@@ -128,7 +128,7 @@ class CreateTask extends React.Component{
                         <Modal.Body>
                             <Form.Group>
                                 <Form.Label>Name of task</Form.Label>
-                                <Form.Control type='text' id="cp_Name" name="cp_Name" required/>
+                                <Form.Control type='text' id="ct_Name" name="ct_Name" required/>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Description of task</Form.Label>
@@ -206,7 +206,7 @@ class CreateTask extends React.Component{
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
-                            Create Project
+                            Create Task
                             </Button>
                         </Modal.Footer>
                     </Form>
