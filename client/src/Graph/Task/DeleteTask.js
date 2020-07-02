@@ -14,7 +14,7 @@ class DeleteTask extends React.Component{
         super(props);
         this.state = 
         { Show:false, 
-           // id: this.props.task.id
+            id: this.props.task.id
         };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
