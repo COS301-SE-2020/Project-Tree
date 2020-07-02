@@ -5,7 +5,7 @@ import $ from 'jquery'
 import dagre from 'dagre';
 import graphlib from 'graphlib';
 import CreateDependency from './Dependency/CreateDependency'
-import {Button} from 'react-bootstrap'
+import {Button, Container, Row, Col } from 'react-bootstrap'
 
 function makeLink(edge) {
     var link = new joint.shapes.standard.Link({
@@ -190,11 +190,22 @@ class Graph extends React.Component {
 
         return(
             <React.Fragment>
+                <Container className="text-center py-2">
+                    <Row>
+                        <Col></Col>
+                        <Col>
+                        <Row>
+                            <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button> 
+                            </Col>
+                            <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomOut}><i className="fa fa-search-minus"></i></Button></Col>
+                            <Col className="text-center"> <Button variant="dark" size="sm" block onClick={this.resetZoom}><i className="fa fa-repeat"></i></Button></Col>
+                            </Row>
+                        </Col>
+                        <Col></Col>
+                    </Row>
+                </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
                 {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null}
-                <Button variant="dark" block size="sm" onClick={this.zoomIn}>+</Button>
-                <Button variant="dark" block size="sm" onClick={this.zoomOut}>-</Button>
-                <Button variant="dark" block size="sm" onClick={this.resetZoom}>Reset</Button>
             </React.Fragment>
         )
     }
