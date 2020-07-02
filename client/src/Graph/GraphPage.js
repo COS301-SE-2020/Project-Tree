@@ -15,6 +15,7 @@ class GraphPage extends React.Component{
         this.state = {task:null, dependency:null, nodes:null, links:null, source:null, target:null};
         this.toggleSidebar = this.toggleSidebar.bind(this);
         this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
+        this.setTaskInfo = this.setTaskInfo.bind(this);
     }
 
     async componentDidMount(){
@@ -29,6 +30,22 @@ class GraphPage extends React.Component{
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
 
+        this.setState({nodes:body.tasks, links:body.rels})
+    }
+
+    async setTaskInfo(){
+        const response = await fetch('/getProject',{
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({ id:this.props.project.id })
+        });
+		const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+
+        console.log(body.tasks)
         this.setState({nodes:body.tasks, links:body.rels})
     }
 
@@ -67,18 +84,6 @@ class GraphPage extends React.Component{
         var newTask = null;
         var newDependency = null;
         var x;
-
-        // if(this.state.task!= null && newTaskID === this.state.task.id)
-        // {
-        //     this.setState({task:null, dependency:null});
-        //     return;
-        // }
-
-        // if(this.state.dependency!= null && newDependencyID === this.state.dependency.id)
-        // {
-        //     this.setState({task:null, dependency:null});
-        //     return;
-        // }
 
         if(newTaskID != null)
         {
@@ -123,12 +128,12 @@ class GraphPage extends React.Component{
         }
         return(
             <React.Fragment>
-                <Container fluid Style="height: 100%">
-                <Row Style="height: 100%"> 
+                <Container fluid className="h-100">
+                <Row className="h-100"> 
                         <Col className="text-center block-example border border-secondary bg-light">
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
-                            <CreateTask project= {this.props.project} />
+                            <CreateTask project={this.props.project} setTaskInfo={this.setTaskInfo}/>
                             {both === true? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : <Button size="sm" variant="secondary" block>{dependency}</Button>} 
                             {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
@@ -136,7 +141,7 @@ class GraphPage extends React.Component{
                             {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} toggleSidebar={this.toggleSidebar}/> : null}
                         </Col>
                         <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
-                            <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
+                            <br/> {this.state.nodes!==null?<Graph project={ this.props.project } nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
                         </Col>
                     </Row>
                 </Container>

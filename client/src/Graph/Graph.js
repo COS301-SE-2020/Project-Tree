@@ -4,6 +4,7 @@ import _ from 'lodash'
 import $ from 'jquery'
 import dagre from 'dagre';
 import graphlib from 'graphlib';
+import CreateDependency from './Dependency/CreateDependency'
 
 function makeLink(edge) {
     var lnk = new joint.dia.Link({
@@ -48,7 +49,7 @@ function makeElement(node) {
                 width: width, height: height,
                 rx: 5, ry: 5,
                 stroke: '#555',
-                //magnet: true
+                magnet: true
             }
         }
     });
@@ -71,8 +72,13 @@ function buildGraph(nodes,rels) {
 class Graph extends React.Component {
     constructor(props) {
         super(props);
+        this.state={graph:null}
         this.handleClick = this.handleClick.bind(this)
         this.handleDblClick = this.handleDblClick.bind(this)
+        this.drawGraph = this.drawGraph.bind(this)
+        this.createDependency = this.createDependency.bind(this)
+        this.hideModal = this.hideModal.bind(this)
+        this.state = {createDep:false, source:null, target:null}
     }
 
     handleClick(clickedNode){
@@ -85,7 +91,16 @@ class Graph extends React.Component {
         {
             this.props.toggleSidebar(null, clickedNode.model.id);
         }
-        
+    }
+
+    createDependency(cellView) {
+        if(cellView.model.attributes.target !== undefined)
+        {
+            if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
+            {
+                this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
+            }
+        }
     }
 
     handleDblClick(clickedNode)
@@ -93,7 +108,7 @@ class Graph extends React.Component {
         this.props.toggleCreateDependency(clickedNode.model.id)
     }
 
-    async componentDidMount() {
+    componentDidMount(){
         var graph = new joint.dia.Graph();
         var paper = new joint.dia.Paper({
             el: $('#paper'),
@@ -101,9 +116,12 @@ class Graph extends React.Component {
             height: $('#paper').height(),
             gridSize: 1,
             model: graph,
-            restrictTranslate: true
+            //restrictTranslate: true,
+            linkPinning: false,
         });
+
         paper.on('cell:pointerclick', this.handleClick);
+
         paper.on('element:pointerdblclick', this.handleDblClick);
         var dragStartPosition
         paper.on('blank:pointerdown',
@@ -111,20 +129,32 @@ class Graph extends React.Component {
                 dragStartPosition = { x: x, y: y};
             }
         );
+
         paper.on('cell:pointerup blank:pointerup', function(cellView, x, y) {
             dragStartPosition = null;
         });
+
+        paper.on('cell:pointerdown cell:pointerup', this.createDependency);
+
         $("#paper")
             .mousemove(function(event) {
                 if (dragStartPosition)
                     paper.translate(
                         event.offsetX - dragStartPosition.x, 
                         event.offsetY - dragStartPosition.y);
-            });
+        });
 
+        this.setState({graph: graph});
+    }
+
+    async drawGraph() {
+        if(this.state.graph === null || this.state.graph === undefined){
+            return;
+        }
+        
         var cells = buildGraph(this.props.nodes,this.props.links);
-        graph.resetCells(cells);
-        joint.layout.DirectedGraph.layout(graph, {
+        this.state.graph.resetCells(cells);
+        joint.layout.DirectedGraph.layout(this.state.graph, {
             dagre: dagre,
             graphlib: graphlib,
             setLinkVertices: false,
@@ -134,10 +164,17 @@ class Graph extends React.Component {
         })
     }
 
+    hideModal(){
+        this.setState({createDep: false})
+    }
+
     render(){
+        this.drawGraph();
+
         return(
             <React.Fragment>
-                <div id="paper" style={{height:'100%',width:'100%', overflow:'auto'}}></div>
+                <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
+                {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null}
             </React.Fragment>
         )
     }

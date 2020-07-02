@@ -36,8 +36,7 @@ class UpdateDependency extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-
-        const response = await fetch('/dependency/update', {
+        await fetch('/dependency/update', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -45,7 +44,6 @@ class UpdateDependency extends React.Component{
             },
             body: data,
         });
-        const body = await response.json();
         this.setState({ Show:false })
     }
 
