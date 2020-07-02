@@ -68,6 +68,18 @@ class GraphPage extends React.Component{
         var newDependency = null;
         var x;
 
+        // if(this.state.task!= null && newTaskID === this.state.task.id)
+        // {
+        //     this.setState({task:null, dependency:null});
+        //     return;
+        // }
+
+        // if(this.state.dependency!= null && newDependencyID === this.state.dependency.id)
+        // {
+        //     this.setState({task:null, dependency:null});
+        //     return;
+        // }
+
         if(newTaskID != null)
         {
             for(x=0; x<this.state.nodes.length; x++)
@@ -214,7 +226,7 @@ class TaskSidebar extends React.Component{
                     <Row className="text-center">
                         <Col> <Button className="btn-danger"><i className="fa fa-trash"></i></Button></Col>
                         <Col xs={6}><h1>{this.props.task.name}</h1></Col>
-                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
+                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
                     </Row>
                     <Row className="text-center">
                         <Col><p>{this.props.task.description}</p></Col>
@@ -263,7 +275,7 @@ class DependencySidebar extends React.Component{
                             <DeleteDependency dependency={this.props.dependency} />
                         </Col>
                         <Col xs={6} ><h3>{start+"→"+end}</h3></Col>
-                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
+                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
                     </Row>
                     <Row>
                         <Col><p>{this.props.dependency.relationshipType === "fs" ? "Finish-Start" : "Start-Start"}</p></Col>
