@@ -91,9 +91,12 @@ class Graph extends React.Component {
     }
 
     createDependency(cellView) {
-        if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
+        if(cellView.model.attributes.target !== undefined)
         {
-            this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
+            if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
+            {
+                this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
+            }
         }
     }
 
