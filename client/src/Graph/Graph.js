@@ -147,7 +147,7 @@ class Graph extends React.Component {
     }
 
     async drawGraph() {
-        if(this.state.graph === null){
+        if(this.state.graph === null || this.state.graph === undefined){
             return;
         }
         
