@@ -4,6 +4,7 @@ import _ from 'lodash'
 import $ from 'jquery'
 import dagre from 'dagre';
 import graphlib from 'graphlib';
+import CreateDependency from './Dependency/CreateDependency'
 
 function makeLink(edge) {
     var lnk = new joint.dia.Link({
@@ -48,7 +49,7 @@ function makeElement(node) {
                 width: width, height: height,
                 rx: 5, ry: 5,
                 stroke: '#555',
-                //magnet: true
+                magnet: true
             }
         }
     });
@@ -73,6 +74,8 @@ class Graph extends React.Component {
         super(props);
         this.handleClick = this.handleClick.bind(this)
         this.handleDblClick = this.handleDblClick.bind(this)
+        this.createDependency = this.createDependency.bind(this)
+        this.state = {createDep:false, source:null, target:null}
     }
 
     handleClick(clickedNode){
@@ -85,7 +88,13 @@ class Graph extends React.Component {
         {
             this.props.toggleSidebar(null, clickedNode.model.id);
         }
-        
+    }
+
+    createDependency(cellView) {
+        if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
+        {
+            this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
+        }
     }
 
     handleDblClick(clickedNode)
@@ -101,9 +110,12 @@ class Graph extends React.Component {
             height: $('#paper').height(),
             gridSize: 1,
             model: graph,
-            restrictTranslate: true
+            //restrictTranslate: true,
+            linkPinning: false,
         });
+
         paper.on('cell:pointerclick', this.handleClick);
+
         paper.on('element:pointerdblclick', this.handleDblClick);
         var dragStartPosition
         paper.on('blank:pointerdown',
@@ -111,15 +123,20 @@ class Graph extends React.Component {
                 dragStartPosition = { x: x, y: y};
             }
         );
+
         paper.on('cell:pointerup blank:pointerup', function(cellView, x, y) {
             dragStartPosition = null;
         });
+
+        paper.on('cell:pointerdown cell:pointerup', this.createDependency);
+
         $("#paper")
             .mousemove(function(event) {
                 if (dragStartPosition)
                     paper.translate(
                         event.offsetX - dragStartPosition.x, 
-                        event.offsetY - dragStartPosition.y);
+                        event.offsetY - dragStartPosition.y
+                        );
             });
 
         var cells = buildGraph(this.props.nodes,this.props.links);
@@ -137,7 +154,8 @@ class Graph extends React.Component {
     render(){
         return(
             <React.Fragment>
-                <div id="paper" style={{height:'100%',width:'100%', overflow:'auto'}}></div>
+                <div id="paper" style={{height:'100%',width:'100%', overflow:'auto', 'user-select': 'none'}}></div>
+                {this.state.createDep ? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : null}
             </React.Fragment>
         )
     }

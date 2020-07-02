@@ -136,7 +136,7 @@ class GraphPage extends React.Component{
                             {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} toggleSidebar={this.toggleSidebar}/> : null}
                         </Col>
                         <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
-                            <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
+                            <br/> {this.state.nodes!==null?<Graph project={ this.props.project } nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
                         </Col>
                     </Row>
                 </Container>
