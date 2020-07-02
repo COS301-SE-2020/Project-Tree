@@ -98,7 +98,7 @@ class Graph extends React.Component {
         var paper = new joint.dia.Paper({
             el: $('#paper'),
             width: $('#paper').width(),
-            //height: 1000,
+            height: $('#paper').height(),
             gridSize: 1,
             model: graph,
             restrictTranslate: true
@@ -137,7 +137,7 @@ class Graph extends React.Component {
     render(){
         return(
             <React.Fragment>
-                <div id="paper" style={{width:'100%', overflow:'auto'}}></div>
+                <div id="paper" style={{height: '91.5vh', width:'100%', overflow:'auto'}}></div>
             </React.Fragment>
         )
     }

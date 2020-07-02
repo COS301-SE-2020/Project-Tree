@@ -106,34 +106,31 @@ class GraphPage extends React.Component{
         }
 
         var dependency;
+        var both = false;
         if(this.state.source !== null && this.state.target !== null){
-            dependency = this.state.source.name+"→"+this.state.target.name;
+            both = true;
+        }else if(this.state.source !== null){
+            dependency = this.state.source.name+"→ Select 1 more Task to make Dependency";
+            both = false;
+        }else{
+            dependency = "Select 2 Tasks to make a Dependency";
+            both = false;
         }
-
-        else if(this.state.source !== null){
-            dependency = this.state.source.name+"→";
-        }
-
-        else{
-            dependency = null;
-        }
-
         return(
             <React.Fragment>
-                <Container fluid >
-                <Row> 
+                <Container fluid className="mh-100">
+                <Row > 
                         <Col className="text-center block-example border border-secondary bg-light">
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
                             <Button size="sm" variant="secondary" block >Create Task</Button>
-                            <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/>
-                            {dependency}
+                            {both === true? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : <Button size="sm" variant="secondary" block>{dependency}</Button>}
                             {this.state.source != null ? <Button onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
                             <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task}/> : null}
                             {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
                         </Col>
-                        <Col xs={9} className="align-items-center text-center">
+                        <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
                             <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
                         </Col>
                     </Row>

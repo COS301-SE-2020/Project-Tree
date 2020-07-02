@@ -13,7 +13,9 @@ class CreateDependency extends React.Component{
     constructor(props) {
         super(props);
         this.state = {  Show:false,
-                        pid: this.props.project.id
+                        pid: this.props.project.id,
+                        source: this.props.source,
+                        target: this.props.target,
         };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
@@ -50,22 +52,18 @@ class CreateDependency extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>
+                <Button size="sm" variant="secondary" block onClick={this.ShowModal}>
+                    Create Dependency between {this.state.source.name}→{this.state.target.name}
+                </Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create Dependency</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <input hidden type="number" id="cd_pid" name="cd_pid" value={this.state.pid} onChange={()=>{}}/>
-                            <Form.Group>
-                                <Form.Label>First Task ID</Form.Label>
-                                <Form.Control type='number' min="0" name='cd_fid' required/>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Second Task ID</Form.Label>
-                                <Form.Control type='number' min="0" name='cd_sid' required/>
-                            </Form.Group>
+                            <input hidden type='number' name='cd_pid' value={this.state.pid} onChange={()=>{}}/>
+                            <input hidden type='number' name='cd_fid' value={this.state.source.id} onChange={()=>{}}/>
+                            <input hidden type='number' name='cd_sid' value={this.state.target.id} onChange={()=>{}}/>
                             <Form.Group>
                                 <Form.Label>Relationship Type</Form.Label>
                                 <Form.Control as="select"  name='cd_relationshipType'>
