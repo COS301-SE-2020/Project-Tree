@@ -22,7 +22,6 @@ class DeleteTask extends React.Component{
     }
 
     ShowModal(){
-        console.log("hello")
         this.setState({ Show:true});
     }
 
@@ -44,6 +43,8 @@ class DeleteTask extends React.Component{
             },
             body: data,
         });
+        this.props.toggleSidebar(null, null)
+        this.props.setTaskInfo();
         this.setState({ Show:false })
         console.log(response.body)
     }
