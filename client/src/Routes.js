@@ -14,7 +14,7 @@ import {Navbar, Nav} from 'react-bootstrap'
 class Routes extends Component {  
 	constructor(props) {
 		super(props);
-		this.state = {project:null}
+		this.state = {project:JSON.parse(sessionStorage.getItem("project"))}
 		this.toggleGraphPage = this.toggleGraphPage.bind(this);
 	}
 
@@ -39,7 +39,7 @@ class Routes extends Component {
 						renders the first one that matches the current URL. */}
 					<Switch>
 					<Route path="/graph">
-						<GraphPage project={this.state.project} toggleGraphPage={this.toggleGraphPage}/>
+						{this.state.project != null ? <GraphPage project={this.state.project} toggleGraphPage={this.toggleGraphPage}/> : null}
 					</Route>
 					<Route path="/project">
 						<ProjectPage toggleGraphPage={this.toggleGraphPage}/>

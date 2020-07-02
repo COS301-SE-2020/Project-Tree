@@ -12,9 +12,10 @@ function stringifyFormData(fd) {
 class DeleteTask extends React.Component{
     constructor(props) {
         super(props);
-        this.state = { Show:false, 
-                        id: this.props.project.id
-                    };
+        this.state = 
+        { Show:false, 
+            //id: this.props.project.id
+        };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,7 +35,7 @@ class DeleteTask extends React.Component{
         data = await stringifyFormData(data)
         console.log(data)
 
-        const response = await fetch('/project/delete', {
+        const response = await fetch('/task/delete', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -43,7 +44,7 @@ class DeleteTask extends React.Component{
             body: data,
         });
         this.setState({ Show:false })
-        this.props.setProjectInfo()
+       // this.props.setProjectInfo()
         this.props.toggleSideBar(null);
         console.log(response.body)
     }
@@ -58,9 +59,9 @@ class DeleteTask extends React.Component{
                             <Modal.Title>Delete Project</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form.Group>
-                                <input hidden type="number" id="dp_id" name="dp_id" value={this.state.id} onChange={()=> {}}/>
-                                <p>Are you sure you want to delete this project</p>
+                            <Form.Group>        
+                                <Form.Label>Enter Task ID to delete</Form.Label>
+                                <Form.Control type='number' id="id" name="id" required/>
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
