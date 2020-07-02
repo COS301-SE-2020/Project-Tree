@@ -119,9 +119,8 @@ class GraphPage extends React.Component{
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
                             <CreateTask project = {this.props.project }/>
-                            <CreateDependency project={this.props.project} source={this.state.source} target={this.state.target}/>
-                            {dependency}
-                            {this.state.source != null ? <Button onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
+                            {both === true? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : <Button size="sm" variant="secondary" block>{dependency}</Button>} 
+                            {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
                             <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar}/> : null}
                             {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} toggleSidebar={this.toggleSidebar}/> : null}
