@@ -5,39 +5,30 @@ import $ from 'jquery'
 import dagre from 'dagre';
 import graphlib from 'graphlib';
 import CreateDependency from './Dependency/CreateDependency'
+import {Button} from 'react-bootstrap'
 
 function makeLink(edge) {
-    var lnk = new joint.dia.Link({
+    var link = new joint.shapes.standard.Link({
         id:edge.id,
         source: { id: edge.source },
         target: { id: edge.target },
         attrs: {
-            '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' },
-            type:'link',
-        },
-        labels: [{
-            position: 0.5,
-            attrs: {
-                text: {
-                    text: edge.relationshipType
-                }
-            }
-        }],
-        connector: {name: 'normal'}
-    });
-    return lnk;
+            type:'link'
+        }
+    })
+    return link
 }
 
 function makeElement(node) {
     var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
-
+    
     var letterSize = 12;
     var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
     var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
 
     return new joint.shapes.basic.Rect({
         id: node.id,
-        size: { width: 100, height: height },
+        size: { width: width, height: height },
         attrs: {
             type:'node',
             text: { 
@@ -46,10 +37,9 @@ function makeElement(node) {
               'font-family': 'monospace',
             },
             rect: {
-                width: width, height: height,
-                rx: 5, ry: 5,
-                stroke: '#555',
-                magnet: true
+                rx: 10, ry: 10,
+                stroke: '#000',
+                //magnet: true
             }
         }
     });
@@ -67,18 +57,25 @@ function buildGraph(nodes,rels) {
       links.push(makeLink(edge)); 
     })
     return elements.concat(links);
-  }
+}
+
+var graphScale = 1
+var paper = null
 
 class Graph extends React.Component {
     constructor(props) {
         super(props);
-        this.state={graph:null}
+        this.state={graph:null, paper:null}
         this.handleClick = this.handleClick.bind(this)
         this.handleDblClick = this.handleDblClick.bind(this)
         this.drawGraph = this.drawGraph.bind(this)
         this.createDependency = this.createDependency.bind(this)
         this.hideModal = this.hideModal.bind(this)
-        this.state = {createDep:false, source:null, target:null}
+        this.zoomIn = this.zoomIn.bind(this)
+        this.zoomOut = this.zoomOut.bind(this)
+        this.resetZoom = this.resetZoom.bind(this)
+        this.paperScale = this.paperScale.bind(this)
+        this.state = {createDep:false, source:null, target:null, graphScale:1, }
     }
 
     handleClick(clickedNode){
@@ -108,9 +105,28 @@ class Graph extends React.Component {
         this.props.toggleCreateDependency(clickedNode.model.id)
     }
 
+    paperScale(sx, sy) {
+        paper.scale(sx, sy);
+    };
+
+    zoomOut() {
+        graphScale -= 0.1;
+        this.paperScale(graphScale, graphScale);
+    };
+
+    zoomIn() {
+        graphScale += 0.1;
+        this.paperScale(graphScale, graphScale);
+    }
+
+    resetZoom() {
+        graphScale = 1;
+        this.paperScale(graphScale, graphScale);
+    };
+
     componentDidMount(){
         var graph = new joint.dia.Graph();
-        var paper = new joint.dia.Paper({
+        paper = new joint.dia.Paper({
             el: $('#paper'),
             width: $('#paper').width(),
             height: $('#paper').height(),
@@ -123,6 +139,7 @@ class Graph extends React.Component {
         paper.on('cell:pointerclick', this.handleClick);
 
         paper.on('element:pointerdblclick', this.handleDblClick);
+        
         var dragStartPosition
         paper.on('blank:pointerdown',
             function(event, x, y) {
@@ -134,7 +151,7 @@ class Graph extends React.Component {
             dragStartPosition = null;
         });
 
-        paper.on('cell:pointerdown cell:pointerup', this.createDependency);
+        //paper.on('cell:pointerdown cell:pointerup', this.createDependency);
 
         $("#paper")
             .mousemove(function(event) {
@@ -143,8 +160,8 @@ class Graph extends React.Component {
                         event.offsetX - dragStartPosition.x, 
                         event.offsetY - dragStartPosition.y);
         });
-
-        this.setState({graph: graph});
+        console.log(graphScale)
+        this.setState({graph: graph, paper: paper});
     }
 
     async drawGraph() {
@@ -175,6 +192,9 @@ class Graph extends React.Component {
             <React.Fragment>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
                 {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null}
+                <Button variant="dark" block size="sm" onClick={this.zoomIn}>+</Button>
+                <Button variant="dark" block size="sm" onClick={this.zoomOut}>-</Button>
+                <Button variant="dark" block size="sm" onClick={this.resetZoom}>Reset</Button>
             </React.Fragment>
         )
     }
