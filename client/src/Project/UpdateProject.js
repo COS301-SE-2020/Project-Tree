@@ -63,7 +63,6 @@ class UpdateProject extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        console.log(data)
 
         const response = await fetch('/project/update', {
             method: 'POST',
@@ -84,7 +83,7 @@ class UpdateProject extends React.Component{
 
         return (
             <React.Fragment>
-                <Button className="btn-dark" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Update </Button>
+                <Button className="btn-dark" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
@@ -92,19 +91,22 @@ class UpdateProject extends React.Component{
                         </Modal.Header>
                         <Modal.Body>
                             <input hidden type="number" id="up_id" name="up_id" value={this.state.id} onChange={()=>{}}/>
-                            <Form.Label>Name of project</Form.Label>
-                            <Form.Control type='text' id="up_name" name="up_name" value={this.state.name}
+                            <Form.Group>
+                                <Form.Label>Name of project</Form.Label>
+                                <Form.Control required type='text' name="up_name" value={this.state.name}
                                                                                                         onChange={e => {
                                                                                                             this.setState({ name: e.target.value });
                                                                                                             this.value = this.state.name;
                                                                                                         }}/>
-                            <Form.Label>Description of project</Form.Label>
-                            <Form.Control as="textarea" id="up_description" name="up_description" rows='3' value={this.state.description}
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Description of project</Form.Label>
+                                <Form.Control required as="textarea" name="up_description" rows='3' value={this.state.description}
                                                                                                         onChange={e => {
                                                                                                             this.setState({ description: e.target.value });
                                                                                                             this.value = this.state.description;
                                                                                                         }}/>
-                            <br />
+                            </Form.Group>
                             <Table bordered hover>
                                 <thead>
                                     <tr>
@@ -120,57 +122,66 @@ class UpdateProject extends React.Component{
                                 <tbody>
                                     <tr>
                                         <td>Package Manager</td>
-                                        <td className="text-center"><input type="checkbox" id='up_pm_Create' name='up_pm_Create' checked={this.state.up_pm_Create}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_pm_Create: e.target.checked });
-                                                                                                                this.checked = this.state.up_pm_Create;
-                                                                                                            }}/></td>
-                                        <td className="text-center"><input type="checkbox" id='up_pm_Delete' name='up_pm_Delete' checked={this.state.up_pm_Delete}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_pm_Delete: e.target.checked });
-                                                                                                                this.checked = this.state.up_pm_Delete;
-                                                                                                            }}/></td>
-                                        <td className="text-center"><input type="checkbox" id='up_pm_Update' name='up_pm_Update' checked={this.state.up_pm_Update}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_pm_Update: e.target.checked });
-                                                                                                                this.checked = this.state.up_pm_Update;
-                                                                                                            }}/></td>
+                                        <td className="text-center"><input type="checkbox" name='up_pm_Create' checked={this.state.up_pm_Create}
+                                            onChange={e => {
+                                                this.setState({ up_pm_Create: e.target.checked });
+                                                this.checked = this.state.up_pm_Create;
+                                            }}/>
+                                        </td>
+                                        <td className="text-center"><input type="checkbox"  name='up_pm_Delete' checked={this.state.up_pm_Delete}
+                                            onChange={e => {
+                                                this.setState({ up_pm_Delete: e.target.checked });
+                                                this.checked = this.state.up_pm_Delete;
+                                            }}/>
+                                        </td>
+                                        <td className="text-center"><input type="checkbox" name='up_pm_Update' checked={this.state.up_pm_Update}
+                                            onChange={e => {
+                                                this.setState({ up_pm_Update: e.target.checked });
+                                                this.checked = this.state.up_pm_Update;
+                                            }}/>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Responsible Person</td>
-                                        <td className="text-center"><input type="checkbox" id='up_rp_Create' name='up_rp_Create' checked={this.state.up_rp_Create}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_rp_Create: e.target.checked });
-                                                                                                                this.checked = this.state.up_rp_Create;
-                                                                                                            }}/></td>
-                                        <td className="text-center"><input type="checkbox" id='up_rp_Delete' name='up_rp_Delete' checked={this.state.up_rp_Delete}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_rp_Delete: e.target.checked });
-                                                                                                                this.checked = this.state.up_rp_Delete;
-                                                                                                            }}/></td>
-                                        <td className="text-center"><input type="checkbox" id='up_rp_Update' name='up_rp_Update' checked={this.state.up_rp_Update}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_rp_Update: e.target.checked });
-                                                                                                                this.checked = this.state.up_rp_Update;
-                                                                                                            }}/></td>
+                                        <td className="text-center"><input type="checkbox" name='up_rp_Create' checked={this.state.up_rp_Create}
+                                            onChange={e => {
+                                                this.setState({ up_rp_Create: e.target.checked });
+                                                this.checked = this.state.up_rp_Create;
+                                            }}/>
+                                        </td>
+                                        <td className="text-center"><input type="checkbox" name='up_rp_Delete' checked={this.state.up_rp_Delete}
+                                            onChange={e => {
+                                                this.setState({ up_rp_Delete: e.target.checked });
+                                                this.checked = this.state.up_rp_Delete;
+                                            }}/>
+                                        </td>
+                                        <td className="text-center"><input type="checkbox" name='up_rp_Update' checked={this.state.up_rp_Update}
+                                            onChange={e => {
+                                                this.setState({ up_rp_Update: e.target.checked });
+                                                this.checked = this.state.up_rp_Update;
+                                            }}/>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Resource</td>
-                                        <td className="text-center"><input type="checkbox" id='up_r_Create' name='up_r_Create' checked={this.state.up_r_Create}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_r_Create: e.target.checked });
-                                                                                                                this.checked = this.state.up_r_Create;
-                                                                                                            }}/></td>
-                                        <td className="text-center"><input type="checkbox" id='up_r_Delete' name='up_r_Delete' checked={this.state.up_r_Delete}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_r_Delete: e.target.checked });
-                                                                                                                this.checked = this.state.up_r_Delete;
-                                                                                                            }}/></td>
-                                        <td className="text-center"><input type="checkbox" id='up_r_Update' name='up_r_Update' checked={this.state.up_r_Update}
-                                                                                                            onChange={e => {
-                                                                                                                this.setState({ up_r_Update: e.target.checked });
-                                                                                                                this.checked = this.state.up_r_Update;
-                                                                                                            }}/></td>
+                                        <td className="text-center"><input type="checkbox" name='up_r_Create' checked={this.state.up_r_Create}
+                                            onChange={e => {
+                                                this.setState({ up_r_Create: e.target.checked });
+                                                this.checked = this.state.up_r_Create;
+                                            }}/>
+                                        </td>
+                                        <td className="text-center"><input type="checkbox" name='up_r_Delete' checked={this.state.up_r_Delete}
+                                            onChange={e => {
+                                                this.setState({ up_r_Delete: e.target.checked });
+                                                this.checked = this.state.up_r_Delete;
+                                            }}/>
+                                        </td>
+                                        <td className="text-center"><input type="checkbox" name='up_r_Update' checked={this.state.up_r_Update}
+                                            onChange={e => {
+                                                this.setState({ up_r_Update: e.target.checked });
+                                                this.checked = this.state.up_r_Update;
+                                            }}/>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </Table><br />
