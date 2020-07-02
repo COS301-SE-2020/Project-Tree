@@ -128,7 +128,7 @@ class GraphPage extends React.Component{
                         <Col className="text-center block-example border border-secondary bg-light">
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
-                            <Button size="sm" variant="secondary" block >Create Task</Button>
+                            <CreateTask project= {this.props.project} />
                             {both === true? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : <Button size="sm" variant="secondary" block>{dependency}</Button>} 
                             {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
@@ -224,7 +224,7 @@ class TaskSidebar extends React.Component{
             <React.Fragment>
                 <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
                     <Row className="text-center">
-                        <Col> <Button className="btn-danger"><i className="fa fa-trash"></i></Button></Col>
+                        <Col> <DeleteTask task = {this.props.task}/></Col>
                         <Col xs={6}><h1>{this.props.task.name}</h1></Col>
                         <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
                     </Row>
@@ -241,7 +241,7 @@ class TaskSidebar extends React.Component{
                         <Col><p>Duration: {this.props.task.duration}</p></Col>
                     </Row>
                     <Row>
-                        <Col><Button className="btn-light" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button></Col>
+                        <Col><UpdateTask  task = {this.props.task}/></Col>
                     </Row>
                 </Container>
             </React.Fragment>

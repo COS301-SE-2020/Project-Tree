@@ -5,6 +5,7 @@ var peopleFunctions = require('./personQueries')
 async function createTask(req,res){
     var session = db.getSession();
     var Tname = req.body.ct_Name;
+    var proj = parseInt(req.body.ct_pid);
     var Sdate = req.body.ct_startDate;
     var Edate = req.body.ct_endDate;
     var Dur = req.body.ct_duration;
@@ -13,8 +14,8 @@ async function createTask(req,res){
     var pacManId = parseInt(req.body.ct_pacManId);
     var resourceId = req.body.ct_resourceId;
     var taskId = null;
-    await session
-        .run('CREATE(n:Task {name:$taskName, startDate: date($startDate), endDate:date($endDate), duration:$duration, description:$desc}) RETURN n', {taskName:Tname, startDate:Sdate, endDate:Edate, duration:Dur, desc:Desc})
+    var result = await session
+        .run('CREATE(n:Task {name:$taskName, startDate: date($startDate), endDate:date($endDate), duration:$duration, description:$desc, projId:$pid}) RETURN n', {taskName:Tname, startDate:Sdate, endDate:Edate, duration:Dur, desc:Desc, pid:proj})
         .then(function(result){
             taskId = result.records[0]._fields[0].identity.low
         })
@@ -28,15 +29,17 @@ async function createTask(req,res){
         await peopleFunctions.addPackageManager(taskId,pacManId)
     if(resourceId != undefined)
         await peopleFunctions.addResources(taskId,resourceId)
-    console.log(Tname)
-    res.redirect({ret: result});
+    result = await session.run(
+        'MATCH (a),(b) WHERE ID(a) = '+ taskId +' AND ID(b) = '+proj +'  CREATE (a)-[n:PART_OF]->(b) RETURN *'
+    )
+    res.send({ret: result});
 }
 
 async function deleteTask(req,res){
     var session = db.getSession();
     var delTask = req.body.id;
     var successors = await dependencyFunctions.getSuccessorNodes(delTask)
-    await session
+    var result = await session
         .run
 		(`
 			MATCH (n) WHERE ID(n)=${req.body.id} DETACH DELETE (n)		
@@ -53,8 +56,11 @@ async function deleteTask(req,res){
     res.redirect({ret: result});
 }
 
+
+
 async function updateTask(req,res){ //update a task with a certain ID with specified fields
     var session = db.getSession();
+    console.log("req.body.ut_id: ", req.body.ut_id)
     let result = await session.run(
         `MATCH (a) WHERE ID(a) = ${req.body.ut_id}
         RETURN (a)`
