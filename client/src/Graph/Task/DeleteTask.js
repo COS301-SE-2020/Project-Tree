@@ -43,6 +43,8 @@ class DeleteTask extends React.Component{
             },
             body: data,
         });
+        this.props.toggleSidebar(null, null)
+        this.props.setTaskInfo();
         this.setState({ Show:false })
         console.log(response.body)
     }
@@ -50,7 +52,7 @@ class DeleteTask extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button className="btn-danger"><i className="fa fa-trash" onClick={this.ShowModal}></i></Button>
+                <Button className="btn-danger" onClick={this.ShowModal}><i className="fa fa-trash"></i></Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
@@ -67,7 +69,7 @@ class DeleteTask extends React.Component{
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
-                            Delete Project
+                            Delete Task
                             </Button>
                         </Modal.Footer>
                     </Form>

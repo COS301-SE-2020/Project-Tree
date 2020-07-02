@@ -137,7 +137,7 @@ class GraphPage extends React.Component{
                             {both === true? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : <Button size="sm" variant="secondary" block>{dependency}</Button>} 
                             {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
-                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar}/> : null}
+                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo}/> : null}
                             {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} toggleSidebar={this.toggleSidebar}/> : null}
                         </Col>
                         <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
@@ -229,7 +229,7 @@ class TaskSidebar extends React.Component{
             <React.Fragment>
                 <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
                     <Row className="text-center">
-                        <Col> <DeleteTask task = {this.props.task}/></Col>
+                        <Col> <DeleteTask task = {this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
                         <Col xs={6}><h1>{this.props.task.name}</h1></Col>
                         <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
                     </Row>
@@ -246,7 +246,7 @@ class TaskSidebar extends React.Component{
                         <Col><p>Duration: {this.props.task.duration}</p></Col>
                     </Row>
                     <Row>
-                        <Col><UpdateTask  task = {this.props.task}/></Col>
+                        <Col><UpdateTask  task={this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
                     </Row>
                 </Container>
             </React.Fragment>
