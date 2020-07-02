@@ -70,6 +70,7 @@ class Graph extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this)
+        this.handleDblClick = this.handleDblClick.bind(this)
     }
 
     handleClick(clickedNode){
@@ -85,6 +86,11 @@ class Graph extends React.Component {
         
     }
 
+    handleDblClick(clickedNode)
+    {
+        this.props.toggleCreateDependency(clickedNode.model.id)
+    }
+
     async componentDidMount() {
         var graph = new joint.dia.Graph();
         var paper = new joint.dia.Paper({
@@ -95,6 +101,7 @@ class Graph extends React.Component {
             model: graph
         });
         paper.on('cell:pointerclick', this.handleClick);
+        paper.on('element:pointerdblclick', this.handleDblClick);
 
         var cells = buildGraph(this.props.nodes,this.props.links);
         graph.resetCells(cells);

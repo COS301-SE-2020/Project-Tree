@@ -6,8 +6,9 @@ import Graph from './Graph'
 class GraphPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {task:null, dependency:null, nodes:null, links:null};
+        this.state = {task:null, dependency:null, nodes:null, links:null, source:null, target:null};
         this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
     }
 
     async componentDidMount(){
@@ -24,6 +25,37 @@ class GraphPage extends React.Component{
         if (response.status !== 200) throw Error(body.message);
 
         this.setState({nodes:body.tasks, links:body.rels})
+    }
+
+    toggleCreateDependency(new_source_targetID){
+        if(new_source_targetID == null)
+        {
+            this.setState({source:null, target:null});
+            return;
+        }
+
+        var source_target
+        for(var x=0; x<this.state.nodes.length; x++)
+        {
+            if(this.state.nodes[x].id === new_source_targetID){
+                source_target = this.state.nodes[x];
+            }
+        }
+        
+        if(this.state.source === null)
+        {
+            this.setState({source:source_target});
+        }
+
+        else{
+            if(this.state.source.id === new_source_targetID)
+            {
+                this.setState({source:null, target:null})
+            }
+            else{
+                this.setState({target:source_target});
+            }
+        }
     }
 
     toggleSidebar(newTaskID, newDependencyID){
@@ -53,6 +85,10 @@ class GraphPage extends React.Component{
             }
             this.setState({task:newTask, dependency:newDependency});
         }
+
+        else{
+            this.setState({task:null, dependency:null});
+        }
     }
 
 
@@ -66,6 +102,19 @@ class GraphPage extends React.Component{
             )
         }
 
+        var dependency;
+        if(this.state.source !== null && this.state.target !== null){
+            dependency = this.state.source.name+"→"+this.state.target.name;
+        }
+
+        else if(this.state.source !== null){
+            dependency = this.state.source.name+"→";
+        }
+
+        else{
+            dependency = null;
+        }
+
         return(
             <React.Fragment>
                 <Container fluid >
@@ -74,13 +123,17 @@ class GraphPage extends React.Component{
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
                             <Button size="sm" variant="secondary" block >Create Task</Button>
-                            <Button size="sm" variant="secondary" block >Create Dependency</Button>
+                            <Button size="sm" variant="secondary" block >
+                                Create Dependency <br/>
+                                {dependency}
+                            </Button>
+                            {this.state.source != null ? <Button onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
                             <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task}/> : null}
                             {this.state.dependency !== null ? <DependencySidebar dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
                         </Col>
                         <Col xs={9} className="align-items-center text-center">
-                            <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleSidebar={this.toggleSidebar}/>:null}
+                            <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
                         </Col>
                     </Row>
                 </Container>
