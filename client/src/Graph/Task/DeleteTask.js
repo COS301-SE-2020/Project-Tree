@@ -14,7 +14,7 @@ class DeleteTask extends React.Component{
         super(props);
         this.state = 
         { Show:false, 
-            id: this.props.task.id
+           // id: this.props.task.id
         };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
@@ -60,7 +60,7 @@ class DeleteTask extends React.Component{
                         </Modal.Header>
                         <Modal.Body>
                             <Form.Group>        
-                                <input hidden type="number" name="t_id" value={this.state.id} onChange={()=> {}}/>
+                                <input hidden type="number" name="id" value={this.state.id} onChange={()=> {}}/>
                                 <p> Are you Sure </p>
                             </Form.Group>
                         </Modal.Body>

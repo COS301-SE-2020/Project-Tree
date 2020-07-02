@@ -34,12 +34,12 @@ async function createTask(req,res){
 
 async function deleteTask(req,res){
     var session = db.getSession();
-    var delTask = req.body.t_id;
+    var delTask = req.body.id;
     var successors = await dependencyFunctions.getSuccessorNodes(delTask)
     await session
         .run
 		(`
-			MATCH (n) WHERE ID(n)=${req.body.t_id} DETACH DELETE (n)		
+			MATCH (n) WHERE ID(n)=${req.body.id} DETACH DELETE (n)		
 			
 		`)
         .catch(function(err){
