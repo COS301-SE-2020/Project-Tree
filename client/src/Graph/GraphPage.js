@@ -1,7 +1,10 @@
 import React from 'react';
 import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
-import Graph from './Graph'
+import Graph from './Graph';
+import CreateTask from './Task/CreateTask';
+import DeleteTask from './Task/DeleteTask';
+import UpdateTask from './Task/UpdateTask';
 
 class GraphPage extends React.Component{
     constructor(props) {
@@ -78,11 +81,13 @@ class GraphPage extends React.Component{
                         <Col>
                             <ProjectDetails project={this.props.project}/> <br/>
                             <Link to="/project"><button onClick={()=>this.props.toggleGraphPage(null)}>Back</button></Link>
-                            <button>Create Task</button>
+                            <CreateTask project="this.props.project"/>                           
+                            <UpdateTask task="22"/>
                             <button>Create Dependency</button>
                             <button>Display Critical Path - Under Construction</button>
                             <button onClick={()=>this.toggleSidebar(1, null)}>View Task Sidebar</button> 
                             <button onClick={()=>this.toggleSidebar(null, 1)}>View Dependency Sidebar</button>
+                            <DeleteTask /> 
                             <br/><br/>
                             <hr/>
                             <br/><br/>
