@@ -22,6 +22,7 @@ class DeleteTask extends React.Component{
     }
 
     ShowModal(){
+        console.log("hello")
         this.setState({ Show:true});
     }
 
@@ -50,7 +51,7 @@ class DeleteTask extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button className="btn-danger"><i className="fa fa-trash" onClick={this.ShowModal}></i></Button>
+                <Button className="btn-danger" onClick={this.ShowModal}><i className="fa fa-trash"></i></Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
