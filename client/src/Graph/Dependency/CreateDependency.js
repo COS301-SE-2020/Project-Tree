@@ -12,28 +12,28 @@ function stringifyFormData(fd) {
 class CreateDependency extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {  Show:false,
-                        pid: this.props.project.id
+        this.state = {  Show:true,
+                        pid: this.props.project.id,
+                        fid: this.props.source,
+                        sid: this.props.target
         };
-        this.ShowModal = this.ShowModal.bind(this);
-        this.HideModal = this.HideModal.bind(this);
+        //this.ShowModal = this.ShowModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    ShowModal(){
-        this.setState({ Show:true });
-    }
-
-    HideModal(){
+    hideModal(){
         this.setState({ Show:false });
+        this.props.hideModal();
     }
 
     async handleSubmit(event) {
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
+        console.log(data);
         
-        const response = await fetch('/dependency/add', {
+        await fetch('/dependency/add', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -41,29 +41,22 @@ class CreateDependency extends React.Component{
             },
             body: data,
         });
-        const body = await response.json();
-        this.setState({ Show:false })
+        this.hideModal()
     }
 
     render(){
         return (
             <React.Fragment>
-                <Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>
-                <Modal show={this.state.Show} onHide={this.HideModal}>
+                {/*<Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>*/}
+                <Modal show={this.state.Show} onHide={this.hideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create Dependency</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <input hidden type="number" id="cd_pid" name="cd_pid" value={this.state.pid} onChange={()=>{}}/>
-                            <Form.Group>
-                                <Form.Label>First Task ID</Form.Label>
-                                <Form.Control type='number' min="0" name='cd_fid' required/>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Second Task ID</Form.Label>
-                                <Form.Control type='number' min="0" name='cd_sid' required/>
-                            </Form.Group>
+                            <input hidden type="number" name="cd_pid" value={this.state.pid} onChange={()=>{}}/>
+                            <input hidden type="number" name="cd_fid" value={this.state.fid} onChange={()=>{}}/>
+                            <input hidden type="number" name="cd_sid" value={this.state.sid} onChange={()=>{}}/>
                             <Form.Group>
                                 <Form.Label>Relationship Type</Form.Label>
                                 <Form.Control as="select"  name='cd_relationshipType'>
@@ -73,11 +66,11 @@ class CreateDependency extends React.Component{
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Dependency Duration</Form.Label>
-                                <Form.Control type='number' name='cd_duration' required/>
+                                <Form.Control required type='number' name='cd_duration'/>
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.HideModal}>
+                            <Button variant="secondary" onClick={this.hideModal}>
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">

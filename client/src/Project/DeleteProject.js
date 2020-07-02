@@ -33,7 +33,7 @@ class DeleteProject extends React.Component{
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
 
-        const response = await fetch('/project/delete', {
+        await fetch('/project/delete', {
             method: 'POST',
             headers: {
             Accept: 'application/json',

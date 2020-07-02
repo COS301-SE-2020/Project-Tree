@@ -53,12 +53,12 @@ class UpdateTask extends React.Component{
         var startDate
         console.log("TARGET:    ",e.target.value) 
         console.log(e.target)
-        if(e.target.id == "ut_startDate")
+        if(e.target.id === "ut_startDate")
         {
             startDate = e.target.value;
             duration = this.state.duration;
         }         
-        else if(e.target.id == "ut_duration")
+        else if(e.target.id === "ut_duration")
         {
             startDate = this.state.startDate;
             duration = e.target.value;
@@ -90,9 +90,7 @@ class UpdateTask extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        console.log(data)
-
-        const response = await fetch('/task/update', {
+        await fetch('/task/update', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -100,7 +98,6 @@ class UpdateTask extends React.Component{
             },
             body: data,
         });
-        const body = await response.json();
         this.setState({ Show:false })
         //this.props.setProjectInfo(body.nodes.id)
     }
@@ -133,9 +130,9 @@ class UpdateTask extends React.Component{
                         </Form.Group>
                         <Form.Group>
                             <Form.Label> Duration</Form.Label>
-                            <Form.Control type='number' id="ut_duration" name="ut_duration" value={this.state.duration}  onChange= {e=> {this.setState({ duration: e.target.value })
+                            <Form.Control required type='number' min='0' id="ut_duration" name="ut_duration" value={this.state.duration}  onChange= {e=> {this.setState({ duration: e.target.value })
                                 this.value = this.state.duration 
-                                this.setState({ endDate: this.setDuration(e)})}} value={this.state.duration} min='0' required/>
+                                this.setState({ endDate: this.setDuration(e)})}}/>
                         </Form.Group>
                         <Form.Group>
                              <Form.Label>End Date</Form.Label>

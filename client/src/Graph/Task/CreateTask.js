@@ -42,12 +42,12 @@ class CreateTask extends React.Component{
         var startDate
         console.log("TARGET:    ",e.target.value) 
         console.log(e.target)
-        if(e.target.id == "ct_startDate")
+        if(e.target.id === "ct_startDate")
         {
             startDate = e.target.value;
             duration = this.state.duration;
         }         
-        else if(e.target.id == "ct_duration")
+        else if(e.target.id === "ct_duration")
         {
             startDate = this.state.startDate;
             duration = e.target.value;
@@ -79,9 +79,7 @@ class CreateTask extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        console.log(data);
-        
-        const response = await fetch('/task/add', {
+        await fetch('/task/add', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -89,7 +87,6 @@ class CreateTask extends React.Component{
             },
             body: data,
         }); 
-        const body = await response.json();
         this.setState({ Show:false })
        // this.props.setProjectInfo(body.nodes.id);
     }

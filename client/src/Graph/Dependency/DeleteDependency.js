@@ -32,8 +32,7 @@ class DeleteDependency extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-
-        const response = await fetch('/dependency/delete', {
+        await fetch('/dependency/delete', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -41,7 +40,6 @@ class DeleteDependency extends React.Component{
             },
             body: data,
         });
-        const body = await response.json();
         this.setState({ Show:false })
     }
 

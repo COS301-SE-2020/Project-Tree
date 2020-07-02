@@ -75,6 +75,7 @@ class Graph extends React.Component {
         this.handleClick = this.handleClick.bind(this)
         this.handleDblClick = this.handleDblClick.bind(this)
         this.createDependency = this.createDependency.bind(this)
+        this.hideModal = this.hideModal.bind(this)
         this.state = {createDep:false, source:null, target:null}
     }
 
@@ -151,11 +152,15 @@ class Graph extends React.Component {
         })
     }
 
+    hideModal(){
+        this.setState({createDep: false})
+    }
+
     render(){
         return(
             <React.Fragment>
-                <div id="paper" style={{height:'100%',width:'100%', overflow:'auto', 'user-select': 'none'}}></div>
-                {this.state.createDep ? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : null}
+                <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
+                {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null}
             </React.Fragment>
         )
     }
