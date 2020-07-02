@@ -42,11 +42,13 @@ function makeElement(node) {
             text: { 
               text: node.name, 
               'font-size': letterSize, 
-              'font-family': 'monospace' },
+              'font-family': 'monospace',
+            },
             rect: {
                 width: width, height: height,
                 rx: 5, ry: 5,
-                stroke: '#555'
+                stroke: '#555',
+                //magnet: true
             }
         }
     });
@@ -95,13 +97,30 @@ class Graph extends React.Component {
         var graph = new joint.dia.Graph();
         var paper = new joint.dia.Paper({
             el: $('#paper'),
-            width: 1000,
-            height: 2000,
+            width: $('#paper').width(),
+            //height: 1000,
             gridSize: 1,
-            model: graph
+            model: graph,
+            restrictTranslate: true
         });
         paper.on('cell:pointerclick', this.handleClick);
         paper.on('element:pointerdblclick', this.handleDblClick);
+        var dragStartPosition
+        paper.on('blank:pointerdown',
+            function(event, x, y) {
+                dragStartPosition = { x: x, y: y};
+            }
+        );
+        paper.on('cell:pointerup blank:pointerup', function(cellView, x, y) {
+            dragStartPosition = null;
+        });
+        $("#paper")
+            .mousemove(function(event) {
+                if (dragStartPosition)
+                    paper.translate(
+                        event.offsetX - dragStartPosition.x, 
+                        event.offsetY - dragStartPosition.y);
+            });
 
         var cells = buildGraph(this.props.nodes,this.props.links);
         graph.resetCells(cells);
@@ -118,7 +137,7 @@ class Graph extends React.Component {
     render(){
         return(
             <React.Fragment>
-                <div id="paper"></div>
+                <div id="paper" style={{width:'100%', overflow:'auto'}}></div>
             </React.Fragment>
         )
     }
