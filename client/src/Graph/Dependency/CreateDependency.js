@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Table, Modal, Button} from 'react-bootstrap'
+import {Form, Modal, Button} from 'react-bootstrap'
 
 function stringifyFormData(fd) {
     const data = {};
@@ -10,9 +10,11 @@ function stringifyFormData(fd) {
 }
 
 class CreateDependency extends React.Component{
-    constructor() {
-        super();
-        this.state = { Show:false };
+    constructor(props) {
+        super(props);
+        this.state = {  Show:false,
+                        pid: this.props.project.id
+        };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,7 +34,7 @@ class CreateDependency extends React.Component{
         data = await stringifyFormData(data)
         console.log(data);
         
-        const response = await fetch('/project/add', {
+        const response = await fetch('/dependency/add', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -41,68 +43,47 @@ class CreateDependency extends React.Component{
             body: data,
         });
         const body = await response.json();
+        console.log(body);
         this.setState({ Show:false })
-        this.props.setProjectInfo(body.nodes.id);
     }
 
     render(){
         return (
             <React.Fragment>
-                <Button className="my-2" variant="outline-dark" onClick={this.ShowModal} block>Create Project</Button>
+                <Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Create Project</Modal.Title>
+                            <Modal.Title>Create Dependency</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
+                            <input hidden type="number" id="cd_pid" name="cd_pid" value={this.state.pid} onChange={()=>{}}/>
                             <Form.Group>
-                                <Form.Label>Name of project</Form.Label>
-                                <Form.Control type='text' id="cp_Name" name="cp_Name" required/>
+                                <Form.Label>First Task ID</Form.Label>
+                                <Form.Control type='number' min="0" name='cd_fid' required/>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Label>Description of project</Form.Label>
-                                <Form.Control as="textarea" rows="3"type='text' id="cp_Description" name="cp_Description" required/>
+                                <Form.Label>Second Task ID</Form.Label>
+                                <Form.Control type='number' min="0" name='cd_sid' required/>
                             </Form.Group>
-                            <Table bordered hover>
-                                <thead>
-                                    <tr>
-                                        <td className="text-center" colSpan="4">Project Permisions</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td className="text-center">Create</td>
-                                        <td className="text-center">Delete</td>
-                                        <td className="text-center">Update</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Package Manager</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
-                                        <td className="text-center"><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Responsible Person</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Resource</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
-                                    </tr>
-                                </tbody>
-                            </Table>
+                            <Form.Group>
+                                <Form.Label>Relationship Type</Form.Label>
+                                <Form.Control as="select"  name='cd_relationshipType'>
+                                    <option value='ss'>Start-Start</option>
+                                    <option value='fs'>Finish-Start</option>
+                                </Form.Control>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Dependency Duration</Form.Label>
+                                <Form.Control type='number' name='cd_duration' required/>
+                            </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={this.HideModal}>
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
-                            Create Project
+                            Create Dependency
                             </Button>
                         </Modal.Footer>
                     </Form>

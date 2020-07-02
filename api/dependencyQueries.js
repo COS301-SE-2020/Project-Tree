@@ -1,74 +1,54 @@
 const db = require('./DB') 
 
-async function updateDependency(req,res){ //update a Dependency between 2 nodes with specified fields
+async function createDependency(req,res){
     var session = db.getSession();
-    let result = await session.run(
-        `MATCH (a)-[r]->(b) 
-        WHERE ID(a) = ${req.body.ud_Fid} AND ID(b) = ${req.body.ud_Sid}
-        RETURN r`
-    )
-    if(result.records.length == 0){
-        res.redirect('/?error=no dependency of that id')
-    }else{
-        let props = '';
-        let check = false
-        if(req.body.ud_duration != ''){
-            check = true
-            props += `duration:${req.body.ud_duration}`
-        }
-        if(req.body.ud_relationshipType != ''){
-            if(check) props += ','
-            else check = true
-            props += `relationshipType: "${req.body.ud_relationshipType}"`
-        }
-        result = await session.run(
-            `MATCH (a)-[r]->(b) 
-            WHERE ID(a) = ${req.body.ud_Fid} AND ID(b) = ${req.body.ud_Sid}
-            SET r += {${props}}`
-        )
-        await updateDependencies(req.body.ud_Sid)
-        res.redirect('/')
+
+    if(req.body.cd_fid == req.body.cd_pid)
+    {
+        res.send({ret: 400})
     }
+
+    result = await session
+        .run(`  MATCH (a),(b)
+                WHERE ID(a) = ${req.body.cd_fid} AND ID(b) = ${req.body.cd_sid} 
+                CREATE (a)-[n:DEPENDENCY{ projID:${req.body.cd_pid}, relationshipType:'${req.body.cd_relationshipType}', duration:${req.body.cd_duration}}]->(b) 
+                RETURN *
+            `)
+        .catch(function(err){
+            return err;
+        });
+    await updateDependencies(req.body.cd_sid)
+    res.send({ret: result});
+}
+
+async function updateDependency(req,res){ //update a Dependency between 2 nodes with specified fields
+    result = await session.run(
+        `MATCH (a)-[r]->(b) 
+        WHERE ID(r) = ${req.body.ud_did}
+        SET r += { projID:${req.body.cd_pid}, duration:${req.body.ud_duration}, relationshipType: "${req.body.ud_relationshipType}" }
+        RETURN *
+        `)
+    await updateDependencies(result.records[0]._fields[1].identity.low)
+    res.send({ret: result});
+    
 }
 
 async function deleteDependency(req,res){
     var session = db.getSession();
-    var delTask = req.body.dep1;
-    await session
+    var result =  await session
         .run
 		(`
-			MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) WHERE (ID(a)=${req.body.dep1} AND ID(b)=${req.body.dep2}) OR (ID(a)=${req.body.dep2} AND ID(b)=${req.body.dep1}) DELETE r	
+            MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) 
+            WHERE ID(r)=${req.body.dp_id} 
+            DELETE r 
+            RETURN *
 		`)
         .catch(function(err){
-            console.log(err);
+            res.send({ret: result});
         });
-    await updateDependencies(req.body.dep1)
-    await updateDependencies(req.body.dep2)
-    res.redirect('/');
-}
-
-
-
-async function createDependency(req,res){
-    var session = db.getSession();
-    var firstTask = parseInt(req.body.cd_firstTaskId)
-    var secondTask = parseInt(req.body.cd_secondTaskId)
-    var relationshipType = req.body.cd_relationshipType
-    var Dduration = req.body.cd_dependencyDuration
-
-    if(firstTask == secondTask)
-    {
-        //display error
-        return;
-    }
-
-    await session
-        .run('MATCH (a),(b) WHERE ID(a) = $Ftask AND ID(b) = $Stask CREATE(a)-[n:DEPENDENCY{relationshipType:$Rtype, duration:$duration}]->(b) RETURN type(n)',{Ftask:firstTask,Stask:secondTask, Rtype:relationshipType, duration:Dduration})
-        .catch(function(err){
-            console.log(err);
-        });
-    await updateDependencies(secondTask)
-    res.redirect('/');
+    await updateDependencies(result.records[0]._fields[0].identity.low)
+    await updateDependencies(result.records[0]._fields[1].identity.low)
+    res.send({ret: result});
 }
 
 async function getSuccessorNodes(nodeID)        //gets successsor nodes
