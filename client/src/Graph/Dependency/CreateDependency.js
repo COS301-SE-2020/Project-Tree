@@ -34,7 +34,6 @@ class CreateDependency extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        console.log(data);
         
         const response = await fetch('/dependency/add', {
             method: 'POST',
@@ -45,7 +44,6 @@ class CreateDependency extends React.Component{
             body: data,
         });
         const body = await response.json();
-        console.log(body);
         this.setState({ Show:false })
     }
 

@@ -22,10 +22,11 @@ async function createDependency(req,res){
 }
 
 async function updateDependency(req,res){ //update a Dependency between 2 nodes with specified fields
+    var session = db.getSession();
     result = await session.run(
         `MATCH (a)-[r]->(b) 
         WHERE ID(r) = ${req.body.ud_did}
-        SET r += { projId:${req.body.cd_pid}, duration:${req.body.ud_duration}, relationshipType: "${req.body.ud_relationshipType}" }
+        SET r += { duration:${req.body.ud_duration}, relationshipType: "${req.body.ud_relationshipType}" }
         RETURN *
         `)
     await updateDependencies(result.records[0]._fields[1].identity.low)
@@ -39,7 +40,7 @@ async function deleteDependency(req,res){
         .run
 		(`
             MATCH (a:Task)-[r:DEPENDENCY]->(b:Task) 
-            WHERE ID(r)=${req.body.dp_id} 
+            WHERE ID(r)=${req.body.dd_did} 
             DELETE r 
             RETURN *
 		`)

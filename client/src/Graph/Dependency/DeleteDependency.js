@@ -32,7 +32,6 @@ class DeleteDependency extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        console.log(data);
 
         const response = await fetch('/dependency/delete', {
             method: 'POST',
@@ -58,7 +57,7 @@ class DeleteDependency extends React.Component{
                         <Modal.Body>
                             <Form.Group>
                                 <Form.Label>Are you sure you want to delete this dependency</Form.Label>
-                                <input hidden type="number" name="dp_did"  value={this.state.did} onChange={()=> {}}/>
+                                <input hidden type="number" name="dd_did"  value={this.state.did} onChange={()=> {}}/>
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>

@@ -15,9 +15,10 @@ class UpdateDependency extends React.Component{
         this.state = {  Show:false,
                         pid: this.props.project.id,
                         did: this.props.dependency.id,
-                        relation: this.props.dependency.relation,
+                        relation: this.props.dependency.relationshipType,
                         duration: this.props.dependency.duration
         };
+        
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -58,8 +59,8 @@ class UpdateDependency extends React.Component{
                             <Modal.Title>Update Dependencies</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <input hidden type="number" name="up_pid"  value={this.state.pid} onChange={()=> {}}/>
-                            <input hidden type="number" name="up_did"  value={this.state.did} onChange={()=> {}}/>
+                            <input hidden type="number" name="ud_pid"  value={this.state.pid} onChange={()=> {}}/>
+                            <input hidden type="number" name="ud_did"  value={this.state.did} onChange={()=> {}}/>
                             {/*<Form.Group>
                             <Form.Label>Select First Task by ID:</Form.Label>
                             <Form.Control required type='text' name="ud_Fid" value={this.state.Fid}/>
@@ -83,7 +84,7 @@ class UpdateDependency extends React.Component{
                                 <Form.Label>Duration:</Form.Label>
                                 <Form.Control required type='number' name="ud_duration" value={this.state.duration}
                                     onChange={e => {
-                                        this.setState({ relation: e.target.value });
+                                        this.setState({ duration: e.target.value });
                                         this.value = this.state.duration;
                                     }}/>
                             </Form.Group>

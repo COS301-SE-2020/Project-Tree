@@ -123,8 +123,8 @@ class GraphPage extends React.Component{
         }
         return(
             <React.Fragment>
-                <Container fluid>
-                <Row> 
+                <Container fluid Style="height: 100%">
+                <Row Style="height: 100%"> 
                         <Col className="text-center block-example border border-secondary bg-light">
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 

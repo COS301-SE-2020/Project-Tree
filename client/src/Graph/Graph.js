@@ -137,7 +137,7 @@ class Graph extends React.Component {
     render(){
         return(
             <React.Fragment>
-                <div id="paper" style={{height: '91.5vh', width:'100%', overflow:'auto'}}></div>
+                <div id="paper" style={{height:'100%',width:'100%', overflow:'auto'}}></div>
             </React.Fragment>
         )
     }
