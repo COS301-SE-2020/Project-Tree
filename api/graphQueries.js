@@ -9,7 +9,6 @@ async function getProjectTasks(req,res)
 	await session
 			.run('MATCH (n {projId:'+projID+'}) RETURN n')
 			.then(function(result){
-                var x = 0;
 				result.records.forEach(function(record){
 					taskArr.push({
                         id: record._fields[0].identity.low,
