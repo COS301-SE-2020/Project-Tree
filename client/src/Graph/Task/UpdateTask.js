@@ -13,11 +13,12 @@ class UpdateTask extends React.Component{
     constructor(props) {
         super(props);
         this.state = { Show:false,                        
-                        id: this.props.task.id,
-                        name: '',
-                        startDate: '', 
-                        duration: '',
-                        endDate: '', 
+                    id: this.props.task.id,
+                    name: this.props.task.name,
+                    startDate: this.props.task.startDate, 
+                    duration: this.props.task.duration,
+                    endDate: this.props.task.endDate, 
+                    description: this.props.task.description
                     };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
