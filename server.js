@@ -61,6 +61,8 @@ app.post('/project/add', pq.createProject);
 app.post('/project/delete', pq.deleteProject);
 app.post('/project/update', pq.updateProject);
 app.post('/task/add', tq.createTask);
+app.post('/task/update', tq.updateTask);
+app.post('/task/delete', tq.deleteTask);
 app.post('/dependency/add', dq.createDependency);
 app.post('/dependency/update', dq.updateDependency);
 app.post('/dependency/delete', dq.deleteDependency);

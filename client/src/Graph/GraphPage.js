@@ -1,7 +1,10 @@
 import React from 'react';
 import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
-import Graph from './Graph'
+import Graph from './Graph';
+import CreateTask from './Task/CreateTask';
+import DeleteTask from './Task/DeleteTask';
+import UpdateTask from './Task/UpdateTask';
 import CreateDependency from './Dependency/CreateDependency'
 import UpdateDependency from './Dependency/UpdateDependency'
 import DeleteDependency from './Dependency/DeleteDependency'
