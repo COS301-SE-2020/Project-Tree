@@ -32,7 +32,6 @@ class DeleteProject extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        console.log(data)
 
         const response = await fetch('/project/delete', {
             method: 'POST',
@@ -45,7 +44,6 @@ class DeleteProject extends React.Component{
         this.setState({ Show:false })
         this.props.setProjectInfo()
         this.props.toggleSideBar(null);
-        console.log(response.body)
     }
 
     render(){
@@ -59,7 +57,7 @@ class DeleteProject extends React.Component{
                         </Modal.Header>
                         <Modal.Body>
                             <Form.Group>
-                                <input hidden type="number" id="dp_id" name="dp_id" value={this.state.id} onChange={()=> {}}/>
+                                <input hidden type="number" name="dp_id" value={this.state.id} onChange={()=> {}}/>
                                 <p>Are you sure you want to delete this project</p>
                             </Form.Group>
                         </Modal.Body>

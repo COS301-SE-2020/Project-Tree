@@ -59,9 +59,12 @@ app.post('/api/world', async function(req, res){
 app.get('/projectInfo', pq.getProjects);
 app.post('/project/add', pq.createProject);
 app.post('/project/delete', pq.deleteProject);
-app.post('/task/add', tq.createTask);
-app.post('/getProject', gq.getProjectTasks)
 app.post('/project/update', pq.updateProject);
+app.post('/task/add', tq.createTask);
+app.post('/dependency/add', dq.createDependency);
+app.post('/dependency/update', dq.updateDependency);
+app.post('/dependency/delete', dq.deleteDependency);
+app.post('/getProject', gq.getProjectTasks)
 
 if (process.env.NODE_ENV === 'production') {
 	// Serve any static files

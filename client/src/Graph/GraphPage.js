@@ -2,6 +2,9 @@ import React from 'react';
 import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Graph from './Graph'
+import CreateDependency from './Dependency/CreateDependency'
+import UpdateDependency from './Dependency/UpdateDependency'
+import DeleteDependency from './Dependency/DeleteDependency'
 
 class GraphPage extends React.Component{
     constructor(props) {
@@ -123,14 +126,12 @@ class GraphPage extends React.Component{
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
                             <Button size="sm" variant="secondary" block >Create Task</Button>
-                            <Button size="sm" variant="secondary" block >
-                                Create Dependency <br/>
-                                {dependency}
-                            </Button>
+                            <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/>
+                            {dependency}
                             {this.state.source != null ? <Button onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
                             <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task}/> : null}
-                            {this.state.dependency !== null ? <DependencySidebar dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
+                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes}/> : null}
                         </Col>
                         <Col xs={9} className="align-items-center text-center">
                             <br/> {this.state.nodes!==null?<Graph nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
@@ -268,7 +269,9 @@ class DependencySidebar extends React.Component{
             <React.Fragment>
                 <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
                     <Row>
-                        <Col> <Button className="btn-danger"><i className="fa fa-trash"></i></Button></Col>
+                        <Col> 
+                            <DeleteDependency dependency={this.props.dependency} />
+                        </Col>
                         <Col xs={8} ><h2>{start+"→"+end}</h2></Col>
                         <Col></Col>
                     </Row>
@@ -279,7 +282,9 @@ class DependencySidebar extends React.Component{
                         <Col><p>Duration: {this.props.dependency.duration}</p></Col>
                     </Row>
                     <Row>
-                        <Col><Button className="btn-light" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button></Col>
+                        <Col>
+                            <UpdateDependency project={this.props.project} dependency={this.props.dependency}/>
+                        </Col>
                     </Row>
                 </Container>
             </React.Fragment>
