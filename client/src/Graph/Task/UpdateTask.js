@@ -12,12 +12,23 @@ function stringifyFormData(fd) {
 class UpdateTask extends React.Component{
     constructor(props) {
         super(props);
+        var syear =  `${this.props.task.startDate.year.low}`
+        var smonth = this.props.task.startDate.month.low
+        smonth = smonth < 10 ? `0${smonth}`: `${smonth}`
+        var sday = this.props.task.startDate.day.low
+        sday = sday < 10 ? `0${sday}`: `${sday}`
+        var eyear =  `${this.props.task.endDate.year.low}`
+        var emonth = this.props.task.endDate.month.low
+        emonth = emonth < 10 ? `0${emonth}`: `${emonth}`
+        var eday = this.props.task.endDate.day.low
+        eday = eday < 10 ? `0${eday}`: `${eday}`
         this.state = { Show:false,                        
                         id: this.props.task.id,
-                        name: '',
-                        startDate: '', 
-                        duration: '',
-                        endDate: '', 
+                        name: this.props.task.name,
+                        startDate: `${syear}-${smonth}-${sday}`, 
+                        duration: this.props.task.duration,
+                        endDate: `${eyear}-${emonth}-${eday}`, 
+                        description: this.props.task.description
                     };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
@@ -27,16 +38,28 @@ class UpdateTask extends React.Component{
     }
 
     refreshState(){
+        var syear =  `${this.props.task.startDate.year.low}`
+        var smonth = this.props.task.startDate.month.low
+        smonth = smonth < 10 ? `0${smonth}`: `${smonth}`
+        var sday = this.props.task.startDate.day.low
+        sday = sday < 10 ? `0${sday}`: `${sday}`
+        var eyear =  `${this.props.task.startDate.year.low}`
+        var emonth = this.props.task.startDate.month.low
+        emonth = emonth < 10 ? `0${emonth}`: `${emonth}`
+        var eday = this.props.task.startDate.day.low
+        eday = eday < 10 ? `0${eday}`: `${eday}`
         this.setState(
             {
                 id: this.props.task.id,
                 name: this.props.task.name,
-                startDate: this.props.task.startDate, 
+                startDate: `${syear}-${smonth}-${sday}`, 
                 duration: this.props.task.duration,
-                endDate: this.props.task.endDate, 
+                endDate: `${eyear}-${emonth}-${eday}`, 
                 description: this.props.task.description
             }
         )
+        
+        
     }
 
     ShowModal(){
@@ -51,8 +74,6 @@ class UpdateTask extends React.Component{
     {
         var duration
         var startDate
-        console.log("TARGET:    ",e.target.value) 
-        console.log(e.target)
         if(e.target.id === "ut_startDate")
         {
             startDate = e.target.value;
@@ -63,7 +84,6 @@ class UpdateTask extends React.Component{
             startDate = this.state.startDate;
             duration = e.target.value;
         }
-        console.log("DURATION:  ",duration)
 
         var initialDate
         initialDate = new Date(startDate);
@@ -80,7 +100,6 @@ class UpdateTask extends React.Component{
         }
     
         var formatDate = edate[0]+"-"+formatMonth+"-"+formatDay;
-        console.log(formatDate)
        // this.setState({ endDate: formatDate })
         return formatDate
         //.state.endDate= formatDate;
