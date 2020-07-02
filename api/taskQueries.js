@@ -53,7 +53,7 @@ async function deleteTask(req,res){
     {
         await dependencyFunctions.updateDependencies(successors[x].identity.low)
     }
-    res.redirect({ret: result});
+    res.send({ret: result});
 }
 
 
@@ -86,7 +86,7 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
             await dependencyFunctions.updateDependencies(req.body.ut_id)
         }
 
-        res.redirect({ret: result})
+        res.send({ret: result})
     }
 }
 
