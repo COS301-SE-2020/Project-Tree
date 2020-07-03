@@ -49,7 +49,7 @@ class CreateDependency extends React.Component{
         return (
             <React.Fragment>
                 {/*<Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>*/}
-                <Modal show={this.state.Show} onHide={this.props.hideDependencyModal}>
+                <Modal show={this.state.Show} onHide={this.props.clearDependency}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create Dependency</Modal.Title>
@@ -71,7 +71,7 @@ class CreateDependency extends React.Component{
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.props.hideDependencyModal}>
+                            <Button variant="secondary" onClick={this.props.clearDependency}>
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
