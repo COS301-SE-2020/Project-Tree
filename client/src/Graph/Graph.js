@@ -230,7 +230,7 @@ class Graph extends React.Component {
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
                 {/* {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null} */}
-                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.setTaskInfo}/> : null}
+                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo}/> : null}
             </React.Fragment>
         )
     }

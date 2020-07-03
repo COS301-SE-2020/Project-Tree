@@ -44,9 +44,7 @@ class DeleteTask extends React.Component{
             body: data,
         });
         this.props.toggleSidebar(null, null)
-        this.props.setTaskInfo();
-        this.setState({ Show:false })
-        console.log(response.body)
+        this.props.setTaskInfo()
     }
 
     render(){
