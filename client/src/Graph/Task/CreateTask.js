@@ -15,24 +15,20 @@ function stringifyFormData(fd) {
 class CreateTask extends React.Component{
     constructor(props) {
         super(props);
-        this.state = { Show:false ,
+        this.state = { Show:true ,
             id: this.props.project.id,
             startDate: 0,
             duration: 0,
             endDate: 0
         };
-        this.ShowModal = this.ShowModal.bind(this);
-        this.HideModal = this.HideModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.setDuration = this.setDuration.bind(this);
     }
 
-    ShowModal(){
-        this.setState({ Show:true });
-    }
-
-    HideModal(){
+    hideModal(){
         this.setState({ Show:false });
+        this.props.hideModal();
     }
 
     
@@ -112,8 +108,7 @@ class CreateTask extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <Button className="my-2" size="sm" variant="secondary" onClick={this.ShowModal} block >Create Task</Button>
-                <Modal show={this.state.Show} onHide={this.HideModal}>
+                <Modal show={this.state.Show} onHide={this.hideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create Task</Modal.Title>
@@ -195,7 +190,7 @@ class CreateTask extends React.Component{
                             </Table> */}
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.HideModal}>
+                            <Button variant="secondary" onClick={this.hideModal}>
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">

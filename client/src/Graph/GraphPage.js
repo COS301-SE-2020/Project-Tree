@@ -15,7 +15,6 @@ class GraphPage extends React.Component{
         this.state = {task:null, dependency:null, nodes:null, links:null, source:null, target:null};
         this.toggleSidebar = this.toggleSidebar.bind(this);
         this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
-        this.setTaskInfo = this.setTaskInfo.bind(this);
     }
 
     async componentDidMount(){
@@ -30,22 +29,6 @@ class GraphPage extends React.Component{
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
 
-        this.setState({nodes:body.tasks, links:body.rels})
-    }
-
-    async setTaskInfo(){
-        const response = await fetch('/getProject',{
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ id:this.props.project.id })
-        });
-		const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-
-        console.log(body.tasks)
         this.setState({nodes:body.tasks, links:body.rels})
     }
 
@@ -133,7 +116,6 @@ class GraphPage extends React.Component{
                         <Col className="text-center block-example border border-secondary bg-light">
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
-                            <CreateTask project={this.props.project} setTaskInfo={this.setTaskInfo}/>
                             {both === true? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : <Button size="sm" variant="secondary" block>{dependency}</Button>} 
                             {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>

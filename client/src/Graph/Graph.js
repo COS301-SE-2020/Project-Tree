@@ -6,6 +6,7 @@ import dagre from 'dagre';
 import graphlib from 'graphlib';
 import CreateDependency from './Dependency/CreateDependency'
 import {Button, Container, Row, Col } from 'react-bootstrap'
+import CreateTask from './Task/CreateTask';
 
 function makeLink(edge) {
     var link = new joint.shapes.standard.Link({
@@ -69,13 +70,15 @@ class Graph extends React.Component {
         this.handleClick = this.handleClick.bind(this)
         this.handleDblClick = this.handleDblClick.bind(this)
         this.drawGraph = this.drawGraph.bind(this)
-        this.createDependency = this.createDependency.bind(this)
+        // this.createDependency = this.createDependency.bind(this)
+        this.addTask = this.addTask.bind(this)
+        this.setTaskInfo = this.setTaskInfo.bind(this)
         this.hideModal = this.hideModal.bind(this)
         this.zoomIn = this.zoomIn.bind(this)
         this.zoomOut = this.zoomOut.bind(this)
         this.resetZoom = this.resetZoom.bind(this)
         this.paperScale = this.paperScale.bind(this)
-        this.state = {createDep:false, source:null, target:null, graphScale:1, }
+        this.state = {createTask:false, source:null, target:null, graphScale:1, }
     }
 
     handleClick(clickedNode){
@@ -90,14 +93,18 @@ class Graph extends React.Component {
         }
     }
 
-    createDependency(cellView) {
-        if(cellView.model.attributes.target !== undefined)
-        {
-            if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
-            {
-                this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
-            }
-        }
+    // createDependency(cellView) {
+    //     if(cellView.model.attributes.target !== undefined)
+    //     {
+    //         if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
+    //         {
+    //             this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
+    //         }
+    //     }
+    // }
+
+    addTask(){
+        this.setState({createTask:true})
     }
 
     handleDblClick(clickedNode)
@@ -151,6 +158,8 @@ class Graph extends React.Component {
             dragStartPosition = null;
         });
 
+        paper.on('blank:pointerdblclick', this.addTask);
+
         //paper.on('cell:pointerdown cell:pointerup', this.createDependency);
 
         $("#paper")
@@ -158,9 +167,10 @@ class Graph extends React.Component {
                 if (dragStartPosition)
                     paper.translate(
                         event.offsetX - dragStartPosition.x, 
-                        event.offsetY - dragStartPosition.y);
+                        event.offsetY - dragStartPosition.y
+                    );
         });
-        console.log(graphScale)
+
         this.setState({graph: graph, paper: paper});
     }
 
@@ -182,7 +192,22 @@ class Graph extends React.Component {
     }
 
     hideModal(){
-        this.setState({createDep: false})
+        this.setState({createTask: false})
+    }
+
+    async setTaskInfo(){
+        const response = await fetch('/getProject',{
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({ id:this.props.project.id })
+        });
+		const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+
+        this.setState({nodes:body.tasks, links:body.rels})
     }
 
     render(){
@@ -195,8 +220,7 @@ class Graph extends React.Component {
                         <Col></Col>
                         <Col>
                         <Row>
-                            <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button> 
-                            </Col>
+                            <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button></Col>
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomOut}><i className="fa fa-search-minus"></i></Button></Col>
                             <Col className="text-center"> <Button variant="dark" size="sm" block onClick={this.resetZoom}><i className="fa fa-repeat"></i></Button></Col>
                             </Row>
@@ -205,7 +229,8 @@ class Graph extends React.Component {
                     </Row>
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
-                {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null}
+                {/* {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null} */}
+                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.setTaskInfo}/> : null}
             </React.Fragment>
         )
     }
