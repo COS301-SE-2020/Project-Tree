@@ -71,6 +71,8 @@ class Graph extends React.Component {
         this.drawGraph = this.drawGraph.bind(this)
         this.addTask = this.addTask.bind(this)
         this.hideModal = this.hideModal.bind(this)
+        this.hideDependecyModal = this.hideDependecyModal.bind(this)
+        this.showDependencyModal = this.showDependencyModal.bind(this)
         this.zoomIn = this.zoomIn.bind(this)
         this.zoomOut = this.zoomOut.bind(this)
         this.resetZoom = this.resetZoom.bind(this)
@@ -218,15 +220,19 @@ class Graph extends React.Component {
         this.setState({createDependency:false})
     }
 
+    showDependencyModal(){
+        this.setState({createDependency:true})
+    }
+
     render(){
         this.drawGraph();
 
-        var both = false;
-        var dependency = null
+        var dependency = null;
+        var color = "standard color"
         if(this.state.source != null && this.state.target != null)
         {
             dependency = this.state.source.name+"→"+this.state.target.name
-            both = true
+            color = "bothClicked";
         }
 
         else if(this.state.source != null){
@@ -240,7 +246,7 @@ class Graph extends React.Component {
                         <Col></Col>
                         <Col xs={6}>
                         <Row>
-                            {dependency != null ? <Col className="text-center" xs={5}><Button variant="outline-secondary" block size="sm">{dependency}</Button></Col> : null}
+                            {dependency != null ? <Col className="text-center" xs={5}><Button onClick={this.showDependencyModal} variant="outline-secondary" block size="sm">{dependency}</Button></Col> : null}
                             {this.state.source != null ? <Col className="text-center"><Button onClick={this.clearDependency} variant="danger" block size="sm"><i className="fa fa-close"></i></Button></Col> : null}
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button></Col>
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomOut}><i className="fa fa-search-minus"></i></Button></Col>
@@ -251,8 +257,8 @@ class Graph extends React.Component {
                     </Row>
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
-                {/* {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null} */}
-                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo}/> : null}
+                {this.state.createDependency ? <CreateDependency setTaskInfo={this.props.setTaskInfo} hideDependencyModal={this.hideDependecyModal} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
+                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project}/> : null}
             </React.Fragment>
         )
     }
