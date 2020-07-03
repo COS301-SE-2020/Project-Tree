@@ -14,8 +14,8 @@ class CreateDependency extends React.Component{
         super(props);
         this.state = {  Show:true,
                         pid: this.props.project.id,
-                        fid: this.props.source,
-                        sid: this.props.target
+                        fid: this.props.source.id,
+                        sid: this.props.target.id
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -24,7 +24,6 @@ class CreateDependency extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        console.log(data);
         
         await fetch('/dependency/add', {
             method: 'POST',
@@ -34,22 +33,20 @@ class CreateDependency extends React.Component{
             },
             body: data,
         });
-        
-        console.log("hello")
         this.props.setTaskInfo()
-        this.props.hideDependecyModal()
+        this.props.closeModal()
     }
 
     render(){
         if(this.props.source == null || this.props.target == null)
         {
-            this.props.hideDependencyModal();
+            this.props.closeModal();
         }
 
         return (
             <React.Fragment>
                 {/*<Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>*/}
-                <Modal show={this.state.Show} onHide={this.props.clearDependency}>
+                <Modal show={true} onHide={this.props.closeModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create Dependency</Modal.Title>
@@ -71,7 +68,7 @@ class CreateDependency extends React.Component{
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.props.clearDependency}>
+                            <Button variant="secondary" onClick={this.props.closeModal}>
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">

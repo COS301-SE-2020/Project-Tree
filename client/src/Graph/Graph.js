@@ -71,19 +71,15 @@ class Graph extends React.Component {
         this.drawGraph = this.drawGraph.bind(this)
         this.addTask = this.addTask.bind(this)
         this.hideModal = this.hideModal.bind(this)
-        this.hideDependecyModal = this.hideDependecyModal.bind(this)
-        this.showDependencyModal = this.showDependencyModal.bind(this)
         this.zoomIn = this.zoomIn.bind(this)
         this.zoomOut = this.zoomOut.bind(this)
         this.resetZoom = this.resetZoom.bind(this)
         this.paperScale = this.paperScale.bind(this)
+        this.openCreateDependency = this.openCreateDependency.bind(this)
+        this.closeCreateDependency = this.closeCreateDependency.bind(this)
         this.toggleCreateDependency = this.toggleCreateDependency.bind(this)
         this.clearDependency = this.clearDependency.bind(this)
         this.state = {createTask:false, createDependency:false, graphScale:1, source:null, target:null }
-    }
-
-    clearDependency(){
-        this.setState({source:null, target:null});
     }
 
     toggleCreateDependency(clickedNode){
@@ -117,6 +113,10 @@ class Graph extends React.Component {
                 this.setState({target:source_target});
             }
         }
+    }
+
+    clearDependency(){
+        this.setState({source:null, target:null})
     }
 
     handleClick(clickedNode){
@@ -216,12 +216,12 @@ class Graph extends React.Component {
         this.setState({createTask: false})
     }
 
-    hideDependecyModal(){
-        this.setState({createDependency:false})
+    openCreateDependency(){
+        this.setState({createDependency: true})
     }
 
-    showDependencyModal(){
-        this.setState({createDependency:true})
+    closeCreateDependency(){
+        this.setState({createDependency: false})
     }
 
     render(){
@@ -246,7 +246,7 @@ class Graph extends React.Component {
                         <Col></Col>
                         <Col xs={6}>
                         <Row>
-                            {dependency != null ? <Col className="text-center" xs={5}><Button onClick={this.showDependencyModal} variant={color} block size="sm">{dependency}</Button></Col> : null}
+                            {dependency != null ? <Col className="text-center" xs={5}><Button onClick={this.openCreateDependency} variant={color} block size="sm">{dependency}</Button></Col> : null}
                             {this.state.source != null ? <Col className="text-center"><Button onClick={this.clearDependency} variant="danger" block size="sm"><i className="fa fa-close"></i></Button></Col> : null}
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button></Col>
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomOut}><i className="fa fa-search-minus"></i></Button></Col>
@@ -257,7 +257,7 @@ class Graph extends React.Component {
                     </Row>
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
-                {this.state.createDependency ? <CreateDependency clearDependency={this.clearDependency} setTaskInfo={this.props.setTaskInfo} hideDependencyModal={this.hideDependecyModal} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
+                {this.state.createDependency ? <CreateDependency closeModal={this.closeCreateDependency} setTaskInfo={this.props.setTaskInfo}  project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
                 {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project}/> : null}
             </React.Fragment>
         )

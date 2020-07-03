@@ -2,8 +2,8 @@ const db = require('./DB')
 
 async function createDependency(req,res){
     var session = db.getSession();
-
-    if(req.body.cd_fid == req.body.cd_pid)
+    
+    if(req.body.cd_fid == req.body.cd_sid)
     {
         res.send({ret: 400})
     }
