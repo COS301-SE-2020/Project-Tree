@@ -22,7 +22,8 @@ class UpdateTask extends React.Component{
         emonth = emonth < 10 ? `0${emonth}`: `${emonth}`
         var eday = this.props.task.endDate.day.low
         eday = eday < 10 ? `0${eday}`: `${eday}`
-        this.state = { Show:false,                        
+        this.state = { 
+                        Show:false,                        
                         id: this.props.task.id,
                         name: this.props.task.name,
                         startDate: `${syear}-${smonth}-${sday}`, 
@@ -48,18 +49,14 @@ class UpdateTask extends React.Component{
         emonth = emonth < 10 ? `0${emonth}`: `${emonth}`
         var eday = this.props.task.startDate.day.low
         eday = eday < 10 ? `0${eday}`: `${eday}`
-        this.setState(
-            {
+        this.setState({
                 id: this.props.task.id,
                 name: this.props.task.name,
                 startDate: `${syear}-${smonth}-${sday}`, 
                 duration: this.props.task.duration,
                 endDate: `${eyear}-${emonth}-${eday}`, 
                 description: this.props.task.description
-            }
-        )
-        
-        
+            })
     }
 
     ShowModal(){
@@ -100,9 +97,7 @@ class UpdateTask extends React.Component{
         }
     
         var formatDate = edate[0]+"-"+formatMonth+"-"+formatDay;
-       // this.setState({ endDate: formatDate })
         return formatDate
-        //.state.endDate= formatDate;
     }
 
     async handleSubmit(event) {
@@ -117,9 +112,7 @@ class UpdateTask extends React.Component{
             },
             body: data,
         });
-
-        this.props.toggleSidebar(null, null)
-        this.props.setTaskInfo();
+        this.props.setTaskInfo()
         this.setState({ Show:false })
     }
 

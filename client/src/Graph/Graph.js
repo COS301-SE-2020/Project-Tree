@@ -94,16 +94,55 @@ class Graph extends React.Component {
         super(props);
         this.state={graph:null, paper:null}
         this.handleClick = this.handleClick.bind(this)
-        this.handleDblClick = this.handleDblClick.bind(this)
         this.drawGraph = this.drawGraph.bind(this)
-        // this.createDependency = this.createDependency.bind(this)
         this.addTask = this.addTask.bind(this)
         this.hideModal = this.hideModal.bind(this)
+        this.hideDependecyModal = this.hideDependecyModal.bind(this)
+        this.showDependencyModal = this.showDependencyModal.bind(this)
         this.zoomIn = this.zoomIn.bind(this)
         this.zoomOut = this.zoomOut.bind(this)
         this.resetZoom = this.resetZoom.bind(this)
         this.paperScale = this.paperScale.bind(this)
-        this.state = {createTask:false, source:null, target:null, graphScale:1, }
+        this.toggleCreateDependency = this.toggleCreateDependency.bind(this)
+        this.clearDependency = this.clearDependency.bind(this)
+        this.state = {createTask:false, createDependency:false, graphScale:1, source:null, target:null }
+    }
+
+    clearDependency(){
+        this.setState({source:null, target:null});
+    }
+
+    toggleCreateDependency(clickedNode){
+        var new_source_targetID = clickedNode.model.id
+
+        if(new_source_targetID == null)
+        {
+            this.setState({source:null, target:null});
+            return;
+        }
+
+        var source_target
+        for(var x=0; x<this.props.nodes.length; x++)
+        {
+            if(this.props.nodes[x].id === new_source_targetID){
+                source_target = this.props.nodes[x];
+            }
+        }
+        
+        if(this.state.source === null)
+        {
+            this.setState({source:source_target});
+        }
+
+        else{
+            if(this.state.source.id === new_source_targetID)
+            {
+                this.setState({source:null, target:null})
+            }
+            else{
+                this.setState({target:source_target});
+            }
+        }
     }
 
     handleClick(clickedNode){
@@ -118,23 +157,8 @@ class Graph extends React.Component {
         }
     }
 
-    // createDependency(cellView) {
-    //     if(cellView.model.attributes.target !== undefined)
-    //     {
-    //         if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
-    //         {
-    //             this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
-    //         }
-    //     }
-    // }
-
     addTask(){
         this.setState({createTask:true})
-    }
-
-    handleDblClick(clickedNode)
-    {
-        this.props.toggleCreateDependency(clickedNode.model.id)
     }
 
     paperScale(sx, sy) {
@@ -168,9 +192,9 @@ class Graph extends React.Component {
             linkPinning: false,
         });
 
-        paper.on('cell:pointerclick', this.handleClick);
+        paper.on('element:contextmenu', this.toggleCreateDependency);
 
-        paper.on('element:pointerdblclick', this.handleDblClick);
+        paper.on('cell:pointerclick', this.handleClick);
         
         var dragStartPosition
         paper.on('blank:pointerdown',
@@ -184,8 +208,6 @@ class Graph extends React.Component {
         });
 
         paper.on('blank:pointerdblclick', this.addTask);
-
-        //paper.on('cell:pointerdown cell:pointerup', this.createDependency);
 
         $("#paper")
             .mousemove(function(event) {
@@ -220,27 +242,49 @@ class Graph extends React.Component {
         this.setState({createTask: false})
     }
 
+    hideDependecyModal(){
+        this.setState({createDependency:false})
+    }
+
+    showDependencyModal(){
+        this.setState({createDependency:true})
+    }
+
     render(){
         this.drawGraph();
+
+        var dependency = null;
+        var color = "outline-dark"
+        if(this.state.source != null && this.state.target != null)
+        {
+            dependency = this.state.source.name+"→"+this.state.target.name
+            color = "success";
+        }
+
+        else if(this.state.source != null){
+            dependency = this.state.source.name+"→"
+        }
 
         return(
             <React.Fragment>
                 <Container className="text-center py-2">
                     <Row>
                         <Col></Col>
-                        <Col>
+                        <Col xs={6}>
                         <Row>
+                            {dependency != null ? <Col className="text-center" xs={5}><Button onClick={this.showDependencyModal} variant={color} block size="sm">{dependency}</Button></Col> : null}
+                            {this.state.source != null ? <Col className="text-center"><Button onClick={this.clearDependency} variant="danger" block size="sm"><i className="fa fa-close"></i></Button></Col> : null}
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button></Col>
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomOut}><i className="fa fa-search-minus"></i></Button></Col>
                             <Col className="text-center"> <Button variant="dark" size="sm" block onClick={this.resetZoom}><i className="fa fa-repeat"></i></Button></Col>
-                            </Row>
+                        </Row>
                         </Col>
                         <Col></Col>
                     </Row>
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
-                {/* {this.state.createDep ? <CreateDependency hideModal={ this.hideModal } project={ this.props.project } source={this.state.source} target={this.state.target}/> : null} */}
-                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo}/> : null}
+                {this.state.createDependency ? <CreateDependency clearDependency={this.clearDependency} setTaskInfo={this.props.setTaskInfo} hideDependencyModal={this.hideDependecyModal} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
+                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project}/> : null}
             </React.Fragment>
         )
     }

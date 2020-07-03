@@ -2,20 +2,17 @@ import React from 'react';
 import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Graph from './Graph';
-import CreateTask from './Task/CreateTask';
 import DeleteTask from './Task/DeleteTask';
 import UpdateTask from './Task/UpdateTask';
 import UpdateProgress from './Task/UpdateProgress';
-import CreateDependency from './Dependency/CreateDependency'
 import UpdateDependency from './Dependency/UpdateDependency'
 import DeleteDependency from './Dependency/DeleteDependency'
 
 class GraphPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {task:null, dependency:null, nodes:null, links:null, source:null, target:null};
+        this.state = {task:null, dependency:null, nodes:null, links:null};
         this.toggleSidebar = this.toggleSidebar.bind(this);
-        this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
         this.setTaskInfo = this.setTaskInfo.bind(this)
     }
 
@@ -34,35 +31,19 @@ class GraphPage extends React.Component{
         this.setState({nodes:body.tasks, links:body.rels})
     }
 
-    toggleCreateDependency(new_source_targetID){
-        if(new_source_targetID == null)
-        {
-            this.setState({source:null, target:null});
-            return;
-        }
+    async setTaskInfo(){
+        const response = await fetch('/getProject',{
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({ id:this.props.project.id })
+        });
+        const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
 
-        var source_target
-        for(var x=0; x<this.state.nodes.length; x++)
-        {
-            if(this.state.nodes[x].id === new_source_targetID){
-                source_target = this.state.nodes[x];
-            }
-        }
-        
-        if(this.state.source === null)
-        {
-            this.setState({source:source_target});
-        }
-
-        else{
-            if(this.state.source.id === new_source_targetID)
-            {
-                this.setState({source:null, target:null})
-            }
-            else{
-                this.setState({target:source_target});
-            }
-        }
+        this.setState({nodes:body.tasks, links:body.rels})
     }
 
     toggleSidebar(newTaskID, newDependencyID){
@@ -115,17 +96,6 @@ class GraphPage extends React.Component{
 
 
     render(){
-        var dependency;
-        var both = false;
-        if(this.state.source !== null && this.state.target !== null){
-            both = true;
-        }else if(this.state.source !== null){
-            dependency = this.state.source.name+"→ Select 1 more Task to make Dependency";
-            both = false;
-        }else{
-            dependency = "Select 2 Tasks to make a Dependency";
-            both = false;
-        }
         return(
             <React.Fragment>
                 <Container fluid className="h-100">
@@ -133,14 +103,13 @@ class GraphPage extends React.Component{
                         <Col className="text-center block-example border border-secondary bg-light">
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
-                            {both === true? <CreateDependency project={ this.props.project } source={this.state.source} target={this.state.target}/> : <Button size="sm" variant="secondary" block>{dependency}</Button>} 
                             {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
                             <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo}/> : null}
                             {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} toggleSidebar={this.toggleSidebar}/> : null}
                         </Col>
                         <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
-                            {this.state.nodes!==null?<Graph project={ this.props.project } nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo}/>:null}
+                            {this.state.nodes!==null?<Graph project={this.props.project} nodes={this.state.nodes} links={this.state.links} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar}/>:null}
                         </Col>
                     </Row>
                 </Container>
