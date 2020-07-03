@@ -228,11 +228,11 @@ class Graph extends React.Component {
         this.drawGraph();
 
         var dependency = null;
-        var color = "standard color"
+        var color = "outline-dark"
         if(this.state.source != null && this.state.target != null)
         {
             dependency = this.state.source.name+"→"+this.state.target.name
-            color = "bothClicked";
+            color = "success";
         }
 
         else if(this.state.source != null){
@@ -246,7 +246,7 @@ class Graph extends React.Component {
                         <Col></Col>
                         <Col xs={6}>
                         <Row>
-                            {dependency != null ? <Col className="text-center" xs={5}><Button onClick={this.showDependencyModal} variant="outline-secondary" block size="sm">{dependency}</Button></Col> : null}
+                            {dependency != null ? <Col className="text-center" xs={5}><Button onClick={this.showDependencyModal} variant={color} block size="sm">{dependency}</Button></Col> : null}
                             {this.state.source != null ? <Col className="text-center"><Button onClick={this.clearDependency} variant="danger" block size="sm"><i className="fa fa-close"></i></Button></Col> : null}
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button></Col>
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomOut}><i className="fa fa-search-minus"></i></Button></Col>
@@ -257,7 +257,7 @@ class Graph extends React.Component {
                     </Row>
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
-                {this.state.createDependency ? <CreateDependency setTaskInfo={this.props.setTaskInfo} hideDependencyModal={this.hideDependecyModal} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
+                {this.state.createDependency ? <CreateDependency clearDependency={this.clearDependency} setTaskInfo={this.props.setTaskInfo} hideDependencyModal={this.hideDependecyModal} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
                 {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project}/> : null}
             </React.Fragment>
         )
