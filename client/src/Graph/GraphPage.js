@@ -79,22 +79,6 @@ class GraphPage extends React.Component{
         }
     }
 
-    async setTaskInfo(){
-        const response = await fetch('/getProject',{
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ id:this.props.project.id })
-        });
-		const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-
-        this.setState({nodes:body.tasks, links:body.rels})
-    }
-
-
     render(){
         return(
             <React.Fragment>
@@ -137,7 +121,7 @@ class ProjectDetails extends React.Component{
                 <tbody>
                     <tr>
                         <td></td>
-                        <td>Create </td>*
+                        <td>Create </td>
                         <td>Delete </td>
                         <td>Update </td>
                     </tr>

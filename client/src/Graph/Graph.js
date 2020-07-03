@@ -284,7 +284,7 @@ class Graph extends React.Component {
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
                 {this.state.createDependency ? <CreateDependency clearDependency={this.clearDependency} setTaskInfo={this.props.setTaskInfo} hideDependencyModal={this.hideDependecyModal} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
-                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project}/> : null}
+                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo}/> : null}
             </React.Fragment>
         )
     }
