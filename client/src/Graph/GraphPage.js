@@ -5,6 +5,7 @@ import Graph from './Graph';
 import CreateTask from './Task/CreateTask';
 import DeleteTask from './Task/DeleteTask';
 import UpdateTask from './Task/UpdateTask';
+import UpdateProgress from './Task/UpdateProgress';
 import CreateDependency from './Dependency/CreateDependency'
 import UpdateDependency from './Dependency/UpdateDependency'
 import DeleteDependency from './Dependency/DeleteDependency'
@@ -15,6 +16,7 @@ class GraphPage extends React.Component{
         this.state = {task:null, dependency:null, nodes:null, links:null, source:null, target:null};
         this.toggleSidebar = this.toggleSidebar.bind(this);
         this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
+        this.setTaskInfo = this.setTaskInfo.bind(this)
     }
 
     async componentDidMount(){
@@ -96,6 +98,21 @@ class GraphPage extends React.Component{
         }
     }
 
+    async setTaskInfo(){
+        const response = await fetch('/getProject',{
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({ id:this.props.project.id })
+        });
+		const body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+
+        this.setState({nodes:body.tasks, links:body.rels})
+    }
+
 
     render(){
         var dependency;
@@ -123,7 +140,7 @@ class GraphPage extends React.Component{
                             {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} toggleSidebar={this.toggleSidebar}/> : null}
                         </Col>
                         <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
-                            {this.state.nodes!==null?<Graph project={ this.props.project } nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar}/>:null}
+                            {this.state.nodes!==null?<Graph project={ this.props.project } nodes={this.state.nodes} links={this.state.links} toggleCreateDependency={this.toggleCreateDependency} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo}/>:null}
                         </Col>
                     </Row>
                 </Container>
@@ -151,7 +168,7 @@ class ProjectDetails extends React.Component{
                 <tbody>
                     <tr>
                         <td></td>
-                        <td>Create </td>
+                        <td>Create </td>*
                         <td>Delete </td>
                         <td>Update </td>
                     </tr>
@@ -229,6 +246,7 @@ class TaskSidebar extends React.Component{
                     </Row>
                     <Row>
                         <Col><UpdateTask  task={this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
+                        <Col><UpdateProgress task={this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
                     </Row>
                 </Container>
             </React.Fragment>

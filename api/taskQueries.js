@@ -13,9 +13,13 @@ async function createTask(req,res){
     var resPersonId = parseInt(req.body.ct_resPersonId);
     var pacManId = parseInt(req.body.ct_pacManId);
     var resourceId = req.body.ct_resourceId;
+    var status = "Incomplete"
     var taskId = null;
     var result = await session
-        .run('CREATE(n:Task {name:$taskName, startDate: date($startDate), endDate:date($endDate), duration:$duration, description:$desc, projId:$pid}) RETURN n', {taskName:Tname, startDate:Sdate, endDate:Edate, duration:Dur, desc:Desc, pid:proj})
+        .run
+        (`
+            CREATE(n:Task {name:"${req.body.ct_Name}", startDate: date("${req.body.ct_startDate}"), endDate:date("${req.body.ct_endDate}"), duration:${req.body.ct_duration}, description:"${req.body.ct_description}", projId:${req.body.ct_pid}, progress:"${status}"}) RETURN n
+        `)
         .then(function(result){
             taskId = result.records[0]._fields[0].identity.low
         })
@@ -32,7 +36,7 @@ async function createTask(req,res){
     result = await session.run(
         'MATCH (a),(b) WHERE ID(a) = '+ taskId +' AND ID(b) = '+proj +'  CREATE (a)-[n:PART_OF]->(b) RETURN *'
     )
-    res.send({ret: result});
+    res.send({ret: result.records[0]._fields[0]});
 }
 
 async function deleteTask(req,res){
@@ -55,8 +59,6 @@ async function deleteTask(req,res){
     }
     res.send({ret: result});
 }
-
-
 
 async function updateTask(req,res){ //update a task with a certain ID with specified fields
     var session = db.getSession();
@@ -90,10 +92,25 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
     }
 }
 
+async function updateProgress(req,res){
+    var session = db.getSession();
+
+    var result = await session.run(
+        `
+            MATCH (n)
+            WHERE ID(n) = ${req.body.id}
+            SET n.progress = toString("${req.body.progress}")
+            RETURN n
+        `
+    )
+    res.send({ret: result})
+}
+
 module.exports =
 {
     createTask,
     deleteTask,
-    updateTask
+    updateTask,
+    updateProgress
 };
 

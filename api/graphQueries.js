@@ -16,7 +16,8 @@ async function getProjectTasks(req,res)
 						description: record._fields[0].properties.description,
 						startDate: record._fields[0].properties.startDate,
 						endDate: record._fields[0].properties.endDate,
-						duration: record._fields[0].properties.duration.low
+						duration: record._fields[0].properties.duration.low,
+						progress: record._fields[0].properties.progress,
                     });
 				});
 			})
