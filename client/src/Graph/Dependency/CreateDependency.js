@@ -25,7 +25,7 @@ class CreateDependency extends React.Component{
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
         
-        await fetch('/dependency/add', {
+        const response = await fetch('/dependency/add', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -33,7 +33,9 @@ class CreateDependency extends React.Component{
             },
             body: data,
         });
-        this.props.setTaskInfo()
+        const body = await response.json(); 
+        await this.props.setTaskInfo()
+        this.props.toggleSidebar(null, body.relationship.id)
         this.props.closeModal()
     }
 

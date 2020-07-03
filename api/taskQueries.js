@@ -35,7 +35,7 @@ async function createTask(req,res){
     if(resourceId != undefined)
         await peopleFunctions.addResources(taskId,resourceId)
     result = await session.run(
-        'MATCH (a),(b) WHERE ID(a) = '+ taskId +' AND ID(b) = '+proj +' AND CREATE (a)-[n:PART_OF]->(b) RETURN a'
+        'MATCH (a),(b) WHERE ID(a) = '+ taskId +' AND ID(b) = '+proj +' CREATE (a)-[n:PART_OF]->(b) RETURN a'
     )
     .then(function(result){
         result.records.forEach(function(record){

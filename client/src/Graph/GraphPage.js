@@ -90,7 +90,7 @@ class GraphPage extends React.Component{
                             {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
                             <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo}/> : null}
-                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} toggleSidebar={this.toggleSidebar}/> : null}
+                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar}/> : null}
                         </Col>
                         <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
                             {this.state.nodes!==null?<Graph project={this.props.project} nodes={this.state.nodes} links={this.state.links} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar}/>:null}
@@ -230,7 +230,7 @@ class DependencySidebar extends React.Component{
                 <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
                     <Row>
                         <Col> 
-                            <DeleteDependency dependency={this.props.dependency} />
+                            <DeleteDependency dependency={this.props.dependency} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/>
                         </Col>
                         <Col xs={6} ><h3>{start+"→"+end}</h3></Col>
                         <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
@@ -243,7 +243,7 @@ class DependencySidebar extends React.Component{
                     </Row>
                     <Row>
                         <Col>
-                            <UpdateDependency project={this.props.project} dependency={this.props.dependency}/>
+                            <UpdateDependency project={this.props.project} dependency={this.props.dependency} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/>
                         </Col>
                     </Row>
                 </Container>

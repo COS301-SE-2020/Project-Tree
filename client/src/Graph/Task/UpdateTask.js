@@ -112,7 +112,8 @@ class UpdateTask extends React.Component{
             },
             body: data,
         });
-        this.props.setTaskInfo()
+        await this.props.setTaskInfo()
+        this.props.toggleSidebar(this.props.task.id, null)
         this.setState({ Show:false })
     }
 

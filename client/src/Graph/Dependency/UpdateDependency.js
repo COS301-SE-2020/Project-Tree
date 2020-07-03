@@ -44,7 +44,10 @@ class UpdateDependency extends React.Component{
             },
             body: data,
         });
-        this.setState({ Show:false })
+        
+        await this.props.setTaskInfo()
+        this.props.toggleSidebar(null, this.props.dependency.id)
+        this.setState({ Show:false }) 
     }
 
     render(){

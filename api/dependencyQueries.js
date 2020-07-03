@@ -2,6 +2,7 @@ const db = require('./DB')
 
 async function createDependency(req,res){
     var session = db.getSession();
+    var taskArr = [];
     
     if(req.body.cd_fid == req.body.cd_sid)
     {
@@ -12,13 +13,23 @@ async function createDependency(req,res){
         .run(`  MATCH (a),(b)
                 WHERE ID(a) = ${req.body.cd_fid} AND ID(b) = ${req.body.cd_sid} 
                 CREATE (a)-[n:DEPENDENCY{ projId:${req.body.cd_pid}, relationshipType:'${req.body.cd_relationshipType}', duration:${req.body.cd_duration}}]->(b) 
-                RETURN *
+                RETURN n
             `)
+        .then(function(result){
+            result.records.forEach(function(record){
+                taskArr.push({
+                    id: record._fields[0].identity.low,
+                    relationshipType: record._fields[0].properties.relationshipType,
+                    duration: record._fields[0].properties.duration.low
+                });
+    
+            });
+        })
         .catch(function(err){
-            return err;
+            console.log(err);
         });
     await updateDependencies(req.body.cd_sid)
-    res.send({ret: result});
+    res.send({relationship: taskArr[0]});
 }
 
 async function updateDependency(req,res){ //update a Dependency between 2 nodes with specified fields

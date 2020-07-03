@@ -40,7 +40,8 @@ class DeleteDependency extends React.Component{
             },
             body: data,
         });
-        this.setState({ Show:false })
+        this.props.setTaskInfo();
+        this.props.toggleSidebar(null, null)
     }
 
     render(){

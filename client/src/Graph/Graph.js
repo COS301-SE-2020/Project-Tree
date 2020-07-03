@@ -276,15 +276,15 @@ class Graph extends React.Component {
                             {this.state.source != null ? <Col className="text-center"><Button onClick={this.clearDependency} variant="danger" block size="sm"><i className="fa fa-close"></i></Button></Col> : null}
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button></Col>
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomOut}><i className="fa fa-search-minus"></i></Button></Col>
-                            <Col className="text-center"> <Button variant="dark" size="sm" block onClick={this.resetZoom}><i className="fa fa-repeat"></i></Button></Col>
+                            <Col className="text-center"><Button variant="dark" size="sm" block onClick={this.resetZoom}><i className="fa fa-repeat"></i></Button></Col>
                         </Row>
                         </Col>
                         <Col></Col>
                     </Row>
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
-                {this.state.createDependency ? <CreateDependency closeModal={this.closeCreateDependency} setTaskInfo={this.props.setTaskInfo}  project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
-                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo}/> : null}
+                {this.state.createDependency ? <CreateDependency closeModal={this.closeCreateDependency} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
+                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/> : null}
             </React.Fragment>
         )
     }

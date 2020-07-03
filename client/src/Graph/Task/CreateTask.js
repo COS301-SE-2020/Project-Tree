@@ -78,8 +78,9 @@ class CreateTask extends React.Component{
             },
             body: data,
         }); 
-        const body = await response.json();        
-        this.props.setTaskInfo();
+        const body = await response.json();       
+        await this.props.setTaskInfo();
+        this.props.toggleSidebar(body.node.id, null)
         this.setState({ Show:false })
     }
 
