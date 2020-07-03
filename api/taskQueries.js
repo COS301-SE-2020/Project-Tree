@@ -4,6 +4,7 @@ var peopleFunctions = require('./personQueries')
 
 async function createTask(req,res){
     var session = db.getSession();
+    var taskArr = [];
     var Tname = req.body.ct_Name;
     var proj = parseInt(req.body.ct_pid);
     var Sdate = req.body.ct_startDate;
@@ -30,9 +31,25 @@ async function createTask(req,res){
     if(resourceId != undefined)
         await peopleFunctions.addResources(taskId,resourceId)
     result = await session.run(
-        'MATCH (a),(b) WHERE ID(a) = '+ taskId +' AND ID(b) = '+proj +'  CREATE (a)-[n:PART_OF]->(b) RETURN *'
+        'MATCH (a),(b) WHERE ID(a) = '+ taskId +' AND ID(b) = '+proj +' AND CREATE (a)-[n:PART_OF]->(b) RETURN a'
     )
-    res.send({ret: result});
+    .then(function(result){
+        result.records.forEach(function(record){
+            taskArr.push({
+                id: record._fields[0].identity.low,
+                name: record._fields[0].properties.name,
+                description: record._fields[0].properties.description,
+                startDate: record._fields[0].properties.startDate,
+                endDate: record._fields[0].properties.endDate,
+                duration: record._fields[0].properties.duration.low
+            });
+
+        });
+    })
+    .catch(function(err){
+        console.log(err);
+    });
+    res.send({node: taskArr[0]});
 }
 
 async function deleteTask(req,res){

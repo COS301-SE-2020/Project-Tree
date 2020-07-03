@@ -68,17 +68,53 @@ class Graph extends React.Component {
         super(props);
         this.state={graph:null, paper:null}
         this.handleClick = this.handleClick.bind(this)
-        this.handleDblClick = this.handleDblClick.bind(this)
         this.drawGraph = this.drawGraph.bind(this)
-        // this.createDependency = this.createDependency.bind(this)
         this.addTask = this.addTask.bind(this)
-        this.setTaskInfo = this.setTaskInfo.bind(this)
         this.hideModal = this.hideModal.bind(this)
         this.zoomIn = this.zoomIn.bind(this)
         this.zoomOut = this.zoomOut.bind(this)
         this.resetZoom = this.resetZoom.bind(this)
         this.paperScale = this.paperScale.bind(this)
-        this.state = {createTask:false, source:null, target:null, graphScale:1, }
+        this.toggleCreateDependency = this.toggleCreateDependency.bind(this)
+        this.clearDependency = this.clearDependency.bind(this)
+        this.state = {createTask:false, createDependency:false, graphScale:1, source:null, target:null }
+    }
+
+    clearDependency(){
+        this.setState({source:null, target:null});
+    }
+
+    toggleCreateDependency(clickedNode){
+        var new_source_targetID = clickedNode.model.id
+
+        if(new_source_targetID == null)
+        {
+            this.setState({source:null, target:null});
+            return;
+        }
+
+        var source_target
+        for(var x=0; x<this.props.nodes.length; x++)
+        {
+            if(this.props.nodes[x].id === new_source_targetID){
+                source_target = this.props.nodes[x];
+            }
+        }
+        
+        if(this.state.source === null)
+        {
+            this.setState({source:source_target});
+        }
+
+        else{
+            if(this.state.source.id === new_source_targetID)
+            {
+                this.setState({source:null, target:null})
+            }
+            else{
+                this.setState({target:source_target});
+            }
+        }
     }
 
     handleClick(clickedNode){
@@ -93,23 +129,8 @@ class Graph extends React.Component {
         }
     }
 
-    // createDependency(cellView) {
-    //     if(cellView.model.attributes.target !== undefined)
-    //     {
-    //         if(cellView.model.attributes.target.id !== undefined && cellView.model.attributes.target.id !== cellView.model.attributes.source.id)
-    //         {
-    //             this.setState({createDep:true, source:cellView.model.attributes.source.id, target:cellView.model.attributes.target.id})
-    //         }
-    //     }
-    // }
-
     addTask(){
         this.setState({createTask:true})
-    }
-
-    handleDblClick(clickedNode)
-    {
-        this.props.toggleCreateDependency(clickedNode.model.id)
     }
 
     paperScale(sx, sy) {
@@ -143,9 +164,9 @@ class Graph extends React.Component {
             linkPinning: false,
         });
 
-        paper.on('cell:pointerclick', this.handleClick);
+        paper.on('element:contextmenu', this.toggleCreateDependency);
 
-        paper.on('element:pointerdblclick', this.handleDblClick);
+        paper.on('cell:pointerclick', this.handleClick);
         
         var dragStartPosition
         paper.on('blank:pointerdown',
@@ -159,8 +180,6 @@ class Graph extends React.Component {
         });
 
         paper.on('blank:pointerdblclick', this.addTask);
-
-        //paper.on('cell:pointerdown cell:pointerup', this.createDependency);
 
         $("#paper")
             .mousemove(function(event) {
@@ -195,23 +214,24 @@ class Graph extends React.Component {
         this.setState({createTask: false})
     }
 
-    async setTaskInfo(){
-        const response = await fetch('/getProject',{
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ id:this.props.project.id })
-        });
-		const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-
-        this.setState({nodes:body.tasks, links:body.rels})
+    hideDependecyModal(){
+        this.setState({createDependency:false})
     }
 
     render(){
         this.drawGraph();
+
+        var both = false;
+        var dependency = null
+        if(this.state.source != null && this.state.target != null)
+        {
+            dependency = this.state.source.name+"→"+this.state.target.name
+            both = true
+        }
+
+        else if(this.state.source != null){
+            dependency = this.state.source.name+"→"
+        }
 
         return(
             <React.Fragment>
@@ -220,6 +240,8 @@ class Graph extends React.Component {
                         <Col></Col>
                         <Col>
                         <Row>
+                            {dependency != null ? <Col className="text-center"><Button variant="outline-secondary" block size="sm">{dependency}</Button></Col> : null}
+                            {this.state.source != null ? <Col className="text-center"><Button onClick={this.clearDependency} variant="outline-secondary" block size="sm">X</Button></Col> : null}
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomIn}><i className="fa fa-search-plus"></i></Button></Col>
                             <Col className="text-center"><Button variant="outline-secondary" block size="sm" onClick={this.zoomOut}><i className="fa fa-search-minus"></i></Button></Col>
                             <Col className="text-center"> <Button variant="dark" size="sm" block onClick={this.resetZoom}><i className="fa fa-repeat"></i></Button></Col>
