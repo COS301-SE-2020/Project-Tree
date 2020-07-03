@@ -9,7 +9,7 @@ import {Button, Container, Row, Col } from 'react-bootstrap'
 import CreateTask from './Task/CreateTask';
 
 function makeLink(edge) {
-    var link = new joint.shapes.standard.Link({
+    return new joint.shapes.standard.Link({
         id:edge.id,
         source: { id: edge.source },
         target: { id: edge.target },
@@ -17,7 +17,6 @@ function makeLink(edge) {
             type:'link'
         }
     })
-    return link
 }
 
 function makeElement(node) {
@@ -27,11 +26,38 @@ function makeElement(node) {
     var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
     var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
 
-    return new joint.shapes.basic.Rect({
+    var statusColor = '#fff'
+    if(node.progress === "Incomplete"){
+        let today = new Date();
+        if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
+            if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
+                if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
+                    statusColor = '#ff6961'
+                }
+            }
+            else{
+                statusColor = '#ff6961'
+            }
+        }
+        else{
+            statusColor = '#ff6961'
+        }
+    }
+    else if(node.progress === "Complete"){
+        statusColor = '#77dd77'
+    }
+    else if(node.progress === "Issue"){
+        statusColor = '#ffae42'
+    }
+
+    return new joint.shapes.standard.Rectangle({
         id: node.id,
         size: { width: width, height: height },
         attrs: {
             type:'node',
+            body: {
+                fill: statusColor
+            },
             text: { 
               text: node.name, 
               'font-size': letterSize, 
@@ -258,7 +284,7 @@ class Graph extends React.Component {
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
                 {this.state.createDependency ? <CreateDependency closeModal={this.closeCreateDependency} setTaskInfo={this.props.setTaskInfo}  project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
-                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project}/> : null}
+                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo}/> : null}
             </React.Fragment>
         )
     }

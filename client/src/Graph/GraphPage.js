@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Graph from './Graph';
 import DeleteTask from './Task/DeleteTask';
 import UpdateTask from './Task/UpdateTask';
+import UpdateProgress from './Task/UpdateProgress';
 import UpdateDependency from './Dependency/UpdateDependency'
 import DeleteDependency from './Dependency/DeleteDependency'
 
@@ -12,7 +13,7 @@ class GraphPage extends React.Component{
         super(props);
         this.state = {task:null, dependency:null, nodes:null, links:null};
         this.toggleSidebar = this.toggleSidebar.bind(this);
-        this.setTaskInfo = this.setTaskInfo.bind(this);
+        this.setTaskInfo = this.setTaskInfo.bind(this)
     }
 
     async componentDidMount(){
@@ -77,7 +78,6 @@ class GraphPage extends React.Component{
             this.setState({task:null, dependency:null});
         }
     }
-
 
     render(){
         return(
@@ -199,6 +199,7 @@ class TaskSidebar extends React.Component{
                     </Row>
                     <Row>
                         <Col><UpdateTask  task={this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
+                        <Col><UpdateProgress task={this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
                     </Row>
                 </Container>
             </React.Fragment>

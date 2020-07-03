@@ -195,6 +195,7 @@ async function setEndDate(nodeID)   //sets end date based on a nodes start date 
 
 async function updateDependencies(currentNodeID)
 {
+    console.log("HELLO" + currentNodeID)
     var predecessors = await getPredecessorNodes(currentNodeID);
     var successors = await getSuccessorNodes(currentNodeID);
     var dependencies = await getDependencies(currentNodeID);  //dependencies of the form B->CurrentNode s
