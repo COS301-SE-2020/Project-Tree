@@ -17,14 +17,7 @@ class CreateDependency extends React.Component{
                         fid: this.props.source,
                         sid: this.props.target
         };
-        //this.ShowModal = this.ShowModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    hideModal(){
-        this.setState({ Show:false });
-        this.props.hideModal();
     }
 
     async handleSubmit(event) {
@@ -41,14 +34,22 @@ class CreateDependency extends React.Component{
             },
             body: data,
         });
-        this.hideModal()
+        
+        console.log("hello")
+        this.props.setTaskInfo()
+        this.props.hideDependecyModal()
     }
 
     render(){
+        if(this.props.source == null || this.props.target == null)
+        {
+            this.props.hideDependencyModal();
+        }
+
         return (
             <React.Fragment>
                 {/*<Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>*/}
-                <Modal show={this.state.Show} onHide={this.hideModal}>
+                <Modal show={this.state.Show} onHide={this.props.hideDependencyModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create Dependency</Modal.Title>
@@ -70,7 +71,7 @@ class CreateDependency extends React.Component{
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.hideModal}>
+                            <Button variant="secondary" onClick={this.props.hideDependencyModal}>
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
