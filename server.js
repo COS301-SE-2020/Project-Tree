@@ -25,6 +25,7 @@ app.post('/dependency/add', dq.createDependency);
 app.post('/dependency/update', dq.updateDependency);
 app.post('/dependency/delete', dq.deleteDependency);
 app.post('/getProject', gq.getProjectTasks)
+app.post('/getProgress', pq.getProgress)
 
 if (process.env.NODE_ENV === 'production') {
 	// Serve any static files
