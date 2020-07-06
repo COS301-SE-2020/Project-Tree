@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ProgressBar from 'react-bootstrap/ProgressBar';
+import {ProgressBar, Button, Container, Row, Col } from 'react-bootstrap'
 
 class Home extends Component{
     render(){
@@ -100,8 +100,17 @@ class ProgressList extends React.Component{
             var currentVariant = this.getColor(projects[x].progress)
             listItems.push(
                 <React.Fragment key={projects[x].id}>
-                    <h1>{projects[x].name}</h1>
-                    <ProgressBar variant={currentVariant} now={projects[x].progress} label={`${projects[x].progress}%`}/>
+                    <Container className="py-4"> 
+                        <Row className="text-left align-items-center">
+                            <Col className="text-left">
+                                <h1>{projects[x].name}</h1>   
+                            </Col>
+                            <Col className="text-left" xs={8}>                             
+                                <ProgressBar variant={currentVariant} now={projects[x].progress} label={`${projects[x].progress}%`}/>
+                            </Col>        
+                        </Row> 
+                    </Container>
+                    
                 </React.Fragment>
             )
         }
