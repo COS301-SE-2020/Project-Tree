@@ -46,7 +46,7 @@ class ProgressDashboard extends React.Component{
     }
 
     async componentDidMount(){
-        var response = await fetch('/getProgress',{
+        var response = await fetch('/project/progress',{
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -57,7 +57,7 @@ class ProgressDashboard extends React.Component{
         const body1 = await response.json();
         if (response.status !== 200) throw Error(body1.message);
 
-        response = await fetch('/projectInfo');
+        response = await fetch('/project/get',{method: 'POST'});
 		var body2 = await response.json();
         if (response.status !== 200) throw Error(body2.message);
 
