@@ -30,7 +30,6 @@ class CreateProject extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        console.log(data);
         
         const response = await fetch('/project/add', {
             method: 'POST',
@@ -57,11 +56,11 @@ class CreateProject extends React.Component{
                         <Modal.Body>
                             <Form.Group>
                                 <Form.Label>Name of project</Form.Label>
-                                <Form.Control type='text' id="cp_Name" name="cp_Name" required/>
+                                <Form.Control type='text' name="cp_Name" required/>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Description of project</Form.Label>
-                                <Form.Control as="textarea" rows="3"type='text' id="cp_Description" name="cp_Description" required/>
+                                <Form.Control as="textarea" rows="3"type='text' name="cp_Description" required/>
                             </Form.Group>
                             <Table bordered hover>
                                 <thead>
@@ -78,21 +77,21 @@ class CreateProject extends React.Component{
                                 <tbody>
                                     <tr>
                                         <td>Package Manager</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
-                                        <td className="text-center"><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_pm_Create"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_pm_Delete"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_pm_Update"/></td>
                                     </tr>
                                     <tr>
                                         <td>Responsible Person</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_rp_Create"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_rp_Delete"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_rp_Update"/></td>
                                     </tr>
                                     <tr>
                                         <td>Resource</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_r_Create"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_r_Delete"/></td>
+                                        <td className="text-center"><input type="checkbox" name="cp_r_Update"/></td>
                                     </tr>
                                 </tbody>
                             </Table>

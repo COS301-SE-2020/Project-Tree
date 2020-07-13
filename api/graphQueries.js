@@ -9,10 +9,15 @@ async function getProjectTasks(req,res)
 	await session
 			.run('MATCH (n {projId:'+projID+'}) RETURN n')
 			.then(function(result){
-                var x = 0;
 				result.records.forEach(function(record){
 					taskArr.push({
-                        record
+                        id: record._fields[0].identity.low,
+                        name: record._fields[0].properties.name,
+						description: record._fields[0].properties.description,
+						startDate: record._fields[0].properties.startDate,
+						endDate: record._fields[0].properties.endDate,
+						duration: record._fields[0].properties.duration.low,
+						progress: record._fields[0].properties.progress,
                     });
 				});
 			})
@@ -22,10 +27,13 @@ async function getProjectTasks(req,res)
 	await session
 			.run('MATCH (n)-[r {projId: '+projID+'}]->(m) RETURN r')
 			.then(function(result){
-                var x = 0;
 				result.records.forEach(function(record){
 					relArr.push({
-                        record
+						id: record._fields[0].identity.low,
+						duration: record._fields[0].properties.duration.low,
+						relationshipType: record._fields[0].properties.relationshipType,
+						source: record._fields[0].start.low,
+						target: record._fields[0].end.low
                     });
 				});
 				

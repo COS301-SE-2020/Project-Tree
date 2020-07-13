@@ -97,6 +97,33 @@ async function updateProject(req,res){
     res.send({nodes: taskArr[0]});
 }
 
+async function getProgress(req, res)
+{
+    var session = db.getSession();
+    var response = [];
+    await session
+			.run(
+                'MATCH (a)-[:PART_OF]->(x:Project) RETURN a.projId, x.name, a.progress, a.name, a.duration'
+                )  
+			.then(function(result){
+                for(var x=0; x<result.records.length; x++)
+                {
+                    response.push({
+                        projectId : result.records[x]._fields[0].low,
+                        projectName : result.records[x]._fields[1],
+                        progress : result.records[x]._fields[2],
+                        taskName : result.records[x]._fields[3],
+                        duration : result.records[x]._fields[4].low
+                    })
+                }
+			})
+			.catch(function(err){
+				console.log(err);
+            });
+            
+	res.send({response: response});
+}
+
 async function getProjects(req, res){
     var session = db.getSession();
 	var taskArr = [];
@@ -124,5 +151,6 @@ module.exports =
     createProject,
     deleteProject,
     updateProject,
-    getProjects
+    getProjects,
+    getProgress
 };

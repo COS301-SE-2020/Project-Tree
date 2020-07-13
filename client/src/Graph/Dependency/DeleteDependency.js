@@ -9,12 +9,12 @@ function stringifyFormData(fd) {
     return JSON.stringify(data, null, 2);
 }
 
-class DeleteProject extends React.Component{
+class DeleteDependency extends React.Component{
     constructor(props) {
         super(props);
-        this.state = { Show:false, 
-                        id: this.props.project.id
-                    };
+        this.state = {  Show:false,
+                        did: this.props.dependency.id                
+        };
         this.ShowModal = this.ShowModal.bind(this);
         this.HideModal = this.HideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,8 +32,7 @@ class DeleteProject extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-
-        await fetch('/project/delete', {
+        await fetch('/dependency/delete', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -41,9 +40,8 @@ class DeleteProject extends React.Component{
             },
             body: data,
         });
-        this.setState({ Show:false })
-        this.props.setProjectInfo()
-        this.props.toggleSideBar(null);
+        this.props.setTaskInfo();
+        this.props.toggleSidebar(null, null)
     }
 
     render(){
@@ -53,12 +51,12 @@ class DeleteProject extends React.Component{
                 <Modal show={this.state.Show} onHide={this.HideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Delete Project</Modal.Title>
+                            <Modal.Title>Delete Dependency</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form.Group>
-                                <input hidden type="number" name="dp_id" value={this.state.id} onChange={()=> {}}/>
-                                <p>Are you sure you want to delete this project</p>
+                                <Form.Label>Are you sure you want to delete this dependency</Form.Label>
+                                <input hidden type="number" name="dd_did"  value={this.state.did} onChange={()=> {}}/>
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
@@ -66,7 +64,7 @@ class DeleteProject extends React.Component{
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
-                            Delete Project
+                            Delete Dependency
                             </Button>
                         </Modal.Footer>
                     </Form>
@@ -76,4 +74,4 @@ class DeleteProject extends React.Component{
     }
 }
 
-export default DeleteProject;
+export default DeleteDependency;
