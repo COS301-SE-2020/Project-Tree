@@ -1,56 +1,58 @@
 import React from 'react';
 import {Form, Modal, Button} from 'react-bootstrap'
+import $ from 'jquery';
 
-function stringifyFormData(fd) {
+function stringifyFormData(fd){
     const data = {};
-      for (let key of fd.keys()) {
+    for (let key of fd.keys()){
         data[key] = fd.get(key);
     }
     return JSON.stringify(data, null, 2);
 }
 
 class DeleteProject extends React.Component{
-    constructor(props) {
+    constructor(props){
         super(props);
-        this.state = { Show:false, 
-                        id: this.props.project.id
-                    };
-        this.ShowModal = this.ShowModal.bind(this);
-        this.HideModal = this.HideModal.bind(this);
+        this.state = { 
+            show:false, 
+            id: this.props.project.id
+        };
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    ShowModal(){
-        this.setState({ Show:true});
+    showModal(){
+        this.setState({ show:true });
     }
 
-    HideModal(){
-        this.setState({ Show:false});
+    hideModal(){
+        this.setState({ show:false });
     }
 
-    async handleSubmit(event) {
+    handleSubmit(event){
         event.preventDefault();
-        let data = new FormData(event.target);
-        data = await stringifyFormData(data)
-
-        await fetch('/project/delete', {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: data,
+        let data = stringifyFormData(new FormData(event.target));
+        $.post( "/project/delete", JSON.parse(data) , response => {
+            this.props.setProjectInfo(response);
+            this.props.toggleSideBar(null);
+        })
+        .done(() => {
+            this.setState({ show:false });
+        })
+        .fail(() => {
+            alert( "Unable to delete project" );
+        })
+        .always(() => {
+            //alert( "finished" );
         });
-        this.setState({ Show:false })
-        this.props.setProjectInfo()
-        this.props.toggleSideBar(null);
     }
 
     render(){
         return (
             <React.Fragment>
-                <Button className="btn-danger" onClick={this.ShowModal}>< i className="fa fa-trash"></i></Button>
-                <Modal show={this.state.Show} onHide={this.HideModal}>
+                <Button className="btn-danger" onClick={this.showModal}>< i className="fa fa-trash"></i></Button>
+                <Modal show={this.state.show} onHide={this.hideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Delete Project</Modal.Title>
@@ -62,11 +64,11 @@ class DeleteProject extends React.Component{
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.HideModal}>
-                            Cancel
+                            <Button variant="secondary" onClick={this.hideModal}>
+                                Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
-                            Delete Project
+                                Delete Project
                             </Button>
                         </Modal.Footer>
                     </Form>

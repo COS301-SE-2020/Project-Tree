@@ -1,54 +1,54 @@
 import React from 'react';
-import {Form, Table, Modal, Button} from 'react-bootstrap'
+import {Form, Table, Modal, Button} from 'react-bootstrap';
+import $ from 'jquery';
 
-function stringifyFormData(fd) {
+function stringifyFormData(fd){
     const data = {};
-      for (let key of fd.keys()) {
+    for (let key of fd.keys()){
         data[key] = fd.get(key);
     }
     return JSON.stringify(data, null, 2);
 }
 
 class CreateProject extends React.Component{
-    constructor() {
+    constructor(){
         super();
-        this.state = { Show:false };
-        this.ShowModal = this.ShowModal.bind(this);
-        this.HideModal = this.HideModal.bind(this);
+        this.state = { show:false };
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    ShowModal(){
-        this.setState({ Show:true });
+    showModal(){
+        this.setState({ show:true });
     }
 
-    HideModal(){
-        this.setState({ Show:false });
+    hideModal(){
+        this.setState({ show:false });
     }
 
-    async handleSubmit(event) {
+    handleSubmit(event){
         event.preventDefault();
-        let data = new FormData(event.target);
-        data = await stringifyFormData(data)
-        
-        const response = await fetch('/project/add', {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: data,
+        let data = stringifyFormData(new FormData(event.target));
+        $.post( "/project/add", JSON.parse(data) , response => {
+            this.props.setProjectInfo(response);
+        })
+        .done(() => {
+            this.setState({ show:false })
+        })
+        .fail(() => {
+            alert( "Unable to create project" );
+        })
+        .always(() => {
+            //alert( "finished" );
         });
-        const body = await response.json();
-        this.setState({ Show:false })
-        this.props.setProjectInfo(body.nodes.id);
     }
 
     render(){
         return (
             <React.Fragment>
-                <Button className="my-2" variant="outline-dark" onClick={this.ShowModal} block>Create Project</Button>
-                <Modal show={this.state.Show} onHide={this.HideModal}>
+                <Button className="my-2" variant="outline-dark" onClick={this.showModal} block>Create Project</Button>
+                <Modal show={this.state.show} onHide={this.hideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Create Project</Modal.Title>
@@ -97,11 +97,11 @@ class CreateProject extends React.Component{
                             </Table>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.HideModal}>
-                            Cancel
+                            <Button variant="secondary" onClick={this.hideModal}>
+                                Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
-                            Create Project
+                                Create Project
                             </Button>
                         </Modal.Footer>
                     </Form>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
+import $ from 'jquery';
 
 import CreateProject from './CreateProject'
 import UpdateProject from './UpdateProject'
@@ -8,7 +9,7 @@ import DeleteProject from './DeleteProject'
 
 
 class ProjectPage extends React.Component{
-    constructor(props) {
+    constructor(props){
         super(props);
         this.state = {projects:null, project:null};
         this.toggleSideBar = this.toggleSideBar.bind(this);
@@ -16,48 +17,39 @@ class ProjectPage extends React.Component{
         
     }
 
-    toggleSideBar(newProject)
-    {
-        if(this.state.project === newProject)
-        {
-            this.setState({project:null})
-        }
-
-        else
-        {
-            this.setState({project:newProject})
-        }
-    }
-
-    async componentDidMount() {
-		const response = await fetch('/projectInfo');
-		const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-
-        this.setState({projects: body.nodes})
-    }
-
-    async setProjectInfo(newProject){
-        const response = await fetch('/projectInfo');
-		const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-
-        if(newProject !== undefined){
-            var index;
-            for(var x=0; x<body.nodes.length; x++)
-            {
-                if(body.nodes[x].id === newProject)
-                {
-                    index = x;
-                }
-            }
-
-            this.setState({projects: body.nodes, project: body.nodes[index]})
+    toggleSideBar(newProject){
+        if(this.state.project === newProject){
+            this.setState({project:null});
         }
 
         else{
-            this.setState({projects: body.nodes}) 
-        }       
+            this.setState({project:newProject});
+        }
+    }
+
+    componentDidMount(){
+        $.post( "/project/get" , response => {
+            this.setState({projects: response.nodes});
+            console.log(this.state.projects);
+        })
+        .fail(response => {
+            throw Error(response.message);
+        })
+    }
+
+    setProjectInfo(project){
+        let projects = this.state.projects;
+        if(project.delete === undefined){
+            projects = projects.map((proj) => {
+                if(proj.id === project.id) proj = project;
+                return proj;
+            });
+            if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
+            this.setState({projects: projects, project: project})
+        }else{
+            projects = projects.filter(proj => proj.id !== project.delete);
+            this.setState({projects: projects});
+        } 
     }
 
     render(){
@@ -84,15 +76,15 @@ class ProjectPage extends React.Component{
 
 class ProjectList extends React.Component{
     render(){
-        if(this.props.projects === null){return null;}
+        if(this.props.projects === null) return null;
         const projects = this.props.projects;
         const listItems = projects.map((project, i) =>
-          <Button key={i} onClick={() => this.props.toggleSideBar(project)} variant="secondary" size="sm" block>
-            {project.name}
-          </Button>
+            <Button key={i} onClick={() => this.props.toggleSideBar(project)} variant="secondary" size="sm" block>
+                {project.name}
+            </Button>
         );
 
-        return (
+        return(
             <Container>
                 <Row> {listItems} </Row>
             </Container>
@@ -101,15 +93,15 @@ class ProjectList extends React.Component{
 }
 
 class Sidebar extends React.Component{
-    constructor(props) {
+    constructor(props){
         super(props);
-        this.state = {permissions:false};
+        this.state = { permissions:false };
         this.togglePermissions = this.togglePermissions.bind(this);
         this.permissionsTable = this.permissionsTable.bind(this);
     }
 
     togglePermissions(){
-        this.setState({permissions:!this.state.permissions})
+        this.setState({ permissions:!this.state.permissions })
     }
     
     permissionsTable(){
@@ -145,42 +137,54 @@ class Sidebar extends React.Component{
         );
     }
 
-    render()
-    {
-        if(this.props.project == null)
-        {
-            return null;
-        }
+    render(){
+        if(this.props.project == null) return null; 
         
         return(
             <React.Fragment>
                 <Container className="block-example border border-secondary bg-light">
                     <Row className="align-items-center bg-dark py-2">
-                        <Col className="text-left"> <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} toggleSideBar={this.props.toggleSideBar}/> </Col>
-                        <Col className="text-white"> {this.props.project.name}  </Col>
-                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button></Col>
+                        <Col className="text-left"> 
+                            <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} toggleSideBar={this.props.toggleSideBar}/>
+                        </Col>
+                        <Col className="text-white">
+                            {this.props.project.name}
+                        </Col>
+                        <Col className="text-right" >
+                            <Button className="btn-dark" onClick={()=>this.props.toggleSideBar(null)}><i className="fa fa-close"></i></Button>
+                        </Col>
                     </Row> 
                     <Row className="align-items-center py-2">
-                        <Col><p>{this.props.project.description}</p> </Col>
+                        <Col>
+                            <p>{this.props.project.description}</p>
+                        </Col>
                     </Row> 
                     <Row className="align-items-center py-2" >
                         <Col className="text-center" >
-                        <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
-                        {this.state.permissions? <this.permissionsTable /> : null}</Col>
+                            <Button variant="secondary" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>
+                            {this.state.permissions? <this.permissionsTable /> : null}
+                        </Col>
                     </Row> 
                     <Row className="align-items-center py-2">
-                        <Col> </Col>
-                        <Col xs={6} className="text-center"><Link to="/graph"><Button onClick={()=>{
-                            sessionStorage.setItem("project",JSON.stringify(this.props.project));
-                            this.props.toggleGraphPage(this.props.project)
-                            }} variant="outline-dark" size="md">View Project</Button></Link></Col>
+                        <Col></Col>
+                        <Col xs={6} className="text-center">
+                            <Link to="/graph">
+                                <Button onClick={
+                                    ()=>{
+                                        sessionStorage.setItem("project",JSON.stringify(this.props.project));
+                                        this.props.toggleGraphPage(this.props.project)
+                                    }
+                                }
+                                variant="outline-dark" size="md">View Project</Button>
+                            </Link>
+                        </Col>
                         <Col></Col>
                     </Row>
                     <Row className="align-items-center py-2">
-                        <Col> </Col>
-
+                        <Col></Col>
                         <Col xs={6} className="text-center">
-                        <UpdateProject project={this.props.project} setProjectInfo={this.props.setProjectInfo}/></Col>
+                            <UpdateProject project={this.props.project} setProjectInfo={this.props.setProjectInfo}/>
+                        </Col>
                         <Col></Col>
                     </Row>
                 </Container>

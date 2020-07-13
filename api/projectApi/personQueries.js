@@ -1,4 +1,4 @@
-const db = require('./DB') 
+const db = require('../DB') 
 
 async function addResponsiblePerson(taskId,personId){
     var session = db.getSession();

@@ -1,4 +1,4 @@
-const db = require('./DB') 
+const db = require('../DB') 
 
 async function createDependency(req,res){
     var session = db.getSession();

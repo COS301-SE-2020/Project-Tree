@@ -1,80 +1,79 @@
 import React from 'react';
 import {Form, Table, Modal, Button} from 'react-bootstrap'
+import $ from 'jquery';
 
-function stringifyFormData(fd) {
+function stringifyFormData(fd){
     const data = {};
-      for (let key of fd.keys()) {
+    for (let key of fd.keys()){
         data[key] = fd.get(key);
     }
     return JSON.stringify(data, null, 2);
 }
 
 class UpdateProject extends React.Component{
-    constructor(props) {
+    constructor(props){
         super(props);
-        this.state = { Show:false, 
-                        id: this.props.project.id,
-                        name: this.props.project.name, 
-                        description: this.props.project.description,
-                        up_pm_Create: this.props.project.permissions[0] === true,
-                        up_pm_Delete: this.props.project.permissions[1] === true,
-                        up_pm_Update: this.props.project.permissions[2] === true,
-                        up_rp_Create: this.props.project.permissions[3] === true,
-                        up_rp_Delete: this.props.project.permissions[4] === true,
-                        up_rp_Update: this.props.project.permissions[5] === true,
-                        up_r_Create: this.props.project.permissions[6] === true,
-                        up_r_Delete: this.props.project.permissions[7] === true,
-                        up_r_Update: this.props.project.permissions[8] === true
-                    };
-        this.ShowModal = this.ShowModal.bind(this);
-        this.HideModal = this.HideModal.bind(this);
+        this.state = { 
+            show:false, 
+            id: this.props.project.id,
+            name: this.props.project.name, 
+            description: this.props.project.description,
+            up_pm_Create: this.props.project.permissions[0] === true,
+            up_pm_Delete: this.props.project.permissions[1] === true,
+            up_pm_Update: this.props.project.permissions[2] === true,
+            up_rp_Create: this.props.project.permissions[3] === true,
+            up_rp_Delete: this.props.project.permissions[4] === true,
+            up_rp_Update: this.props.project.permissions[5] === true,
+            up_r_Create: this.props.project.permissions[6] === true,
+            up_r_Delete: this.props.project.permissions[7] === true,
+            up_r_Update: this.props.project.permissions[8] === true
+        };
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.refreshState = this.refreshState.bind(this);
     }
 
     refreshState(){
-        this.setState(
-            {
-                id: this.props.project.id,
-                name: this.props.project.name, 
-                description: this.props.project.description,
-                up_pm_Create: this.props.project.permissions[0] === true,
-                up_pm_Delete: this.props.project.permissions[1] === true,
-                up_pm_Update: this.props.project.permissions[2] === true,
-                up_rp_Create: this.props.project.permissions[3] === true,
-                up_rp_Delete: this.props.project.permissions[4] === true,
-                up_rp_Update: this.props.project.permissions[5] === true,
-                up_r_Create: this.props.project.permissions[6] === true,
-                up_r_Delete: this.props.project.permissions[7] === true,
-                up_r_Update: this.props.project.permissions[8] === true
-            }
-        )
+        this.setState({
+            id: this.props.project.id,
+            name: this.props.project.name, 
+            description: this.props.project.description,
+            up_pm_Create: this.props.project.permissions[0] === true,
+            up_pm_Delete: this.props.project.permissions[1] === true,
+            up_pm_Update: this.props.project.permissions[2] === true,
+            up_rp_Create: this.props.project.permissions[3] === true,
+            up_rp_Delete: this.props.project.permissions[4] === true,
+            up_rp_Update: this.props.project.permissions[5] === true,
+            up_r_Create: this.props.project.permissions[6] === true,
+            up_r_Delete: this.props.project.permissions[7] === true,
+            up_r_Update: this.props.project.permissions[8] === true
+        })
     }
 
-    ShowModal(){
-        this.setState({ Show:true});
+    showModal(){
+        this.setState({ show:true});
     }
 
-    HideModal(){
-        this.setState({ Show:false});
+    hideModal(){
+        this.setState({ show:false});
     }
 
-    async handleSubmit(event) {
+    async handleSubmit(event){
         event.preventDefault();
-        let data = new FormData(event.target);
-        data = await stringifyFormData(data)
-
-        const response = await fetch('/project/update', {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: data,
+        let data = stringifyFormData(new FormData(event.target));
+        $.post( "/project/update", JSON.parse(data) , response => {
+            this.props.setProjectInfo(response);
+        })
+        .done(() => {
+            this.setState({ show:false })
+        })
+        .fail(() => {
+            alert( "Unable to uodate project" );
+        })
+        .always(() => {
+            //alert( "finished" );
         });
-        const body = await response.json();
-        this.setState({ Show:false })
-        this.props.setProjectInfo(body.nodes.id)
     }
 
     render(){
@@ -83,8 +82,8 @@ class UpdateProject extends React.Component{
 
         return (
             <React.Fragment>
-                <Button className="btn-dark" onClick={this.ShowModal}><i className="fa fa-edit"> </i> Edit </Button>
-                <Modal show={this.state.Show} onHide={this.HideModal}>
+                <Button className="btn-dark" onClick={this.showModal}><i className="fa fa-edit"> </i> Edit </Button>
+                <Modal show={this.state.show} onHide={this.hideModal}>
                     <Form onSubmit={this.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Update Project</Modal.Title>
@@ -187,7 +186,7 @@ class UpdateProject extends React.Component{
                             </Table><br />
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.HideModal}>
+                            <Button variant="secondary" onClick={this.hideModal}>
                             Cancel
                             </Button>
                             <Button  type="submit" variant="dark">
