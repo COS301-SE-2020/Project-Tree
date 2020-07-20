@@ -141,7 +141,7 @@ class CreateTask extends React.Component{
                                 <Form.Label>End date of task</Form.Label>
                                 <Form.Control type='date' name='ct_endDate' id='ct_endDate' value={this.state.endDate} readOnly required/>
                             </Form.Group>
-                            <Form.Group>
+                            {/* <Form.Group>
                                 <Form.Label>Responsible Person </Form.Label>
                                 <Form.Control type='number' min='0' name="ct_resPersonId" required/>
                             </Form.Group>
@@ -152,7 +152,7 @@ class CreateTask extends React.Component{
                             <Form.Group>
                                 <Form.Label>Resources </Form.Label>
                                 <Form.Control type='number' min='0' name="ct_resourceId" required/>
-                            </Form.Group>
+                            </Form.Group> */}
                             <Form.Group>
                                 <input hidden type="number" id="ct_pid" name="ct_pid" value={this.state.id} onChange={()=> {}}/>
                             </Form.Group>
