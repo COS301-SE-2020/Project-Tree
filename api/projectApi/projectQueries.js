@@ -60,9 +60,10 @@ function createProject(req,res){
 function deleteProject(req, res){
     db.getSession()
         .run(`  
-                MATCH(n:Project) 
-                WHERE ID(n)= ${req.body.dp_id} 
-                DETACH DELETE n 
+                MATCH (n)
+                WHERE n.projId=${req.body.dp_id}
+                OR ID(n)=${req.body.dp_id}
+                DETACH DELETE n
                 RETURN n
             `)
         .then(result => {

@@ -32,8 +32,11 @@ function makeElement(node) {
         let today = new Date();
         if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
             if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
-                if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
-                    statusColor = '#ff6961'
+                if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
+                {
+                    if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
+                        statusColor = '#ff6961'
+                    }
                 }
             }
             else{
