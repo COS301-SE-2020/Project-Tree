@@ -28,12 +28,12 @@ async function createTask(req,res){
             console.log(err);
         });
 
-    if(resPersonId != undefined)
-        await peopleFunctions.addResponsiblePerson(taskId,resPersonId)
-    if(pacManId != undefined)
-        await peopleFunctions.addPackageManager(taskId,pacManId)
-    if(resourceId != undefined)
-        await peopleFunctions.addResources(taskId,resourceId)
+    // if(resPersonId != undefined)
+    //     await peopleFunctions.addResponsiblePerson(taskId,resPersonId)
+    // if(pacManId != undefined)
+    //     await peopleFunctions.addPackageManager(taskId,pacManId)
+    // if(resourceId != undefined)
+    //     await peopleFunctions.addResources(taskId,resourceId)
     result = await session.run(
         'MATCH (a),(b) WHERE ID(a) = '+ taskId +' AND ID(b) = '+proj +' CREATE (a)-[n:PART_OF]->(b) RETURN a'
     )
