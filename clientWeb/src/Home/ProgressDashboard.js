@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import {ProgressBar, Button, Container, Row, Col } from 'react-bootstrap'
+import React from 'react';
+import {ProgressBar, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 
 class ProgressDashboard extends React.Component{
@@ -82,7 +82,6 @@ class ProgressList extends React.Component{
         
         for(var x=0; x<this.props.projects.length; x++){
             if(id === this.props.projects[x].id){
-                console.log("hello")
                 project = this.props.projects[x]
                 break;
             }

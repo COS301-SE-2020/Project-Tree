@@ -6,7 +6,7 @@ function stringifyFormData(fd) {
       for (let key of fd.keys()) {
         data[key] = fd.get(key);
     }
-    return JSON.stringify(data, null, 2);
+    return data //changed
 }
 
 class CreateDependency extends React.Component{
@@ -24,6 +24,10 @@ class CreateDependency extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
+        let projectData = await this.props.getProjectInfo()
+        projectData.changedInfo = data;
+        projectData = JSON.stringify(projectData)
+        
         
         const response = await fetch('/dependency/add', {
             method: 'POST',
@@ -31,12 +35,12 @@ class CreateDependency extends React.Component{
             Accept: 'application/json',
             'Content-Type': 'application/json',
             },
-            body: data,
+            body: projectData
         });
         const body = await response.json(); 
-        await this.props.setTaskInfo()
-        this.props.toggleSidebar(null, body.relationship.id)
-        this.props.closeModal()
+        
+        await this.props.setTaskInfo(body.nodes, body.rels, body.displayNode, body.displayRel)
+        this.props.clearDependency();
     }
 
     render(){

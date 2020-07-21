@@ -7,7 +7,7 @@ function stringifyFormData(fd) {
       for (let key of fd.keys()) {
         data[key] = fd.get(key);
     }
-    return JSON.stringify(data, null, 2);
+    return data
 }
 
 
@@ -26,7 +26,7 @@ class CreateTask extends React.Component{
         this.setDuration = this.setDuration.bind(this);
     }
 
-    hideModal(){
+    async hideModal(){
         this.setState({ Show:false });
         this.props.hideModal();
     }
@@ -69,6 +69,9 @@ class CreateTask extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
+        let projectData = await this.props.getProjectInfo()
+        projectData.changedInfo = data;
+        projectData = JSON.stringify(projectData)
         
         const response = await fetch('/task/add', {
             method: 'POST',
@@ -76,35 +79,13 @@ class CreateTask extends React.Component{
             Accept: 'application/json',
             'Content-Type': 'application/json',
             },
-            body: data,
+            body: projectData,
         }); 
-        const body = await response.json();       
-        await this.props.setTaskInfo();
-        this.props.toggleSidebar(body.node.id, null)
-        this.setState({ Show:false })
+        
+        const body = await response.json();  
+        this.hideModal();   
+        await this.props.setTaskInfo(body.nodes, body.rels, body.displayNode, body.displayRel);
     }
-
-    
-/* <form method='post' action='/task/add'>
-                <label for='ct_taskName'> Name of task</label><br/>
-                <input type='text' name='ct_taskName'/> <br/><br/>
-                <label for='ct_startDate'> Start Date</label><br/>
-                <input type='date' name='ct_startDate' id='ct_startDate' onchange='setDuration()'/>  <br/><br/>
-                <label for='ct_duration'> Duration (Days) </label><br/>
-                <input type='number' name='ct_duration' id='ct_duration' min='0' required/> <br/><br/>
-                <label for='ct_endDate'> End date </label><br/>
-                <input type='date' name='ct_endDate' id='ct_endDate' readonly/> <br/><br/>
-                <label for='ct_description'> Description </label><br/>
-                <textarea name="ct_description" cols='30' rows='10'></textarea><br/>
-                <label for='ct_resPersonId'> Responsible Person </label><br/>
-                    <input type='number' min='0' name="ct_resPersonId"/><br/><br/>
-                    <label for='ct_pacManId'> Package Manager </label><br/>
-                    <input type='number' min='0' name="ct_pacManId"/><br/><br/>
-                    <label for='ct_resourceId'> Resources </label><br/>
-                    <input type='text' min='0' name="ct_resourceId"/><br/><br/>
-                <input type='submit' value='Submit'/>
-            </form>
- */
 
     render(){
         return (
@@ -156,39 +137,6 @@ class CreateTask extends React.Component{
                             <Form.Group>
                                 <input hidden type="number" id="ct_pid" name="ct_pid" value={this.state.id} onChange={()=> {}}/>
                             </Form.Group>
-                           {/*  <Table bordered hover>
-                                <thead>
-                                    <tr>
-                                        <td className="text-center" colSpan="4">Project Permisions</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td className="text-center">Create</td>
-                                        <td className="text-center">Delete</td>
-                                        <td className="text-center">Update</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Package Manager</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_pm_Create' name="cp_pm_Create"/></td>
-                                        <td className="text-center"><input type="checkbox"  id='cp_pm_Delete' name="cp_pm_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_pm_Update' name="cp_pm_Update"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Responsible Person</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Create' name="cp_rp_Create"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Delete' name="cp_rp_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_rp_Update' name="cp_rp_Update"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Resource</td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Create' name="cp_r_Create"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Delete' name="cp_r_Delete"/></td>
-                                        <td className="text-center"><input type="checkbox" id='cp_r_Update' name="cp_r_Update"/></td>
-                                    </tr>
-                                </tbody>
-                            </Table> */}
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={this.hideModal}>

@@ -9,8 +9,9 @@ import {Button, Container, Row, Col } from 'react-bootstrap'
 import CreateTask from './Task/CreateTask';
 
 function makeLink(edge) {
+    //console.log(edge.id)
     return new joint.shapes.standard.Link({
-        id:edge.id,
+        id:"l"+edge.id,
         source: { id: edge.source },
         target: { id: edge.target },
         attrs: {
@@ -153,7 +154,7 @@ class Graph extends React.Component {
 
         else if(clickedNode.model.attributes.attrs.type === 'link')
         {
-            this.props.toggleSidebar(null, clickedNode.model.id);
+            this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)));
         }
     }
 
@@ -283,8 +284,8 @@ class Graph extends React.Component {
                     </Row>
                 </Container>
                 <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
-                {this.state.createDependency ? <CreateDependency closeModal={this.closeCreateDependency} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
-                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/> : null}
+                {this.state.createDependency ? <CreateDependency closeModal={this.closeCreateDependency} getProjectInfo={this.props.getProjectInfo} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar} clearDependency={this.clearDependency} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
+                {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} getProjectInfo={this.props.getProjectInfo} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/> : null}
             </React.Fragment>
         )
     }
