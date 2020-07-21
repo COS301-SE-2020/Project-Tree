@@ -28,8 +28,6 @@ class GraphPage extends React.Component{
         });
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message)
-        console.log(body.tasks)
-        console.log(body.rels)
         this.setState({nodes:body.tasks, links:body.rels})
     }
 

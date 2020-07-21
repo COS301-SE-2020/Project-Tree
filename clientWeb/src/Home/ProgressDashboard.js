@@ -39,7 +39,7 @@ class ProgressDashboard extends React.Component{
         projectProgress.push({
             name: projectName,
             id: currentId,
-            progress: (completeDuration/totalDuartion)*100
+            progress: Math.round((completeDuration/totalDuartion)*100)
         })
 
         this.setState({progressInfo:projectProgress, projects:projects})
@@ -128,12 +128,12 @@ class ProgressList extends React.Component{
                      <Row className="align-items-center bg-white py-2">
                             <Col className="text-left">
                                 <Link to="/graph">
-                                <Button variant="secondary" size="sm">
-                                <h6 key={projects[x].id} data-id={projects[x].id} onClick={this.handleClick}>{projects[x].name}</h6>
+                                <Button variant="secondary" size="sm" key={projects[x].id} data-id={projects[x].id} onClick={this.handleClick}>
+                                    <h6>{projects[x].name}</h6>
                                 </Button>
                                 </Link>       
                             </Col>
-                                <Col className="text-left" xs={10}>                             
+                            <Col className="text-left" xs={10}>                             
                                 <ProgressBar variant={currentVariant} now={projects[x].progress} label={`${projects[x].progress}%`}/>
                             </Col>        
                         </Row> 
