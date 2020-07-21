@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {ProgressBar, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
+//import { Button } from 'semantic-ui-react';
+//import Button from '@material-ui/core/Button';
 
 class ProgressDashboard extends React.Component{
     constructor(props) {
@@ -119,16 +121,22 @@ class ProgressList extends React.Component{
 
         var listItems = []
         var projects = this.props.progressInfo;
+        
         for(var x=0; x<projects.length; x++){
             var currentVariant = this.getColor(projects[x].progress)
             listItems.push(
+               
                 <React.Fragment key={projects[x].id}>
-                    <Container className="py-4"> 
-                        <Row className="text-left align-items-center">
+                     <Container className="block-example  bg-light">
+                     <Row className="align-items-center bg-white py-2">
                             <Col className="text-left">
-                            <Link to="/graph"><h1 key={projects[x].id} data-id={projects[x].id} onClick={this.handleClick}>{projects[x].name}</h1></Link>
+                                <Link to="/graph">
+                                <Button variant="secondary" size="sm">
+                                <h6 key={projects[x].id} data-id={projects[x].id} onClick={this.handleClick}>{projects[x].name}</h6>
+                                </Button>
+                                </Link>       
                             </Col>
-                            <Col className="text-left" xs={8}>                             
+                                <Col className="text-left" xs={10}>                             
                                 <ProgressBar variant={currentVariant} now={projects[x].progress} label={`${projects[x].progress}%`}/>
                             </Col>        
                         </Row> 
