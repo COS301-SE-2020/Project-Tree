@@ -1,8 +1,6 @@
 import React from 'react';
-import {ProgressBar, Container, Row, Col } from 'react-bootstrap'
+import {ProgressBar, Container, Button, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
-//import { Button } from 'semantic-ui-react';
-//import Button from '@material-ui/core/Button';
 
 class ProgressDashboard extends React.Component{
     constructor(props) {
