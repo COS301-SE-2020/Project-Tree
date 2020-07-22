@@ -71,6 +71,7 @@ function makeElement(node) {
                 rx: 10, ry: 10,
                 stroke: '#000',
                 //magnet: true
+                transform: 'translate(1, 1)'
             }
         }
     });
@@ -192,8 +193,7 @@ class Graph extends React.Component {
             height: $('#paper').height(),
             gridSize: 1,
             model: graph,
-            //restrictTranslate: true,
-            linkPinning: false,
+            linkPinning: false
         });
 
         paper.on('element:contextmenu', this.toggleCreateDependency);
@@ -203,7 +203,7 @@ class Graph extends React.Component {
         var dragStartPosition
         paper.on('blank:pointerdown',
             function(event, x, y) {
-                dragStartPosition = { x: x, y: y};
+                dragStartPosition = { x: x*graphScale, y: y*graphScale};
             }
         );
 
@@ -213,14 +213,14 @@ class Graph extends React.Component {
 
         paper.on('blank:pointerdblclick', this.addTask);
 
-        $("#paper")
-            .mousemove(function(event) {
-                if (dragStartPosition)
+        $("#paper").mousemove(function(event){
+                if (dragStartPosition){
                     paper.translate(
                         event.offsetX - dragStartPosition.x, 
                         event.offsetY - dragStartPosition.y
                     );
-        });
+                }
+            });
 
         this.setState({graph: graph, paper: paper});
     }
@@ -292,7 +292,6 @@ class Graph extends React.Component {
             </React.Fragment>
         )
     }
-
 }
 
 export default Graph
