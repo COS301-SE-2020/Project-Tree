@@ -123,3 +123,13 @@ Final year student studying BSc IT at the University of Pretoria.
   - Implementation of Create Dependencies
 
 </details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of Delete Projects
+  - Implementation and design of bootstrap UI for the web app
+  - User Manual
+  - Scalability quality requirement
+  - NodeJS technology requirements
+  - Constraints
+  
+</details>
