@@ -38,7 +38,6 @@ class GraphPage extends React.Component{
     async setTaskInfo(nodes, rels, displayNode, displayRel){
         if(nodes !== undefined && rels !== undefined){
             this.setState({nodes:nodes, links:rels}) 
-
             if(displayNode !== undefined || displayRel !== undefined)
             {
                 this.toggleSidebar(displayNode, displayRel)
