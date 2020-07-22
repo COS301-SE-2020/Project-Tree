@@ -192,8 +192,7 @@ class Graph extends React.Component {
             height: $('#paper').height(),
             gridSize: 1,
             model: graph,
-            //restrictTranslate: true,
-            linkPinning: false,
+            linkPinning: false
         });
 
         paper.on('element:contextmenu', this.toggleCreateDependency);
@@ -203,7 +202,7 @@ class Graph extends React.Component {
         var dragStartPosition
         paper.on('blank:pointerdown',
             function(event, x, y) {
-                dragStartPosition = { x: x, y: y};
+                dragStartPosition = { x: x*graphScale, y: y*graphScale};
             }
         );
 
@@ -286,7 +285,7 @@ class Graph extends React.Component {
                         <Col></Col>
                     </Row>
                 </Container>
-                <div id="paper" className="h-100 w-100 overflow-hidden user-select-none"></div>
+                <svg id="paper" className="h-100 w-100 overflow-visible user-select-none"></svg>
                 {this.state.createDependency ? <CreateDependency closeModal={this.closeCreateDependency} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar} project={this.props.project} source={this.state.source} target={this.state.target}/> : null} 
                 {this.state.createTask ? <CreateTask hideModal={this.hideModal} project={this.props.project} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/> : null}
             </React.Fragment>
