@@ -6,7 +6,7 @@ function stringifyFormData(fd) {
       for (let key of fd.keys()) {
         data[key] = fd.get(key);
     }
-    return JSON.stringify(data, null, 2);
+    return data
 }
 
 class DeleteTask extends React.Component{
@@ -31,9 +31,11 @@ class DeleteTask extends React.Component{
 
     async handleSubmit(event) {
         event.preventDefault();
-        let data = new FormData(event.target);
+        let data = new FormData(event.target)
         data = await stringifyFormData(data)
-        console.log(data)
+        let projectData = await this.props.getProjectInfo()
+        projectData.changedInfo = data;
+        projectData = JSON.stringify(projectData)
 
         const response = await fetch('/task/delete', {
             method: 'POST',
@@ -41,10 +43,11 @@ class DeleteTask extends React.Component{
             Accept: 'application/json',
             'Content-Type': 'application/json',
             },
-            body: data,
+            body: projectData,
         });
-        this.props.toggleSidebar(null, null)
-        this.props.setTaskInfo()
+
+        const body = await response.json();
+        await this.props.setTaskInfo(body.nodes, body.rels, body.displayNode, body.displayRel);
     }
 
     render(){

@@ -13,7 +13,8 @@ class GraphPage extends React.Component{
         super(props);
         this.state = {task:null, dependency:null, nodes:null, links:null};
         this.toggleSidebar = this.toggleSidebar.bind(this);
-        this.setTaskInfo = this.setTaskInfo.bind(this)
+        this.setTaskInfo = this.setTaskInfo.bind(this);
+        this.getProjectInfo = this.getProjectInfo.bind(this);
     }
 
     async componentDidMount(){
@@ -26,12 +27,26 @@ class GraphPage extends React.Component{
             body:JSON.stringify({ id:this.props.project.id })
         });
 		const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-
+        if (response.status !== 200) throw Error(body.message)
         this.setState({nodes:body.tasks, links:body.rels})
     }
 
-    async setTaskInfo(){
+    async getProjectInfo(){
+        return {nodes:this.state.nodes, rels:this.state.links}
+    }
+
+    async setTaskInfo(nodes, rels, displayNode, displayRel){
+        if(nodes !== undefined && rels !== undefined){
+            this.setState({nodes:nodes, links:rels}) 
+
+            if(displayNode !== undefined || displayRel !== undefined)
+            {
+                this.toggleSidebar(displayNode, displayRel)
+            }
+
+            return  
+        } 
+
         const response = await fetch('/getProject',{
             method: 'POST',
             headers: {
@@ -89,11 +104,11 @@ class GraphPage extends React.Component{
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
                             {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
                             <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
-                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo}/> : null}
-                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar}/> : null}
+                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo} getProjectInfo={this.getProjectInfo}/> : null}
+                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar} getProjectInfo={this.getProjectInfo}/> : null}
                         </Col>
                         <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
-                            {this.state.nodes!==null?<Graph project={this.props.project} nodes={this.state.nodes} links={this.state.links} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar}/>:null}
+                            {this.state.nodes!==null?<Graph project={this.props.project} nodes={this.state.nodes} links={this.state.links} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar} getProjectInfo={this.getProjectInfo}/>:null}
                         </Col>
                     </Row>
                 </Container>
@@ -181,7 +196,7 @@ class TaskSidebar extends React.Component{
             <React.Fragment>
                 <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
                     <Row className="text-center">
-                        <Col> <DeleteTask task = {this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
+                        <Col> <DeleteTask task = {this.props.task} setTaskInfo={this.props.setTaskInfo} getProjectInfo={this.props.getProjectInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
                         <Col xs={6}><h1>{this.props.task.name}</h1></Col>
                         <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
                     </Row>
@@ -198,7 +213,7 @@ class TaskSidebar extends React.Component{
                         <Col><p>Duration: {this.props.task.duration}</p></Col>
                     </Row>
                     <Row>
-                        <Col><UpdateTask  task={this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
+                        <Col><UpdateTask task={this.props.task} setTaskInfo={this.props.setTaskInfo} getProjectInfo={this.props.getProjectInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
                         <Col><UpdateProgress task={this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
                     </Row>
                 </Container>
@@ -230,7 +245,7 @@ class DependencySidebar extends React.Component{
                 <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
                     <Row>
                         <Col> 
-                            <DeleteDependency dependency={this.props.dependency} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/>
+                            <DeleteDependency dependency={this.props.dependency} getProjectInfo={this.props.getProjectInfo} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/>
                         </Col>
                         <Col xs={6} ><h3>{start+"→"+end}</h3></Col>
                         <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
@@ -243,7 +258,7 @@ class DependencySidebar extends React.Component{
                     </Row>
                     <Row>
                         <Col>
-                            <UpdateDependency project={this.props.project} dependency={this.props.dependency} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/>
+                            <UpdateDependency project={this.props.project} dependency={this.props.dependency} getProjectInfo={this.props.getProjectInfo} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/>
                         </Col>
                     </Row>
                 </Container>

@@ -30,7 +30,6 @@ class ProjectPage extends React.Component{
     componentDidMount(){
         $.post( "/project/get" , response => {
             this.setState({projects: response.nodes});
-            console.log(this.state.projects);
         })
         .fail(response => {
             throw Error(response.message);
