@@ -110,11 +110,23 @@ class Graph extends React.Component {
         this.closeCreateDependency = this.closeCreateDependency.bind(this)
         this.toggleCreateDependency = this.toggleCreateDependency.bind(this)
         this.clearDependency = this.clearDependency.bind(this)
-        this.state = {createTask:false, createDependency:false, graphScale:1, source:null, target:null }
+        this.state = {createTask:false, createDependency:false, graphScale:1, source:null, target:null, alert: null}
+    }
+
+    recDepCheck(curr, target){
+        for(let i = 0; i < this.props.links.length; i++){
+            const el = this.props.links[i];
+            if(el.source === curr){
+                if(target === el.target) return true;
+                return this.recDepCheck(el.target, target);
+            }
+        }
+        return false;
     }
 
     toggleCreateDependency(clickedNode){
         var new_source_targetID = clickedNode.model.id
+        this.setState({alert: null});
 
         if(new_source_targetID == null)
         {
@@ -136,18 +148,19 @@ class Graph extends React.Component {
         }
 
         else{
-            if(this.state.source.id === new_source_targetID)
-            {
+            if(this.state.source.id === new_source_targetID){
                 this.setState({source:null, target:null})
-            }
-            else{
+            }else{
                 this.setState({target:source_target});
+                if(this.recDepCheck(this.state.target.id, this.state.source.id) === true){
+                    this.setState({target:null, alert: 1});
+                }
             }
         }
     }
 
     clearDependency(){
-        this.setState({source:null, target:null})
+        this.setState({source:null, target:null, alert: null})
     }
 
     handleClick(clickedNode){
@@ -275,6 +288,7 @@ class Graph extends React.Component {
                     <Row>
                         <Col></Col>
                         <Col xs={6}>
+                        {this.state.alert != null? <Row>Please select another node that is not higher in the same chain</Row>:null}
                         <Row>
                             {dependency != null ? <Col className="text-center" xs={5}><Button onClick={this.openCreateDependency} variant={color} block size="sm">{dependency}</Button></Col> : null}
                             {this.state.source != null ? <Col className="text-center"><Button onClick={this.clearDependency} variant="danger" block size="sm"><i className="fa fa-close"></i></Button></Col> : null}

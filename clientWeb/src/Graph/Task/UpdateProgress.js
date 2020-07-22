@@ -1,14 +1,6 @@
 import React from 'react';
 import {Form, Modal, Button, ButtonGroup} from 'react-bootstrap'
 
-function stringifyFormData(fd) {
-    const data = {};
-      for (let key of fd.keys()) {
-        data[key] = fd.get(key);
-    }
-    return JSON.stringify(data, null, 2);
-}
-
 class UpdateProgress extends React.Component{
     constructor(props) {
         super(props);
