@@ -1,13 +1,29 @@
-const db = require('../DB') 
+const db = require('../DB'); 
+const { result } = require('lodash');
 
 async function createDependency(req,res){
     var session = db.getSession();
     var taskArr = [];
     
-    if(req.body.cd_fid == req.body.cd_sid)
-    {
-        res.send({ret: 400})
-    }
+    if(req.body.cd_fid == req.body.cd_sid) res.send({ret: 400})
+
+    /*db.getSession()
+        .run(`
+                MATCH p = (a:Task)-[:DEPENDENCY *..]->(b:Task) 
+                WHERE ID(a) = ${req.body.cd_fid} AND ID(b) = ${req.body.cd_sid}
+                RETURN p
+            `)
+        .then(result => {
+            if(result.records[0] == null){
+                res.status(400);
+                res.send("cannot merge");
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400);
+            res.send(err);
+        });*/
 
     result = await session
         .run(`  MATCH (a),(b)
