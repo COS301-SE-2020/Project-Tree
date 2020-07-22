@@ -4,8 +4,6 @@ var updateProject = require('./updateProject')
 async function createDependency(req,res){
     var session = db.getSession();
     var relArr = [];
-    
-    if(req.body.cd_fid == req.body.cd_sid) res.send({ret: 400})
 
     result = await session
         .run(`  MATCH (a),(b)

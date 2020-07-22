@@ -9,7 +9,6 @@ import {Button, Container, Row, Col } from 'react-bootstrap'
 import CreateTask from './Task/CreateTask';
 
 function makeLink(edge) {
-    //console.log(edge.id)
     return new joint.shapes.standard.Link({
         id:"l"+edge.id,
         source: { id: edge.source },

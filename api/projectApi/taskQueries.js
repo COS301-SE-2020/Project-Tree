@@ -22,7 +22,8 @@ async function createTask(req,res){
                     description: record._fields[0].properties.description,
                     startDate: record._fields[0].properties.startDate,
                     endDate: record._fields[0].properties.endDate,
-                    duration: record._fields[0].properties.duration.low
+                    duration: record._fields[0].properties.duration.low,
+                    progress: record._fields[0].properties.progress
                 });
     
             });
@@ -52,29 +53,37 @@ async function deleteTask(req,res){
     {
         if(req.body.nodes[x].id == req.body.changedInfo.id)
         {
-            if(x == 0){
-                req.body.nodes.shift();
-            }
-
-            else{
-                req.body.nodes.splice(x, x);
-            }
+            req.body.nodes[x] = null
         }
     }
+
+    var tempArr=[]
+    for(var x=0; x<req.body.nodes.length; x++)
+    {
+        if(req.body.nodes[x]!= null)
+        {
+            tempArr.push(req.body.nodes[x])
+        }
+    }
+    req.body.nodes = tempArr
 
     for(var x=0; x<req.body.rels.length; x++)
     {
         if(req.body.rels[x].target == req.body.changedInfo.id || req.body.rels[x].source == req.body.changedInfo.id)
         {
-            if(x == 0){
-                req.body.rels.shift();
-            }
-
-            else{
-                req.body.rels.splice(x, x);
-            }
+            req.body.rels[x] = null;
         }
     }
+
+    tempArr=[]
+    for(var x=0; x<req.body.rels.length; x++)
+    {
+        if(req.body.rels[x]!= null)
+        {
+            tempArr.push(req.body.rels[x])
+        }
+    }
+    req.body.rels = tempArr
 
     let queriesArray = []
     for(var x=0; x<successors.length; x++)
@@ -121,7 +130,8 @@ async function updateTask(req,res){ //update a task with a certain ID with speci
                     description: record._fields[0].properties.description,
                     startDate: record._fields[0].properties.startDate,
                     endDate: record._fields[0].properties.endDate,
-                    duration: record._fields[0].properties.duration.low
+                    duration: record._fields[0].properties.duration.low,
+                    progress: record._fields[0].properties.progress
                 })
     
             })
