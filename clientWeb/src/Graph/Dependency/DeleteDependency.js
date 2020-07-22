@@ -6,7 +6,7 @@ function stringifyFormData(fd) {
       for (let key of fd.keys()) {
         data[key] = fd.get(key);
     }
-    return JSON.stringify(data, null, 2);
+    return data;
 }
 
 class DeleteDependency extends React.Component{
@@ -31,17 +31,21 @@ class DeleteDependency extends React.Component{
     async handleSubmit(event) {
         event.preventDefault();
         let data = new FormData(event.target);
-        data = await stringifyFormData(data)
-        await fetch('/dependency/delete', {
+        data = await stringifyFormData(data);
+        let projectData = await this.props.getProjectInfo()
+        projectData.changedInfo = data;
+        projectData = JSON.stringify(projectData)
+
+        const response = await fetch('/dependency/delete', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             },
-            body: data,
+            body: projectData,
         });
-        this.props.setTaskInfo();
-        this.props.toggleSidebar(null, null)
+        const body = await response.json();
+        await this.props.setTaskInfo(body.nodes, body.rels, body.displayNode, body.displayRel)
     }
 
     render(){

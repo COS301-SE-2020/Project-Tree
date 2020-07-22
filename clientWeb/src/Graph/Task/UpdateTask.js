@@ -6,7 +6,7 @@ function stringifyFormData(fd) {
       for (let key of fd.keys()) {
         data[key] = fd.get(key);
     }
-    return JSON.stringify(data, null, 2);
+    return data
 }
 
 class UpdateTask extends React.Component{
@@ -104,16 +104,21 @@ class UpdateTask extends React.Component{
         event.preventDefault();
         let data = new FormData(event.target);
         data = await stringifyFormData(data)
-        await fetch('/task/update', {
+        let projectData = await this.props.getProjectInfo()
+        projectData.changedInfo = data;
+        projectData = JSON.stringify(projectData)
+
+        const response = await fetch('/task/update', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             },
-            body: data,
+            body: projectData,
         });
-        await this.props.setTaskInfo()
-        this.props.toggleSidebar(this.props.task.id, null)
+        
+        const body = await response.json();
+        await this.props.setTaskInfo(body.nodes, body.rels, body.displayNode, body.displayRel);
         this.setState({ Show:false })
     }
 

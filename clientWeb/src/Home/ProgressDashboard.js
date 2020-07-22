@@ -1,5 +1,5 @@
 import React from 'react';
-import {ProgressBar, Container, Row, Col } from 'react-bootstrap'
+import {ProgressBar, Container, Button, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 
 class ProgressDashboard extends React.Component{
@@ -82,7 +82,6 @@ class ProgressList extends React.Component{
         
         for(var x=0; x<this.props.projects.length; x++){
             if(id === this.props.projects[x].id){
-                console.log("hello")
                 project = this.props.projects[x]
                 break;
             }
@@ -119,16 +118,22 @@ class ProgressList extends React.Component{
 
         var listItems = []
         var projects = this.props.progressInfo;
+        
         for(var x=0; x<projects.length; x++){
             var currentVariant = this.getColor(projects[x].progress)
             listItems.push(
+               
                 <React.Fragment key={projects[x].id}>
-                    <Container className="py-4"> 
-                        <Row className="text-left align-items-center">
+                     <Container className="block-example  bg-light">
+                     <Row className="align-items-center bg-white py-2">
                             <Col className="text-left">
-                            <Link to="/graph"><h1 key={projects[x].id} data-id={projects[x].id} onClick={this.handleClick}>{projects[x].name}</h1></Link>
+                                <Link to="/graph">
+                                <Button variant="secondary" size="sm">
+                                <h6 key={projects[x].id} data-id={projects[x].id} onClick={this.handleClick}>{projects[x].name}</h6>
+                                </Button>
+                                </Link>       
                             </Col>
-                            <Col className="text-left" xs={8}>                             
+                                <Col className="text-left" xs={10}>                             
                                 <ProgressBar variant={currentVariant} now={projects[x].progress} label={`${projects[x].progress}%`}/>
                             </Col>        
                         </Row> 
