@@ -6,7 +6,7 @@ The project entails the development of a project management system. The system r
 ## Links
 | Document                          | Links                                                                                         |
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
-| SRS                              	| [Software Requirements Specification](https://drive.google.com/file/d/1pl1_JyQYS-kghzqPgpnU6xxcONd2ZmeC/view?usp=sharing)                                      	        |
+| SRS                              	| [Software Requirements Specification](https://drive.google.com/file/d/1n98-NLL15CfXkzxZjh6qA4oEXYbvMa7F/view?usp=sharing)                                      	        |
 | Project management tool        | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |  
 | Project Tree Application        | [Prototype](https://projecttree.herokuapp.com/)     |
 | User Manual       | [User Manual](https://drive.google.com/file/d/1gf3E9aW_K-hzb1L-F0usv7Q2hcFmKbav/view?usp=sharing)     |
