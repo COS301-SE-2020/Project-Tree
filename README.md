@@ -6,9 +6,10 @@ The project entails the development of a project management system. The system r
 ## Links
 | Document                          | Links                                                                                         |
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
-| SRS                              	| [Software Requirements Specification](https://drive.google.com/file/d/1l6Cgjnm5o0mMwBth8ciSjw5qBNZSv1nR/view?usp=sharing)                                      	        |
+| SRS                              	| [Software Requirements Specification](https://drive.google.com/file/d/1pl1_JyQYS-kghzqPgpnU6xxcONd2ZmeC/view?usp=sharing)                                      	        |
 | Project management tool        | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |  
 | Project Tree Application        | [Prototype](https://projecttree.herokuapp.com/)     |
+| User Manual       | [User Manual](https://drive.google.com/file/d/1gf3E9aW_K-hzb1L-F0usv7Q2hcFmKbav/view?usp=sharing)     |
 
 ## Demos
 | Demo                          	  | Link                                                                                        	|
@@ -40,6 +41,12 @@ I am currently a Computer Science Student at The University of Pretoria
   - Implemented helper functions for above function (getSuccessorNodes, getPredecessorNodes, getDependencies, compareDates, addDays)
 
 </details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of progress dashboard
+  - Implementation of react web app framework/routing
+  
+</details>
 
 ### Damian Venter (u18076514)
 
@@ -61,6 +68,12 @@ Undergraduate student studying BIT at the University of Pretoria.
   - Set up hosting on grapheneDB and Heroku
 
 </details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of graphing/View Projects
+  - Implementation of task progress
+  
+</details>
 
 ### Dayne Moonsamy (u16148721)
 
@@ -80,6 +93,13 @@ Final year undergraduate student studying Computer Science at The University of 
   - Implementation of deleting tasks
   - Implementation of deleting dependencies
 
+</details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of Create Projects
+  - Implementation of Modals/forms for tasks 
+  - Implementation of graphing/view project
+  
 </details>
 
 ### Brandon Robinson (u18021353)
@@ -103,7 +123,13 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
   - Implementation of Update Task Dependencies
 
 </details>
-
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of Update Projects
+  - Implementation of Modals/forms for dependencies and projects
+  - Project page server call optimization
+  
+</details>
 ### Amber Grill (u18164022)
 
 #### Description
@@ -127,9 +153,5 @@ Final year student studying BSc IT at the University of Pretoria.
   
   - Implementation of Delete Projects
   - Implementation and design of bootstrap UI for the web app
-  - User Manual
-  - Scalability quality requirement
-  - NodeJS technology requirements
-  - Constraints
   
 </details>
