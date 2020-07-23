@@ -28,7 +28,7 @@ function executeQuery(query){
     session.run(query)
     .catch(function(err){
         console.log(err);
-    });   
+    })
 }
 
 async function propagateDependencies(currentNode, nodes, rels, queriesArray){
@@ -156,7 +156,10 @@ module.exports =
 {
     updateProject,
     excecuteQueries,
+    executeQuery,
     findNode,
     deleteDependency,
-    getSuccessors
+    getSuccessors,
+    addDays,
+    compareDates
 };
