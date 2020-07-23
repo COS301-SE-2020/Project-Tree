@@ -130,6 +130,7 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
   - Project page server call optimization
   
 </details>
+
 ### Amber Grill (u18164022)
 
 #### Description
