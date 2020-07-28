@@ -49,7 +49,7 @@ class ProjectListPage extends Component{
   }
 
   async componentDidMount(){
-    const response = await fetch('http://192.168.1.24:5000/project/get',{
+    const response = await fetch('http://projecttree.herokuapp.com/project/get',{
         method: 'POST',
         headers: {
         Accept: 'application/json',
