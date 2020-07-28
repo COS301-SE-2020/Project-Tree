@@ -5,6 +5,8 @@ var dq = require('./api/projectApi/dependencyQueries');
 var pq = require('./api/projectApi/projectQueries');
 var gq = require('./api/projectApi/graphQueries');
 
+var um = require('./api/userManagementApi/userQueries');
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -24,6 +26,11 @@ app.post('/dependency/add', dq.createDependency);
 app.post('/dependency/update', dq.updateDependency);
 app.post('/dependency/delete', dq.deleteDependency);
 app.post('/getProject', gq.getProjectTasks);
+
+
+app.get('/login', um.login);
+app.get('/register', um.register);
+app.get('/verify', um.verify);
 
 if(process.env.NODE_ENV === 'production'){
 	// Serve any static files
