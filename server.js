@@ -28,9 +28,8 @@ app.post('/dependency/delete', dq.deleteDependency);
 app.post('/getProject', gq.getProjectTasks);
 
 
-app.get('/login', um.login);
-app.get('/register', um.register);
-app.get('/verify', um.verify);
+app.post('/login', um.login);
+app.post('/register', um.register);
 
 if(process.env.NODE_ENV === 'production'){
 	// Serve any static files
