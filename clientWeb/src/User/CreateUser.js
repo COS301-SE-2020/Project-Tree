@@ -1,6 +1,7 @@
-import React from 'react';
-import {Form, Modal, Button} from 'react-bootstrap';
-
+import React, { Component } from 'react';
+import { Table, Button, Container, Row, Col } from 'react-bootstrap'
+import { Link } from "react-router-dom";
+import $ from 'jquery';
 
 function stringifyFormData(fd) {
     const data = {};
@@ -10,8 +11,8 @@ function stringifyFormData(fd) {
     return data
 }
 
+class User extends React.Component{
 
-class CreateTask extends React.Component{
     constructor(props) {
         super(props);
         this.state = { Show:true ,
@@ -28,40 +29,6 @@ class CreateTask extends React.Component{
     async hideModal(){
         this.setState({ Show:false });
         this.props.hideModal();
-    }
-
-    
-    setDuration(e)
-    {
-        var duration
-        var startDate
-        if(e.target.id === "ct_startDate")
-        {
-            startDate = e.target.value;
-            duration = this.state.duration;
-        }         
-        else if(e.target.id === "ct_duration")
-        {
-            startDate = this.state.startDate;
-            duration = e.target.value;
-        }
-
-        var initialDate
-        initialDate = new Date(startDate);
-        var endDate = new Date(initialDate.getTime()+1000*60*60*24*duration);
-        var dateWithDuration = [endDate.getFullYear(), endDate.getMonth()+1, endDate.getDate()]
-        var edate = dateWithDuration;
-        var formatMonth = edate[1];
-        if(edate[1]<10){
-            formatMonth = "0"+edate[1]
-        }
-        var formatDay = edate[2];
-        if(edate[2]<10){
-            formatDay = "0"+edate[2]
-        }
-    
-        var formatDate = edate[0]+"-"+formatMonth+"-"+formatDay;
-        return formatDate
     }
 
     async handleSubmit(event) {
@@ -152,4 +119,4 @@ class CreateTask extends React.Component{
     }
 }
 
-export default CreateTask;
+export default User;
