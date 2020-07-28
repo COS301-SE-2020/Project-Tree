@@ -1,0 +1,106 @@
+const db = require('../DB');
+const { JWT } = require('jose');
+const bcrypt = require('bcrypt');
+
+function login(req,res){ //email, password, 
+    db.getSession()
+    .run(`
+            Match (n:User { email: "${req.body.email}" })
+            RETURN n.password
+        `)
+    .then(result => {
+        if(result.records.length != 0){
+            let hash = result.records[0]._fields[0];
+            bcrypt.compare(req.body.password, hash, function(err, result) {
+                if(result){
+                    res.status(200);
+                    res.send({sessionToken : JWT.sign({email: req.body.email, hash}, process.env.ACCESS_TOKEN_SECRET)});
+                }else{
+                    res.send(err)
+                }
+            });
+        }else{
+            res.send('err')
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(400);
+        res.send(err);
+    })
+}
+
+function register(req,res){ //email, password, name, surname
+    db.getSession()
+        .run(`
+                Match (n:User { email: "${req.body.email}" })
+                RETURN n
+            `)
+        .then(result => {
+            if(result.records.length != 0) res.send("already a user")
+            else{
+                bcrypt.hash(req.body.password, 10, function(err, hash) {
+                    db.getSession()
+                    .run(`
+                            CREATE(a:User {
+                                email:"${req.body.email}",
+                                password:"${hash}", 
+                                name:"${req.body.name}",
+                                sname:"${req.body.sname}"
+                            })
+                            RETURN a
+                        `)
+                    .then(result => {
+                        res.status(200);
+                        res.send({sessionToken : JWT.sign({email: req.body.email, hash}, process.env.ACCESS_TOKEN_SECRET)});
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(400);
+                        res.send(err);
+                    })
+                    });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400);
+            res.send(err);
+        });
+}
+
+function updateInfo(){
+
+}
+
+function verify(token){
+    try {
+        var user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, { maxTokenAge: '1440 min' });
+        db.getSession()
+        .run(`
+                Match (n:User { email: "${user.email}" })
+                RETURN n
+            `)
+        .then(result => {
+            if(user.password == result.records[0]._fields[0].password){
+                return result.records[0]._fields[0].identity.low;
+            }else{
+                return null;
+            }
+        })
+        .catch(err => {
+            return null
+        });
+    } catch (err) {
+        return null
+    }
+}
+
+
+module.exports =
+{
+    login,
+    register,
+    updateInfo,
+    verify
+};
