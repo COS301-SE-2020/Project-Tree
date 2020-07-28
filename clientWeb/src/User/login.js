@@ -21,6 +21,7 @@ class Login extends Component{
         event.preventDefault();
         let data = stringifyFormData(new FormData(event.target));
         $.post( "/login", JSON.parse(data) , response => {
+            sessionStorage.setItem("sessionToken", response.sessionToken);
         })
         .done(() => {
         })
