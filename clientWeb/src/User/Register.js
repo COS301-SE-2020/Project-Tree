@@ -3,38 +3,37 @@ import {Form, Container, Button, Col, Row, Card} from 'react-bootstrap';
 import $ from 'jquery';
 
 
-function stringifyFormData(fd) {
+function stringifyFormData(fd){
     const data = {};
-      for (let key of fd.keys()) {
+    for (let key of fd.keys()){
         data[key] = fd.get(key);
     }
-    return data
+    return JSON.stringify(data, null, 2);
 }
 
 class Register extends React.Component
 {
-    constructor(props) {
-        super(props);
-    
-      
-      }
+    constructor(){
+        super();
+        this.state = { };
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
 
-      handleSubmit(event){
+    handleSubmit(event){
         event.preventDefault();
         let data = stringifyFormData(new FormData(event.target));
         $.post( "/register", JSON.parse(data) , response => {
-            this.props.setProjectInfo(response);
         })
         .done(() => {
-            this.setState({ show:false })
         })
         .fail(() => {
-            alert( "Unable to Create User" );
+            alert( "Unable to create User" );
         })
         .always(() => {
             //alert( "finished" );
         });
     }
+    
 
       render(){
         return (
