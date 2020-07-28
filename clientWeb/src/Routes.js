@@ -9,7 +9,7 @@ import Register from './User/Register'
 import ProjectPage from './Project/ProjectPage'
 import GraphPage from './Graph/GraphPage'
 import {Navbar, Nav} from 'react-bootstrap'
-import Login  from './User/login';
+import Login  from './User/Login';
 
 
 class Routes extends Component {  

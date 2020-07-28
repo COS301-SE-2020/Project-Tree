@@ -11,6 +11,7 @@ function stringifyFormData(fd){
     return JSON.stringify(data, null, 2);
 }
 
+
 class Register extends React.Component
 {
     constructor(){
@@ -22,7 +23,9 @@ class Register extends React.Component
     handleSubmit(event){
         event.preventDefault();
         let data = stringifyFormData(new FormData(event.target));
+        console.log(data);
         $.post( "/register", JSON.parse(data) , response => {
+            sessionStorage.setItem("sessionToken", response.sessionToken);
         })
         .done(() => {
         })
@@ -41,11 +44,11 @@ class Register extends React.Component
                 <Container>
                     <Row>
                         <Col></Col>
-                            <Col>
-                                <Card style={{ width: '18rem' }}>
-                                    <Card.Header>Register</Card.Header>
-                                    <Card.Body>
-                                        <Form onSubmit={this.handleSubmit}>
+                        <Col>
+                            <Card style={{ width: '18rem' }}>
+                                <Card.Header>Register</Card.Header>
+                                <Card.Body>
+                                    <Form onSubmit={this.handleSubmit}>
                                         <Form.Group>
                                             <Form.Label>Email: </Form.Label>
                                             <Form.Control type='text' id="email" name="email" required/>
@@ -71,8 +74,8 @@ class Register extends React.Component
                                         </Form.Group>
                                     </Form>
                                 </Card.Body>
-                             </Card>
-                            </Col>
+                            </Card>
+                        </Col>
                         <Col></Col>
                     </Row>
                 </Container>
