@@ -60,7 +60,7 @@ class DeleteProject extends React.Component{
                         <Modal.Body>
                             <Form.Group>
                                 <input hidden type="number" name="dp_id" value={this.state.id} onChange={()=> {}}/>
-                                <p>Are you sure you want to delete this project</p>
+                                <p>Are you sure you want to delete this project?</p>
                             </Form.Group>
                         </Modal.Body>
                         <Modal.Footer>

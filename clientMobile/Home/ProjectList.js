@@ -10,8 +10,23 @@ class ProjectListPage extends Component {
         super(props);
         this.state = {projects:null, project:null, modalVisible:false, tableData: null };
         this.toggleActionSheet = this.toggleActionSheet.bind(this);
-        this.setModalVisible = this.setModalVisible.bind(this)
-        // this.setProjectInfo = this.setProjectInfo.bind(this); 
+        this.setModalVisible = this.setModalVisible.bind(this);
+        this.setProjectInfo = this.setProjectInfo.bind(this);
+    }
+
+    setProjectInfo(project){
+        let projects = this.state.projects;
+        if(project.delete === undefined){
+            projects = projects.map((proj) => {
+                if(proj.id === project.id) proj = project;
+                return proj;
+            });
+            if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
+            this.setState({projects: projects, project: project})
+        }else{
+            projects = projects.filter(proj => proj.id !== project.delete);
+            this.setState({projects: projects});
+        } 
     }
     
     toggleActionSheet = (selectedProject) => {
@@ -41,7 +56,7 @@ class ProjectListPage extends Component {
         return (
             <Content>
                 <View padder style={{ padding: 5 }}>
-                    {this.state.project !== null ? <ProjectModal project={this.state.project} modalVisible={modalVisible} setModalVisible={this.setModalVisible}/> : null}
+                    {this.state.project !== null ? <ProjectModal project={this.state.project} modalVisible={modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo}/> : null}
                     <ProjectList projects={this.state.projects} toggleActionSheet={this.toggleActionSheet}/>
                 </View>
             </Content>
