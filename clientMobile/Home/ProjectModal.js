@@ -34,12 +34,15 @@ class ProjectModal extends Component {
                                 </TableWrapper>
                             </Table>
                         </View>
+                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => { this.props.setModalVisible(!this.props.modalVisible); }}>
+                            <Icon type="FontAwesome" name="eye"><Text>&nbsp;View</Text></Icon>
+                        </TouchableHighlight>
                         <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(!this.props.modalVisible)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableHighlight>
                         <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} modalVisible={this.props.modalVisible} setModalVisible={this.props.setModalVisible}/>
-                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => { this.props.setModalVisible(!this.props.modalVisible); }}>
-                            <Icon type="FontAwesome5" name="edit" />
+                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(!this.props.modalVisible,true)}>
+                            <Icon type="FontAwesome" name="edit" />
                         </TouchableHighlight>
                     </View>
                 </View>

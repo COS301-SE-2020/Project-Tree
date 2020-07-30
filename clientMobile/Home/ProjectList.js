@@ -5,14 +5,16 @@ import buttonStyling from '../native-base-theme/variables/buttonStylingProjList'
 import getTheme from '../native-base-theme/components';
 import ProjectModal from './ProjectModal'
 import CreateProject from './CreateProject'
+import UpdateProject from './UpdateProject'
 
 class ProjectListPage extends Component {
     constructor(props){
         super(props);
-        this.state = {projects:null, project:null, modalVisible:false, tableData: null };
+        this.state = {projects:null, project:null, modalVisible:false, tableData: null, editing:false };
         this.toggleActionSheet = this.toggleActionSheet.bind(this);
-        this.setModalVisible = this.setModalVisible.bind(this)
-        this.setProjectInfo = this.setProjectInfo.bind(this); 
+        this.setModalVisible = this.setModalVisible.bind(this);
+        this.setProjectInfo = this.setProjectInfo.bind(this);
+        this.setEditing = this.setEditing.bind(this)
     }
 
     setProjectInfo(project){
@@ -31,14 +33,24 @@ class ProjectListPage extends Component {
             this.setState({projects: projects});
         } 
     }
+
+    setEditing(val){
+        this.setState({editing: val})
+    }
     
     toggleActionSheet = (selectedProject) => {
         this.setState({project: selectedProject});
         this.setModalVisible(true);
     }
   
-    setModalVisible = (visible) => {
-        this.setState({ modalVisible: visible });
+    setModalVisible = (visible, edit) => {
+        if(edit === true){
+            this.setState({editing: edit})
+        }
+        else{
+            this.setState({ modalVisible: visible });
+        }
+            
     }
 
     async componentDidMount(){
@@ -58,7 +70,8 @@ class ProjectListPage extends Component {
         return (
             <Content>
                 <View padder style={{ padding: 5 }}>
-                    {this.state.project !== null ? <ProjectModal project={this.state.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible}/> : null}
+                    {this.state.project !== null && this.state.editing !== true ? <ProjectModal project={this.state.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo} setEditing={this.setEditing} /> : null}
+                    {this.state.project !== null && this.state.editing === true ? <UpdateProject project={this.state.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo} setEditing={this.setEditing} /> : null}
                     <ProjectList projects={this.state.projects} toggleActionSheet={this.toggleActionSheet}/>
                     <CreateProject setProjectInfo={this.setProjectInfo}/>
                 </View>

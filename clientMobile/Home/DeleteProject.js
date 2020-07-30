@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, Button } from "react-native";
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import { Icon } from 'native-base';
 import $ from 'jquery'
 
@@ -23,7 +22,7 @@ export default class DeleteProject extends Component{
     }
 
     async handleSubmit(){
-        this.props.setModalVisible(!this.props.modalVisible);
+        this.props.setModalVisible(!this.props.modalVisible, false);
 
         let data = {
             dp_id: this.props.project.id
