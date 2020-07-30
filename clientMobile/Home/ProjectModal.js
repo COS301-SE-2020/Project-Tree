@@ -18,7 +18,7 @@ class ProjectModal extends Component {
         while(tempArr.length) tableData.push(tempArr.splice(0,3));
 
         return (
-            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={() => { this.props.setModalVisible(!this.props.modalVisible); }}>
+            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={() => { Alert.alert("Modal has been closed."); }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>{this.props.project.name}</Text>

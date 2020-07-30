@@ -45,7 +45,9 @@ class ProjectPage extends React.Component{
             });
             if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
             this.setState({projects: projects, project: project})
-        }else{
+        }
+        
+        else{
             projects = projects.filter(proj => proj.id !== project.delete);
             this.setState({projects: projects});
         } 

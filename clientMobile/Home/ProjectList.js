@@ -4,6 +4,7 @@ import { Alert, Modal, StyleSheet, Text, View, TouchableHighlight } from "react-
 import buttonStyling from '../native-base-theme/variables/buttonStylingProjList';
 import getTheme from '../native-base-theme/components';
 import ProjectModal from './ProjectModal'
+import CreateProject from './CreateProject'
 
 class ProjectListPage extends Component {
     constructor(props){
@@ -11,7 +12,24 @@ class ProjectListPage extends Component {
         this.state = {projects:null, project:null, modalVisible:false, tableData: null };
         this.toggleActionSheet = this.toggleActionSheet.bind(this);
         this.setModalVisible = this.setModalVisible.bind(this)
-        // this.setProjectInfo = this.setProjectInfo.bind(this); 
+        this.setProjectInfo = this.setProjectInfo.bind(this); 
+    }
+
+    setProjectInfo(project){
+        let projects = this.state.projects;
+        if(project.delete === undefined){
+            projects = projects.map((proj) => {
+                if(proj.id === project.id) proj = project;
+                return proj;
+            });
+            if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
+            this.setState({projects: projects, project: project})
+        }
+        
+        else{
+            projects = projects.filter(proj => proj.id !== project.delete);
+            this.setState({projects: projects});
+        } 
     }
     
     toggleActionSheet = (selectedProject) => {
@@ -37,12 +55,12 @@ class ProjectListPage extends Component {
     }
   
     render() {
-        const { modalVisible } = this.state;
         return (
             <Content>
                 <View padder style={{ padding: 5 }}>
-                    {this.state.project !== null ? <ProjectModal project={this.state.project} modalVisible={modalVisible} setModalVisible={this.setModalVisible}/> : null}
+                    {this.state.project !== null ? <ProjectModal project={this.state.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible}/> : null}
                     <ProjectList projects={this.state.projects} toggleActionSheet={this.toggleActionSheet}/>
+                    <CreateProject setProjectInfo={this.setProjectInfo}/>
                 </View>
             </Content>
         );
@@ -66,9 +84,9 @@ class ProjectList extends React.Component{
         );
 
         return(
-            <Container>
+            <React.Fragment>
                 {listItems}
-            </Container>
+            </React.Fragment>
         );
     }
 }
