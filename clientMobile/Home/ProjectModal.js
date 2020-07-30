@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, Button } from "react-native";
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import { Icon } from 'native-base';
+import DeleteProject from './DeleteProject'
 
 class ProjectModal extends Component {
     render() {
@@ -32,8 +34,12 @@ class ProjectModal extends Component {
                                 </TableWrapper>
                             </Table>
                         </View>
+                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(!this.props.modalVisible)}>
+                            <Icon type="FontAwesome" name="close" />
+                        </TouchableHighlight>
+                        <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} modalVisible={this.props.modalVisible} setModalVisible={this.props.setModalVisible}/>
                         <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => { this.props.setModalVisible(!this.props.modalVisible); }}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
+                            <Icon type="FontAwesome5" name="edit" />
                         </TouchableHighlight>
                     </View>
                 </View>
@@ -57,8 +63,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
-        width: 0,
-        height: 2
+            width: 0,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
