@@ -49,15 +49,16 @@ class CreateProject extends React.Component {
       <React.Fragment>
         <Button
           className="my-2"
-          variant="outline-dark"
+          style={{borderColor:"#184D47", backgroundColor:"white"}}
           onClick={this.showModal}
           block
+          size="sm"
         >
-          Create Project
+          <i className="fa fa-plus" style={{fontSize:"30px", color:"#184D47"}}></i>
         </Button>
         <Modal show={this.state.show} onHide={this.hideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
               <Modal.Title>Create Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -75,10 +76,10 @@ class CreateProject extends React.Component {
                   required
                 />
               </Form.Group>
-              <Table bordered hover>
-                <thead>
+              <Table bordered striped hover>
+                <thead >
                   <tr>
-                    <td className="text-center" colSpan="4">
+                    <td className="text-center" colSpan="4" style={{backgroundColor:"#184D47", color:"white"}}>
                       Project Permisions
                     </td>
                   </tr>
@@ -129,7 +130,7 @@ class CreateProject extends React.Component {
                 </tbody>
               </Table>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{backgroundColor:"#184D47"}}>
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>

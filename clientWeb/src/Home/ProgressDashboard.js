@@ -123,11 +123,11 @@ class ProgressList extends React.Component {
       var currentVariant = this.getColor(projects[x].progress);
       listItems.push(
         <React.Fragment key={projects[x].id}>
-          <Container className="block-example  bg-light">
+          <Container className="block  bg-light">
             <Row className="align-items-center bg-white py-2">
               <Col className="text-left">
                 <Link to="/graph">
-                  <Button variant="secondary" size="sm">
+                  <Button style={{fontFamily:"arial black", color: "#184D47", backgroundColor: "white", borderColor:"#EEBB4D"}} size="sm">
                     <h6
                       key={projects[x].id}
                       data-id={projects[x].id}

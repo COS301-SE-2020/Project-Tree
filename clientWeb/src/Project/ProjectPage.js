@@ -30,11 +30,11 @@ class ProjectPage extends React.Component {
     }
 
     return (
-      <Container>
+      <Container className="py-2">
         <Row>
         <Button
           onClick={() => {this.handleClick();}}
-          variant="secondary"
+          style={{fontFamily:"arial black", backgroundColor: "#EEBB4D", borderColor:"#EEBB4D"}}          
           size="sm"
           block
         >

@@ -39,9 +39,9 @@ class App extends Component {
       <React.Fragment>
         <Router>
           <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"arial black", backgroundColor: "#96BB7C"}}>
-            <Nav className="mr-auto">
+            <Nav className="mr-auto form-inline ">
               <Nav.Link href="/">
-                <img src={logo} alt="Logo" style={{width:"100px"}}/>
+                <img src={logo} alt="Logo" style={{width:"80px"}}/>
               </Nav.Link>
               {this.state.showSideBar === false ?
                 (
