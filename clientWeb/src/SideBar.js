@@ -1,27 +1,28 @@
 import React from "react";
 import { Button, Container, Row} from "react-bootstrap";
-import { Link, Redirect } from "react-router-dom";
-
-import CreateProject from "./Project/CreateProject";
-import { identity } from "lodash";
+import { Redirect } from "react-router-dom";
 
 class SideBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { projects: this.props.projects, redirect: null};
+    this.state = { projects: this.props.projects};
     this.handleClick = this.handleClick.bind(this);
+    this.closeSideBar = this.closeSideBar.bind(this);
   }
 
   handleClick(project){
     this.setState({redirect: project});
   }
 
+  closeSideBar(){
+    this.props.closeSideBar();
+  }
+
   render() {
     if (this.state.redirect != null) {
-      return <Redirect to={{
-        pathname: '/project',
-        state: { projects: null, project: this.state.redirect }
-      }}/>;
+      sessionStorage.setItem("project", JSON.stringify({project: this.state.redirect}));
+      this.closeSideBar();
+      return(<Redirect to="/project"/>)
     }
     if (this.state.projects === undefined) return null;
     const listItems = [];

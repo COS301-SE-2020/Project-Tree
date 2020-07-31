@@ -5,7 +5,7 @@ import Home from "./Home/Home";
 import User from "./User/User";
 import ProjectPage from "./Project/ProjectPage";
 import GraphPage from "./Graph/GraphPage";
-import { Button, Container, Row, Col, Navbar, Nav  } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Nav  } from "react-bootstrap";
 import SideBar from "./SideBar";
 import $ from "jquery";
 
@@ -13,16 +13,24 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { projects: null, showSideBar: false };
+    this.toggleSideBar = this.toggleSideBar.bind(this);
+  }
+
+  componentDidMount(){
     $.post("/project/get", (response) => {
-      this.setState({ projects: response.projects });
+      this.setState({projects: response.projects });
     }).fail((response) => {
       throw Error(response.message);
     });
   }
 
-
   toggleSideBar(){
-    this.setState({showSideBar: !this.state.showSideBar});
+    if(this.state.projects != null) this.setState({showSideBar: !this.state.showSideBar});
+    else this.setState({showSideBar: this.state.showSideBar});
+  }
+
+  closeSideBar(){
+    this.setState({showSideBar: false});
   }
 
   render() {
@@ -32,7 +40,8 @@ class App extends Component {
           <Navbar sticky="top" bg="dark" variant="dark">
             <Nav className="mr-auto">
               <Nav.Link href="/">Home</Nav.Link>
-              {this.state.showSideBar === false ?
+              {
+                this.state.showSideBar === false ?
                 (
                   <Nav.Link href="#" onClick={() => {this.toggleSideBar();}}>
                     open Projects view
@@ -56,7 +65,7 @@ class App extends Component {
               {this.state.showSideBar !== false ? 
               (
                 <Col xs={2}>
-                  <SideBar projects={this.state.projects}/>
+                  <SideBar closeSideBar={() => {this.closeSideBar()}} projects={this.state.projects}/>
                 </Col>
               ) : null}
               <Col>
@@ -73,7 +82,7 @@ class App extends Component {
                     ) : null}
                   </Route>
                   <Route path="/project">
-                    <ProjectPage toggleGraphPage={this.toggleGraphPage} />
+                    <ProjectPage closeSideBar={() => {this.closeSideBar()}} />
                   </Route>
                   <Route path="/">
                     <Home toggleGraphPage={this.toggleGraphPage} />
