@@ -22,7 +22,7 @@ export default class DeleteProject extends Component{
     }
 
     async handleSubmit(){
-        this.props.setModalVisible(!this.props.modalVisible, false);
+        this.props.setModalVisible(!this.props.modalVisible);
 
         let data = {
             dp_id: this.props.project.id

@@ -42,7 +42,7 @@ class ProjectModal extends Component {
                         </TouchableHighlight>
                         <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} modalVisible={this.props.modalVisible} setModalVisible={this.props.setModalVisible}/>
                         <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(!this.props.modalVisible,true)}>
-                            <Icon type="FontAwesome" name="edit" />
+                            <Icon type="FontAwesome" name="edit" ><Text>&nbsp;Edit</Text></Icon>
                         </TouchableHighlight>
                     </View>
                 </View>

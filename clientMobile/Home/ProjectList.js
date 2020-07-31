@@ -27,7 +27,6 @@ class ProjectListPage extends Component {
             if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
             this.setState({projects: projects, project: project})
         }
-        
         else{
             projects = projects.filter(proj => proj.id !== project.delete);
             this.setState({projects: projects});
@@ -44,11 +43,11 @@ class ProjectListPage extends Component {
     }
   
     setModalVisible = (visible, edit) => {
-        if(edit === true){
+        if(edit !== undefined){
             this.setState({editing: edit})
         }
         else{
-            this.setState({ modalVisible: visible });
+            this.setState({ modalVisible: visible, editing:false });
         }
             
     }
