@@ -51,11 +51,11 @@ export default class App extends Component {
 
 		return (
 			<Container>
-				<Content>
+				<Container>
 					{this.state.home ? <HomeScreen setCurrentProject={this.setCurrentProject}/> : null}
 					{this.state.graph ? <GraphScreen project={this.state.currentProject}/> : null}
 					{this.state.settings ? <SettingsScreen /> : null}
-				</Content>
+				</Container>
 				<Footer>
 					<FooterTab style={{backgroundColor:'grey'}}>
 						<Button vertical onPress={()=>this.handlePageChange(0)}>
