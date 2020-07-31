@@ -8,6 +8,7 @@ import GraphPage from "./Graph/GraphPage";
 import { Container, Row, Col, Navbar, Nav  } from "react-bootstrap";
 import SideBar from "./SideBar";
 import $ from "jquery";
+import logo from './Images/Logo.png';
 
 class App extends Component {
   constructor(props) {
@@ -37,34 +38,35 @@ class App extends Component {
     return (
       <React.Fragment>
         <Router>
-          <Navbar sticky="top" bg="dark" variant="dark">
+          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"arial black", backgroundColor: "#96BB7C"}}>
             <Nav className="mr-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              {
-                this.state.showSideBar === false ?
+              <Nav.Link href="/">
+                <img src={logo} alt="Logo" style={{width:"100px"}}/>
+              </Nav.Link>
+              {this.state.showSideBar === false ?
                 (
-                  <Nav.Link href="#" onClick={() => {this.toggleSideBar();}}>
-                    open Projects view
+                  <Nav.Link href="#" variant="dark" onClick={() => {this.toggleSideBar();}}>
+                    Project List
                   </Nav.Link>
                 ):
                 (
-                  <Nav.Link href="#" onClick={() => {this.toggleSideBar();}}>
-                    close Projects view
+                  <Nav.Link href="#" variant="dark" onClick={() => {this.toggleSideBar();}}>
+                    Close Project List
                   </Nav.Link>
                 )
               }
             </Nav>
             <Nav>
               <Nav.Link className="form-inline" href="/user">
-                Login
+                <i className="fa fa-cogs" style={{fontSize:"30px"}}></i>
               </Nav.Link>
             </Nav>
           </Navbar>
-          <Container>
+          <Container fluid>
             <Row>
               {this.state.showSideBar !== false ? 
               (
-                <Col xs={2}>
+                <Col xs={2} className="border-right border-dark" style={{height: "100vh"}}>
                   <SideBar closeSideBar={() => {this.closeSideBar()}} projects={this.state.projects}/>
                 </Col>
               ) : null}
