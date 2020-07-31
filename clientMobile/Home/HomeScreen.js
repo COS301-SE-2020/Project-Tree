@@ -7,7 +7,7 @@ import ProjectList from './ProjectList';
 class HomeScreen extends Component{
     render(){
         return(
-            <ProjectList />
+            <ProjectList setCurrentProject={this.props.setCurrentProject}/>
         );
     }
 }

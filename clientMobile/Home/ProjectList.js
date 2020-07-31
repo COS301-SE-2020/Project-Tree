@@ -70,7 +70,7 @@ class ProjectListPage extends Component {
         return (
             <Content>
                 <View padder style={{ padding: 5 }}>
-                    {this.state.project !== null && this.state.editing !== true ? <ProjectModal project={this.state.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo} setEditing={this.setEditing} /> : null}
+                    {this.state.project !== null && this.state.editing !== true ? <ProjectModal project={this.state.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo} setEditing={this.setEditing} setCurrentProject={this.props.setCurrentProject}/> : null}
                     {this.state.project !== null && this.state.editing === true ? <UpdateProject project={this.state.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo} setEditing={this.setEditing} /> : null}
                     <ProjectList projects={this.state.projects} toggleActionSheet={this.toggleActionSheet}/>
                     <CreateProject setProjectInfo={this.setProjectInfo}/>

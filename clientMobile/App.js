@@ -12,50 +12,83 @@ import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Footer, Foote
 import HomeScreen from './Home/HomeScreen';
 import GraphScreen from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
-import tabStyling from './native-base-theme/variables/tabStyling';
-import getTheme from './native-base-theme/components';
 
 export default class App extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {initialPage: 0, activeTab: 0};
-		this.setCurrentTab = this.setCurrentTab.bind(this);
+		this.state = {home:true, graph:false, settings:false, currentProject: null}
+		this.handlePageChange = this.handlePageChange.bind(this);
+		this.setCurrentProject = this.setCurrentProject.bind(this);
 	}
 
 	componentDidMount(){
 		BackHandler.addEventListener('hardwareBackPress', ()=>{
-			if(this.state.activeTab == 0){
+			if(this.state.home === true){
 				return false;
 			}
 
 			else{
-				this.setState({activeTab : 0});
+				this.setState({home:true, graph:false, settings:false});
 				return true;
 			}
 		});
 	}
 
-	setCurrentTab(event){
-		this.setState({activeTab:event.i})
+	setCurrentProject(project){
+		this.setState({home:false, graph:true, settings:false, currentProject:project})
+	}
+
+	handlePageChange(index){
+		if(index===0) this.setState({home:true, graph:false, settings:false});
+		else if(index===1) this.setState({home:false, graph:true, settings:false});
+		else this.setState({home:false, graph:false, settings:true});
 	}
 
 	render() {
+		let homeColor = this.state.home ? 'white' : 'black';
+		let graphColor = this.state.graph ? 'white' : 'black';
+		let settingsColor = this.state.settings ? 'white' : 'black';
+
 		return (
-			<StyleProvider style={getTheme(tabStyling)}>
-				<Container>
-					<Tabs initialPage={this.state.initialPage} page={this.state.activeTab} onChangeTab={this.setCurrentTab}>
-						<Tab heading={ <TabHeading><Icon type="SimpleLineIcons" name="home" /></TabHeading>}>
-							<HomeScreen />
-						</Tab>
-						<Tab heading={ <TabHeading><Icon type="FontAwesome5" name="project-diagram" /></TabHeading>}>
-							<GraphScreen />
-						</Tab>
-						<Tab heading={ <TabHeading><Icon type="SimpleLineIcons" name="settings" /></TabHeading>}>
-							<SettingsScreen />
-						</Tab>
-					</Tabs>
-				</Container>
-			</StyleProvider>
+			<Container>
+				<Content>
+					{this.state.home ? <HomeScreen setCurrentProject={this.setCurrentProject}/> : null}
+					{this.state.graph ? <GraphScreen project={this.state.currentProject}/> : null}
+					{this.state.settings ? <SettingsScreen /> : null}
+				</Content>
+				<Footer>
+					<FooterTab style={{backgroundColor:'grey'}}>
+						<Button vertical onPress={()=>this.handlePageChange(0)}>
+							<Icon type="SimpleLineIcons" name="home" style={{color : homeColor}} />
+						</Button>
+						<Button vertical onPress={()=>this.handlePageChange(1)}>
+							<Icon type="FontAwesome5" name="project-diagram" style={{color : graphColor}} />
+						</Button>
+						<Button vertical onPress={()=>this.handlePageChange(2)}>
+							<Icon type="SimpleLineIcons" name="settings" style={{color : settingsColor}} />
+						</Button>
+					</FooterTab>
+				</Footer>		
+			</Container>
 		);
 	}
 }
+
+
+
+
+{/* // <StyleProvider style={getTheme(tabStyling)}>
+			// 	<Container>
+			// 		<Tabs initialPage={this.state.initialPage} page={this.state.activeTab} onChangeTab={this.setCurrentTab}>
+			// 			<Tab heading={ <TabHeading><Icon type="SimpleLineIcons" name="home" /></TabHeading>}>
+			// 				<HomeScreen setCurrentProject={this.setCurrentProject}/>
+			// 			</Tab>
+			// 			<Tab heading={ <TabHeading><Icon type="FontAwesome5" name="project-diagram" /></TabHeading>}>
+			// 				<GraphScreen project={this.state.currentProject}/>
+			// 			</Tab>
+			// 			<Tab heading={ <TabHeading><Icon type="SimpleLineIcons" name="settings" /></TabHeading>}>
+			// 				<SettingsScreen />
+			// 			</Tab>
+			// 		</Tabs>
+			// 	</Container>
+			// </StyleProvider> */}

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, Button } from "react-native";
 import { Icon } from 'native-base';
-import $ from 'jquery'
 
 export default class DeleteProject extends Component{ 
     constructor(props){

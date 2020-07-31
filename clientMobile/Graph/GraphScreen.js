@@ -4,12 +4,25 @@ import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form
 
 class GraphScreen extends Component{
     render(){
+        if(this.props.project === null){
+            return(
+                <View>
+                    <Text>
+                        Please select a project to view from the home page
+                    </Text>
+                </View>
+            )
+        }
+
         return(
             <Container>
                 <Content>
                     <View>
                         <Text>
-                            Graph
+                            {this.props.project.name}
+                        </Text>
+                        <Text>
+                            {this.props.project.description}
                         </Text>
                     </View>
                 </Content>

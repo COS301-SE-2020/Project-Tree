@@ -20,7 +20,7 @@ class ProjectModal extends Component {
         while(tempArr.length) tableData.push(tempArr.splice(0,3));
 
         return (
-            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={() => { Alert.alert("Modal has been closed."); }}>
+            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={()=>this.props.setModalVisible(!this.props.modalVisible)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>{this.props.project.name}</Text>
@@ -34,7 +34,10 @@ class ProjectModal extends Component {
                                 </TableWrapper>
                             </Table>
                         </View>
-                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => { this.props.setModalVisible(!this.props.modalVisible); }}>
+                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>{
+                                this.props.setModalVisible(!this.props.modalVisible);
+                                this.props.setCurrentProject(this.props.project);
+                            }}>
                             <Icon type="FontAwesome" name="eye"><Text>&nbsp;View</Text></Icon>
                         </TouchableHighlight>
                         <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(!this.props.modalVisible)}>
