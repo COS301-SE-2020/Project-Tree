@@ -30,7 +30,7 @@ class SideBar extends React.Component {
         <Button
           key={project.id}
           onClick={() => {this.handleClick(project);}}
-          variant="secondary"
+          style={{fontFamily:"arial black", backgroundColor: "#EEBB4D", borderColor:"#EEBB4D"}}
           size="sm"
           block
         >
@@ -40,7 +40,7 @@ class SideBar extends React.Component {
     });
 
     return (
-      <Container>
+      <Container className="py-2">
         <Row> {listItems} </Row>
       </Container>
     );
