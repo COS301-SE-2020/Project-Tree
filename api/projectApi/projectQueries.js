@@ -235,7 +235,7 @@ function getProjects(req, res) {
         });
       });
       res.status(200);
-      res.send({ nodes: taskArr });
+      res.send({ projects: taskArr });
     })
     .catch((err) => {
       console.log(err);
