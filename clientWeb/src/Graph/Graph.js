@@ -8,18 +8,21 @@ import CreateDependency from './Dependency/CreateDependency'
 import {Button, Container, Row, Col } from 'react-bootstrap'
 import CreateTask from './Task/CreateTask';
 
-function makeLink(edge) {
+function makeLink(edge, criticalPathLinks) {
+    var strokeColor = '#000';
+    if(criticalPathLinks.includes(edge.id)) strokeColor = "#00f";
     return new joint.shapes.standard.Link({
         id:"l"+edge.id,
         source: { id: edge.source },
         target: { id: edge.target },
         attrs: {
-            type:'link'
+            type:'link',
+            line: {stroke:strokeColor}
         }
     })
 }
 
-function makeElement(node) {
+function makeElement(node, criticalPathNodes) {
     var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
     
     var letterSize = 12;
@@ -52,6 +55,8 @@ function makeElement(node) {
     else if(node.progress === "Issue"){
         statusColor = '#ffae42'
     }
+    var borderColor = '#000';
+    if(criticalPathNodes.includes(node.id)) borderColor = "#00f";
 
     return new joint.shapes.standard.Rectangle({
         id: node.id,
@@ -59,7 +64,8 @@ function makeElement(node) {
         attrs: {
             type:'node',
             body: {
-                fill: statusColor
+                fill: statusColor,
+                stroke: borderColor
             },
             text: { 
               text: node.name, 
@@ -68,7 +74,6 @@ function makeElement(node) {
             },
             rect: {
                 rx: 10, ry: 10,
-                stroke: '#000',
                 //magnet: true
                 transform: 'translate(1, 1)'
             }
@@ -76,16 +81,23 @@ function makeElement(node) {
     });
 }
 
-function buildGraph(nodes,rels) {
+function buildGraph(nodes,rels, criticalPath) {
     var elements = [];
     var links = [];
-      
+    let criticalPathLinks = [];
+    let criticalPathNodes = [];
+    if(criticalPath !== null && criticalPath.path !== null)
+        criticalPath.path.segments.forEach(element => {
+            criticalPathNodes.push(element.start.identity.low);
+            criticalPathLinks.push(element.relationship.identity.low);
+            criticalPathNodes.push(element.end.identity.low);
+        });
     _.each(nodes, function(node) {
-      elements.push(makeElement(node));
+      elements.push(makeElement(node, criticalPathNodes));
     })
     
     _.each(rels, function(edge) {
-      links.push(makeLink(edge)); 
+      links.push(makeLink(edge, criticalPathLinks)); 
     })
     return elements.concat(links);
 }
@@ -96,7 +108,7 @@ var paper = null
 class Graph extends React.Component {
     constructor(props) {
         super(props);
-        this.state={graph:null, paper:null}
+        this.state={graph:null, paper:null, criticalPath: this.props.criticalPath}
         this.handleClick = this.handleClick.bind(this)
         this.drawGraph = this.drawGraph.bind(this)
         this.addTask = this.addTask.bind(this)
@@ -237,12 +249,13 @@ class Graph extends React.Component {
         this.setState({graph: graph, paper: paper});
     }
 
-    async drawGraph() {
+    async drawGraph(criticalPath) {
+        
         if(this.state.graph === null || this.state.graph === undefined){
             return;
         }
         
-        var cells = buildGraph(this.props.nodes,this.props.links);
+        var cells = buildGraph(this.props.nodes,this.props.links, criticalPath);
         this.state.graph.resetCells(cells);
         joint.layout.DirectedGraph.layout(this.state.graph, {
             dagre: dagre,
@@ -267,7 +280,15 @@ class Graph extends React.Component {
     }
 
     render(){
-        this.drawGraph();
+        if(this.props.displayCriticalPath){
+            $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
+                this.drawGraph(response);
+            })
+            .fail(() => {
+                alert( "Unable to get Critical Path" );
+            })
+        }else this.drawGraph(null);
+        
 
         var dependency = null;
         var color = "outline-dark"

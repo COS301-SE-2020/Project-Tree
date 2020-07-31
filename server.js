@@ -16,6 +16,7 @@ app.post('/project/add', pq.createProject);
 app.post('/project/delete', pq.deleteProject);
 app.post('/project/update', pq.updateProject);
 app.post('/project/progress', pq.getProgress);
+app.post('/project/criticalpath', pq.getCriticalPath);
 app.post('/task/add', tq.createTask);
 app.post('/task/update', tq.updateTask);
 app.post('/task/delete', tq.deleteTask);

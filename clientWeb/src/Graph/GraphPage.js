@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Container, Row, Col } from 'react-bootstrap'
+import {Form, Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Graph from './Graph';
 import DeleteTask from './Task/DeleteTask';
@@ -11,7 +11,7 @@ import DeleteDependency from './Dependency/DeleteDependency'
 class GraphPage extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {task:null, dependency:null, nodes:null, links:null};
+        this.state = {task:null, dependency:null, nodes:null, links:null, displayCriticalPath:true};
         this.toggleSidebar = this.toggleSidebar.bind(this);
         this.setTaskInfo = this.setTaskInfo.bind(this);
         this.getProjectInfo = this.getProjectInfo.bind(this);
@@ -102,12 +102,23 @@ class GraphPage extends React.Component{
                             <br/> 
                             <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
                             {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
-                            <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
+                            <Form>
+                                <Form.Check 
+                                    type="switch" 
+                                    id="switchEnabled"
+                                    label="Display Critical Path"  
+                                    checked={this.state.displayCriticalPath}
+                                    onChange={e => {
+                                        this.setState({ displayCriticalPath: e.target.checked });
+                                        this.checked = this.state.displayCriticalPath;
+                                    }}
+                                />
+                            </Form>
                             <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo} getProjectInfo={this.getProjectInfo}/> : null}
                             {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar} getProjectInfo={this.getProjectInfo}/> : null}
                         </Col>
                         <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
-                            {this.state.nodes!==null?<Graph project={this.props.project} nodes={this.state.nodes} links={this.state.links} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar} getProjectInfo={this.getProjectInfo}/>:null}
+                            {this.state.nodes!==null?<Graph project={this.props.project} nodes={this.state.nodes} links={this.state.links} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar} getProjectInfo={this.getProjectInfo} displayCriticalPath={this.state.displayCriticalPath}/>:null}
                         </Col>
                     </Row>
                 </Container>
