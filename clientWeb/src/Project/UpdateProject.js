@@ -37,10 +37,8 @@ class UpdateProject extends React.Component {
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
     $.post("/project/update", JSON.parse(data), (response) => {
-      this.props.setProject(response);
-    })
-    .done(() => {
       this.setState({ show: false });
+      this.props.setProject(response);
     })
     .fail(() => {
       alert("Unable to update project");

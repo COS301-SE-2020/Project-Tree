@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Table, Modal, Button } from "react-bootstrap";
-import { Redirect } from "react-router-dom";
 import $ from "jquery";
 
 function stringifyFormData(fd) {
@@ -14,7 +13,7 @@ function stringifyFormData(fd) {
 class CreateProject extends React.Component {
   constructor() {
     super();
-    this.state = { show: false, redirect: false };
+    this.state = { show: false };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,11 +31,8 @@ class CreateProject extends React.Component {
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
     $.post("/project/add", JSON.parse(data), (response) => {
+      this.setState({ show: false });
       this.props.setProject(response);
-      this.props.closeSideBar();
-    })
-    .done(() => {
-      this.setState({ show: false, redirect: true });
     })
     .fail(() => {
       alert("Unable to create project");
@@ -44,11 +40,7 @@ class CreateProject extends React.Component {
   }
 
   render() {
-    if(this.state.redirect){
-      return <Redirect to={'/project'}/>
-    }
-    return (
-      
+    return ( 
       <React.Fragment>
         <Button
           className="my-2"

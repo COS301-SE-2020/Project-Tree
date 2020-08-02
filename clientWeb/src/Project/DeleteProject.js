@@ -42,9 +42,6 @@ class DeleteProject extends React.Component {
     $.post("/project/delete", JSON.parse(data), (response) => {
       this.props.setProject(response);
     })
-    .done(() => {
-      this.setState({ show: false });
-    })
     .fail(() => {
       alert("Unable to delete project");
     });

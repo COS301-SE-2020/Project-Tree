@@ -40,7 +40,7 @@ class App extends Component {
       if(!this.state.projects.includes(proj)){
         let projects = this.state.projects;
         projects.push(proj);
-        this.setState({projects: projects});
+        this.setState({projects: projects, redirect: "project"});
       }
       this.setState({project: proj})
     }
@@ -55,10 +55,22 @@ class App extends Component {
     this.setState({showSideBar: false});
   }
 
+  checkRedirect(){
+    switch (this.state.redirect) {
+      case "project":
+        //this.setState({redirect: ""});
+        return (<Redirect to={'/project'}/>);
+      default:
+        break;
+    }
+  }
+
   render() {
+  
     return (
       <React.Fragment>
         <Router>
+          {this.checkRedirect()}
           <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"arial black", backgroundColor: "#96BB7C"}}>
             <Nav className="mr-auto form-inline ">
               <Nav.Link href="/">
