@@ -1,112 +1,6 @@
-// import React, { Component } from 'react';
-// import './App.css';
-// import Routes from './Routes'
-// import {Navbar, Nav} from 'react-bootstrap'
-
-// import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-// import axios from 'axios';
-// import Home from './Home/Home';
-// import Def from './Def';
-
-// export default class App extends Component {
-// 	_isMounted = false;
-
-// 	constructor() {
-// 	  super();
-  
-// 	  this.state = {
-// 		loggedInStatus: false,
-// 		user: {}
-// 	  };
-  
-// 	  this.handleLogin = this.handleLogin.bind(this);
-// 	  this.handleLogout = this.handleLogout.bind(this);
-// 	}
-
-// 	checkLoginStatus() {
-// 		console.log(this.state)
-// 		//Check logged In 
-// 			if (!this.state.loggedInStatus) 
-// 			{
-// 			  this.setState({
-// 				loggedInStatus: false,
-// 				user: {}
-// 			  });
-// 			} 
-// 	  }
-	
-// 	  componentDidMount() {
-// 		this._isMounted = true;
-// 		this.checkLoginStatus();
-// 	  }
-	  
-
-// 	  handleLogoutClick() {
-// 		console.log(this.state)
-// 		this.props.handleLogout();
-// 		console.log(this.state)
-// 	  }
-
-// 	handleLogout() {
-// 	console.log(this.state)
-// 	this.setState({
-// 		loggedInStatus: false,
-// 		user: "000"
-// 	});
-// 	console.log(this.state)
-// 	this._isMounted = false;
-// 	}
-
-// 	handleLogin(data) 
-// 	{
-// 		this.setState({
-// 			loggedInStatus: data.status,
-// 			user: data.id
-// 		});
-// 		console.log(this.state)
-// 	}
-
-// 	render() {
-// 		return (
-// 		  <div className="app">
-// 			  	<Navbar sticky="top" bg="dark" variant="dark">
-// 					<Nav className="mr-auto" >
-// 						<Nav>				
-// 							<Nav.Link className="form-inline" href="/register">Register</Nav.Link>
-// 							<Nav.Link className="form-inline" href="/register">Logout</Nav.Link>
-// 						</Nav>	
-// 					</Nav>
-// 				</Navbar>
-// 			<button onClick={() => this.handleLogout()}>Logout</button>
-// 			<BrowserRouter>
-// 			  <Switch>
-// 				<Route
-// 				  exact path={"/"} render={props => (
-// 					<Def
-// 					  {...props}
-// 					  handleLogin={this.handleLogin}
-// 					  handleLogout={this.handleLogout}
-// 					  loggedInStatus={this.state.loggedInStatus}
-// 					/>
-// 				  )}
-// 				/>
-// 				<Route path="/home" exact strict render={props=>
-// 				(
-// 					this.state.loggedInStatus ? ( <Home {...props} 
-// 					loggedInStatus={this.state.loggedInStatus}
-// 					id={this.state.id} />) 
-// 					: (<Redirect to='/' />)
-//       			)}/>
-// 			  </Switch>
-// 			</BrowserRouter>
-// 		  </div>
-// 		//<Routes />
-// 		);
-// 	  }
-// }
 import React, { Component } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Home/Home";
 import User from "./User/User";
 import ProjectPage from "./Project/ProjectPage";
@@ -115,15 +9,23 @@ import { Container, Row, Col, Navbar, Nav  } from "react-bootstrap";
 import SideBar from "./SideBar";
 import $ from "jquery";
 import logo from './Images/Logo.png';
+import Login from './User/login'
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { projects: null, project: null, showSideBar: false };
+    this.state = { 
+      projects: null,
+      project: null, 
+      showSideBar: false,
+      loggedInStatus: false,
+      user: {}
+    };
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
     this.closeSideBar = this.closeSideBar.bind(this);
-    //this.updateProject = this.updateProject.bind(this);
+	  this.handleLogin = this.handleLogin.bind(this);
+	  this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentDidMount(){
@@ -132,6 +34,7 @@ class App extends Component {
     }).fail((response) => {
       throw Error(response.message);
     });
+    
   }
 
   setProject(proj){
@@ -161,22 +64,30 @@ class App extends Component {
     this.setState({showSideBar: false});
   }
 
-  checkRedirect(){
-    switch (this.state.redirect) {
-      case "project":
-        //this.setState({redirect: ""});
-        return (<Redirect to={'/project'}/>);
-      default:
-        break;
-    }
+  handleLogin(data){
+    this.setState({
+      loggedInStatus: data.status,
+      user: data.id
+    });
+    console.log(this.state)
+   }
+   
+  handleLogout() {
+    console.log(this.state)
+    this.setState({
+      loggedInStatus: false,
+      user: {}
+    });
+    console.log(this.state)
+    this._isMounted = false;
   }
 
   render() {
   
     return (
       <React.Fragment>
-        <Router>
-          {this.checkRedirect()}
+        <BrowserRouter>
+          <button onClick={() => this.handleLogout()}>Logout</button>
           <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"arial black", backgroundColor: "#96BB7C"}}>
             <Nav className="mr-auto form-inline ">
               <Nav.Link href="/">
@@ -211,6 +122,11 @@ class App extends Component {
               ) : null}
               <Col>
                 <Switch>
+                  <Route path="/project">
+                    {this.state.project != null ? (
+                      <ProjectPage project={this.state.project} setProject={project => this.setProject(project)}/>
+                    ) : <Redirect to="/"/>}
+                  </Route>
                   <Route path="/graph">
                     {this.state.project != null ? (
                       <GraphPage
@@ -218,22 +134,17 @@ class App extends Component {
                       />
                     ) : <Redirect to="/"/>}
                   </Route>
-                  <Route path="/project">
-                    {this.state.project != null ? (
-                      <ProjectPage project={this.state.project} setProject={project => {this.setProject(project)}}/>
-                    ) : <Redirect to="/"/>}
-                  </Route>
-                  <Route path="/">
-                    <Home />
-                  </Route>
                   <Route path="/user">
                     <User />
+                  </Route>
+                  <Route path="/">
+                    {this.state.loggedInStatus? (<Home />) : (<Login handleLogin={data => this.handleLogin(data)}/>)}
                   </Route>
                 </Switch>
               </Col>
             </Row>
           </Container>
-        </Router>
+        </BrowserRouter>
       </React.Fragment>
     );
   }

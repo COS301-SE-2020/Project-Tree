@@ -21,7 +21,6 @@ export default class Login extends Component {
         password: "",
         loginErrors: ""
       };
-     // this.handleSuccessfulAuth = this.handleSuccessfulAuth.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
     }
@@ -42,7 +41,7 @@ export default class Login extends Component {
             {
                 console.log(response)
                 sessionStorage.setItem("sessionToken", response.sessionToken);
-                this.props.handleSuccessfulAuth(response);
+                this.props.handleLogin(response);
             }
             else
                 alert( "Unable to Log" );
