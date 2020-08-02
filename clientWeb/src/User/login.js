@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {Card, Form, Button, Container, Row, Col} from 'react-bootstrap';
 import $ from 'jquery';
+import axios from 'axios';
+
 
 function stringifyFormData(fd){
     const data = {};
@@ -10,20 +12,40 @@ function stringifyFormData(fd){
     return JSON.stringify(data, null, 2);
 }
 
-class Login extends Component{
-    constructor(){
-        super();
-        this.state = { };
-        this.handleSubmit = this.handleSubmit.bind(this);
+export default class Login extends Component {
+    constructor(props) {
+      super(props);
+  
+      this.state = {
+        email: "",
+        password: "",
+        loginErrors: ""
+      };
+     // this.handleSuccessfulAuth = this.handleSuccessfulAuth.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleChange = this.handleChange.bind(this);
     }
 
+
+    handleChange(event) {
+        this.setState({
+          [event.target.name]: event.target.value
+        });
+      }
+
+
     handleSubmit(event){
-        event.preventDefault();
+        const { email, password } = this.state;
         let data = stringifyFormData(new FormData(event.target));
         $.post( "/login", JSON.parse(data) , response => {
-            sessionStorage.setItem("sessionToken", response.sessionToken);
-        })
-        .done(() => {
+            if(response.status === true)
+            {
+                console.log(response)
+                sessionStorage.setItem("sessionToken", response.sessionToken);
+                this.props.handleSuccessfulAuth(response);
+            }
+            else
+                alert( "Unable to Log" );
         })
         .fail(() => {
             alert( "Unable to login" );
@@ -31,6 +53,7 @@ class Login extends Component{
         .always(() => {
             //alert( "finished" );
         });
+        event.preventDefault();
     }
 
     render(){
@@ -46,11 +69,11 @@ class Login extends Component{
                                     <Form onSubmit={this.handleSubmit}>
                                         <Form.Group>
                                             <Form.Label>Email</Form.Label>
-                                            <Form.Control type='text' name="email" required/>
+                                            <Form.Control type='text' name="email" value={this.state.email} onChange={this.handleChange} required/>
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.Label>password</Form.Label>
-                                            <Form.Control type='password' name="password" required/>
+                                            <Form.Control type='password' name="password" value={this.state.password} onChange={this.handleChange} required/>
                                         </Form.Group>
                                         <Card.Link href="/register">register</Card.Link>
                                         <Card.Link href="#">
@@ -69,5 +92,3 @@ class Login extends Component{
         )
     }
 }
-
-export default Login;

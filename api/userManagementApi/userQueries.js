@@ -6,17 +6,27 @@ function login(req,res){ //email, password,
     db.getSession()
     .run(`
             Match (n:User { email: "${req.body.email}" })
-            RETURN n.password
+            RETURN n
         `)
     .then(result => {
+        let id = (result.records[0]._fields[0].identity.low)
         if(result.records.length != 0){
-            let hash = result.records[0]._fields[0];
+            let hash = result.records[0]._fields[0].properties.password;
             bcrypt.compare(req.body.password, hash, function(err, result) {
                 if(result){
+                    //console.log("JERE")
                     res.status(200);
-                    res.send({sessionToken : JWT.sign({email: req.body.email, hash}, process.env.ACCESS_TOKEN_SECRET)});
-                }else{
-                    res.send(err)
+                    res.send({
+                        sessionToken : JWT.sign({email: req.body.email, hash}, process.env.ACCESS_TOKEN_SECRET), 
+                        status: true,
+                        id : id
+                    });
+                }else
+                {
+                    res.send({
+                        status: false,
+                        err:err
+                    })
                 }
             });
         }else{
@@ -51,6 +61,7 @@ function register(req,res){ //email, password, name, surname
                             RETURN a
                         `)
                     .then(result => {
+                        console.log("JERE")
                         res.status(200);
                         res.send({sessionToken : JWT.sign({email: req.body.email, hash}, process.env.ACCESS_TOKEN_SECRET)});
                     })
@@ -69,7 +80,8 @@ function register(req,res){ //email, password, name, surname
         });
 }
 
-function updateInfo(){
+function updateInfo()
+{
 
 }
 

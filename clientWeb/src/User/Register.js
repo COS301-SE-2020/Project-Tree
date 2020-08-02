@@ -21,24 +21,39 @@ class Register extends React.Component
     }
 
     handleSubmit(event){
+     //   const { email, password, name, sname } = this.state;
         event.preventDefault();
         let data = stringifyFormData(new FormData(event.target));
         console.log(data);
+        
         $.post( "/register", JSON.parse(data) , response => {
             sessionStorage.setItem("sessionToken", response.sessionToken);
         })
         .done(() => {
+            //this.setState(sessionToken.getItem({sessionToken}));
         })
         .fail(() => {
             alert( "Unable to create User" );
         })
         .always(() => {
-            //alert( "finished" );
+            alert( "finished" );
         });
     }
-    
+        onChange = event => 
+        {
+         this.setState({ [event.target.name]: event.target.value });
+        };
 
       render(){
+
+        const {
+            email,
+            password,
+            name,
+            sname,
+            error
+          } = this.state;
+
         return (
             <React.Fragment>
                 <Container>
@@ -51,19 +66,19 @@ class Register extends React.Component
                                     <Form onSubmit={this.handleSubmit}>
                                         <Form.Group>
                                             <Form.Label>Email: </Form.Label>
-                                            <Form.Control type='text' id="email" name="email" required/>
+                                            <Form.Control type='text' id="email" name="email" value={email}  onChange={this.onChange} required/>
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.Label>Password</Form.Label>
-                                            <Form.Control type='password' id="password" name="password" required/>
+                                            <Form.Control type='password' id="password" name="password" value={password}  onChange={this.onChange} required/>
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.Label>Name</Form.Label>
-                                            <Form.Control type='text' id="name" name="name" required/>
+                                            <Form.Control type='text' id="name" name="name" value={name}  onChange={this.onChange} required/>
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.Label>Surname</Form.Label>
-                                            <Form.Control type='text' id="sname" name="sname" required/>
+                                            <Form.Control type='text' id="sname" name="sname" value={sname}  onChange={this.onChange} required/>
                                         </Form.Group>
                                         <Form.Group>
                                         <Card.Link href="">
@@ -72,6 +87,7 @@ class Register extends React.Component
                                             </Button>
                                             </Card.Link>
                                         </Form.Group>
+                                        {error && <p>{error.message}</p>}
                                     </Form>
                                 </Card.Body>
                             </Card>

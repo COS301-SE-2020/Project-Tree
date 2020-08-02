@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@projectstorm/react-diagrams": "^6.0.1-beta.7",
+    "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.5.0",
