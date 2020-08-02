@@ -8,85 +8,98 @@ import CreateDependency from "./Dependency/CreateDependency";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
 
-function makeLink(edge) {
+function makeLink(edge, criticalPathLinks) {
+  var strokeColor = '#000';
+  if(criticalPathLinks.includes(edge.id)) strokeColor = "#00f";
   return new joint.shapes.standard.Link({
-    id: "l" + edge.id,
-    source: { id: edge.source },
-    target: { id: edge.target },
-    attrs: {
-      type: "link",
-    },
-  });
-}
-
-function makeElement(node) {
-  var maxLineLength = _.max(node.name.split("\n"), function (l) {
-    return l.length;
-  }).length;
-
-  var letterSize = 12;
-  var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-  var height = 2 * ((node.name.split("\n").length + 1) * letterSize);
-
-  var statusColor = "#fff";
-  if (node.progress === "Incomplete") {
-    let today = new Date();
-    if (parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)) {
-      if (parseInt(today.getMonth() + 1) <= parseInt(node.endDate.month.low)) {
-        if (
-          parseInt(today.getMonth() + 1) === parseInt(node.endDate.month.low)
-        ) {
-          if (parseInt(today.getDate()) > parseInt(node.endDate.day.low)) {
-            statusColor = "#ff6961";
-          }
-        }
-      } else {
-        statusColor = "#ff6961";
+      id:"l"+edge.id,
+      source: { id: edge.source },
+      target: { id: edge.target },
+      attrs: {
+          type:'link',
+          line: {stroke:strokeColor}
       }
-    } else {
-      statusColor = "#ff6961";
-    }
-  } else if (node.progress === "Complete") {
-    statusColor = "#77dd77";
-  } else if (node.progress === "Issue") {
-    statusColor = "#ffae42";
-  }
-
-  return new joint.shapes.standard.Rectangle({
-    id: node.id,
-    size: { width: width, height: height },
-    attrs: {
-      type: "node",
-      body: {
-        fill: statusColor,
-      },
-      text: {
-        text: node.name,
-        "font-size": letterSize,
-        "font-family": "monospace",
-      },
-      rect: {
-        rx: 10,
-        ry: 10,
-        stroke: "#000",
-        //magnet: true
-        transform: 'translate(1, 1)'
-      },
-    },
-  });
+  })
 }
 
-function buildGraph(nodes, rels) {
+function makeElement(node, criticalPathNodes) {
+    var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
+    
+    var letterSize = 12;
+    var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+    var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
+
+    var statusColor = '#fff'
+    if(node.progress === "Incomplete"){
+      let today = new Date();
+      if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
+          if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
+              if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
+              {
+                  if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
+                      statusColor = '#ff6961'
+                  }
+              }
+          }
+          else{
+              statusColor = '#ff6961'
+          }
+      }
+      else{
+          statusColor = '#ff6961'
+      }
+  }
+  else if(node.progress === "Complete"){
+      statusColor = '#77dd77'
+  }
+  else if(node.progress === "Issue"){
+      statusColor = '#ffae42'
+  }
+    var borderColor = '#000';
+    if(criticalPathNodes.includes(node.id)) borderColor = "#00f";
+
+    return new joint.shapes.standard.Rectangle({
+        id: node.id,
+        size: { width: width, height: height },
+        attrs: {
+            type:'node',
+            body: {
+                fill: statusColor,
+                stroke: borderColor
+            },
+            text: { 
+              text: node.name, 
+              'font-size': letterSize, 
+              'font-family': 'monospace',
+            },
+            rect: {
+                rx: 10, ry: 10,
+                //magnet: true
+                transform: 'translate(1, 1)'
+            }
+        }
+    });
+}
+
+
+function buildGraph(nodes,rels, criticalPath) {
   var elements = [];
   var links = [];
-
-  _.each(nodes, function (node) {
-    elements.push(makeElement(node));
-  });
-
-  _.each(rels, function (edge) {
-    links.push(makeLink(edge));
-  });
+  let criticalPathLinks = [];
+  let criticalPathNodes = [];
+  if(criticalPath !== null && criticalPath.path !== null)
+      criticalPath.path.segments.forEach(element => {
+          criticalPathNodes.push(element.start.identity.low);
+          criticalPathLinks.push(element.relationship.identity.low);
+          criticalPathNodes.push(element.end.identity.low);
+      });
+  _.each(nodes, function(node) {
+    elements.push(makeElement(node, criticalPathNodes));
+  })
+  
+  _.each(rels, function(edge) {
+    links.push(makeLink(edge, criticalPathLinks)); 
+  })
   return elements.concat(links);
 }
 
@@ -96,7 +109,7 @@ var paper = null;
 class Graph extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { graph: null, paper: null };
+    this.state = { graph: null, paper: null, criticalPath: this.props.criticalPath };
     this.handleClick = this.handleClick.bind(this);
     this.drawGraph = this.drawGraph.bind(this);
     this.addTask = this.addTask.bind(this);
@@ -233,22 +246,23 @@ class Graph extends React.Component {
     this.setState({ graph: graph, paper: paper });
   }
 
-  async drawGraph() {
-    if (this.state.graph === null || this.state.graph === undefined) {
-      return;
+  async drawGraph(criticalPath) {
+        
+    if(this.state.graph === null || this.state.graph === undefined){
+        return;
     }
-
-    var cells = buildGraph(this.props.nodes, this.props.links);
+    
+    var cells = buildGraph(this.props.nodes,this.props.links, criticalPath);
     this.state.graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(this.state.graph, {
-      dagre: dagre,
-      graphlib: graphlib,
-      setLinkVertices: false,
-      rankDir: "TB",
-      nodeSep: 100,
-      rankSep: 100,
-    });
-  }
+        dagre: dagre,
+        graphlib: graphlib,
+        setLinkVertices: false,
+        rankDir: "TB",
+        nodeSep: 100,
+        rankSep: 100
+    })
+}
 
   hideModal() {
     this.setState({ createTask: false });
@@ -263,7 +277,15 @@ class Graph extends React.Component {
   }
 
   render() {
-    this.drawGraph();
+    if(this.props.displayCriticalPath){
+      $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
+        console.log(response);
+          this.drawGraph(response);
+      })
+      .fail(() => {
+          alert( "Unable to get Critical Path" );
+      })
+    }else this.drawGraph(null);
 
     var dependency = null;
     var color = "outline-dark";
@@ -274,6 +296,15 @@ class Graph extends React.Component {
       dependency = this.state.source.name + "→";
     }
 
+    if(this.props.displayCriticalPath){
+      $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
+          this.drawGraph(response);
+      })
+      .fail(() => {
+          alert( "Unable to get Critical Path" );
+      })
+    }else this.drawGraph(null);
+  
     return (
       <React.Fragment>
         <Container className="text-center py-2">

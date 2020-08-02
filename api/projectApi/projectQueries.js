@@ -244,10 +244,32 @@ function getProjects(req, res) {
     });
 }
 
+function getCriticalPath(req, res){
+	db.getSession()
+        .run(`
+                MATCH (a:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(b:Task {projId: ${req.body.projId}})
+                WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
+                MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
+                WHERE duration.inDays(c.startDate, d.endDate) = dur
+                RETURN p
+            `)
+        .then(result => {
+            res.status(200);
+            if(result.records[0] != null) res.send({path: result.records[0]._fields[0]});
+            else res.send({path: null});
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400);
+            res.send(err);
+        });
+};
+
 module.exports = {
   createProject,
   deleteProject,
   updateProject,
   getProjects,
   getProgress,
+  getCriticalPath
 };

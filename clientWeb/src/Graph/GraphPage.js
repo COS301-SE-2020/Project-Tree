@@ -1,5 +1,5 @@
-import React from "react";
-import { Table, Button, Container, Row, Col } from "react-bootstrap";
+import React from 'react';
+import {Form, Table, Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
@@ -8,14 +8,14 @@ import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
 
-class GraphPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { task: null, dependency: null, nodes: null, links: null };
-    this.toggleSidebar = this.toggleSidebar.bind(this);
-    this.setTaskInfo = this.setTaskInfo.bind(this);
-    this.getProjectInfo = this.getProjectInfo.bind(this);
-  }
+class GraphPage extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {task:null, dependency:null, nodes:null, links:null, displayCriticalPath:true};
+        this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.setTaskInfo = this.setTaskInfo.bind(this);
+        this.getProjectInfo = this.getProjectInfo.bind(this);
+    }
 
   async componentDidMount() {
     const response = await fetch("/getProject", {
@@ -106,7 +106,18 @@ class GraphPage extends React.Component {
                 </Button>
               ) : null}
               <Button size="sm" variant="secondary" block>
-                Display Critical Path - Under Construction
+              <Form>
+                                <Form.Check 
+                                    type="switch" 
+                                    id="switchEnabled"
+                                    label="Display Critical Path"  
+                                    checked={this.state.displayCriticalPath}
+                                    onChange={e => {
+                                        this.setState({ displayCriticalPath: e.target.checked });
+                                        this.checked = this.state.displayCriticalPath;
+                                    }}
+                                />
+                            </Form>
               </Button>
               <br />{" "}
               {this.state.task !== null ? (
@@ -143,6 +154,7 @@ class GraphPage extends React.Component {
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
                   getProjectInfo={this.getProjectInfo}
+                  displayCriticalPath={this.state.displayCriticalPath}
                 />
               ) : null}
             </Col>
