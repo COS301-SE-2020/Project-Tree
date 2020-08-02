@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Table, Modal, Button } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 import $ from "jquery";
 
 function stringifyFormData(fd) {
@@ -13,7 +14,7 @@ function stringifyFormData(fd) {
 class CreateProject extends React.Component {
   constructor() {
     super();
-    this.state = { show: false };
+    this.state = { show: false, redirect: false };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,33 +32,35 @@ class CreateProject extends React.Component {
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
     $.post("/project/add", JSON.parse(data), (response) => {
-      this.props.setProjectInfo(response);
+      this.props.setProject(response);
+      this.props.closeSideBar();
     })
-      .done(() => {
-        this.setState({ show: false });
-      })
-      .fail(() => {
-        alert("Unable to create project");
-      })
-      .always(() => {
-        //alert( "finished" );
-      });
+    .done(() => {
+      this.setState({ show: false, redirect: true });
+    })
+    .fail(() => {
+      alert("Unable to create project");
+    })
   }
 
   render() {
+    if(this.state.redirect){
+      return <Redirect to={'/project'}/>
+    }
     return (
+      
       <React.Fragment>
         <Button
           className="my-2"
           style={{borderColor:"#184D47", backgroundColor:"white"}}
-          onClick={this.showModal}
+          onClick={() => {this.showModal()}}
           block
           size="sm"
         >
           <i className="fa fa-plus" style={{fontSize:"30px", color:"#184D47"}}></i>
         </Button>
-        <Modal show={this.state.show} onHide={this.hideModal}>
-          <Form onSubmit={this.handleSubmit}>
+        <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
+          <Form onSubmit={event => {this.handleSubmit(event)}}>
             <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
               <Modal.Title>Create Project</Modal.Title>
             </Modal.Header>
@@ -131,10 +134,13 @@ class CreateProject extends React.Component {
               </Table>
             </Modal.Body>
             <Modal.Footer style={{backgroundColor:"#184D47"}}>
-              <Button variant="secondary" onClick={this.hideModal}>
+              <Button variant="secondary" onClick={() => {this.hideModal()}}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark">
+              <Button
+                type="submit"
+                variant="dark"
+              >
                 Create Project
               </Button>
             </Modal.Footer>

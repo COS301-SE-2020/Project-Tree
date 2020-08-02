@@ -13,42 +13,16 @@ function stringifyFormData(fd) {
 class UpdateProject extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      show: false,
-      id: this.props.project.id,
-      name: this.props.project.name,
-      description: this.props.project.description,
-      up_pm_Create: this.props.project.permissions[0] === true,
-      up_pm_Delete: this.props.project.permissions[1] === true,
-      up_pm_Update: this.props.project.permissions[2] === true,
-      up_rp_Create: this.props.project.permissions[3] === true,
-      up_rp_Delete: this.props.project.permissions[4] === true,
-      up_rp_Update: this.props.project.permissions[5] === true,
-      up_r_Create: this.props.project.permissions[6] === true,
-      up_r_Delete: this.props.project.permissions[7] === true,
-      up_r_Update: this.props.project.permissions[8] === true,
-    };
+    this.state = { show: false, project: this.props.project };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.refreshState = this.refreshState.bind(this);
   }
-
-  refreshState() {
-    this.setState({
-      id: this.props.project.id,
-      name: this.props.project.name,
-      description: this.props.project.description,
-      up_pm_Create: this.props.project.permissions[0] === true,
-      up_pm_Delete: this.props.project.permissions[1] === true,
-      up_pm_Update: this.props.project.permissions[2] === true,
-      up_rp_Create: this.props.project.permissions[3] === true,
-      up_rp_Delete: this.props.project.permissions[4] === true,
-      up_rp_Update: this.props.project.permissions[5] === true,
-      up_r_Create: this.props.project.permissions[6] === true,
-      up_r_Delete: this.props.project.permissions[7] === true,
-      up_r_Update: this.props.project.permissions[8] === true,
-    });
+  
+  componentDidUpdate(prevProps) {
+    if (this.props.project !== prevProps.project) {
+      this.setState({ project: this.props.project });
+    }
   }
 
   showModal() {
@@ -63,29 +37,24 @@ class UpdateProject extends React.Component {
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
     $.post("/project/update", JSON.parse(data), (response) => {
-      this.props.setProjectInfo(response);
+      this.props.setProject(response);
     })
-      .done(() => {
-        this.setState({ show: false });
-      })
-      .fail(() => {
-        alert("Unable to uodate project");
-      })
-      .always(() => {
-        //alert( "finished" );
-      });
+    .done(() => {
+      this.setState({ show: false });
+    })
+    .fail(() => {
+      alert("Unable to update project");
+    })
   }
 
   render() {
-    if (this.state.id !== this.props.project.id) this.refreshState();
-
     return (
       <React.Fragment>
-        <Button className="btn-dark" onClick={this.showModal}>
+        <Button className="btn-dark" onClick={() => {this.showModal()}}>
           <i className="fa fa-edit"> </i> Edit{" "}
         </Button>
-        <Modal show={this.state.show} onHide={this.hideModal}>
-          <Form onSubmit={this.handleSubmit}>
+        <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
+          <Form onSubmit={event => {this.handleSubmit(event)}}>
             <Modal.Header closeButton>
               <Modal.Title>Update Project</Modal.Title>
             </Modal.Header>
@@ -93,9 +62,8 @@ class UpdateProject extends React.Component {
               <input
                 hidden
                 type="number"
-                id="up_id"
                 name="up_id"
-                value={this.state.id}
+                value={this.state.project.id}
                 onChange={() => {}}
               />
               <Form.Group>
@@ -104,10 +72,12 @@ class UpdateProject extends React.Component {
                   required
                   type="text"
                   name="up_name"
-                  value={this.state.name}
+                  value={this.state.project.name}
                   onChange={(e) => {
-                    this.setState({ name: e.target.value });
-                    this.value = this.state.name;
+                    let proj = this.state.project;
+                    proj.name = e.target.value;
+                    this.setState({ project: proj });
+                    this.value = this.state.project.name;
                   }}
                 />
               </Form.Group>
@@ -118,10 +88,12 @@ class UpdateProject extends React.Component {
                   as="textarea"
                   name="up_description"
                   rows="3"
-                  value={this.state.description}
+                  value={this.state.project.description}
                   onChange={(e) => {
-                    this.setState({ description: e.target.value });
-                    this.value = this.state.description;
+                    let proj = this.state.project;
+                    proj.description = e.target.value ;
+                    this.setState({ project: proj });
+                    this.value = this.state.project.description;
                   }}
                 />
               </Form.Group>
@@ -146,10 +118,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_pm_Create"
-                        checked={this.state.up_pm_Create}
+                        checked={this.state.project.permissions[0]}
                         onChange={(e) => {
-                          this.setState({ up_pm_Create: e.target.checked });
-                          this.checked = this.state.up_pm_Create;
+                          let proj = this.state.project;
+                          proj.permissions[0] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[0];
                         }}
                       />
                     </td>
@@ -157,10 +131,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_pm_Delete"
-                        checked={this.state.up_pm_Delete}
+                        checked={this.state.project.permissions[1]}
                         onChange={(e) => {
-                          this.setState({ up_pm_Delete: e.target.checked });
-                          this.checked = this.state.up_pm_Delete;
+                          let proj = this.state.project;
+                          proj.permissions[1] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[1];
                         }}
                       />
                     </td>
@@ -168,10 +144,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_pm_Update"
-                        checked={this.state.up_pm_Update}
+                        checked={this.state.project.permissions[2]}
                         onChange={(e) => {
-                          this.setState({ up_pm_Update: e.target.checked });
-                          this.checked = this.state.up_pm_Update;
+                          let proj = this.state.project;
+                          proj.permissions[2] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[2];
                         }}
                       />
                     </td>
@@ -182,10 +160,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_rp_Create"
-                        checked={this.state.up_rp_Create}
+                        checked={this.state.project.permissions[3]}
                         onChange={(e) => {
-                          this.setState({ up_rp_Create: e.target.checked });
-                          this.checked = this.state.up_rp_Create;
+                          let proj = this.state.project;
+                          proj.permissions[3] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[3];
                         }}
                       />
                     </td>
@@ -193,10 +173,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_rp_Delete"
-                        checked={this.state.up_rp_Delete}
+                        checked={this.state.project.permissions[4]}
                         onChange={(e) => {
-                          this.setState({ up_rp_Delete: e.target.checked });
-                          this.checked = this.state.up_rp_Delete;
+                          let proj = this.state.project;
+                          proj.permissions[4] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[4];
                         }}
                       />
                     </td>
@@ -204,10 +186,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_rp_Update"
-                        checked={this.state.up_rp_Update}
+                        checked={this.state.project.permissions[5]}
                         onChange={(e) => {
-                          this.setState({ up_rp_Update: e.target.checked });
-                          this.checked = this.state.up_rp_Update;
+                          let proj = this.state.project;
+                          proj.permissions[5] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[5];
                         }}
                       />
                     </td>
@@ -218,10 +202,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_r_Create"
-                        checked={this.state.up_r_Create}
+                        checked={this.state.project.permissions[6]}
                         onChange={(e) => {
-                          this.setState({ up_r_Create: e.target.checked });
-                          this.checked = this.state.up_r_Create;
+                          let proj = this.state.project;
+                          proj.permissions[6] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[6];
                         }}
                       />
                     </td>
@@ -229,10 +215,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_r_Delete"
-                        checked={this.state.up_r_Delete}
+                        checked={this.state.project.permissions[7]}
                         onChange={(e) => {
-                          this.setState({ up_r_Delete: e.target.checked });
-                          this.checked = this.state.up_r_Delete;
+                          let proj = this.state.project;
+                          proj.permissions[7] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[7];
                         }}
                       />
                     </td>
@@ -240,10 +228,12 @@ class UpdateProject extends React.Component {
                       <input
                         type="checkbox"
                         name="up_r_Update"
-                        checked={this.state.up_r_Update}
+                        checked={this.state.project.permissions[8]}
                         onChange={(e) => {
-                          this.setState({ up_r_Update: e.target.checked });
-                          this.checked = this.state.up_r_Update;
+                          let proj = this.state.project;
+                          proj.permissions[8] = e.target.checked;
+                          this.setState({ project: proj });
+                          this.checked = this.state.project.permissions[8];
                         }}
                       />
                     </td>

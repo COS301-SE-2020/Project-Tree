@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Home/Home";
 import User from "./User/User";
 import ProjectPage from "./Project/ProjectPage";
@@ -13,8 +13,11 @@ import logo from './Images/Logo.png';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { projects: null, showSideBar: false };
+    this.state = { projects: null, project: null, showSideBar: false };
+    this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
+    this.closeSideBar = this.closeSideBar.bind(this);
+    //this.updateProject = this.updateProject.bind(this);
   }
 
   componentDidMount(){
@@ -23,6 +26,24 @@ class App extends Component {
     }).fail((response) => {
       throw Error(response.message);
     });
+  }
+
+  setProject(proj){
+    if(proj.delete != null){
+      let projects = [];
+      for (let i = 0; i < this.state.projects.length; i++) {
+        if(this.state.projects[i].id !== proj.delete) projects.push(this.state.projects[i]);
+      }
+      this.setState({projects: projects})
+      this.setState({project: null});
+    }else{
+      if(!this.state.projects.includes(proj)){
+        let projects = this.state.projects;
+        projects.push(proj);
+        this.setState({projects: projects});
+      }
+      this.setState({project: proj})
+    }
   }
 
   toggleSideBar(){
@@ -67,27 +88,25 @@ class App extends Component {
               {this.state.showSideBar !== false ? 
               (
                 <Col xs={2} className="border-right border-dark" style={{height: "100vh"}}>
-                  <SideBar closeSideBar={() => {this.closeSideBar()}} projects={this.state.projects}/>
+                  <SideBar closeSideBar={() => {this.closeSideBar()}} projects={this.state.projects} setProject={project => {this.setProject(project)}}/>
                 </Col>
               ) : null}
               <Col>
                 <Switch>
-                  {/* <Route exact path="/"> can be used for login and logout
-                    {loggedIn ? <Redirect to="/dashboard" /> : <PublicHomePage />}
-                  </Route> */}
                   <Route path="/graph">
                     {this.state.project != null ? (
                       <GraphPage
                         project={this.state.project}
-                        toggleGraphPage={this.toggleGraphPage}
                       />
-                    ) : null}
+                    ) : <Redirect to="/"/>}
                   </Route>
                   <Route path="/project">
-                    <ProjectPage closeSideBar={() => {this.closeSideBar()}} />
+                    {this.state.project != null ? (
+                      <ProjectPage project={this.state.project} setProject={project => {this.setProject(project)}}/>
+                    ) : <Redirect to="/"/>}
                   </Route>
                   <Route path="/">
-                    <Home toggleGraphPage={this.toggleGraphPage} />
+                    <Home />
                   </Route>
                   <Route path="/user">
                     <User />

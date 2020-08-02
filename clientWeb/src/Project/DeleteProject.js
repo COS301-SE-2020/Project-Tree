@@ -15,11 +15,17 @@ class DeleteProject extends React.Component {
     super(props);
     this.state = {
       show: false,
-      id: this.props.project.id,
+      project: this.props.project
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.project !== prevProps.project) {
+      this.setState({ project: this.props.project });
+    }
   }
 
   showModal() {
@@ -34,28 +40,24 @@ class DeleteProject extends React.Component {
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
     $.post("/project/delete", JSON.parse(data), (response) => {
-      this.props.setProjectInfo(response);
-      this.props.toggleSideBar(null);
+      this.props.setProject(response);
     })
-      .done(() => {
-        this.setState({ show: false });
-      })
-      .fail(() => {
-        alert("Unable to delete project");
-      })
-      .always(() => {
-        //alert( "finished" );
-      });
+    .done(() => {
+      this.setState({ show: false });
+    })
+    .fail(() => {
+      alert("Unable to delete project");
+    });
   }
 
   render() {
     return (
       <React.Fragment>
-        <Button className="btn-danger" onClick={this.showModal}>
+        <Button className="btn-danger" onClick={() => {this.showModal()}}>
           <i className="fa fa-trash"></i>
         </Button>
-        <Modal show={this.state.show} onHide={this.hideModal}>
-          <Form onSubmit={this.handleSubmit}>
+        <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
+          <Form onSubmit={event => {this.handleSubmit(event)}}>
             <Modal.Header closeButton>
               <Modal.Title>Delete Project</Modal.Title>
             </Modal.Header>
@@ -65,14 +67,14 @@ class DeleteProject extends React.Component {
                   hidden
                   type="number"
                   name="dp_id"
-                  value={this.state.id}
+                  value={this.state.project.id}
                   onChange={() => {}}
                 />
                 <p>Are you sure you want to delete this project</p>
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={this.hideModal}>
+              <Button variant="secondary" onClick={() => {this.hideModal()}}>
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
