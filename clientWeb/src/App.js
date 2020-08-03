@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Home/Home";
 import User from "./User/User";
@@ -17,7 +16,6 @@ class App extends Component {
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
     this.closeSideBar = this.closeSideBar.bind(this);
-    //this.updateProject = this.updateProject.bind(this);
   }
 
   componentDidMount(){
@@ -55,22 +53,10 @@ class App extends Component {
     this.setState({showSideBar: false});
   }
 
-  checkRedirect(){
-    switch (this.state.redirect) {
-      case "project":
-        //this.setState({redirect: ""});
-        return (<Redirect to={'/project'}/>);
-      default:
-        break;
-    }
-  }
-
   render() {
-  
     return (
       <React.Fragment>
         <Router>
-          {this.checkRedirect()}
           <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"arial black", backgroundColor: "#96BB7C"}}>
             <Nav className="mr-auto form-inline ">
               <Nav.Link href="/">
@@ -95,11 +81,11 @@ class App extends Component {
               </Nav.Link>
             </Nav>
           </Navbar>
-          <Container fluid>
-            <Row>
+          <Container fluid style={{height: "100%"}}>
+            <Row style={{height: "100%"}}>
               {this.state.showSideBar !== false ? 
               (
-                <Col xs={2} className="border-right border-dark" style={{height: "100vh"}}>
+                <Col xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto"}}>
                   <SideBar closeSideBar={() => {this.closeSideBar()}} projects={this.state.projects} setProject={project => {this.setProject(project)}}/>
                 </Col>
               ) : null}

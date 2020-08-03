@@ -222,6 +222,8 @@ class Graph extends React.Component {
       linkPinning: false,
     });
 
+    paper.on('element:contextmenu', this.toggleCreateDependency);
+
     paper.on("cell:pointerclick", this.handleClick);
 
     var dragStartPosition;
@@ -279,7 +281,6 @@ class Graph extends React.Component {
   render() {
     if(this.props.displayCriticalPath){
       $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
-        console.log(response);
           this.drawGraph(response);
       })
       .fail(() => {

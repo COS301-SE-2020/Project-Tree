@@ -214,7 +214,7 @@ function getProjects(req, res) {
         RETURN n
       `
     )
-    .then((result) => {
+    .then(result => {
       let taskArr = [];
       result.records.forEach((record) => {
         taskArr.push({
@@ -244,25 +244,58 @@ function getProjects(req, res) {
     });
 }
 
+function getProjectTasks(req, res) {
+  db.getSession()
+    .run(
+      `
+        MATCH (a)-[:PART_OF]->(x:Project) 
+        WHERE ID(x) = ${req.body.projId}
+        RETURN a
+      `
+    )
+    .then(result => {
+      let response = [];
+      result.records.forEach((record) => {
+        response.push({
+          id: record._fields[0].identity.low,
+          name: record._fields[0].properties.name,
+          description: record._fields[0].properties.description,
+          startDate: record._fields[0].properties.startDate,
+          progress: record._fields[0].properties.progress,
+          endDate: record._fields[0].properties.endDate,
+          duration: record._fields[0].properties.duration.low,
+        });
+      });
+      res.status(200);
+      res.send({ tasks: response });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+}
+
 function getCriticalPath(req, res){
 	db.getSession()
-        .run(`
-                MATCH (a:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(b:Task {projId: ${req.body.projId}})
-                WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
-                MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
-                WHERE duration.inDays(c.startDate, d.endDate) = dur
-                RETURN p
-            `)
-        .then(result => {
-            res.status(200);
-            if(result.records[0] != null) res.send({path: result.records[0]._fields[0]});
-            else res.send({path: null});
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(400);
-            res.send(err);
-        });
+  .run
+  (`
+    MATCH (a:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(b:Task {projId: ${req.body.projId}})
+    WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
+    MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
+    WHERE duration.inDays(c.startDate, d.endDate) = dur
+    RETURN p
+  `)
+  .then(result => {
+      res.status(200);
+      if(result.records[0] != null) res.send({path: result.records[0]._fields[0]});
+      else res.send({path: null});
+  })
+  .catch(err => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+  });
 };
 
 module.exports = {
@@ -271,5 +304,6 @@ module.exports = {
   updateProject,
   getProjects,
   getProgress,
+  getProjectTasks,
   getCriticalPath
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Row} from "react-bootstrap";
+import { Button, Container, Row, Col} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import CreateProject from "./Project/CreateProject";
@@ -14,27 +14,58 @@ class SideBar extends React.Component {
     const listItems = [];
     this.state.projects.forEach(project => {
       listItems.push(
-        <Link to="/project" 
+        <Row 
+          className="m-1"
           key={project.id}>
-          <Button
-            style={{fontFamily:"arial black",color: "black", backgroundColor: "#EEBB4D", borderColor:"#EEBB4D"}}
-            onClick={
-              ()=>{
-                  this.props.setProject(project);
-                  this.props.closeSideBar(true);
-              }
-            }
-          >
-            {project.name}
-          </Button>
-        </Link>
+          <Col>
+            <Container fluid>
+              <Row className="align-items-center bg-dark py-2">
+                <Col  className="text-white">
+                  {project.name}
+                </Col>
+              </Row>
+              <Row className="align-items-center bg-dark py-2">
+                <Col>
+                  <Link to="/project">
+                    <Button
+                      style={{fontFamily:"arial black",color: "black", backgroundColor: "#EEBB4D", borderColor:"#EEBB4D"}}
+                      onClick={
+                        ()=>{
+                            this.props.setProject(project);
+                            this.props.closeSideBar(true);
+                        }
+                      }
+                    >
+                      Project Info
+                    </Button>
+                  </Link>
+                </Col>
+                <Col>
+                  <Link to="/graph">
+                    <Button
+                      style={{fontFamily:"arial black",color: "black", backgroundColor: "#EEBB4D", borderColor:"#EEBB4D"}}
+                      onClick={
+                        ()=>{
+                            this.props.setProject(project);
+                            this.props.closeSideBar(true);
+                        }
+                      }
+                    >
+                      Project Graph
+                    </Button>
+                  </Link>
+                </Col>
+              </Row>
+            </Container>
+          </Col>
+        </Row>
       );
     });
 
     return (
       <Container className="py-2">
         <Row> <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/> </Row>
-        <Row> {listItems} </Row>
+         {listItems} 
       </Container>
     );
   }
