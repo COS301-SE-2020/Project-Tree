@@ -129,21 +129,18 @@ class App extends Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"arial black", backgroundColor: "#96BB7C"}}>
-            <Nav className="mr-auto form-inline ">
-              <Nav.Link href="/">
-                <img src={logo} alt="Logo" style={{width:"80px"}}/>
-              </Nav.Link>
+          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C"}}>
+            <Nav className="form-inline ">
               {this.state.loggedInStatus === true ?
                 this.state.showSideBar === false ?
                   (
-                    <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
-                      Open Project List
+                    <Nav.Link href="#" onClick={() => this.toggleSideBar()}>
+                      <i className="fa fa-navicon text-dark" style={{fontSize:"30px"}}></i>
                     </Nav.Link>
                   ):
                   (
-                    <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
-                      Close Project List
+                    <Nav.Link href="#" onClick={() => this.toggleSideBar()}>
+                      <i className="fa fa-navicon text-dark" style={{fontSize:"30px", transform: "rotate(90deg)"}}></i>
                     </Nav.Link>
                   )
                 :

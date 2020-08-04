@@ -39,11 +39,11 @@ class Settings extends React.Component {
           b
           size="sm"
         >
-          <i className="fa fa-cogs" style={{fontSize:"30px"}}></i>
+          <i className="fa fa-cogs text-dark" style={{fontSize:"30px"}}></i>
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
             <Modal.Header closeButton>
-              <Modal.Title clasName="align-items-center"> <i className="fa fa-cogs" style={{fontSize:"50px"}}></i></Modal.Title> 
+              <Modal.Title className="align-items-centers"> <i className="fa fa-cogs " style={{fontSize:"50px"}}></i></Modal.Title> 
             </Modal.Header>
             <Modal.Body>
               User Image <br/>
