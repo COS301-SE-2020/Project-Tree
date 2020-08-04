@@ -2,11 +2,27 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import ProjectInfo from "./ProjectInfo";
 import TaskInfo from "./TaskInfo";
+import $ from "jquery";
 
 class ProjectPage extends React.Component {
   constructor(props) {
     super(props); 
-    this.state = { project: this.props.project };
+    this.state = { project: this.props.project, tasks: [], criticalPath: null };
+  }
+
+  componentDidMount(){
+    $.post( "/project/projecttasks", {projId: this.state.project.id} , response => {
+      this.setState({tasks: response.tasks})
+    })
+    .fail(() => {
+        alert( "Unable to get Critical Path" );
+    })
+    $.post( "/project/criticalpath", {projId: this.state.project.id} , response => {
+      this.setState({criticalPath: response})
+    })
+    .fail(() => {
+        alert( "Unable to get Critical Path" );
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -23,7 +39,7 @@ class ProjectPage extends React.Component {
           <Col sm={12} md={6} xl={8} style={{border: "blue solid 1px"}}>more project info</Col>
         </Row>
         <Row style={{border: "blue solid 1px"}}>
-          <Col xs={12} sm={12} style={{border: "blue solid 1px"}}><TaskInfo project={this.state.project}/></Col>
+          <Col xs={12} sm={12} style={{border: "blue solid 1px"}}><TaskInfo project={this.state.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/></Col>
         </Row>
       </Container>
     );

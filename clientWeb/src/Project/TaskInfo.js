@@ -1,74 +1,43 @@
 import React from "react";
 import { Form, Container, Row, Col } from "react-bootstrap";
-import $ from "jquery";
+//import $ from "jquery";
 import './Project.css'
 
 class TaskInfo extends React.Component{
     constructor(props){
         super(props);
-        this.state = { project: this.props.project, tasks: [] };
-    }
-
-    componentDidMount(){
-      $.post( "/project/criticalpath", {projId: this.state.project.id} , response => {
-        this.setState({tasks: response})
-      })
-      .fail(() => {
-          alert( "Unable to get Critical Path" );
-      })
+        this.state = { project: this.props.project, tasks: this.props.tasks, criticalpath: this.props.criticalpath};
+        console.log(this.state.criticalpath);
     }
   
     componentDidUpdate(prevProps) {
       if (this.props.project !== prevProps.project) {
         this.setState({ project: this.props.project });
-        $.post( "/project/criticalpath", {projId: this.state.project.id} , response => {
-          this.setState({tasks: response})
-        })
-        .fail(() => {
-            alert( "Unable to get Critical Path" );
-        })
+      }
+      if (this.props.tasks !== prevProps.tasks) {
+        this.setState({ tasks: this.props.tasks });
+      }
+      if (this.props.criticalpath !== prevProps.criticalpath) {
+        this.setState({ criticalpath: this.props.criticalpath });
       }
     }
 
-    setTasks(type){
-      switch (type) {
-        case "Critical Path":
-          type = "criticalpath";
-          break;
-      
-        default:
-          break;
-      }
-      $.post( `/project/${type}`, {projId: this.state.project.id} , response => {
-        this.setState({tasks: response})
-      })
-      .fail(() => {
-          alert( "Unable to get new Task layout" );
-      })
-    }
-
-    render(){
-      let tasks = [];
-      if (this.state.tasks.path !== undefined && this.state.tasks.path !== null) {
-      console.log(this.state.tasks.path.segments);
-        this.state.tasks.path.segments.forEach((el,index) => {
-          
-          console.log(index);
-          if(index === 0){
-            tasks.push(
-              <Col
+    /* createCriticalPath(){
+      let list = [];
+      if (this.state.criticalpath.path !== undefined && this.state.criticalpath.path !== null) {
+      console.log(this.state.criticalpath.path.segments);
+        this.state.criticalpath.path.segments.forEach((el,index) => {
+          //if(index === 0){
+            list.push(
+              <svg 
+                width="100" 
+                height="100"
                 key={el.start.identity.low}
               >
-                <Container style={{border: "1 solid black"}}>
-                  <Row>
-                    <Col>
-                    {el.start.properties.name}
-                    </Col>
-                  </Row>
-                </Container>
-              </Col>
+                <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+              </svg>
             );
-          }
+          /*}
           console.log(el);
           tasks.push(
             <Col
@@ -85,16 +54,19 @@ class TaskInfo extends React.Component{
             </Col>
           );
         });
-        console.log(tasks);
+        console.log(list);
       }else{
-        tasks.push(
+        list.push(
         <Col
           key={0}
         >
-          {`cant display ${this.state.taskType} tasks`}
+          {`can not display critical path `}
         </Col>)
       }
+      return list;
+    } */
 
+    render(){
       return(
           <React.Fragment>
               <Container fluid>
@@ -124,7 +96,7 @@ class TaskInfo extends React.Component{
                 <Row>
                   <Container className="horizontal-scrollable">
                       <Row>
-                        {tasks}
+                        {/* this.createCriticalPath() */}
                       </Row>
                   </Container>
                 </Row> 

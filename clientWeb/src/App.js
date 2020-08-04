@@ -64,12 +64,12 @@ class App extends Component {
               </Nav.Link>
               {this.state.showSideBar === false ?
                 (
-                  <Nav.Link href="#" variant="dark" onClick={() => {this.toggleSideBar();}}>
-                    Project List
+                  <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
+                    Open Project List
                   </Nav.Link>
                 ):
                 (
-                  <Nav.Link href="#" variant="dark" onClick={() => {this.toggleSideBar();}}>
+                  <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
                     Close Project List
                   </Nav.Link>
                 )
@@ -86,7 +86,7 @@ class App extends Component {
               {this.state.showSideBar !== false ? 
               (
                 <Col xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto"}}>
-                  <SideBar closeSideBar={() => {this.closeSideBar()}} projects={this.state.projects} setProject={project => {this.setProject(project)}}/>
+                  <SideBar closeSideBar={() => this.closeSideBar()} projects={this.state.projects} setProject={project => this.setProject(project)}/>
                 </Col>
               ) : null}
               <Col>
@@ -100,7 +100,7 @@ class App extends Component {
                   </Route>
                   <Route path="/project">
                     {this.state.project != null ? (
-                      <ProjectPage project={this.state.project} setProject={project => {this.setProject(project)}}/>
+                      <ProjectPage project={this.state.project} setProject={project => this.setProject(project)}/>
                     ) : <Redirect to="/"/>}
                   </Route>
                   <Route path="/">

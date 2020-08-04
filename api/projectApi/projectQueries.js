@@ -251,6 +251,7 @@ function getProjectTasks(req, res) {
         MATCH (a)-[:PART_OF]->(x:Project) 
         WHERE ID(x) = ${req.body.projId}
         RETURN a
+        ORDER BY a.startDate
       `
     )
     .then(result => {
