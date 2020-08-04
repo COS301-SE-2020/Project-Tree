@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, BackHandler, TouchableOpacity, StyleSheet, Text } from 'react-native'
 import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
+import { WebView } from 'react-native-webview';
 import ProjectModal from './GraphProjectModal'
 
 class GraphScreen extends Component{
@@ -17,15 +18,8 @@ class GraphScreen extends Component{
 
         return (
             <View style={styles.container}>
-                <View style={{flex:1}}>
-                    <Text>
-                        I'm just a TextI'm just a TextI'm just a TextI'm just a TextI'm just a{'\n'}
-                        I'm just a TextI'm just a TextI'm just a TextI'm just a TextI'm just a{'\n'}
-                        I'm just a TextI'm just a TextI'm just a TextI'm just a TextI'm just a{'\n'}
-                        I'm just a TextI'm just a TextI'm just a TextI'm just a TextI'm just a{'\n'}
-                        I'm just a TextI'm just a TextI'm just a TextI'm just a TextI'm just a{'\n'}
-                        
-                    </Text>
+                <View style={{flex:30}}>
+                    <WebView source={{ uri: 'http://10.0.2.2:3030' }} />
                 </View>
                 <View style={{flex:1}}>
                     <ProjectModal project={this.props.project}/>
