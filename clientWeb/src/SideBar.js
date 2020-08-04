@@ -17,7 +17,7 @@ class SideBar extends React.Component {
         <Row 
           noGutters
           className="m-1"
-          style={{width: "100%", border: "1px solid blue"}}
+          style={{width: "100%"}}
           key={project.id}>
           <Col>
             <Container fluid block className="block-example bg-secondary rounded border border-dark" style={{fontFamily:"Courier New", color: "black"}}>
