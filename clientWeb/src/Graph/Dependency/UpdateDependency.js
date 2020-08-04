@@ -67,7 +67,7 @@ class UpdateDependency extends React.Component {
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
               <Modal.Title>Update Dependencies</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -122,7 +122,7 @@ class UpdateDependency extends React.Component {
                 />
               </Form.Group>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>

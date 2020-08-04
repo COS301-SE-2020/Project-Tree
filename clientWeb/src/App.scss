@@ -49,15 +49,15 @@
 .login {
   text-align: center;
   width: 22em;
-  height: 52em;
+  height: 43em;
   min-height: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 5px;
   position: absolute;
-  left:700px;
-  top: 64px;
+  left:39%;
+  top: 2%;
   z-index: 99;
   .container {
     display: flex;
@@ -111,24 +111,5 @@
       margin-right: 3em;
       margin-left: 3em;
     }
-  }
-}
-
-//Button
-.btn {
-  font-size: 21px;
-  padding: 5px 20px;
-  border: 0;
-  background-color: #96BB7C;
-  color: #fff;
-  border-radius: 3px;
-  transition: all 250ms ease-in-out;
-  cursor: pointer;
-  &:hover {
-    background-color: #96BB7C;
-    box-shadow: 0px 0px 12px 0.3px #a5ce88;
-  }
-  &:focus {
-    outline: none;
   }
 }

@@ -53,7 +53,7 @@ class UpdateProject extends React.Component {
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
           <Form onSubmit={event => {this.handleSubmit(event)}}>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
               <Modal.Title>Update Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -95,10 +95,10 @@ class UpdateProject extends React.Component {
                   }}
                 />
               </Form.Group>
-              <Table bordered hover>
+              <Table bordered striped hover>
                 <thead>
                   <tr>
-                    <td className="text-center" colSpan="4">
+                    <td className="text-center" colSpan="4" style={{backgroundColor:"#184D47", color:"white"}}>
                       Project Permisions
                     </td>
                   </tr>
@@ -240,7 +240,7 @@ class UpdateProject extends React.Component {
               </Table>
               <br />
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>
