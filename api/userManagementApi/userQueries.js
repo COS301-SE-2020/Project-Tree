@@ -90,8 +90,8 @@ function updateInfo()
 
 }
 
-function verify(res,req){
-    console.log(req.body)
+function verify(req, res){
+    console.log(req.body.foo)
     try {
         var user = JWT.verify(req, process.env.ACCESS_TOKEN_SECRET, { maxTokenAge: '1440 min' });
         console.log("user")
@@ -102,18 +102,18 @@ function verify(res,req){
             `)
         .then(result => {
             if(user.password == result.records[0]._fields[0].password){
-                return result.records[0]._fields[0].identity.low;
+                res.send(result.records[0]._fields[0].identity.low);
             }else{
-                return null;
+                res.send(null);
             }
         })
         .catch(err => 
         {
-            return null
+            res.send(null);
         });
     } catch (err) 
     {
-        return null
+        res.send(null);
     }
 }
 

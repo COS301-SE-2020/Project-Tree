@@ -12,7 +12,7 @@ import logo from './Images/Logo.png';
 import { Login, Register } from "./User/index";
 
 
-const RightSide = props => {
+function RightSide(props){
   return (
     <div
       className="right-side"
@@ -50,22 +50,22 @@ class App extends Component {
     {
       // let x = localStorage.getItem('sessionToken');
       // console.log(x)
-      //sconsole.log(x)
-      //console.log(localStorage.getItem('sessionToken'))
+      // sconsole.log(x)
+      // console.log(localStorage.getItem('sessionToken'))
       // axios.post(`/verify`, {token: x}, null)
       // .then(response => console.log("response"))
       // .catch(err => console.warn(err))
 
-    //   $.post("/verify", { foo: 'bar' }, (response) => {
-    //     if(response)
-    //     {
-    //         console.log("TRue")
-    //     }
-    //     else
-    //         alert( "Nope" );
-    //   })
-    //   .fail(() => {
-    //     })
+      $.post("/verify", { foo: 'bar' }, (response) => {
+        if(response)
+        {
+            console.log("TRue")
+        }
+        else
+            alert( "Nope" );
+      })
+      .fail(() => {
+        })
     console.log(this.rightSide)
     this.setState({
       loggedInStatus: true })
