@@ -1,15 +1,30 @@
 import React, { Component } from "react";
-import "./App.css";
-import { BrowserRouter as BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import "./App.scss";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Home/Home";
 import User from "./User/User";
 import ProjectPage from "./Project/ProjectPage";
 import GraphPage from "./Graph/GraphPage";
-import { Container, Row, Col, Navbar, Nav  } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Nav, Button  } from "react-bootstrap";
 import SideBar from "./SideBar";
 import $ from "jquery";
 import logo from './Images/Logo.png';
-import Login from './User/login'
+import { Login, Register } from "./User/index";
+
+
+const RightSide = props => {
+  return (
+    <div
+      className="right-side"
+      ref={props.containerRef}
+      onClick={props.onClick}
+    >
+      <div className="inner-container">
+        <div className="text">{props.current}</div>
+      </div>
+    </div>
+  );
+};
 
 class App extends Component {
   constructor(props) {
@@ -19,7 +34,8 @@ class App extends Component {
       project: null, 
       showSideBar: false,
       loggedInStatus: false,
-      user: {}
+      user: {},
+      isLogginActive: true
     };
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
@@ -29,14 +45,45 @@ class App extends Component {
   }
 
   componentDidMount(){
+    console.log(localStorage.getItem('sessionToken'))
+    if(localStorage.getItem('sessionToken') != null)
+    {
+      // let x = localStorage.getItem('sessionToken');
+      // console.log(x)
+      //sconsole.log(x)
+      //console.log(localStorage.getItem('sessionToken'))
+      // axios.post(`/verify`, {token: x}, null)
+      // .then(response => console.log("response"))
+      // .catch(err => console.warn(err))
+
+    //   $.post("/verify", { foo: 'bar' }, (response) => {
+    //     if(response)
+    //     {
+    //         console.log("TRue")
+    //     }
+    //     else
+    //         alert( "Nope" );
+    //   })
+    //   .fail(() => {
+    //     })
+    console.log(this.rightSide)
+    this.setState({
+      loggedInStatus: true })
+    }
+    else
+    {
+      if(this.rightSide != null)
+        this.rightSide.classList.add("right");
+      //<Redirect to="/"/>
+    }
     $.post("/project/get", (response) => {
       this.setState({projects: response.projects });
-    }).fail((response) => {
-      throw Error(response.message);
+      }).fail((response) => {
+        throw Error(response.message);
     });
-    
-  }
-
+   }
+  
+  
   setProject(proj){
     if(proj.delete != null){
       let projects = [];
@@ -56,6 +103,10 @@ class App extends Component {
   }
 
   toggleSideBar(){
+    if(!this.state.loggedInStatus)
+    {
+      return;
+    }
     if(this.state.projects != null) this.setState({showSideBar: !this.state.showSideBar});
     else this.setState({showSideBar: this.state.showSideBar});
   }
@@ -64,30 +115,50 @@ class App extends Component {
     this.setState({showSideBar: false});
   }
 
+  changeState() {
+  const { isLogginActive } = this.state;
+
+  if (isLogginActive) {
+    this.rightSide.classList.remove("right");
+    this.rightSide.classList.add("left");
+  } else {
+    this.rightSide.classList.remove("left");
+    this.rightSide.classList.add("right");
+  }
+  this.setState(prevState => ({ isLogginActive: !prevState.isLogginActive }));
+  }
+
+  handleReg(data){
+    this.setState({
+      loggedInStatus: data.status,
+      user: data.id
+    });
+   }
+  
   handleLogin(data){
     this.setState({
       loggedInStatus: data.status,
       user: data.id
     });
-    console.log(this.state)
    }
    
   handleLogout() {
-    console.log(this.state)
+    localStorage.clear();
     this.setState({
       loggedInStatus: false,
       user: {}
     });
-    console.log(this.state)
     this._isMounted = false;
+    window.location.reload(false);
   }
 
   render() {
-  
+    const { isLogginActive } = this.state;
+    const current = isLogginActive ? "  Register" : "Login";
+    const currentActive = isLogginActive ? "Login" : "  Register";
     return (
       <React.Fragment>
         <BrowserRouter>
-          <button onClick={() => this.handleLogout()}>Logout</button>
           <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"arial black", backgroundColor: "#96BB7C"}}>
             <Nav className="mr-auto form-inline ">
               <Nav.Link href="/">
@@ -95,7 +166,7 @@ class App extends Component {
               </Nav.Link>
               {this.state.showSideBar === false ?
                 (
-                  <Nav.Link href="#" variant="dark" onClick={() => {this.toggleSideBar();}}>
+                  <Nav.Link  href="#" variant="dark" onClick={() => {this.toggleSideBar();}}>
                     Project List
                   </Nav.Link>
                 ):
@@ -107,6 +178,9 @@ class App extends Component {
               }
             </Nav>
             <Nav>
+              <Nav.Link>
+               <Button onClick={() => this.handleLogout()}>Logout</Button>
+              </Nav.Link>
               <Nav.Link className="form-inline" href="/user">
                 <i className="fa fa-cogs" style={{fontSize:"30px"}}></i>
               </Nav.Link>
@@ -119,15 +193,15 @@ class App extends Component {
                 <Col xs={2} className="border-right border-dark" style={{height: "100vh"}}>
                   <SideBar closeSideBar={() => {this.closeSideBar()}} projects={this.state.projects} setProject={project => {this.setProject(project)}}/>
                 </Col>
-              ) : null}
-              <Col>
+              ) : null}              
+              <Col>  
                 <Switch>
-                  <Route path="/project">
+                  <Route path="/project" component={ProjectPage}>
                     {this.state.project != null ? (
                       <ProjectPage project={this.state.project} setProject={project => this.setProject(project)}/>
                     ) : <Redirect to="/"/>}
                   </Route>
-                  <Route path="/graph">
+                  <Route path="/graph" >
                     {this.state.project != null ? (
                       <GraphPage
                         project={this.state.project}
@@ -137,8 +211,23 @@ class App extends Component {
                   <Route path="/user">
                     <User />
                   </Route>
-                  <Route path="/">
-                    {this.state.loggedInStatus? (<Home />) : (<Login handleLogin={data => this.handleLogin(data)}/>)}
+                  <Route path="/home">
+                    {this.state.loggedInStatus? (<Home />) : (<Redirect to="/"/>)}
+                  </Route>
+                  <Route exact path="/">
+                    {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
+                    <div className="login">
+                      <div className="container" ref={ref => (this.container = ref)}>
+                        {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
+                        {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
+                      </div>
+                      <RightSide
+                          current={current}
+                          currentActive={currentActive}
+                          containerRef={ref => (this.rightSide = ref)}
+                          onClick={this.changeState.bind(this)}
+                        />
+                    </div>
                   </Route>
                 </Switch>
               </Col>

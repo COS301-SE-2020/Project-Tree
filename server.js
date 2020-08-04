@@ -4,7 +4,6 @@ var tq = require("./api/projectApi/taskQueries");
 var dq = require("./api/projectApi/dependencyQueries");
 var pq = require("./api/projectApi/projectQueries");
 var gq = require("./api/projectApi/graphQueries");
-
 var um = require('./api/userManagementApi/userQueries');
 
 const app = express();
@@ -28,6 +27,8 @@ app.post("/dependency/delete", dq.deleteDependency);
 app.post("/getProject", gq.getProjectTasks);
 app.post('/login', um.login);
 app.post('/register', um.register);
+app.post('/verify', um.verify);
+
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
   app.use(express.static(path.join(__dirname, "clientWeb/build")));

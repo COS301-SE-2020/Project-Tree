@@ -2,7 +2,7 @@ const db = require('../DB');
 const { JWT } = require('jose');
 const bcrypt = require('bcrypt');
 
-function login(req,res){ //email, password, 
+function login(req,res){ //email, password,
     db.getSession()
     .run(`
             Match (n:User { email: "${req.body.email}" })
@@ -47,7 +47,7 @@ function register(req,res){ //email, password, name, surname
                 RETURN n
             `)
         .then(result => {
-            if(result.records.length != 0) res.send("already a user")
+            if(result.records.length != 0) res.send("Already a user")
             else{
                 bcrypt.hash(req.body.password, 10, function(err, hash) {
                     db.getSession()
@@ -61,9 +61,14 @@ function register(req,res){ //email, password, name, surname
                             RETURN a
                         `)
                     .then(result => {
-                        console.log("JERE")
+                        let id = (result.records[0]._fields[0].identity.low)
+                        console.log(req.body.email, hash)
                         res.status(200);
-                        res.send({sessionToken : JWT.sign({email: req.body.email, hash}, process.env.ACCESS_TOKEN_SECRET)});
+                        res.send({
+                            sessionToken : JWT.sign({email: req.body.email, hash}, process.env.ACCESS_TOKEN_SECRET), 
+                            status: true,
+                            id : id
+                        });
                     })
                     .catch(err => {
                         console.log(err);
@@ -85,9 +90,11 @@ function updateInfo()
 
 }
 
-function verify(token){
+function verify(res,req){
+    console.log(req.body)
     try {
-        var user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, { maxTokenAge: '1440 min' });
+        var user = JWT.verify(req, process.env.ACCESS_TOKEN_SECRET, { maxTokenAge: '1440 min' });
+        console.log("user")
         db.getSession()
         .run(`
                 Match (n:User { email: "${user.email}" })
@@ -100,10 +107,12 @@ function verify(token){
                 return null;
             }
         })
-        .catch(err => {
+        .catch(err => 
+        {
             return null
         });
-    } catch (err) {
+    } catch (err) 
+    {
         return null
     }
 }
