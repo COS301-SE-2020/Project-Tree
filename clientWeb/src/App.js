@@ -151,13 +151,13 @@ class App extends Component {
             <Nav className="form-inline">
               {this.state.showSideBar === false ?
                 (
-                  <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
-                    <i className="fa fa-navicon" style={{fontSize:"30px"}}></i>
+                  <Nav.Link href="#"  onClick={() => this.toggleSideBar()}>
+                    <i className="fa fa-navicon text-dark" style={{fontSize:"30px"}}></i>
                   </Nav.Link>
                 ):
                 (
-                  <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
-                    <i className="fa fa-navicon" style={{fontSize:"30px", transform: "rotate(90deg)"}}></i>
+                  <Nav.Link href="#"  onClick={() => this.toggleSideBar()}>
+                    <i className="fa fa-navicon text-dark" style={{fontSize:"30px", transform: "rotate(90deg)"}}></i>
                   </Nav.Link>
                 )
               }
