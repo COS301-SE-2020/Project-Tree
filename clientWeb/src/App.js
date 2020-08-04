@@ -45,28 +45,8 @@ class App extends Component {
   }
 
   componentDidMount(){
-    console.log(localStorage.getItem('sessionToken'))
     if(localStorage.getItem('sessionToken') != null)
     {
-      // let x = localStorage.getItem('sessionToken');
-      // console.log(x)
-      // sconsole.log(x)
-      // console.log(localStorage.getItem('sessionToken'))
-      // axios.post(`/verify`, {token: x}, null)
-      // .then(response => console.log("response"))
-      // .catch(err => console.warn(err))
-
-      $.post("/verify", { foo: 'bar' }, (response) => {
-        if(response)
-        {
-            console.log("TRue")
-        }
-        else
-            alert( "Nope" );
-      })
-      .fail(() => {
-        })
-    console.log(this.rightSide)
     this.setState({
       loggedInStatus: true })
     }
@@ -164,18 +144,22 @@ class App extends Component {
               <Nav.Link href="/">
                 <img src={logo} alt="Logo" style={{width:"80px"}}/>
               </Nav.Link>
-              {this.state.showSideBar === false ?
-                (
-                  <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
-                    Open Project List
-                  </Nav.Link>
-                ):
-                (
-                  <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
-                    Close Project List
-                  </Nav.Link>
-                )
+              {this.state.loggedInStatus === true ?
+                this.state.showSideBar === false ?
+                  (
+                    <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
+                      Open Project List
+                    </Nav.Link>
+                  ):
+                  (
+                    <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
+                      Close Project List
+                    </Nav.Link>
+                  )
+                :
+                null
               }
+              
             </Nav>
             <Nav>
               <Nav.Link>

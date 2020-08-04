@@ -1,13 +1,16 @@
 import React from "react";
-import { Form, Container, Row, Col } from "react-bootstrap";
-//import $ from "jquery";
+import { Form, Container, Row, Col, Card } from "react-bootstrap";
+import $ from "jquery";
 import './Project.css'
 
 class TaskInfo extends React.Component{
     constructor(props){
         super(props);
-        this.state = { project: this.props.project, tasks: this.props.tasks, criticalpath: this.props.criticalpath};
-        console.log(this.state.criticalpath);
+        this.state = { project: this.props.project, tasks: this.props.tasks, criticalPath: this.props.criticalPath, taskType: "criticalPath"};
+    }
+
+    componentDidMount(){
+      
     }
   
     componentDidUpdate(prevProps) {
@@ -17,54 +20,126 @@ class TaskInfo extends React.Component{
       if (this.props.tasks !== prevProps.tasks) {
         this.setState({ tasks: this.props.tasks });
       }
-      if (this.props.criticalpath !== prevProps.criticalpath) {
-        this.setState({ criticalpath: this.props.criticalpath });
+      if (this.props.criticalPath !== prevProps.criticalPath) {
+        this.setState({ criticalPath: this.props.criticalPath });
       }
     }
 
-    /* createCriticalPath(){
+    createCriticalPath(){
       let list = [];
-      if (this.state.criticalpath.path !== undefined && this.state.criticalpath.path !== null) {
-      console.log(this.state.criticalpath.path.segments);
-        this.state.criticalpath.path.segments.forEach((el,index) => {
-          //if(index === 0){
+      if (this.state.criticalPath !== null && this.state.criticalPath.path !== null) {
+        this.state.criticalPath.path.segments.forEach((el,index) => {
+          if(index === 0){
             list.push(
-              <svg 
-                width="100" 
-                height="100"
-                key={el.start.identity.low}
-              >
-                <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
-              </svg>
+              {
+                name: el.start.properties.name,
+                description: el.start.properties.description,
+                progress: el.start.properties.progress,
+                startDate: el.start.properties.startDate,
+                endDate: el.start.properties.endDate
+              }
             );
-          /*}
-          console.log(el);
-          tasks.push(
-            <Col
-              xs={4}
-              key={el.end.identity.low}
-            >
-              <Container>
-                <Row>
-                  <Col>
-                    {el.end.properties.name}
-                  </Col>
-                </Row>
-              </Container>
-            </Col>
+          }
+          list.push(
+            {
+              name: el.end.properties.name,
+              description: el.end.properties.description,
+              progress: el.end.properties.progress,
+              startDate: el.end.properties.startDate,
+              endDate: el.end.properties.endDate
+            }
           );
         });
-        console.log(list);
       }else{
-        list.push(
-        <Col
-          key={0}
-        >
-          {`can not display critical path `}
-        </Col>)
+        list.push('no critical path to Display');
       }
       return list;
-    } */
+    } 
+
+    createLateList(){
+      let list = [];
+      console.log(this.state.tasks);
+      if(this.state.tasks !== []){
+        this.state.tasks.forEach(el => {
+          let today = new Date();
+            if(parseInt(today.getFullYear()) <= parseInt(el.endDate.year.low)){
+              if(parseInt(today.getMonth()+1)<=parseInt(el.endDate.month.low)){
+                if(parseInt(today.getMonth()+1)===parseInt(el.endDate.month.low)){
+                  if(parseInt(today.getDate()) > parseInt(el.endDate.day.low)){
+                    list.push(el);
+                  }
+                }
+              } else list.push(el);
+            } else list.push(el);
+        });
+      }else{
+        list.push('no late tasks to display');
+      }
+      console.log(list);
+      return list;
+    } 
+
+    createTaskList(){
+      let list = [];
+      if(this.state.taskType === "criticalPath") list = this.createCriticalPath();
+      if(this.state.taskType === "Late") list = this.createLateList();
+      else{
+        this.state.tasks.forEach(el => {
+        });
+      }
+      if (list[0] === 'no critical path to Display') {
+        return (list[0]);
+      } else {
+        list.forEach((el, i) => {
+          let syear = `${el.startDate.year.low}`;
+          let smonth = el.startDate.month.low;
+          smonth = smonth < 10 ? `0${smonth}` : `${smonth}`;
+          let sday = el.startDate.day.low;
+          sday = sday < 10 ? `0${sday}` : `${sday}`;
+          let eyear = `${el.endDate.year.low}`;
+          let emonth = el.endDate.month.low;
+          emonth = emonth < 10 ? `0${emonth}` : `${emonth}`;
+          let eday = el.endDate.day.low;
+          eday = eday < 10 ? `0${eday}` : `${eday}`;
+          
+          let color;
+          switch (el.progress) {
+            case "Complete":
+              color = '#77dd77';
+              break;
+            case "Issue":
+              color = '#ffae42';
+              break;
+            default:
+              color = '#fff';
+              let today = new Date();
+              if(parseInt(today.getFullYear()) <= parseInt(el.endDate.year.low)){
+                if(parseInt(today.getMonth()+1)<=parseInt(el.endDate.month.low)){
+                  if(parseInt(today.getMonth()+1)===parseInt(el.endDate.month.low)){
+                    if(parseInt(today.getDate()) > parseInt(el.endDate.day.low)){
+                      color = '#ff6961'
+                    }
+                  }
+                }
+                else color = '#ff6961';
+              } else color = '#ff6961';
+              break;
+          }
+          list[i]=(
+            <Col 
+              key={i}
+              style={{backgroundColor: `${color}`}}
+            >
+              Name: {el.name}
+              Description: {el.description}
+              StartDate: {`${syear}-${smonth}-${sday}`}
+              EndDate: {`${eyear}-${emonth}-${eday}`}
+            </Col>
+          )
+        });
+      }
+      return(list)
+    }
 
     render(){
       return(
@@ -80,26 +155,21 @@ class TaskInfo extends React.Component{
                       id="taskType"
                       value={this.state.taskType}
                       onChange={(e) => {
-                        this.setTasks(e.target.value);
                         this.setState({ taskType: e.target.value });
                         this.value = this.state.taskType;
                       }}
                     >
-                      <option value="Critical Path">Crititcal Path</option>
-                      <option value="Complete">Complete</option>
+                      <option value="criticalPath">Crititcal Path</option>
                       <option value="Incomplete">Incomplete</option>
+                      <option value="Complete">Complete</option>
                       <option value="Issue">Issue</option>
                       <option value="Late">Late</option>
                     </Form.Control>
                   </Col>
                 </Row>
-                <Row>
-                  <Container className="horizontal-scrollable">
-                      <Row>
-                        {/* this.createCriticalPath() */}
-                      </Row>
-                  </Container>
-                </Row> 
+                <Row className="d-flex flex-nowrap flex-row" style={{overflowX: 'auto'}}>
+                  {this.createTaskList()}
+                </Row>
               </Container>
           </React.Fragment>
       )

@@ -8,6 +8,7 @@ class ProjectPage extends React.Component {
   constructor(props) {
     super(props); 
     this.state = { project: this.props.project, tasks: [], criticalPath: null };
+    
   }
 
   componentDidMount(){
@@ -18,11 +19,12 @@ class ProjectPage extends React.Component {
         alert( "Unable to get Critical Path" );
     })
     $.post( "/project/criticalpath", {projId: this.state.project.id} , response => {
-      this.setState({criticalPath: response})
-    })
-    .fail(() => {
-        alert( "Unable to get Critical Path" );
-    })
+        this.setState({criticalPath: response})
+      })
+      .fail(() => {
+          alert( "Unable to get Critical Path" );
+      })
+    
   }
 
   componentDidUpdate(prevProps) {

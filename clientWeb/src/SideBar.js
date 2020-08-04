@@ -15,7 +15,9 @@ class SideBar extends React.Component {
     this.state.projects.forEach(project => {
       listItems.push(
         <Row 
+          noGutters
           className="m-1"
+          style={{width: "100%", border: "1px solid blue"}}
           key={project.id}>
           <Col>
             <Container fluid>
@@ -64,8 +66,8 @@ class SideBar extends React.Component {
 
     return (
       <Container className="py-2">
-        <Row> <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/> </Row>
-         {listItems} 
+        <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/> 
+        {listItems} 
       </Container>
     );
   }
