@@ -55,7 +55,7 @@ class DeleteProject extends React.Component {
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
           <Form onSubmit={event => {this.handleSubmit(event)}}>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
               <Modal.Title>Delete Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -70,7 +70,7 @@ class DeleteProject extends React.Component {
                 <p>Are you sure you want to delete this project</p>
               </Form.Group>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
               <Button variant="secondary" onClick={() => {this.hideModal()}}>
                 Cancel
               </Button>

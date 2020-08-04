@@ -45,7 +45,7 @@ class ProjectInfo extends React.Component{
                       </Col>
                       <Col className="text-right" >
                         <Link to="/graph">
-                            <Button variant="warning" size="md">View Project</Button>
+                            <Button variant="warning" size="md">View Graph</Button>
                         </Link>
                       </Col>
                   </Row> 

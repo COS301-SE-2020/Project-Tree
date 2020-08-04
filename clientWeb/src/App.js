@@ -10,6 +10,7 @@ import SideBar from "./SideBar";
 import $ from "jquery";
 import logo from './Images/Logo.png';
 import { Login, Register } from "./User/index";
+import Settings from "./User/Settings"
 
 
 function RightSide(props){
@@ -41,7 +42,6 @@ class App extends Component {
     this.toggleSideBar = this.toggleSideBar.bind(this);
     this.closeSideBar = this.closeSideBar.bind(this);
 	  this.handleLogin = this.handleLogin.bind(this);
-	  this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentDidMount(){
@@ -121,16 +121,6 @@ class App extends Component {
       user: data.id
     });
    }
-   
-  handleLogout() {
-    localStorage.clear();
-    this.setState({
-      loggedInStatus: false,
-      user: {}
-    });
-    this._isMounted = false;
-    window.location.reload(false);
-  }
 
   render() {
     const { isLogginActive } = this.state;
@@ -161,20 +151,20 @@ class App extends Component {
               }
               
             </Nav>
-            <Nav>
-              <Nav.Link>
-               <Button onClick={() => this.handleLogout()}>Logout</Button>
+            <Nav className="m-auto form-inline">
+              <Nav.Link href="/">
+                <img src={logo} alt="Logo" style={{width:"80px"}}/>
               </Nav.Link>
-              <Nav.Link className="form-inline" href="/user">
-                <i className="fa fa-cogs" style={{fontSize:"30px"}}></i>
-              </Nav.Link>
+            </Nav>
+            <Nav className="form-inline">
+                <Settings/>
             </Nav>
           </Navbar>
           <Container fluid style={{height: "100%"}}>
             <Row style={{height: "100%"}}>
               {this.state.showSideBar !== false ? 
               (
-                <Col xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto"}}>
+                <Col  xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto", backgroundColor: "#184D47" }}>
                   <SideBar closeSideBar={() => this.closeSideBar()} projects={this.state.projects} setProject={project => this.setProject(project)}/>
                 </Col>
               ) : null}              

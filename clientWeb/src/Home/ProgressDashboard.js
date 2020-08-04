@@ -127,7 +127,7 @@ class ProgressList extends React.Component {
             <Row className="align-items-center bg-white py-2">
               <Col className="text-left">
                 <Link to="/graph">
-                  <Button style={{fontFamily:"arial black", color: "#184D47", backgroundColor: "white", borderColor:"#EEBB4D"}} size="sm">
+                  <Button block style={{fontFamily:"Courier New", color: "#184D47", backgroundColor: "white", borderColor:"#EEBB4D"}} size="sm">
                     <h6
                       key={projects[x].id}
                       data-id={projects[x].id}
