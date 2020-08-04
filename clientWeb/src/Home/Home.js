@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ProgressDashboard from "./ProgressDashboard";
+import '.././App.css';
 
 class Home extends Component {
   render() {
