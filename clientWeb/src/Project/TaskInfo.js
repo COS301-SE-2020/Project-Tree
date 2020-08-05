@@ -26,7 +26,6 @@ class TaskInfo extends React.Component{
     }
 
     createCriticalPath(){
-      console.log(this.state.criticalPath);
       let list = [];
       if (this.state.criticalPath !== null && this.state.criticalPath.path !== null) {
         this.state.criticalPath.path.segments.forEach((el,index) => {
