@@ -16,7 +16,7 @@ import SettingsScreen from './Settings/SettingsScreen';
 export default class App extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {home:true, graph:false, settings:false, currentProject: null}
+		this.state = {home:false, graph:true, settings:false, currentProject: null}
 		this.handlePageChange = this.handlePageChange.bind(this);
 		this.setCurrentProject = this.setCurrentProject.bind(this);
 	}

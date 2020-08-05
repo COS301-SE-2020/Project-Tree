@@ -5,6 +5,8 @@ var dq = require('./api/projectApi/dependencyQueries');
 var pq = require('./api/projectApi/projectQueries');
 var gq = require('./api/projectApi/graphQueries');
 
+
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -24,6 +26,9 @@ app.post('/dependency/add', dq.createDependency);
 app.post('/dependency/update', dq.updateDependency);
 app.post('/dependency/delete', dq.deleteDependency);
 app.post('/getProject', gq.getProjectTasks);
+app.get('/mobile', function(req,res){
+    res.sendFile(__dirname + '/GraphMobile.html')
+});
 
 if(process.env.NODE_ENV === 'production'){
 	// Serve any static files
