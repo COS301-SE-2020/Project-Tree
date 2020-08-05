@@ -16,7 +16,7 @@ import SettingsScreen from './Settings/SettingsScreen';
 export default class App extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {home:false, graph:true, settings:false, currentProject: null}
+		this.state = {home:true, graph:false, settings:false, currentProject: null}
 		this.handlePageChange = this.handlePageChange.bind(this);
 		this.setCurrentProject = this.setCurrentProject.bind(this);
 	}
@@ -73,22 +73,3 @@ export default class App extends Component {
 		);
 	}
 }
-
-
-
-
-{/* // <StyleProvider style={getTheme(tabStyling)}>
-			// 	<Container>
-			// 		<Tabs initialPage={this.state.initialPage} page={this.state.activeTab} onChangeTab={this.setCurrentTab}>
-			// 			<Tab heading={ <TabHeading><Icon type="SimpleLineIcons" name="home" /></TabHeading>}>
-			// 				<HomeScreen setCurrentProject={this.setCurrentProject}/>
-			// 			</Tab>
-			// 			<Tab heading={ <TabHeading><Icon type="FontAwesome5" name="project-diagram" /></TabHeading>}>
-			// 				<GraphScreen project={this.state.currentProject}/>
-			// 			</Tab>
-			// 			<Tab heading={ <TabHeading><Icon type="SimpleLineIcons" name="settings" /></TabHeading>}>
-			// 				<SettingsScreen />
-			// 			</Tab>
-			// 		</Tabs>
-			// 	</Container>
-			// </StyleProvider> */}

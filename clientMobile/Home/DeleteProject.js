@@ -38,8 +38,6 @@ export default class DeleteProject extends Component{
         
         const body = await response.json();
         this.props.setProjectInfo(body)
-        
-        // $.post( "http://projecttree.herokuapp.com/project/delete", JSON.stringify(data)).done(response => console.log(response))
     }
     
     render(){
