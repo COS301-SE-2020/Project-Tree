@@ -4,28 +4,36 @@ import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form
 import { WebView } from 'react-native-webview';
 import ProjectModal from './GraphProjectModal';
 
-var htmlCode = '<p>Hello</p>'
 class GraphScreen extends Component{
+    reload(){
+        this.myWebView.reload()
+    }
+
     render(){
-        // console.log(webTest)
-        // if(this.props.project === null){
-        //     return(
-        //         <View>
-        //             <Text>
-        //                 Please select a project to view from the home page
-        //             </Text>
-        //         </View>
-        //     )
-        // }
+        if(this.props.project === null){
+            return(
+                <View>
+                    <Text>
+                        Please select a project to view from the home page
+                    </Text>
+                </View>
+            )
+        }
 
         return (
             <View style={styles.container}>
                 <View style={{flex:30}}>
-                    <WebView source={{html : htmlCode}} />
+                    <WebView 
+                        ref={(ref) => this.myWebView = ref}
+                        renderLoading={this.ActivityIndicatorLoadingView}
+                        startInLoadingState={true}
+                        source={{uri:'http://192.168.137.1:5000/mobile'}} />
+                    <Button onPress={()=>this.reload() }><Text>Reload</Text></Button>
                 </View>
-                {/* <View style={{flex:1}}>
-                    <ProjectModal project={this.props.project}/>
-                </View> */}
+                <View style={{flex:1}}>
+                
+                    {/* <ProjectModal project={this.props.project}/> */}
+                </View>
             </View>
         );
     }
