@@ -1,6 +1,15 @@
+const uq = require("../UserManagementApi/userQueries");
+const { JWT } = require('jose');
+
 const db = require("../DB");
 
-function createProject(req, res) {
+
+
+ async function createProject(req, res) {
+
+  //(async () => console.log(await uq.verify(req.body.creatorID)))()
+  let creator = await uq.verify(req.body.creatorID);
+  console.log(creator)
   req.body.cp_pm_Create != undefined
     ? (cp_pm_Create = true)
     : (cp_pm_Create = false);
@@ -32,6 +41,8 @@ function createProject(req, res) {
   db.getSession()
     .run(
       `
+        MATCH (b)
+        WHERE ID(b) = ${creator}
         CREATE(n:Project {
             name:"${req.body.cp_Name}", 
             description:"${req.body.cp_Description}", 
@@ -47,7 +58,8 @@ function createProject(req, res) {
             resourceCT:${cp_r_Create}, 
             resourceDT:${cp_r_Delete}, 
             resourceUT:${cp_r_Update}
-        }) 
+        }),
+        (b)-[x:MANAGES]->(n)
         RETURN n
       `
     )
@@ -75,6 +87,7 @@ function createProject(req, res) {
       res.status(400);
       res.send(err);
     });
+  //)
 }
 
 function deleteProject(req, res) {
@@ -206,12 +219,19 @@ function getProgress(req, res) {
     });
 }
 
-function getProjects(req, res) {
-  db.getSession()
+async function getProjects(req, res) {
+  console.log(req.body.creatorID)
+  let creator = await uq.verify(req.body.creatorID);
+  console.log(" sss",creator)
+  if(creator != null)
+  {
+    console.log("INSIDE: " , creator)
+    await db.getSession()
     .run(
       `
-        MATCH (n:Project) 
-        RETURN n
+      MATCH (user)-[:MANAGES]->(project) 
+      WHERE ID(user) = ${creator}
+      return project
       `
     )
     .then((result) => {
@@ -242,6 +262,22 @@ function getProjects(req, res) {
       res.status(400);
       res.send(err);
     });
+  }
+  else if(typeof creator == 'undefined')
+  {
+    res.send(
+      {
+        message: "Undefined"
+      })
+  }
+  else
+  {
+    res.send(
+    {
+      message: "Invalid User"
+    }
+   )
+  }
 }
 
 module.exports = {

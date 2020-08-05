@@ -11,7 +11,6 @@ import $ from "jquery";
 import logo from './Images/Logo.png';
 import { Login, Register } from "./User/index";
 
-
 function RightSide(props){
   return (
     <div
@@ -45,38 +44,30 @@ class App extends Component {
   }
 
   componentDidMount(){
-    console.log(localStorage.getItem('sessionToken'))
+    let token = localStorage.getItem('sessionToken')
     if(localStorage.getItem('sessionToken') != null)
     {
-      // let x = localStorage.getItem('sessionToken');
-      // console.log(x)
-      // sconsole.log(x)
-      // console.log(localStorage.getItem('sessionToken'))
-      // axios.post(`/verify`, {token: x}, null)
-      // .then(response => console.log("response"))
-      // .catch(err => console.warn(err))
-
-      $.post("/verify", { foo: 'bar' }, (response) => {
+      $.post("/verify", { token: token }, (response) => 
+      {
+        console.log(response)
         if(response)
         {
             console.log("TRue")
         }
-        else
-            alert( "Nope" );
+        else{this.handleLogout()}
       })
-      .fail(() => {
-        })
     console.log(this.rightSide)
     this.setState({
       loggedInStatus: true })
     }
     else
     {
-      if(this.rightSide != null)
+      console.log(this.rightSide)
+      if(this.rightSide)
         this.rightSide.classList.add("right");
       //<Redirect to="/"/>
     }
-    $.post("/project/get", (response) => {
+    $.post("/project/get", {creatorID: token}, (response) => {
       this.setState({projects: response.projects });
       }).fail((response) => {
         throw Error(response.message);
@@ -140,16 +131,21 @@ class App extends Component {
       loggedInStatus: data.status,
       user: data.id
     });
+    window.location.reload(false);
    }
    
   handleLogout() {
+    window.location.reload(false);
+    //localStorage.clear();   
+    this._isMounted = false;
     localStorage.clear();
     this.setState({
       loggedInStatus: false,
       user: {}
     });
-    this._isMounted = false;
-    window.location.reload(false);
+    console.log(this.rightSide)
+    if(!this.rightSide)
+        this.rightSide.classList.add("right");
   }
 
   render() {
@@ -214,7 +210,7 @@ class App extends Component {
                   <Route path="/home">
                     {this.state.loggedInStatus? (<Home />) : (<Redirect to="/"/>)}
                   </Route>
-                  <Route exact path="/">
+                  <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
                     <div className="login">
                       <div className="container" ref={ref => (this.container = ref)}>

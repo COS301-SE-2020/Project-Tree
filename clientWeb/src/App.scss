@@ -107,7 +107,7 @@
     .text {
       font-size: 21px;
       font-weight: 500;
-      color: #fff;
+      color: rgb(255, 255, 255);
       margin-right: 3em;
       margin-left: 3em;
     }
@@ -115,20 +115,3 @@
 }
 
 //Button
-.btn {
-  font-size: 21px;
-  padding: 5px 20px;
-  border: 0;
-  background-color: #96BB7C;
-  color: #fff;
-  border-radius: 3px;
-  transition: all 250ms ease-in-out;
-  cursor: pointer;
-  &:hover {
-    background-color: #96BB7C;
-    box-shadow: 0px 0px 12px 0.3px #a5ce88;
-  }
-  &:focus {
-    outline: none;
-  }
-}

@@ -1,6 +1,8 @@
 import React from "react";
 import { Button, Container, Row} from "react-bootstrap";
 import { Link } from "react-router-dom";
+import "./App.scss";
+ 
 
 import CreateProject from "./Project/CreateProject";
 
