@@ -35,12 +35,12 @@ class ProjectPage extends React.Component {
 
   render() {
     return (
-      <Container fluid className="py-2">
-        <Row>
-          <Col sm={12} md={6} xl={4} style={{border: "blue solid 1px"}}><ProjectInfo project={this.state.project} setProject={project => this.props.setProject(project)}/></Col>
+      <Container fluid className="py-2" style={{height: "50%"}}>
+        <Row className="m-2">
+          <Col sm={12} md={6} xl={4}><ProjectInfo project={this.state.project} setProject={project => this.props.setProject(project)}/></Col>
           <Col sm={12} md={6} xl={8} style={{border: "blue solid 1px"}}>more project info</Col>
         </Row>
-        <Row style={{border: "blue solid 1px"}}>
+        <Row style={{height: "100%",border: "blue solid 1px"}}>
           <Col xs={12} sm={12} style={{border: "blue solid 1px"}}><TaskInfo project={this.state.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/></Col>
         </Row>
       </Container>

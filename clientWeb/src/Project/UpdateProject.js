@@ -48,13 +48,13 @@ class UpdateProject extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button className="btn-dark" onClick={() => {this.showModal()}}>
+        <Button style={{backgroundColor:"#184D47", color:"white", borderColor:"#184D47"}}onClick={() => {this.showModal()}}>
           <i className="fa fa-edit"> </i> Edit{" "}
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
           <Form onSubmit={event => {this.handleSubmit(event)}}>
             <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
-              <Modal.Title>Update Project</Modal.Title>
+              <Modal.Title>Edit Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <input

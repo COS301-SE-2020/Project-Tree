@@ -35,8 +35,8 @@ class ProjectInfo extends React.Component{
   
       return(
           <React.Fragment>
-              <Container className="block-example border border-secondary bg-light">
-                  <Row className="align-items-center bg-dark py-2">
+              <Container className="block-example border border-secondary">
+                  <Row className="align-items-center bg-secondary py-2">
                       <Col className="text-left"> 
                           <DeleteProject project={this.state.project} setProject={project => {this.setProject(project)}}/>
                       </Col>
@@ -58,6 +58,9 @@ class ProjectInfo extends React.Component{
                     <Col className="text-center" >
                     <Table className="mt-2" striped bordered size="sm" variant="light">
                       <tbody>
+                        <tr>
+                           <th colspan="4">Project permissions</th>
+                        </tr>
                         <tr>
                           <td></td>
                           <td>Create </td>
