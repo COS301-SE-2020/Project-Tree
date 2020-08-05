@@ -6,7 +6,7 @@ class Home extends Component {
   render() {
     return (
       <React.Fragment>
-        <ProgressDashboard toggleGraphPage={this.props.toggleGraphPage} />
+        <ProgressDashboard/>
       </React.Fragment>
     );
   }

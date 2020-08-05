@@ -36,7 +36,6 @@ class Settings extends React.Component {
           className="my-2"
           style={{borderColor:"#96BB7C", backgroundColor:"#96BB7C"}}
           onClick={() => {this.showModal()}}
-          b
           size="sm"
         >
           <i className="fa fa-cogs text-dark" style={{fontSize:"30px"}}></i>

@@ -1,6 +1,7 @@
 import React from "react";
 import { ProgressBar, Container, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import $ from "jquery";
 
 class ProgressDashboard extends React.Component {
   constructor(props) {
@@ -45,28 +46,25 @@ class ProgressDashboard extends React.Component {
   }
 
   async componentDidMount() {
-    var response = await fetch("/project/progress", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ check: "sent" }),
-    });
-    const body1 = await response.json();
-    if (response.status !== 200) throw Error(body1.message);
-
-    response = await fetch("/project/get", { method: "POST" });
-    var body2 = await response.json();
-    if (response.status !== 200) throw Error(body2.message);
-
-    this.getProjectProgress(body1.response, body2.nodes);
+    $.post( "/project/progress", progress => {
+      $.post( "/project/get", projects => {
+        this.getProjectProgress(progress.response, projects.projects);
+      })
+      .fail(err => {
+        throw Error(err);
+      })
+    })
+    .fail(err => {
+      throw Error(err);
+    })
+    
   }
 
   render() {
+    console.log(this.state.progressInfo);
+    console.log(this.state.projects );
     return (
       <ProgressList
-        toggleGraphPage={this.props.toggleGraphPage}
         progressInfo={this.state.progressInfo}
         projects={this.state.projects}
       />
