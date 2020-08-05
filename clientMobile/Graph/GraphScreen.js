@@ -34,6 +34,16 @@ class GraphScreen extends Component{
 
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message)
+
+        // const test = await fetch('http://192.168.137.1:5000/mobile',{
+        //     method: 'POST',
+        //     headers: {
+        //         Accept: 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body:JSON.stringify({nodes:body.tasks, links:body.rels})
+        // })
+
         this.setState({nodes:body.tasks, links:body.rels})
     }
 
@@ -69,15 +79,16 @@ class GraphScreen extends Component{
             );
         }
 
-        return (
+        return this.state.nodes ? (
             <View style={styles.container}>
                 <View style={{flex:30}}>
-                    <WebView 
-
+                    <WebView
                         ref={(ref) => this.myWebView = ref}
                         renderLoading={this.ActivityIndicatorLoadingView}
                         startInLoadingState={true}
-                        source={{uri:'http://192.168.137.1:5000/mobile'}}
+                        source={{uri:'http://192.168.137.1:5000/mobile',
+                                method: 'POST',
+                                body:'nodes='+JSON.stringify(this.state.nodes)+'&links='+JSON.stringify(this.state.links)+''}}
                         onMessage={event => {
                             this.displayTaskDependency(parseInt(event.nativeEvent.data), null);
                         }} />
@@ -94,7 +105,7 @@ class GraphScreen extends Component{
                     <ProjectModal project={this.props.project}/>
                 </View>
             </View>
-        );
+        ) : null;
     }
 }
       
