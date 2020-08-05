@@ -71,40 +71,19 @@
                 linkPinning: false
             });
 
-            paper.on('element:pointerclick', (event) => {handleNodeClick(event.model.attributes.attrs.text.text)});
-            paper.on('link:pointerclick', (event)=> {handleNodeClick("link")});
-        
-            // function TouchStart() {
-            // 	if(nodeTouch == false)
-            // 	{
-            // 		dragStartPosition = {x: event.touches[0].clientX, y: event.touches[0].clientY}
-            // 	}
-            // }
-
-            // function TouchMove(){
-            // 	if(dragStartPosition)
-            // 		paper.translate(
-            // 			event.touches[0].clientX - dragStartPosition.x,
-            // 			event.touches[0].clientY - dragStartPosition.y
-            // 		);
-            // }
-
-            // function TouchEnd(){
-            // 	dragStartPosition = null;
-            // }
-            
+            paper.on('element:pointerdown', (event) => {handleNodeClick(event.model.id)});
+            paper.on('link:pointerdown', (event)=> {handleNodeClick("link")});
+               
             function handleNodeClick(input){
                 count++;
                 nodeTouch = true
                 document.getElementById("p1").innerHTML = input; 
+                window.ReactNativeWebView.postMessage(input);
             }
-
-            
 
             // paper.scale(1, 1)
             paper.on('blank:pointerdown', (event, x, y) =>{
                 dragStartPosition = { x: x, y: y};
-                handleNodeClick(dragStartPosition.x + " " + dragStartPosition.y)
             });
 
             paper.on('blank:pointerup', ()=>{
@@ -113,7 +92,6 @@
             
             paper.on('blank:pointermove', (event, x, y)=>{
                 if (dragStartPosition){
-                    handleNodeClick(event.clientX + " " + event.clientY)
                     paper.translate(
                         event.clientX - dragStartPosition.x, 
                         event.clientY - dragStartPosition.y
