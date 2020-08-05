@@ -59,7 +59,7 @@ class ProjectInfo extends React.Component{
                     <Table className="mt-2" striped bordered size="sm" variant="light">
                       <tbody>
                         <tr>
-                           <th colspan="4">Project permissions</th>
+                           <th colSpan="4">Project permissions</th>
                         </tr>
                         <tr>
                           <td></td>

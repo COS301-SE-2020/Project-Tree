@@ -16,21 +16,35 @@ class ProjectPage extends React.Component {
       this.setState({tasks: response.tasks})
     })
     .fail(() => {
-        alert( "Unable to get Critical Path" );
+        alert( "Unable to get tasks" );
     })
     $.post( "/project/criticalpath", {projId: this.state.project.id} , response => {
-        this.setState({criticalPath: response})
-      })
-      .fail(() => {
-          alert( "Unable to get Critical Path" );
-      })
+      this.setState({criticalPath: response})
+    })
+    .fail(() => {
+        alert( "Unable to get Critical Path" );
+    })
     
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.project !== prevProps.project) {
+      console.log("Here");
       this.setState({ project: this.props.project });
+      $.post( "/project/projecttasks", {projId: this.props.project.id} , response => {
+        this.setState({tasks: response.tasks})
+      })
+      .fail(() => {
+          alert( "Unable to get tasks" );
+      })
+      $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
+        this.setState({criticalPath: response})
+      })
+      .fail(() => {
+          alert( "Unable to get Critical Path" );
+      })
     }
+    
   }
 
   render() {
