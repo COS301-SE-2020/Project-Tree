@@ -135,13 +135,14 @@ class TaskInfo extends React.Component{
             list[i]=(
               <Col 
                 key={i}
-                style={{backgroundColor: `${color}`}}
+                style={{fontFamily:"Courier New", fontSize: "15px",backgroundColor: `${color}`, maxWidth: "300px", minWidth:"250px", fontWeight: "bold"}}
+                className="rounded border border-dark m-1 align-items-center"
               >
-                Name: {el.name}
-                Description: {el.description}
-                StartDate: {`${syear}-${smonth}-${sday}`}
-                EndDate: {`${eyear}-${emonth}-${eday}`}
-                Duration: {el.duration}
+                <Row><Col className="text-center">{el.name} <hr/></Col></Row>
+                <Row><Col className="text-center">{el.description} <hr/></Col></Row>
+                <Row><Col className="text-center">Start:</Col><Col className="text-center">End:</Col></Row>
+                <Row><Col className="text-center">{`${syear}-${smonth}-${sday}`}</Col><Col className="text-center">{`${eyear}-${emonth}-${eday}`}</Col></Row>
+                <Row><Col></Col><Col xs={6} className="text-center">Duration: {el.duration}</Col><Col></Col></Row>
               </Col>
             )
           });
