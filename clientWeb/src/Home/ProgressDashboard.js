@@ -61,8 +61,6 @@ class ProgressDashboard extends React.Component {
   }
 
   render() {
-    console.log(this.state.progressInfo);
-    console.log(this.state.projects );
     return (
       <ProgressList
         progressInfo={this.state.progressInfo}

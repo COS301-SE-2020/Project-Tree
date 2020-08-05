@@ -20,13 +20,13 @@ class SideBar extends React.Component {
           style={{width: "100%"}}
           key={project.id}>
           <Col>
-            <Container fluid block className="block-example bg-secondary rounded border border-dark" style={{fontFamily:"Courier New", color: "black"}}>
+            <Container fluid className="block-example bg-secondary rounded border border-dark" style={{fontFamily:"Courier New", color: "black"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
                   {project.name}
                 </Col>
               </Row>
-              <Row className="align-items-center py-2" fluid>
+              <Row className="align-items-center py-2">
                 <Col>
                   <Link to="/project">
                     <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
