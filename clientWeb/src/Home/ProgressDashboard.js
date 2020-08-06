@@ -46,8 +46,9 @@ class ProgressDashboard extends React.Component {
   }
 
   async componentDidMount() {
+    let token = localStorage.getItem('sessionToken')
     $.post( "/project/progress", progress => {
-      $.post( "/project/get", projects => {
+      $.post( "/project/get", {creatorID: token}, projects => {
         this.getProjectProgress(progress.response, projects.projects);
       })
       .fail(err => {

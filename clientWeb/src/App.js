@@ -53,13 +53,18 @@ class App extends Component {
         console.log(response)
         if(response)
         {
-            console.log("TRue")
+            console.log("True")
         }
         else{this.handleLogout()}
       })
     console.log(this.rightSide)
     this.setState({
       loggedInStatus: true })
+      $.post("/project/get", {creatorID: token}, (response) => {
+        this.setState({projects: response.projects });
+        }).fail((response) => {
+          throw Error(response.message);
+      });
     }
     else
     {
@@ -68,11 +73,6 @@ class App extends Component {
         this.rightSide.classList.add("right");
       //<Redirect to="/"/>
     }
-    $.post("/project/get", {creatorID: token}, (response) => {
-      this.setState({projects: response.projects });
-      }).fail((response) => {
-        throw Error(response.message);
-    });
    }
   
   
@@ -156,7 +156,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C"}}>
+          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#c30b4e"}}>
             <Nav className="form-inline ">
               {this.state.loggedInStatus === true ?
                 this.state.showSideBar === false ?
@@ -179,9 +179,10 @@ class App extends Component {
                 <img src={logo} alt="Logo" style={{width:"80px"}}/>
               </Nav.Link>
             </Nav>
+            {this.state.loggedInStatus === true ?
             <Nav className="form-inline">
                 <Settings/>
-            </Nav>
+            </Nav>: null}
           </Navbar>
           <Container fluid style={{height: "100%"}}>
             <Row style={{height: "100%"}}>
@@ -214,7 +215,7 @@ class App extends Component {
                   <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
                     <div class="row">
-                    <div class="column" style={{backgroundColor: "white"}}>
+                    <div class="column" style={{backgroundColor: "#446ccf"}}>
                      <div className="login">
                       <div className="container" ref={ref => (this.container = ref)}>
                         {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
@@ -227,7 +228,7 @@ class App extends Component {
                           onClick={this.changeState.bind(this)}
                         /></div>
                         </div>
-                        <div class="column">  
+                        <div class="column" style={{backgroundColor: "#e0bc5b"}}>  
                           <div className="carosal">
                            <About/>
                           </div>
