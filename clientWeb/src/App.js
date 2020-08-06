@@ -198,7 +198,8 @@ class App extends Component {
                           currentActive={currentActive}
                           containerRef={ref => (this.rightSide = ref)}
                           onClick={this.changeState.bind(this)}
-                        /> */}<About/>
+                        /> */}
+                        <About/>
                     </div>
                   </Route>
                 </Switch>
