@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Table, Modal, Button } from "react-bootstrap";
 import $ from "jquery";
 
+
 function stringifyFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
@@ -13,7 +14,7 @@ function stringifyFormData(fd) {
 class CreateProject extends React.Component {
   constructor() {
     super();
-    this.state = { show: false };
+    this.state = { show: false, token: localStorage.getItem('sessionToken') };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,7 +31,7 @@ class CreateProject extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
-    $.post("/project/add", JSON.parse(data), (response) => {
+    $.post("/project/add",  JSON.parse(data), (response) => {
       this.setState({ show: false });
       this.props.setProject(response);
     })
@@ -57,6 +58,9 @@ class CreateProject extends React.Component {
               <Modal.Title>Create Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+            <Form.Group>
+                <Form.Control id="creatorID" name="creatorID" type="hidden" value= {this.state.token} />
+              </Form.Group>
               <Form.Group>
                 <Form.Label>Name of project</Form.Label>
                 <Form.Control type="text" name="cp_Name" required />
