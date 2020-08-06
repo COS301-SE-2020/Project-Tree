@@ -19,7 +19,7 @@ class CreateTask extends Component {
 	render(){
 		return(
 			<React.Fragment>
-				<CreateTaskModal projectID={this.props.projectID} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} getProjectInfo={this.props.getProjectInfo}/>
+				<CreateTaskModal projectID={this.props.projectID} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo}/>
 				<View style={{flex:1}}>
 					<TouchableOpacity onPress={()=>this.setModalVisible(true)} style={styles.floatinBtn}>
 						<Icon type="AntDesign" name="plus" />
@@ -36,7 +36,7 @@ class CreateTaskModal extends Component{
             <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={()=>this.props.setModalVisible(false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <CreateTaskForm projectID={this.props.projectID} getProjectInfo={this.props.getProjectInfo} setModalVisible={this.props.setModalVisible}/>
+                        <CreateTaskForm projectID={this.props.projectID} setModalVisible={this.props.setModalVisible} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo}/>
 						<TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(false)}>
                             <Text style={styles.textStyle}>Hide Modal</Text>
                         </TouchableHighlight>
@@ -122,9 +122,8 @@ class CreateTaskForm extends Component{
         }); 
         
         const body = await response.json();  
-        console.log(body);
         this.props.setModalVisible(false);
-        //await this.props.setTaskInfo(body.nodes, body.rels, body.displayNode, body.displayRel);
+        this.props.setProjectInfo(body.nodes, body.rels);
     }
 
     render()

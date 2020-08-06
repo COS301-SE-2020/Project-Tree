@@ -30,8 +30,13 @@ class UpdateTaskForm extends Component{
     constructor(props){
         super(props);
         
-        let startDate = this.props.task.startDate.year.low+"-"+this.props.task.startDate.month.low+"-"+this.props.task.startDate.day.low;
-        console.log(new Date(startDate));
+        let sYear = this.props.task.startDate.year.low;
+        let sMonth = this.props.task.startDate.month.low < 10 ? "0"+this.props.task.startDate.month.low : this.props.task.startDate.month.low;
+        let sDay = this.props.task.startDate.day.low;
+        if(sDay < 10){
+            sDay = "0"+sDay;
+        }
+        let startDate = sYear+'-'+sMonth+'-'+sDay;
         // console.log(this.props.task.startDate.year.low, this.props.task.startDate.month.low, this.props.task.startDate.day.low)
         // console.log(new Date(this.props.task.startDate.year.low, (this.props.task.startDate.month.low-1), this.props.task.startDate.day.low))
 

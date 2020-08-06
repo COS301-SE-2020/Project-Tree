@@ -14,9 +14,6 @@
         <meta name="viewport" content="height=device-height, width=device-width, user-scalable=no" />
     </head>
     <body>
-        <!-- content -->
-        <!-- <div id="myholder"></div> -->
-        <p id="p1"></p>
         <div id="toolbar">
             <textarea id="adjacency-list" width="200">
                 {
@@ -55,17 +52,15 @@
             interactive: false
         });
 
-        paper.on('element:pointerdown', (event) => {handleNodeClick(event.model.attributes.attrs.text.text)});
+        paper.on('element:pointerdown', (event) => {handleNodeClick(event.model.id)});
         
         function handleNodeClick(input){
-            count++;
-            nodeTouch = true
-            document.getElementById("p1").innerHTML = input; 
+            nodeTouch = true;
+            window.ReactNativeWebView.postMessage(input);
         }
 
         paper.on('blank:pointerdown', (event, x, y) =>{
             dragStartPosition = { x: x, y: y};
-            handleNodeClick(dragStartPosition.x + " " + dragStartPosition.y)
         });
 
         paper.on('blank:pointerup', ()=>{
@@ -74,7 +69,6 @@
         
         paper.on('blank:pointermove', (event, x, y)=>{
             if (dragStartPosition){
-                handleNodeClick(event.clientX + " " + event.clientY)
                 paper.translate(
                     event.clientX - dragStartPosition.x, 
                     event.clientY - dragStartPosition.y

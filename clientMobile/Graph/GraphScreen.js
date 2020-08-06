@@ -9,13 +9,14 @@ import TaskModal from './TaskModal';
 class GraphScreen extends Component{
     constructor(props) {
 		super(props);
-        this.state = {nodes: null, links:null, selectedTask:null, selectedDependency:null}
+        this.state = {nodes: null, links:null, selectedTask:null, selectedDependency:null, key:0}
         this.getProjectInfo = this.getProjectInfo.bind(this);
         this.displayTaskDependency = this.displayTaskDependency.bind(this);
+        this.setProjectInfo = this.setProjectInfo.bind(this);
     }
     
     reload(){
-        this.myWebView.reload()
+        this.setState({key : this.state.key+1})
     }
 
     async componentDidMount(){
@@ -35,20 +36,16 @@ class GraphScreen extends Component{
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message)
 
-        // const test = await fetch('http://192.168.137.1:5000/mobile',{
-        //     method: 'POST',
-        //     headers: {
-        //         Accept: 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body:JSON.stringify({nodes:body.tasks, links:body.rels})
-        // })
-
         this.setState({nodes:body.tasks, links:body.rels})
     }
 
     getProjectInfo(){
         return {nodes:this.state.nodes, rels:this.state.links}
+    }
+
+    setProjectInfo(nodes, rels){
+        this.setState({nodes:nodes, rels:rels});
+        this.reload();
     }
 
     displayTaskDependency(taskID, dependencyID){
@@ -82,23 +79,13 @@ class GraphScreen extends Component{
         return this.state.nodes ? (
             <View style={styles.container}>
                 <View style={{flex:30}}>
-                    <WebView
-                        ref={(ref) => this.myWebView = ref}
-                        renderLoading={this.ActivityIndicatorLoadingView}
-                        startInLoadingState={true}
-                        source={{uri:'http://192.168.137.1:5000/mobile',
-                                method: 'POST',
-                                body:'nodes='+JSON.stringify(this.state.nodes)+'&links='+JSON.stringify(this.state.links)+''}}
-                        onMessage={event => {
-                            this.displayTaskDependency(parseInt(event.nativeEvent.data), null);
-                        }} />
-                    <Button onPress={()=>this.reload() }><Text>Reload</Text></Button>
+                    <WebViewWrapper nodes={this.state.nodes} links={this.state.links} webKey={this.state.key} displayTaskDependency={this.displayTaskDependency}/>
                 </View>
                 
-                <TaskModal selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} />
+                <TaskModal selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
 
                 <View style={{flex:1}}>
-                    <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo}/>
+                    <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
                 </View>
 
                 <View style={{flex:1}}>
@@ -106,6 +93,23 @@ class GraphScreen extends Component{
                 </View>
             </View>
         ) : null;
+    }
+}
+
+class WebViewWrapper extends Component{
+    render(){
+        return(
+            <WebView
+                key={this.props.webKey}
+                ref={(ref) => this.myWebView = ref}
+                renderLoading={this.ActivityIndicatorLoadingView}
+                startInLoadingState={true}
+                source={{uri:'http://10.0.2.2:5000/mobile',
+                        method: 'POST',
+                        body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+''}}
+                onMessage={event => this.props.displayTaskDependency(parseInt(event.nativeEvent.data), null)}
+            />
+        );
     }
 }
       

@@ -57,7 +57,7 @@ class TaskModal extends Component {
                                         <Icon type="AntDesign" name="edit" />
                                     </TouchableHighlight>
 
-                                    <DeleteTask task={this.props.selectedTask} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} />
+                                    <DeleteTask task={this.props.selectedTask} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
                                 </View>
                             </Container>
                             
