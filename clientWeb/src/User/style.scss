@@ -1,8 +1,3 @@
-// img {
-//     max-width: 100%;
-//     max-height: 100%;
-// }
-
 .portrait {
     height: 80px;
     width: 30px;
@@ -13,13 +8,27 @@
     width: 80px;
 }
 
-.square {
-    height: 75px;
-    width: 75px;
-}
+p{ margin-top: -20px; }
 
 
 .base-container {
+  .btn {
+    font-size: 21px;
+    padding: 5px 5px;
+    border: 0;
+    background-color: #96BB7C;
+    color: #fff;
+    border-radius: 3px;
+    transition: all 250ms ease-in-out;
+    cursor: pointer;
+    &:hover {
+      background-color: #96BB7C;
+      box-shadow: 0px 0px 12px 0.3px #a5ce88;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
     width: 100%;
     height: 100%;
     display: flex;
@@ -92,7 +101,6 @@
               background-color: #ffffff;
               box-shadow: 0px 0px 14px 0.3px #0e81ce96;
             }
-  
             &:focus {
               outline: none;
               box-shadow: 0px 0px 12px 0.8px #3474dbb2;
@@ -106,3 +114,5 @@
       margin-top: 0em;
     }
   }
+
+  

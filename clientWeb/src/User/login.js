@@ -31,7 +31,6 @@ export class Login extends Component {
         });
       }
 
-
     handleSubmit(event){
       //  const { email, password } = this.state;
         let data = stringifyFormData(new FormData(event.target));
@@ -67,7 +66,7 @@ export class Login extends Component {
                 <div className="form">
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
-                    <input  type='text' name="email" value={this.state.email} onChange={this.handleChange} required />
+                    <input  type='email' name="email" value={this.state.email} onChange={this.handleChange} required />
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Password</label>
@@ -83,38 +82,5 @@ export class Login extends Component {
               </Form>
             </div>
           );
-        // return(
-        //     <React.Fragment>
-        //         <Container>
-        //             <Row>
-        //                 <Col></Col>
-        //                 <Col>
-        //                     <Card style={{ width: '20rem' }}>
-        //                         <Card.Body>Login
-        //                         <div class="card"><img class="card-img-top img-fluid" src={loginImg} /> </div>
-        //                             <Form onSubmit={this.handleSubmit}>
-        //                                 <Form.Group>
-        //                                     <Form.Label>Email</Form.Label>
-        //                                     <Form.Control type='text' name="email" value={this.state.email} onChange={this.handleChange} required/>
-        //                                 </Form.Group>
-        //                                 <Form.Group>
-        //                                     <Form.Label>password</Form.Label>
-        //                                     <Form.Control type='password' name="password" value={this.state.password} onChange={this.handleChange} required/>
-        //                                 </Form.Group>
-        //                                 <Card.Link href="/register">register</Card.Link>
-        //                                 <Card.Link href="#">
-        //                                     <Button type="submit" variant="dark">
-        //                                         Login
-        //                                     </Button>
-        //                                 </Card.Link>
-        //                             </Form>
-        //                         </Card.Body>
-        //                     </Card>
-        //                 </Col>
-        //                 <Col></Col>
-        //             </Row>
-        //         </Container>
-        //     </React.Fragment>
-        // )
     }
 }
