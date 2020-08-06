@@ -13,10 +13,11 @@ class GraphScreen extends Component{
         this.getProjectInfo = this.getProjectInfo.bind(this);
         this.displayTaskDependency = this.displayTaskDependency.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
+        this.reload = this.reload.bind(this);
     }
     
     reload(){
-        this.setState({key : this.state.key+1})
+        this.setState({key: this.state.key+1})
     }
 
     async componentDidMount(){
@@ -27,8 +28,8 @@ class GraphScreen extends Component{
         const response = await fetch('http://projecttree.herokuapp.com/getProject',{
             method: 'POST',
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             },
             body:JSON.stringify({ id:this.props.project.id })
         });
@@ -82,7 +83,7 @@ class GraphScreen extends Component{
                     <WebViewWrapper nodes={this.state.nodes} links={this.state.links} webKey={this.state.key} displayTaskDependency={this.displayTaskDependency}/>
                 </View>
                 
-                <TaskModal selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
+                <TaskModal project={this.props.project} selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
 
                 <View style={{flex:1}}>
                     <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
@@ -104,7 +105,7 @@ class WebViewWrapper extends Component{
                 ref={(ref) => this.myWebView = ref}
                 renderLoading={this.ActivityIndicatorLoadingView}
                 startInLoadingState={true}
-                source={{uri:'http://10.0.2.2:5000/mobile',
+                source={{uri:'http://projecttree.herokuapp.com/mobile',
                         method: 'POST',
                         body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+''}}
                 onMessage={event => this.props.displayTaskDependency(parseInt(event.nativeEvent.data), null)}
