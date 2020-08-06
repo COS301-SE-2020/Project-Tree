@@ -13,7 +13,6 @@ import { Login, Register } from "./User/index";
 import Settings from "./User/Settings"
 import About from "./About"
 
-
 function RightSide(props){
   return (
     <div
@@ -46,18 +45,30 @@ class App extends Component {
   }
 
   componentDidMount(){
+    let token = localStorage.getItem('sessionToken')
     if(localStorage.getItem('sessionToken') != null)
     {
+      $.post("/verify", { token: token }, (response) => 
+      {
+        console.log(response)
+        if(response)
+        {
+            console.log("TRue")
+        }
+        else{this.handleLogout()}
+      })
+    console.log(this.rightSide)
     this.setState({
       loggedInStatus: true })
     }
     else
     {
-      if(this.rightSide != null)
+      console.log(this.rightSide)
+      if(this.rightSide)
         this.rightSide.classList.add("right");
       //<Redirect to="/"/>
     }
-    $.post("/project/get", (response) => {
+    $.post("/project/get", {creatorID: token}, (response) => {
       this.setState({projects: response.projects });
       }).fail((response) => {
         throw Error(response.message);
@@ -121,7 +132,22 @@ class App extends Component {
       loggedInStatus: data.status,
       user: data.id
     });
+    window.location.reload(false);
    }
+   
+  handleLogout() {
+    window.location.reload(false);
+    //localStorage.clear();   
+    this._isMounted = false;
+    localStorage.clear();
+    this.setState({
+      loggedInStatus: false,
+      user: {}
+    });
+    console.log(this.rightSide)
+    if(!this.rightSide)
+        this.rightSide.classList.add("right");
+  }
 
   render() {
     const { isLogginActive } = this.state;
@@ -186,7 +212,7 @@ class App extends Component {
                   <Route path="/home">
                     {this.state.loggedInStatus? (<Home />) : (<Redirect to="/"/>)}
                   </Route>
-                  <Route exact path="/">
+                  <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
                     <div className="login">
                       {/* <div className="container" ref={ref => (this.container = ref)}>

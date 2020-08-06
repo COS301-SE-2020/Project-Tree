@@ -9,9 +9,11 @@ function login(req,res){ //email, password,
             RETURN n
         `)
     .then(result => {
+        console.log(result.records[0])
         let id = (result.records[0]._fields[0].identity.low)
         if(result.records.length != 0){
             let hash = result.records[0]._fields[0].properties.password;
+            console.log()
             bcrypt.compare(req.body.password, hash, function(err, result) {
                 if(result){
                     //console.log("JERE")
@@ -90,33 +92,82 @@ function updateInfo()
 
 }
 
-function verify(req, res){
-    console.log(req.body.foo)
-    try {
-        var user = JWT.verify(req, process.env.ACCESS_TOKEN_SECRET, { maxTokenAge: '1440 min' });
-        console.log("user")
-        db.getSession()
-        .run(`
-                Match (n:User { email: "${user.email}" })
-                RETURN n
-            `)
-        .then(result => {
-            if(user.password == result.records[0]._fields[0].password){
-                res.send(result.records[0]._fields[0].identity.low);
-            }else{
-                res.send(null);
-            }
-        })
-        .catch(err => 
-        {
-            res.send(null);
-        });
-    } catch (err) 
-    {
-        res.send(null);
-    }
-}
+// function verify(req, res){
+//    // console.log(req.body.token)
+//     try {
+//         //console.log("user")
+//         var user = JWT.verify(req.body.token, process.env.ACCESS_TOKEN_SECRET, { maxAge: 1440 });
+//         var milliseconds = +new Date;        
+//         var seconds = milliseconds / 1000;
+//         console.log(seconds)
+//         console.log(user)
+//         if(seconds - user.iat > 86400)
+//             res.send(null)
+//         db.getSession()
+//         .run(`
+//                 Match (n:User { email: "${user.email}" })
+//                 RETURN n
+//             `)
+//         .then(result => {
+//             //console.log(result.records[0]._fields[0].properties.password, " == ", user.hash)
+//             if(user.password == result.records[0]._fields[0].properties.hash){
+//                 res.send({
+//                     id :  result.records[0]._fields[0].identity.low
+//                 });
+//             }
+//         })
+//         .catch(err => 
+//         {
+//             res.send(null);
+//         });
+//     } catch (err) 
+//     {
+//         res.send(null);
+//     }
+// }
 
+async function verify(token)
+{
+    let answer = "initial"
+    bool = false;
+     try {
+         //console.log("user")
+         var user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, { maxAge: 1440 });
+         var milliseconds = +new Date;        
+         var seconds = milliseconds / 1000;
+        // console.log(seconds)
+        // console.log(user)
+         if(seconds - user.iat > 86400)
+             return (null)
+         await db.getSession()
+         .run(`
+                 Match (n:User { email: "${user.email}" })
+                 RETURN n
+             `)
+         .then(result => {
+             //console.log(result.records[0]._fields[0].properties.password, " == ", user.hash)
+             if(user.password == result.records[0]._fields[0].properties.hash){
+                    answer = result.records[0]._fields[0].identity.low
+                    console.log("Sending...    ",answer)
+                    bool = true
+             }
+         })
+         .catch(err => 
+         {
+            return (null)
+
+         });
+     } 
+     catch (err) 
+     {
+        return (null)
+
+     }
+    if(bool)
+        return answer;
+    else
+        return null
+ }
 
 module.exports =
 {
