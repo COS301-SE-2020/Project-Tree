@@ -81,7 +81,7 @@ class TaskInfo extends React.Component{
     } 
 
     createTaskList(){
-      let list = [`no ${this.state.taskType} tasks to display`];
+      let list = [`no ${this.state.taskType} tasks`];
       if(this.state.tasks.length !== 0 && this.state.criticalPath !== null){
         if(this.state.taskType === "CriticalPath") list = this.createCriticalPath();
         else if(this.state.taskType === "Late") list = this.createLateList();
@@ -93,7 +93,7 @@ class TaskInfo extends React.Component{
             }
           });
         }
-        if (list[0] === 'no critical path to Display' || list[0] === 'no late tasks to display') {
+        if (list[0] === 'no critical path ' || list[0] === 'no late tasks') {
           return (list[0]);
         } else {
           list.forEach((el, i) => {
@@ -132,17 +132,17 @@ class TaskInfo extends React.Component{
                 break;
             }
             list[i]=(
-              <Col 
-                key={i}
-                style={{fontFamily:"Courier New", fontSize: "15px",backgroundColor: `${color}`, maxWidth: "300px", minWidth:"250px", fontWeight: "bold"}}
-                className="rounded border border-dark m-1 align-items-center"
-              >
-                <Row><Col className="text-center">{el.name} <hr/></Col></Row>
-                <Row><Col className="text-center">{el.description} <hr/></Col></Row>
-                <Row><Col className="text-center">Start:</Col><Col className="text-center">End:</Col></Row>
-                <Row><Col className="text-center">{`${syear}-${smonth}-${sday}`}</Col><Col className="text-center">{`${eyear}-${emonth}-${eday}`}</Col></Row>
-                <Row><Col></Col><Col xs={6} className="text-center">Duration: {el.duration}</Col><Col></Col></Row>
-              </Col>
+                <Col 
+                  key={i}
+                  style={{fontFamily:"Courier New", fontSize: "15px",backgroundColor: `${color}`, maxWidth: "300px", minWidth:"250px", fontWeight: "bold"}}
+                  className="rounded border border-dark m-1 align-items-center"
+                >
+                  <Row><Col className="text-center">{el.name} <hr/></Col></Row>
+                  <Row><Col className="text-center">{el.description} <hr/></Col></Row>
+                  <Row><Col className="text-center">Start:</Col><Col className="text-center">End:</Col></Row>
+                  <Row><Col className="text-center">{`${syear}-${smonth}-${sday}`}</Col><Col className="text-center">{`${eyear}-${emonth}-${eday}`}</Col></Row>
+                  <Row><Col className="text-center">Duration: {el.duration}</Col></Row>
+                </Col>
             )
           });
         }
@@ -157,27 +157,23 @@ class TaskInfo extends React.Component{
       return(
           <React.Fragment>
               <Container fluid>
-                <Row>
-                  <Col xs={12} sm={12} md={3} lg={2} xl={2}>
-                    <Form.Label>Select type of tasks to display</Form.Label>
-                  </Col>
-                  <Col  xs={12} sm={12} md={6} lg={4} xl={3}>
+                <Row >
                     <Form.Control
                       as="select"
                       id="taskType"
                       value={this.state.taskType}
+                      style={{width:"250px", borderColor: "#EEBB4D", backgroundColor:"white"}}
                       onChange={(e) => {
                         this.setState({ taskType: e.target.value });
                         this.value = this.state.taskType;
                       }}
                     >
-                      <option value="CriticalPath">Crititcal Path</option>
-                      <option value="Incomplete">Incomplete</option>
-                      <option value="Complete">Complete</option>
-                      <option value="Issue">Issue</option>
-                      <option value="Late">Late</option>
+                      <option value="Critical Path">Critical Path Tasks</option>
+                      <option value="Incomplete">Incomplete tasks</option>
+                      <option value="Complete">Complete tasks</option>
+                      <option value="Issue">Issue Tasks</option>
+                      <option value="Late">Late Tasks</option>
                     </Form.Control>
-                  </Col>
                 </Row>
                 <Row className="d-flex flex-nowrap flex-row" style={{overflowX: 'auto'}}>
                   {this.createTaskList()}

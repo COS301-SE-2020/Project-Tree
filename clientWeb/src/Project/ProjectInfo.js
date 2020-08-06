@@ -35,7 +35,7 @@ class ProjectInfo extends React.Component{
   
       return(
           <React.Fragment>
-              <Container className="block-example border border-secondary">
+              <Container className="block-example border rounded border-secondary">
                   <Row className="align-items-center bg-secondary py-2">
                       <Col className="text-left"> 
                           <DeleteProject project={this.state.project} setProject={project => {this.setProject(project)}}/>

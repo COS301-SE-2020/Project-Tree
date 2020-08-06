@@ -19,7 +19,7 @@ class SideBar extends React.Component {
           className="m-1"
           style={{width: "100%"}}
           key={project.id}>
-          <Col>
+          <Col style={{position: "absolute", overflowY: "hidden"}}>
             <Container fluid className="block-example bg-secondary rounded border border-dark" style={{fontFamily:"Courier New", color: "black"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
@@ -63,7 +63,7 @@ class SideBar extends React.Component {
     });
 
     return (
-      <Container className="py-2">
+      <Container className="py-1">
         <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/> 
         {listItems} 
       </Container>
