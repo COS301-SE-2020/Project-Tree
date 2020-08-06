@@ -14,12 +14,9 @@ import s5 from './Images/S5.png';
 class About extends Component{
     render(){
         return(
-            <Carousel>
+            <Carousel className="border rounded">
                 <Carousel.Item >
                     <img src={logo} alt="Logo"/>
-                    <Carousel.Caption>
-                    <h3>First slide label</h3>
-                    </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
                     <img src={logo} alt="Logo"/>
