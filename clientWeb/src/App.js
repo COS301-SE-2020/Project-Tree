@@ -172,8 +172,7 @@ class App extends Component {
                   )
                 :
                 null
-              }
-              
+                  }              
             </Nav>
             <Nav className="m-auto form-inline">
               <Nav.Link href="/">
@@ -214,8 +213,10 @@ class App extends Component {
                   </Route>
                   <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
-                    <div className="login">
-                      {/* <div className="container" ref={ref => (this.container = ref)}>
+                    <div class="row">
+                    <div class="column" style={{backgroundColor: "#222A1A"}}>
+                     <div className="login">
+                      <div className="container" ref={ref => (this.container = ref)}>
                         {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
                         {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
                       </div>
@@ -224,8 +225,14 @@ class App extends Component {
                           currentActive={currentActive}
                           containerRef={ref => (this.rightSide = ref)}
                           onClick={this.changeState.bind(this)}
-                        /> */}<About/>
-                    </div>
+                        /></div>
+                        </div>
+                        <div class="column" style={{backgroundColor: "grey"}}>  
+                          <div className="carosal">
+                           <About/>
+                          </div>
+                        </div>                   
+                     </div>
                   </Route>
                 </Switch>
               </Col>

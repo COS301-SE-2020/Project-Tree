@@ -7,7 +7,7 @@ import logo from './Images/Logo.png';
 class About extends Component{
     render(){
         return(
-            <Carousel className="bg-dark">
+            <Carousel className="bg-dark" style={{ borderRadius: "60"}}>
                 <Carousel.Item>
                     <img src={logo} alt="Logo" style={{width:"500px"}}/>
                     <Carousel.Caption>
