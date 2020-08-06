@@ -14,7 +14,7 @@ import s5 from './Images/S5.png';
 class About extends Component{
     render(){
         return(
-            <Carousel >
+            <Carousel>
                 <Carousel.Item >
                     <img src={logo} alt="Logo"/>
                     <Carousel.Caption>

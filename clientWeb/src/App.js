@@ -214,7 +214,7 @@ class App extends Component {
                   <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
                     <div class="row">
-                    <div class="column" style={{backgroundColor: "#222A1A"}}>
+                    <div class="column" style={{backgroundColor: "white"}}>
                      <div className="login">
                       <div className="container" ref={ref => (this.container = ref)}>
                         {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
@@ -227,7 +227,7 @@ class App extends Component {
                           onClick={this.changeState.bind(this)}
                         /></div>
                         </div>
-                        <div class="column" style={{backgroundColor: "grey"}}>  
+                        <div class="column">  
                           <div className="carosal">
                            <About/>
                           </div>
