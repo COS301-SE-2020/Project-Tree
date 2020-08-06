@@ -63,7 +63,7 @@ class SideBar extends React.Component {
     });
 
     return (
-      <Container className="py-1">
+      <Container className="py-1" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
         <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/> 
         {listItems} 
       </Container>

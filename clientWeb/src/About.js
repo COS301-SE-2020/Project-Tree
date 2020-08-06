@@ -1,5 +1,5 @@
 import React, { Component} from "react";
-import { Container, Row, Col, Navbar, Carousel, Button  } from "react-bootstrap";
+import { Carousel  } from "react-bootstrap";
 import logo from './Images/Logo.png';
 
 

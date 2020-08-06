@@ -1,6 +1,5 @@
 import React from "react";
-import { Form, Container, Row, Col, Card } from "react-bootstrap";
-import $ from "jquery";
+import { Form, Container, Row, Col } from "react-bootstrap";
 import './Project.css'
 
 class TaskInfo extends React.Component{
@@ -168,7 +167,7 @@ class TaskInfo extends React.Component{
                         this.value = this.state.taskType;
                       }}
                     >
-                      <option value="Critical Path">Critical Path Tasks</option>
+                      <option value="CriticalPath">Critical Path Tasks</option>
                       <option value="Incomplete">Incomplete tasks</option>
                       <option value="Complete">Complete tasks</option>
                       <option value="Issue">Issue Tasks</option>

@@ -5,7 +5,7 @@ import $ from "jquery";
 import dagre from "dagre";
 import graphlib from "graphlib";
 import CreateDependency from "./Dependency/CreateDependency";
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
 
 function makeLink(edge, criticalPathLinks) {
@@ -109,7 +109,16 @@ var paper = null;
 class Graph extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { graph: null, paper: null, criticalPath: this.props.criticalPath };
+    this.state = { 
+      graph: null, 
+      paper: null, 
+      createTask: false,
+      createDependency: false,
+      graphScale: 1,
+      source: null,
+      target: null,
+      alert: null,
+      displayCriticalPath:true };
     this.handleClick = this.handleClick.bind(this);
     this.drawGraph = this.drawGraph.bind(this);
     this.addTask = this.addTask.bind(this);
@@ -122,14 +131,6 @@ class Graph extends React.Component {
     this.closeCreateDependency = this.closeCreateDependency.bind(this);
     this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
     this.clearDependency = this.clearDependency.bind(this);
-    this.state = {
-      createTask: false,
-      createDependency: false,
-      graphScale: 1,
-      source: null,
-      target: null,
-      alert: null,
-    };
   }
 
   recDepCheck(curr, target) {
@@ -279,7 +280,7 @@ class Graph extends React.Component {
   }
 
   render() {
-    if(this.props.displayCriticalPath){
+    if(this.state.displayCriticalPath){
       $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
           this.drawGraph(response);
       })
@@ -297,7 +298,7 @@ class Graph extends React.Component {
       dependency = this.state.source.name + "→";
     }
 
-    if(this.props.displayCriticalPath){
+    if(this.state.displayCriticalPath){
       $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
           this.drawGraph(response);
       })
@@ -308,10 +309,9 @@ class Graph extends React.Component {
   
     return (
       <React.Fragment>
-        <Container className="text-center py-2">
+        <Container className="text-center py-2" fluid>
           <Row>
-            <Col></Col>
-            <Col xs={6}>
+            <Col className="alignSelfCenter">
               {this.state.alert != null ? (
                 <Row>
                   Please select another node that is not higher in the same
@@ -343,6 +343,20 @@ class Graph extends React.Component {
                     </Button>
                   </Col>
                 ) : null}
+                <Col xs={4}>
+                  <Form>
+                    <Form.Check 
+                      type="switch" 
+                      id="switchEnabled"
+                      label="Display Critical Path"  
+                      checked={this.state.displayCriticalPath}
+                      onChange={e => {
+                        this.setState({ displayCriticalPath: e.target.checked });
+                        this.checked = this.state.displayCriticalPath;
+                      }}
+                    />
+                  </Form>
+                </Col>
                 <Col className="text-center">
                   <Button
                     variant="outline-secondary"
@@ -375,7 +389,6 @@ class Graph extends React.Component {
                 </Col>
               </Row>
             </Col>
-            <Col></Col>
           </Row>
         </Container>
         <div

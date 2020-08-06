@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Table, Button, Container, Row, Col } from 'react-bootstrap'
+import { Button, Container, Row, Col } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
@@ -7,35 +7,42 @@ import UpdateTask from "./Task/UpdateTask";
 import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
+import $ from "jquery";
 
 class GraphPage extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {task:null, dependency:null, nodes:null, links:null, displayCriticalPath:true};
-        this.toggleSidebar = this.toggleSidebar.bind(this);
-        this.setTaskInfo = this.setTaskInfo.bind(this);
-        this.getProjectInfo = this.getProjectInfo.bind(this);
-    }
-
-  async componentDidMount() {
-    const response = await fetch("/getProject", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: this.props.project.id }),
-    });
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    this.setState({ nodes: body.tasks, links: body.rels });
+  constructor(props) {
+    super(props);
+    this.state = { project: this.props.project, task:null, dependency:null, nodes:null, links:null};
+    this.toggleSidebar = this.toggleSidebar.bind(this);
+    this.setTaskInfo = this.setTaskInfo.bind(this);
+    this.getProjectInfo = this.getProjectInfo.bind(this);
   }
 
-  async getProjectInfo() {
+  componentDidMount() {
+    $.post( "/getProject", {id: this.state.project.id} , response => {
+      this.setState({ nodes: response.tasks, links: response.rels });
+    })
+    .fail(err => {
+      throw Error(err);
+    });
+  }
+
+  componentDidUpdate(prevProps){
+    if (this.props.project !== prevProps.project) {
+      $.post( "/getProject", {id: this.props.project.id} , response => {
+        this.setState({ project: this.props.project, nodes: response.tasks, links: response.rels });
+      })
+      .fail(err => {
+        throw Error(err);
+      })
+    }
+  }
+
+  getProjectInfo() {
     return { nodes: this.state.nodes, rels: this.state.links };
   }
 
-  async setTaskInfo(nodes, rels, displayNode, displayRel) {
+  setTaskInfo(nodes, rels, displayNode, displayRel) {
     if (nodes !== undefined && rels !== undefined) {
       this.setState({ nodes: nodes, links: rels });
 
@@ -45,19 +52,12 @@ class GraphPage extends React.Component{
 
       return;
     }
-
-    const response = await fetch("/getProject", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: this.props.project.id }),
-    });
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-
-    this.setState({ nodes: body.tasks, links: body.rels });
+    $.post( "/getProject", { id: this.state.project.id } , response => {
+      this.setState({ nodes: response.tasks, links: response.rels });
+    })
+    .fail(err => {
+      throw Error(err);
+    })    
   }
 
   toggleSidebar(newTaskID, newDependencyID) {
@@ -91,35 +91,26 @@ class GraphPage extends React.Component{
         <Container fluid className="h-100">
           <Row className="h-100">
             <Col className="text-center block-example border border-secondary bg-light">
-              <br />
-              <ProjectDetails
-                toggleGraphPage={this.props.toggleGraphPage}
-                project={this.props.project}
-              />
-              {this.state.source != null ? (
-                <Button
-                  size="sm"
-                  variant="outline-secondary"
-                  onClick={() => this.toggleCreateDependency(null)}
-                >
-                  X
-                </Button>
-              ) : null}
-              <Button size="sm" variant="secondary" block>
-              <Form>
-                                <Form.Check 
-                                    type="switch" 
-                                    id="switchEnabled"
-                                    label="Display Critical Path"  
-                                    checked={this.state.displayCriticalPath}
-                                    onChange={e => {
-                                        this.setState({ displayCriticalPath: e.target.checked });
-                                        this.checked = this.state.displayCriticalPath;
-                                    }}
-                                />
-                            </Form>
-              </Button>
-              <br />{" "}
+              <Container>
+                <Row>
+                  <Col>
+                    <Link to="/project">
+                      <Button
+                        variant="light"
+                        size="sm"
+                        className="text-left align-items-top"
+                      >
+                        <i className="fa fa-arrow-left"></i>
+                      </Button>
+                    </Link>
+                  </Col>
+                  <Col xs={6} md={6} lg={6} xl={6} className="text-center">
+                    <h3>{this.props.project.name}</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+              </Container>
+              <hr></hr>
               {this.state.task !== null ? (
                 <TaskSidebar
                   task={this.state.task}
@@ -148,98 +139,17 @@ class GraphPage extends React.Component{
             >
               {this.state.nodes !== null ? (
                 <Graph
-                  project={this.props.project}
+                  project={this.state.project}
                   nodes={this.state.nodes}
                   links={this.state.links}
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
                   getProjectInfo={this.getProjectInfo}
-                  displayCriticalPath={this.state.displayCriticalPath}
                 />
               ) : null}
             </Col>
           </Row>
         </Container>
-      </React.Fragment>
-    );
-  }
-}
-
-class ProjectDetails extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { permissions: false };
-    this.togglePermissions = this.togglePermissions.bind(this);
-    this.permissionsTable = this.permissionsTable.bind(this);
-  }
-
-  togglePermissions() {
-    this.setState({ permissions: !this.state.permissions });
-  }
-
-  permissionsTable() {
-    return (
-      <Table className="mt-2" striped bordered size="sm" variant="light">
-        <tbody>
-          <tr>
-            <td></td>
-            <td>Create </td>
-            <td>Delete </td>
-            <td>Update </td>
-          </tr>
-          <tr>
-            <td>Package Manager</td>
-            <td>{this.props.project.permissions[0] === true ? "X" : null}</td>
-            <td>{this.props.project.permissions[1] === true ? "X" : null}</td>
-            <td>{this.props.project.permissions[2] === true ? "X" : null}</td>
-          </tr>
-          <tr>
-            <td>Responsible Person</td>
-            <td>{this.props.project.permissions[3] === true ? "X" : null}</td>
-            <td>{this.props.project.permissions[4] === true ? "X" : null}</td>
-            <td>{this.props.project.permissions[5] === true ? "X" : null}</td>
-          </tr>
-          <tr>
-            <td>Resource</td>
-            <td>{this.props.project.permissions[6] === true ? "X" : null}</td>
-            <td>{this.props.project.permissions[7] === true ? "X" : null}</td>
-            <td>{this.props.project.permissions[8] === true ? "X" : null}</td>
-          </tr>
-        </tbody>
-      </Table>
-    );
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <Container>
-          <Row>
-            <Col>
-              <br />{" "}
-              <Link to="/project">
-                <Button
-                  variant="light"
-                  size="sm"
-                  className="text-left align-items-top"
-                >
-                  <i className="fa fa-arrow-left"></i>
-                </Button>
-              </Link>
-            </Col>
-            <Col xs={6} md={6} lg={6} xl={6} className="text-center">
-              <h3>{this.props.project.name}</h3>
-              <p>{this.props.project.description}</p>
-            </Col>
-            <Col></Col>
-          </Row>
-        </Container>
-
-        <Button variant="dark" block size="sm" onClick={this.togglePermissions}>
-          Permissions {this.state.permissions ? "\u25B4" : "\u25BE"}
-        </Button>
-        {this.state.permissions ? <this.permissionsTable /> : null}
-        <hr></hr>
       </React.Fragment>
     );
   }

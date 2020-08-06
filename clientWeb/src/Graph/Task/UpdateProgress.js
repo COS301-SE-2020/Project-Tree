@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button, ButtonGroup } from "react-bootstrap";
+import { Form, Modal, Button } from "react-bootstrap";
 
 class UpdateProgress extends React.Component {
   constructor(props) {

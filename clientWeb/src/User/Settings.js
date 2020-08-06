@@ -1,6 +1,5 @@
 import React from "react";
-import { Form, Table, Modal, Button, Col, Row, Container} from "react-bootstrap";
-import $ from "jquery";
+import { Modal, Button, Col, Row, Container} from "react-bootstrap";
 
 class Settings extends React.Component {
   constructor() {
