@@ -89,42 +89,9 @@ function register(req,res){ //email, password, name, surname
 
 function updateInfo()
 {
-
+    
 }
 
-// function verify(req, res){
-//    // console.log(req.body.token)
-//     try {
-//         //console.log("user")
-//         var user = JWT.verify(req.body.token, process.env.ACCESS_TOKEN_SECRET, { maxAge: 1440 });
-//         var milliseconds = +new Date;        
-//         var seconds = milliseconds / 1000;
-//         console.log(seconds)
-//         console.log(user)
-//         if(seconds - user.iat > 86400)
-//             res.send(null)
-//         db.getSession()
-//         .run(`
-//                 Match (n:User { email: "${user.email}" })
-//                 RETURN n
-//             `)
-//         .then(result => {
-//             //console.log(result.records[0]._fields[0].properties.password, " == ", user.hash)
-//             if(user.password == result.records[0]._fields[0].properties.hash){
-//                 res.send({
-//                     id :  result.records[0]._fields[0].identity.low
-//                 });
-//             }
-//         })
-//         .catch(err => 
-//         {
-//             res.send(null);
-//         });
-//     } catch (err) 
-//     {
-//         res.send(null);
-//     }
-// }
 
 async function verify(token)
 {
