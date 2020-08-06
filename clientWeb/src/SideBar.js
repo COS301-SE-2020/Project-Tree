@@ -19,7 +19,7 @@ class SideBar extends React.Component {
           className="m-1"
           style={{width: "100%"}}
           key={project.id}>
-          <Col style={{position: "absolute", overflowY: "hidden"}}>
+          <Col style={{}}>
             <Container fluid className="block-example bg-secondary rounded border border-dark" style={{fontFamily:"Courier New", color: "black"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">

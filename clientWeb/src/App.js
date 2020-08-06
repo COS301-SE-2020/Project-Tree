@@ -189,7 +189,7 @@ class App extends Component {
                   <Route exact path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
                     <div className="login">
-                      {/* <div className="container" ref={ref => (this.container = ref)}>
+                      <div className="container" ref={ref => (this.container = ref)}>
                         {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
                         {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
                       </div>
@@ -198,7 +198,7 @@ class App extends Component {
                           currentActive={currentActive}
                           containerRef={ref => (this.rightSide = ref)}
                           onClick={this.changeState.bind(this)}
-                        /> */}<About/>
+                        /><About/>
                     </div>
                   </Route>
                 </Switch>

@@ -93,7 +93,7 @@ class TaskInfo extends React.Component{
             }
           });
         }
-        if (list[0] === 'no critical path ' || list[0] === 'no late tasks') {
+        if (list[0] === 'no critical path to Display' || list[0] === 'no late tasks to display') {
           return (list[0]);
         } else {
           list.forEach((el, i) => {
