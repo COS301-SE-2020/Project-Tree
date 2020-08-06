@@ -34,7 +34,6 @@ app.post('/getProject', gq.getProjectTasks);
 // 	res.render(__dirname +'/GraphMobile',{info:"hello"})
 // });
 app.post("/mobile", async (req, res) => {
-	console.log(req.body.nodes)
 	taskArr = req.body.nodes
 	relArr = req.body.links
 	res.render("GraphMobile", {

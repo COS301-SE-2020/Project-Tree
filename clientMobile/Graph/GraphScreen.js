@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, BackHandler, TouchableOpacity, StyleSheet, Text } from 'react-native'
+import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions } from 'react-native'
 import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
 import { WebView } from 'react-native-webview';
 import ProjectModal from './GraphProjectModal';
@@ -66,6 +66,7 @@ class GraphScreen extends Component{
     }
 
     render(){
+        
         if(this.props.project == null){
             return(
                 <View>
@@ -97,6 +98,27 @@ class GraphScreen extends Component{
 }
 
 class WebViewWrapper extends Component{
+    constructor(props){
+        super(props);
+        this.handleOnMessage = this.handleOnMessage.bind(this);
+    }
+
+    handleOnMessage(event){
+        let message = event.nativeEvent.data;
+        
+        if(message[0] === 'n'){
+            this.props.displayTaskDependency(parseInt(message.substr(1)), null)
+        }
+        
+        else if(message[0] === 'l'){
+            console.log(message);
+        }
+
+        else{
+            console.log(message)
+        }
+    }
+
     render(){
         return(
             <WebView
@@ -107,15 +129,21 @@ class WebViewWrapper extends Component{
                 source={{uri:'http://10.0.2.2:5000/mobile',
                         method: 'POST',
                         body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+''}}
-                onMessage={event => this.props.displayTaskDependency(parseInt(event.nativeEvent.data), null)}
+                onMessage={event => this.handleOnMessage(event)}
             />
         );
     }
 }
       
+let deviceWidth = Math.round(Dimensions.get('window').width);
+let deviceHeight = Math.round(Dimensions.get('window').height)-30;
+
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        width: deviceWidth,
+        height: 750,
+        marginBottom: 190,
+        marginTop: 150
     }
 });
 

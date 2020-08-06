@@ -52,11 +52,29 @@
             interactive: false
         });
 
-        paper.on('element:pointerdown', (event) => {handleNodeClick(event.model.id)});
+        paper.on('element:pointerdown', (event) => {handleDownNodeClick()});
+        paper.on('element:pointerup', (event) => {handleUpNodeClick(event.model.id)})
+        paper.on('link:pointerdown', (event) => {handleLinkClick(event.model.id)});
         
-        function handleNodeClick(input){
+        var initialDownClick = null;
+        function handleDownNodeClick(){
             nodeTouch = true;
-            window.ReactNativeWebView.postMessage(input);
+            initialDownClick = performance.now();
+        }
+
+        function handleUpNodeClick(input){
+            if((performance.now()-initialDownClick) < 600){
+                window.ReactNativeWebView.postMessage('n'+input);
+            }
+
+            else{
+                window.ReactNativeWebView.postMessage('c'+input);
+            }
+        }
+
+        function handleLinkClick(input){
+            nodeTouch = true;
+            window.ReactNativeWebView.postMessage('l'+input);
         }
 
         paper.on('blank:pointerdown', (event, x, y) =>{
@@ -92,7 +110,7 @@
         
         function makeLink(edge) {
             return new joint.shapes.standard.Link({
-                id:"l"+edge.id,
+                id:edge.id,
                 source: { id: edge.source },
                 target: { id: edge.target },
                 attrs: {
