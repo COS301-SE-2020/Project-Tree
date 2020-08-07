@@ -5,7 +5,11 @@ import './Project.css'
 class TaskInfo extends React.Component{
     constructor(props){
         super(props);
-        this.state = { project: this.props.project, tasks: this.props.tasks, criticalPath: this.props.criticalPath, taskType: "CriticalPath"};
+        this.state = { 
+          project: this.props.project, 
+          tasks: this.props.tasks, 
+          criticalPath: this.props.criticalPath, 
+          taskType: "CriticalPath"};
     }
 
     componentDidMount(){

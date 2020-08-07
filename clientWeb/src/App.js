@@ -186,7 +186,7 @@ class App extends Component {
                 <Col  xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto", backgroundColor: "#184D47" }}>
                   <SideBar closeSideBar={() => this.closeSideBar()} projects={this.state.projects} setProject={project => this.setProject(project)}/>
                 </Col>
-              ) : null}              
+              ) : null}
               <Col>  
                 <Switch>
                   <Route path="/project" component={ProjectPage}>
@@ -211,8 +211,8 @@ class App extends Component {
                   </Route>
                   <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
-                    <div class="row">
-                    <div class="column" style={{backgroundColor: "white"}}>
+                    <div className="row">
+                    <div className="column" style={{backgroundColor: "white"}}>
                      <div className="login">
                       <div className="container" ref={ref => (this.container = ref)}>
                         {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
@@ -225,7 +225,7 @@ class App extends Component {
                           onClick={this.changeState.bind(this)}
                         /></div>
                         </div>
-                        <div class="column">  
+                        <div className="column">  
                           <div className="carosal">
                            <About/>
                           </div>

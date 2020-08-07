@@ -7,14 +7,10 @@ import "./App.scss";
 import CreateProject from "./Project/CreateProject";
 
 class SideBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { projects: this.props.projects};
-  }
 
   OwnedProjects(){
     const OwnedProjects = [];
-    this.state.projects.forEach(project => {
+    this.props.projects.forEach(project => {
       OwnedProjects.push(
         <Row 
           noGutters
@@ -68,7 +64,7 @@ class SideBar extends React.Component {
 
   OtherProjects(){
     const OtherProjects = [];
-    this.state.projects.forEach(project => {
+    this.props.projects.forEach(project => {
       OtherProjects.push(
         <Row 
           noGutters
@@ -121,7 +117,7 @@ class SideBar extends React.Component {
   }
 
   render() {
-    if (this.state.projects === undefined) return null;
+    if (this.props.projects === undefined) return null;
     
 
     return (

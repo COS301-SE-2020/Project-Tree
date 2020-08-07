@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import ProjectInfo from "./ProjectInfo";
 import TaskInfo from "./TaskInfo";
 import $ from "jquery";
-import ProgressDashboard from "./ProgressDashboard";
+import ProjectDashboard from "./ProjectDashboard";
 
 class ProjectPage extends React.Component {
   constructor(props) {
@@ -13,13 +13,13 @@ class ProjectPage extends React.Component {
   }
 
   componentDidMount(){
-    $.post( "/project/projecttasks", {projId: this.state.project.id} , response => {
+    $.post( "/project/projecttasks", {projId: this.props.project.id} , response => {
       this.setState({tasks: response.tasks})
     })
     .fail(() => {
         alert( "Unable to get tasks" );
     })
-    $.post( "/project/criticalpath", {projId: this.state.project.id} , response => {
+    $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
       this.setState({criticalPath: response})
     })
     .fail(() => {
@@ -51,11 +51,13 @@ class ProjectPage extends React.Component {
     return (
       <Container fluid className="py-2" style={{height: "40%"}}>
         <Row className="m-2">
-          <Col sm={12} md={6} xl={4}><ProjectInfo project={this.state.project} setProject={project => this.props.setProject(project)}/></Col>
-          <Col sm={12} md={6} xl={8} style={{border: "black solid 1px"}}> <ProgressDashboard/></Col>
+          <Col sm={12} md={6} xl={4}><ProjectInfo project={this.props.project} setProject={project => this.props.setProject(project)}/></Col>
+          <Col sm={12} md={6} xl={8} style={{border: "black solid 1px"}}> 
+            <ProjectDashboard project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
+          </Col>
         </Row>
         <Row style={{height: "100%"}} className="m-1" >
-          <Col xs={12} sm={12}><TaskInfo project={this.state.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/></Col>
+          <Col xs={12} sm={12}><TaskInfo project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/></Col>
         </Row>
       </Container>
     );
