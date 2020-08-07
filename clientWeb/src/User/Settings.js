@@ -41,12 +41,14 @@ class Settings extends React.Component {
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
             <Modal.Header closeButton>
-              <Modal.Title className="align-items-centers"> </Modal.Title> 
+              <Modal.Title className=""> </Modal.Title> 
             </Modal.Header>
             <Modal.Body>
-             {this.props.user.name}
-             {this.props.user.sname}
-             {this.props.user.email}
+              <Container>
+                <Row>Name: {this.props.user.name}</Row>
+                <Row>Surname: {this.props.user.sname}</Row>
+                <Row>Email: {this.props.user.email}</Row>
+              </Container>
             </Modal.Body>
               <Container>
                 <Row>
