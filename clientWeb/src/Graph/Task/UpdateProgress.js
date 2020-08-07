@@ -60,7 +60,7 @@ class UpdateProgress extends React.Component {
 
     return (
       <React.Fragment>
-        <Button className="btn-light" onClick={this.showModal}>
+        <Button className="border-dark bg-white ml-3" onClick={this.showModal}>
           <i className="fa fa-edit"> </i> Update Progress{" "}
         </Button>
         <Modal show={this.state.Show} onHide={this.hideModal}>

@@ -348,6 +348,7 @@ class Graph extends React.Component {
                     <Form.Check 
                       type="switch" 
                       id="switchEnabled"
+                      className="border rounded border-secondary pb-1"
                       label="Display Critical Path"  
                       checked={this.state.displayCriticalPath}
                       onChange={e => {
