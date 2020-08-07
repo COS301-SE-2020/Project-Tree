@@ -92,6 +92,40 @@ function updateInfo()
     
 }
 
+async function getUser(req,res)
+{
+    let creator = await verify(req.body.creatorID);
+    if(creator!=null)
+    {
+        db.getSession()
+        .run(
+        `
+        MATCH (u:User) WHERE ID(u) = ${creator} 
+        RETURN u
+        `
+        )
+        .then(result => {
+            let user={
+                id: result.records[0]._fields[0].identity.low,
+                name: result.records[0]._fields[0].properties.name,
+                sname: result.records[0]._fields[0].properties.sname,
+                email: result.records[0]._fields[0].properties.email,
+            }
+            res.status(200);
+            res.send({user});
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send(err);
+          });
+    }
+    else
+    {
+        res.status(400)
+        res.send({user:null})
+    }
+}
 
 async function verify(token)
 {
@@ -141,5 +175,6 @@ module.exports =
     login,
     register,
     updateInfo,
-    verify
+    verify,
+    getUser
 };

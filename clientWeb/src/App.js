@@ -73,6 +73,13 @@ class App extends Component {
       }).fail((response) => {
         throw Error(response.message);
     });
+
+    $.post("/user/get", {creatorID: token}, (response) => {
+      this.setState({user: response.user });
+      }).fail((response) => {
+        throw Error(response.message);
+    });
+
    }
   
   
@@ -180,7 +187,7 @@ class App extends Component {
               </Nav.Link>
             </Nav>
             <Nav className="form-inline">
-                <Settings/>
+                <Settings user={this.state.user}/>
             </Nav>
           </Navbar>
           <Container fluid style={{height: "100%"}}>
