@@ -12,13 +12,13 @@ class UpdateProject extends Component{
 
     render(){
         return(
-            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={() => this.props.setModalVisible(!this.props.modalVisible,false)}>
+            <Modal animationType="fade" transparent={true} visible={this.props.modalVisible} onRequestClose={() => this.props.setModalVisible(!this.props.modalVisible,false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
+                        <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(!this.props.modalVisible,false)}>
+                            <Icon type="FontAwesome" name="close" />
+                        </TouchableOpacity>
                         {this.props.project !== undefined ? <CreateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible} project={this.props.project} /> : null}
-                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(!this.props.modalVisible,false)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight>
                     </View>
                 </View>
             </Modal>
@@ -111,12 +111,12 @@ class CreateProjectForm extends Component{
                     </Item>
                 </Form>
                 <PermissionsTable tableFormData={this.state.tableFormData} setElementClicked={this.setElementClicked}/>
-                <View style={{ padding: 5 }}>
-                    <StyleProvider style={getTheme(buttonStyling)}>
-                        <Button block light onPress={this.handleSubmit}>
-                            <Text>Submit</Text>
-                        </Button>
-                    </StyleProvider>
+                <View styles={{padding:10}}>
+                    <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
+                        <Text>
+                            Submit
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </React.Fragment>
         );
@@ -128,36 +128,70 @@ class PermissionsTable extends Component{
         const elementButton = (value, index) => (
             <TouchableOpacity onPress={() => this.props.setElementClicked(index)}>
                 <View style={styles.btn}>
-                    <Text style={styles.btnText}>{value}</Text>
+                    <Text style={styles.text}>{value}</Text>
                 </View>
             </TouchableOpacity>
         );
 
+        let tableHead = ['', 'Create', 'Delete', 'Update']
         let tableData = [
-            ['', 'Package Managers', 'Responsible Persons', 'Resources'],
-            ['Create', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[6], 6)],
-            ['Delete', elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[7], 7)],
-            ['Update', elementButton(this.props.tableFormData[2], 2), elementButton(this.props.tableFormData[5], 5), elementButton(this.props.tableFormData[8], 8)]
-        ]
+                ['Package Managers', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[6], 6)],
+                ['Responsible Persons', elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[7], 7)],
+                ['Resources', elementButton(this.props.tableFormData[2], 2), elementButton(this.props.tableFormData[5], 5), elementButton(this.props.tableFormData[8], 8)]
+            ];
 
         return (
             <View style={styles.container}>
-                <Table style={{flexDirection: 'row'}} borderStyle={{borderWidth: 1}}>
-                    <TableWrapper style={{flex:1}}>
-                        <Cols data={tableData} heightArr={[40, 30, 30, 30, 30]} textStyle={styles.text}/>
+                <Table borderStyle={{borderWidth:1}}>
+                    <Row data={tableHead} flexArr={[2,1,1,1]} style={styles.head} textStyle={styles.text}/>
+                    <TableWrapper style={styles.wrapper}>
+                            <Rows data={tableData} flexArr={[2,1,1,1]} style={styles.row} textStyle={styles.text}/>
                     </TableWrapper>
                 </Table>
             </View>
         )
     }
+    // render() {
+    //     const elementButton = (value, index) => (
+    //         <TouchableOpacity onPress={() => this.props.setElementClicked(index)}>
+    //             <View style={styles.btn}>
+    //                 <Text style={styles.btnText}>{value}</Text>
+    //             </View>
+    //         </TouchableOpacity>
+    //     );
+
+    //     let tableData = [
+    //         ['', 'Package Managers', 'Responsible Persons', 'Resources'],
+    //         ['Create', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[6], 6)],
+    //         ['Delete', elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[7], 7)],
+    //         ['Update', elementButton(this.props.tableFormData[2], 2), elementButton(this.props.tableFormData[5], 5), elementButton(this.props.tableFormData[8], 8)]
+    //     ]
+
+    //     return (
+    //         <View style={styles.container}>
+    //             <Table style={{flexDirection: 'row'}} borderStyle={{borderWidth: 1}}>
+    //                 <TableWrapper style={{flex:1}}>
+    //                     <Cols data={tableData} heightArr={[40, 30, 30, 30, 30]} textStyle={styles.text}/>
+    //                 </TableWrapper>
+    //             </Table>
+    //         </View>
+    //     )
+    // }
 }
 
 const styles = StyleSheet.create({
     centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22,
+        // flex: 1,
+        // justifyContent: "center",
+        // alignItems: "center",
+        // marginTop: 22,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(100,100,100, 0.8)',
+        padding: 20,
     },
     modalView: {
         margin: 20,
@@ -195,7 +229,47 @@ const styles = StyleSheet.create({
     wrapper: { flexDirection: 'row' },
     title: { flex: 1, backgroundColor: '#f6f8fa' },
     row: {  height: 40  },
-    text: { margin: 6, textAlign: 'center' }
+    text: { margin: 6, textAlign: 'center' },
+    hideButton:{
+        flex:0.15,
+        backgroundColor:'#fff',
+        alignItems:'flex-end',
+        marginRight:10,
+        marginTop:10
+    },
+    submitButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        margin:3,
+    },
+    ontainer:{
+        flex:1,
+        paddingTop:20,
+        backgroundColor:'#fff',
+    },
+    head:{
+        height:40,
+        backgroundColor:'#96BB7C',
+    },
+    wrapper:{
+        flexDirection:'row'
+    },
+    row:{
+        height:40
+    },
 });
 
 export default UpdateProject

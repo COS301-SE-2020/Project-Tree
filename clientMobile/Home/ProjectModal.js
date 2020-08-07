@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, Button } from "react-native";
+import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity } from "react-native";
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import { Icon } from 'native-base';
 import DeleteProject from './DeleteProject'
@@ -7,46 +7,54 @@ import DeleteProject from './DeleteProject'
 class ProjectModal extends Component {
     render() {
         const tableData = []
+        const tempData = ['Package Managers',null,null,null,'Responsible Persons',null,null,null,'Resources',null,null,null]
         const tempArr = []
         for(let x = 0; x < this.props.project.permissions.length; x++){
             if(this.props.project.permissions[x] === true){
-                tempArr.push("x")
+                tempArr.push('x')
             }
             else{
-                tempArr.push("")
+                tempArr.push('')
             }
         }
 
-        while(tempArr.length) tableData.push(tempArr.splice(0,3));
+        let tempIndex = 0
+        for(let x = 0; x < tempData.length; x++){
+            if(tempData[x] === null){
+                tempData[x] = tempArr[tempIndex];
+                tempIndex++;
+            }
+        }
+
+        while(tempData.length) tableData.push(tempData.splice(0,4));
 
         return (
-            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={()=>this.props.setModalVisible(!this.props.modalVisible)}>
+            <Modal animationType="fade" transparent={true} visible={this.props.modalVisible} onRequestClose={()=>this.props.setModalVisible(!this.props.modalVisible)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
+                        <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
+                            <Icon type="FontAwesome" name="close" />
+                        </TouchableOpacity>
                         <Text style={styles.modalText}>{this.props.project.name}</Text>
                         <Text style={styles.modalText}>{this.props.project.description}</Text>
                         <View style={styles.container}>
-                            <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
-                                <Row data={["","Create","Delete","Update"]} style={styles.head} textStyle={styles.text}/>
+                            <Table borderStyle={{borderWidth:1}}>
+                                <Row data={['','Create','Delete','Update']} flexArr={[2,1,1,1]} style={styles.head} textStyle={styles.text}/>
                                 <TableWrapper style={styles.wrapper}>
-                                    <Col data={["Package Manager","Responsible Person","Resource"]} style={styles.title} heightArr={[40,40,40]} textStyle={styles.text}/>
-                                    <Rows data={ tableData } flexArr={[1, 1, 1]} style={styles.row} textStyle={styles.text}/>
+                                    <Rows data={tableData} flexArr={[2,1,1,1]} style={styles.row} textStyle={styles.text}/>
                                 </TableWrapper>
                             </Table>
                         </View>
-                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>{
+                        <TouchableOpacity style={styles.viewButton} onPress={()=>{
                                 this.props.setModalVisible(!this.props.modalVisible);
                                 this.props.setCurrentProject(this.props.project);
                             }}>
                             <Icon type="FontAwesome" name="eye"><Text>&nbsp;View</Text></Icon>
-                        </TouchableHighlight>
-                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(!this.props.modalVisible)}>
-                            <Icon type="FontAwesome" name="close" />
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                         <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} modalVisible={this.props.modalVisible} setModalVisible={this.props.setModalVisible}/>
-                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(!this.props.modalVisible,true)}>
+                        <TouchableOpacity style={styles.editButton} onPress={() => this.props.setModalVisible(!this.props.modalVisible,true)}>
                             <Icon type="FontAwesome" name="edit" ><Text>&nbsp;Edit</Text></Icon>
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -56,25 +64,29 @@ class ProjectModal extends Component {
 
 const styles = StyleSheet.create({
     centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(100,100,100, 0.8)',
+        padding: 20,
     },
     modalView: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
+        padding: 10,
         shadowColor: "#000",
         shadowOffset: {
-            width: 0,
+            width: 100,
             height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5
+        elevation: 5,
+        height: 650,
+        width: 350
     },
     openButton: {
         backgroundColor: "#F194FF",
@@ -91,12 +103,167 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: "center"
     },
-    container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
-    head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },
-    wrapper: { flexDirection: 'row' },
-    title: { flex: 1, backgroundColor: '#f6f8fa' },
-    row: {  height: 40  },
-    text: { margin: 6, textAlign: 'center' }
+    container:{
+        flex:1,
+        paddingTop:20,
+        backgroundColor:'#fff',
+    },
+    head:{
+        height:40,
+        backgroundColor:'#96BB7C',
+    },
+    wrapper:{
+        flexDirection:'row'
+    },
+    title:{
+        flex:1,
+        backgroundColor:'#f6f8fa'
+    },
+    row:{
+        height:40
+    },
+    text:{
+        margin:6, 
+        textAlign:'center'
+        
+    },
+    createButton:{
+        backgroundColor:'#fff',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:3
+    },
+    whiteText:{
+        color:'#fff'
+    },
+    blackText:{
+        color:'#000'
+    },
+    hideButton:{
+        flex:0.15,
+        backgroundColor:'#fff',
+        alignItems:'flex-end',
+        marginRight:10,
+        marginTop:10
+    },
+    viewButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        margin:3,
+    },
+    editButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        margin:3,
+    }
 });
+
+// const styles = StyleSheet.create({
+//     centeredView: {
+//         flex: 1,
+//         justifyContent: "center",
+//         alignItems: "center",
+//         marginTop: 22
+//     },
+//     modalView: {
+//         margin: 20,
+//         backgroundColor: "white",
+//         borderRadius: 20,
+//         padding: 10,
+//         alignItems: "center",
+//         shadowColor: "#000",
+//         shadowOffset: {
+//             width: 0,
+//             height: 2
+//         },
+//         shadowOpacity: 0.25,
+//         shadowRadius: 3.84,
+//         elevation: 5,
+//         height: 440,
+//         width: 350
+//     },
+//     openButton:{
+//         backgroundColor: "#F194FF",
+//         borderRadius: 20,
+//         padding: 10,
+//         elevation: 2
+//     },
+//     textStyle:{
+//         color: "white",
+//         fontWeight: "bold",
+//         textAlign: "center"
+//     },
+//     modalText:{
+//         marginBottom: 15,
+//         textAlign: "center"
+//     },
+//     container:{
+//         flex:1,
+//         paddingTop:20,
+//         backgroundColor:'#fff',
+//     },
+//     head:{
+//         height:40,
+//         backgroundColor:'#96BB7C',
+//     },
+//     wrapper:{
+//         flexDirection:'row'
+//     },
+//     title:{
+//         flex:1,
+//         backgroundColor:'#f6f8fa'
+//     },
+//     row:{
+//         height:40
+//     },
+//     text:{
+//         margin:6,
+//         textAlign:'center'
+//     },
+//     hideButton:{
+//         flex:0.15,
+//         backgroundColor:'#fff',
+//         alignItems:'flex-end',
+//         marginRight:10,
+//         marginTop:10
+//     },
+// });
 
 export default ProjectModal;

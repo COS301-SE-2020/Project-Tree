@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Alert, Modal, StyleSheet, Text, View, TouchableHighlight, TouchableOpacity } from "react-native";
 import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-import buttonStyling from '../native-base-theme/variables/buttonStylingProjList';
-import getTheme from '../native-base-theme/components';
 
 class CreateProject extends Component{
     constructor(props){
@@ -21,13 +19,11 @@ class CreateProject extends Component{
             <React.Fragment>
                 <CreateProjectModal modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.props.setProjectInfo}/>
                 <View style={{ padding: 5 }}>
-                    <StyleProvider style={getTheme(buttonStyling)}>
-                        <Button block dark onPress={()=>this.setModalVisible(true)}>
-                            <Text>
-                                Create Project
-                            </Text>
-                        </Button>
-                    </StyleProvider>
+                    <TouchableOpacity style={styles.createButton} onPress={()=>this.setModalVisible(true)}>
+                        <Text style={styles.buttonText}>
+                            Create Project
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </React.Fragment>
         )
@@ -37,13 +33,13 @@ class CreateProject extends Component{
 class CreateProjectModal extends Component{
     render(){
         return(
-            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={() => this.props.setModalVisible(false)}>
+            <Modal animationType="fade" transparent={true} visible={this.props.modalVisible} onRequestClose={() => this.props.setModalVisible(false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
+                        <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
+                            <Icon type="FontAwesome" name="close" />
+                        </TouchableOpacity>
                         <CreateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible}/>
-                        <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(false)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight>
                     </View>
                 </View>
             </Modal>
@@ -54,14 +50,14 @@ class CreateProjectModal extends Component{
 class CreateProjectForm extends Component{
     constructor(props){
 		super(props);
-        this.state = {projName:null, projDescription:null, tableFormData : [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']};
+        this.state = {projName:null, projDescription:null, tableFormData : ['', '', '', '', '', '', '', '', '']};
         this.setElementClicked = this.setElementClicked.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     setElementClicked(index){
         let array = this.state.tableFormData;
-        array[index] === ' ' ? array[index] = 'x' : array[index] = ' ';
+        array[index] === '' ? array[index] = 'x' : array[index] = '';
         this.setState({tableFormData:array});
     }
 
@@ -112,8 +108,7 @@ class CreateProjectForm extends Component{
         this.props.setProjectInfo(body)
     }
 
-    render()
-    {
+    render(){
         return(
             <React.Fragment>
                 <Form>
@@ -131,43 +126,42 @@ class CreateProjectForm extends Component{
                     </Item>
                 </Form>
                 <PermissionsTable tableFormData={this.state.tableFormData} setElementClicked={this.setElementClicked}/>
-                <View style={{ padding: 5 }}>
-                    <StyleProvider style={getTheme(buttonStyling)}>
-                        <Button block light onPress={this.handleSubmit}>
-                            <Text>
-                                Submit
-                            </Text>
-                        </Button>
-                    </StyleProvider>
+                <View styles={{padding:10}}>
+                    <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
+                        <Text>
+                            Submit
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </React.Fragment>
         );
     }
 }
 
-class PermissionsTable extends Component{
+class PermissionsTable extends Component{  
     render() {
         const elementButton = (value, index) => (
-          <TouchableOpacity onPress={() => this.props.setElementClicked(index)}>
-            <View style={styles.btn}>
-              <Text style={styles.btnText}>{value}</Text>
-            </View>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.setElementClicked(index)}>
+                <View style={styles.btn}>
+                    <Text style={styles.text}>{value}</Text>
+                </View>
+            </TouchableOpacity>
         );
 
-        tableData = [
-            [' ', 'Package Managers', 'Responsible Persons', 'Resources'],
-            ['Create', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[6], 6)],
-            ['Delete', elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[7], 7)],
-            ['Update', elementButton(this.props.tableFormData[2], 2), elementButton(this.props.tableFormData[5], 5), elementButton(this.props.tableFormData[8], 8)]
-        ]
+        let tableHead = ['', 'Create', 'Delete', 'Update']
+        let tableData = [
+                ['Package Managers', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[6], 6)],
+                ['Responsible Persons', elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[7], 7)],
+                ['Resources', elementButton(this.props.tableFormData[2], 2), elementButton(this.props.tableFormData[5], 5), elementButton(this.props.tableFormData[8], 8)]
+            ];
 
         return (
             <View style={styles.container}>
-                <Table style={{flexDirection: 'row'}} borderStyle={{borderWidth: 1}}>
-                <TableWrapper style={{flex:1}}>
-                    <Cols data={tableData} heightArr={[40, 30, 30, 30, 30]} textStyle={styles.text}/>
-                </TableWrapper>
+                <Table borderStyle={{borderWidth:1}}>
+                    <Row data={tableHead} flexArr={[2,1,1,1]} style={styles.head} textStyle={styles.text}/>
+                    <TableWrapper style={styles.wrapper}>
+                            <Rows data={tableData} flexArr={[2,1,1,1]} style={styles.row} textStyle={styles.text}/>
+                    </TableWrapper>
                 </Table>
             </View>
         )
@@ -176,10 +170,13 @@ class PermissionsTable extends Component{
 
 const styles = StyleSheet.create({
     centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(100,100,100, 0.8)',
+        padding: 20,
     },
     modalView: {
         margin: 20,
@@ -188,8 +185,8 @@ const styles = StyleSheet.create({
         padding: 10,
         shadowColor: "#000",
         shadowOffset: {
-        width: 100,
-        height: 2
+            width: 100,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
@@ -212,12 +209,78 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: "center"
     },
-    container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
-    head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },
-    wrapper: { flexDirection: 'row' },
-    title: { flex: 1, backgroundColor: '#f6f8fa' },
-    row: {  height: 40  },
-    text: { margin: 6, textAlign: 'center' }
+    container:{
+        flex:1,
+        paddingTop:20,
+        backgroundColor:'#fff',
+    },
+    head:{
+        height:40,
+        backgroundColor:'#96BB7C',
+    },
+    wrapper:{
+        flexDirection:'row'
+    },
+    title:{
+        flex:1,
+        backgroundColor:'#f6f8fa'
+    },
+    row:{
+        height:40
+    },
+    text:{
+        margin:6, 
+        textAlign:'center'
+        
+    },
+    createButton:{
+        backgroundColor:'#fff',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:3
+    },
+    whiteText:{
+        color:'#fff'
+    },
+    blackText:{
+        color:'#000'
+    },
+    hideButton:{
+        flex:0.15,
+        backgroundColor:'#fff',
+        alignItems:'flex-end',
+        marginRight:10,
+        marginTop:10
+    },
+    submitButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        margin:3,
+    }
 });
 
 export default CreateProject

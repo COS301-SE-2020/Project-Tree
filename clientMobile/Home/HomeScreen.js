@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
-import { Container, Header, Tab, Tabs, TabHeading, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
-import { Alert, Modal, StyleSheet, Text, View, TouchableHighlight } from "react-native";
-import buttonStyling from '../native-base-theme/variables/buttonStylingProjList';
-import getTheme from '../native-base-theme/components';
+import React, {Component} from 'react';
+import {Content} from 'native-base';
+import {Text, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import ProjectModal from './ProjectModal'
 import CreateProject from './CreateProject'
 import UpdateProject from './UpdateProject'
@@ -85,13 +83,13 @@ class ProjectList extends React.Component{
         const projects = this.props.projects;
         const listItems = projects.map((project, i) =>
             <View key={i} style={{ padding: 5 }}>
-                <StyleProvider style={getTheme(buttonStyling)}>
-                    <Button block light onPress={() => this.props.toggleActionSheet(project)}>
-                        <Text>
-                            {project.name}
-                        </Text>
-                    </Button>
-                </StyleProvider>
+                <TouchableOpacity 
+                    style={styles.projectButtons}
+                    onPress={() => this.props.toggleActionSheet(project)}>
+                    <Text style={styles.buttonText}>
+                        {project.name}
+                    </Text>
+                </TouchableOpacity>
             </View>
         );
 
@@ -104,47 +102,24 @@ class ProjectList extends React.Component{
 }
 
 const styles = StyleSheet.create({
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
+    projectButtons:{
+        backgroundColor:'#EEBB4D',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:1
         },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:3
     },
-    openButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-    },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center"
-    },
-    container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
-    head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },
-    wrapper: { flexDirection: 'row' },
-    title: { flex: 1, backgroundColor: '#f6f8fa' },
-    row: {  height: 40  },
-    text: { margin: 6, textAlign: 'center' }
-});
+    buttonText:{
+        color:'#000'
+    }
+})
 
 export default HomeScreen;

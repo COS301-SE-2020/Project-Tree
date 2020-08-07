@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, Button } from "react-native";
+import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View, Button } from "react-native";
 import { Icon } from 'native-base';
 
 export default class DeleteProject extends Component{ 
@@ -42,54 +42,30 @@ export default class DeleteProject extends Component{
     
     render(){
         return(
-            <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.deleteConfirmation()}>
-                <Icon type="FontAwesome" name="trash" />
-            </TouchableHighlight>
+            <TouchableOpacity style={styles.deleteButton} onPress={() => this.deleteConfirmation()}>
+                <Icon type="FontAwesome" name="trash"><Text>&nbsp;Delete</Text></Icon>
+            </TouchableOpacity>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-        width: 0,
-        height: 2
+    deleteButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
         },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5
-    },
-    openButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-    },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center"
-    },
-    container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
-    head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },
-    wrapper: { flexDirection: 'row' },
-    title: { flex: 1, backgroundColor: '#f6f8fa' },
-    row: {  height: 40  },
-    text: { margin: 6, textAlign: 'center' }
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        margin:3,
+    }
 });
