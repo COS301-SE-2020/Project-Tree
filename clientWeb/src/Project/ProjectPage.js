@@ -3,6 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import ProjectInfo from "./ProjectInfo";
 import TaskInfo from "./TaskInfo";
 import $ from "jquery";
+import ProgressDashboard from "./ProgressDashboard";
 
 class ProjectPage extends React.Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class ProjectPage extends React.Component {
       <Container fluid className="py-2" style={{height: "40%"}}>
         <Row className="m-2">
           <Col sm={12} md={6} xl={4}><ProjectInfo project={this.state.project} setProject={project => this.props.setProject(project)}/></Col>
-          <Col sm={12} md={6} xl={8} style={{border: "black solid 1px"}}>more project info</Col>
+          <Col sm={12} md={6} xl={8} style={{border: "black solid 1px"}}> <ProgressDashboard/></Col>
         </Row>
         <Row style={{height: "100%"}} className="m-1" >
           <Col xs={12} sm={12}><TaskInfo project={this.state.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/></Col>

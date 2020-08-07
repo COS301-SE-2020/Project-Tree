@@ -188,7 +188,7 @@ class TaskSidebar extends React.Component {
             </Col>
             <Col className="text-right">
               <Button
-                className="btn-light"
+                className="btn-light border-dark"
                 onClick={() => this.props.toggleSidebar(null, null)}
               >
                 <i className="fa fa-close"></i>

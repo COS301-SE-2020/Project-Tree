@@ -50,8 +50,8 @@ class ProjectInfo extends React.Component{
                       </Col>
                   </Row> 
                   <Row className="align-items-center py-2">
-                    <Col>
-                      <p>{this.state.project.description}</p>
+                    <Col className="align-items-center text-center">
+                      {this.state.project.description}
                     </Col>
                   </Row> 
                   <Row className="align-items-center py-2" >
