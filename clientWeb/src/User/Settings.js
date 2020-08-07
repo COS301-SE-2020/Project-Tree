@@ -41,14 +41,12 @@ class Settings extends React.Component {
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
             <Modal.Header closeButton>
-              <Modal.Title className="align-items-centers"> <i className="fa fa-cogs " style={{fontSize:"50px"}}></i></Modal.Title> 
+              <Modal.Title className="align-items-centers"> </Modal.Title> 
             </Modal.Header>
             <Modal.Body>
-              User Image <br/>
-              Name<br/>
-              Email<br/>
-              Person type<br/>
-              Picture
+             {this.props.user.name}
+             {this.props.user.sname}
+             {this.props.user.email}
             </Modal.Body>
               <Container>
                 <Row>

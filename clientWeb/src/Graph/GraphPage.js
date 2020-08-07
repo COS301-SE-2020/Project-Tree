@@ -88,9 +88,9 @@ class GraphPage extends React.Component{
   render() {
     return (
       <React.Fragment>
-        <Container fluid className="h-100">
+        <Container fluid style={{height:"100%", width: "100%"}}>
           <Row className="h-100">
-            <Col className="text-center block-example border border-secondary bg-light">
+            <Col className="text-center block-example border-right border-secondary bg-light">
               <Container>
                 <Row>
                   <Col>
@@ -172,7 +172,7 @@ class TaskSidebar extends React.Component {
 
     return (
       <React.Fragment>
-        <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
+        <Container className="text-dark text-center bg-light py-2">
           <Row className="text-center">
             <Col>
               {" "}
@@ -184,54 +184,53 @@ class TaskSidebar extends React.Component {
               />
             </Col>
             <Col xs={6}>
-              <h1>{this.props.task.name}</h1>
+              <h3>{this.props.task.name}</h3>
             </Col>
             <Col className="text-right">
               <Button
-                className="btn-dark"
+                className="btn-light"
                 onClick={() => this.props.toggleSidebar(null, null)}
               >
                 <i className="fa fa-close"></i>
               </Button>
             </Col>
           </Row>
-          <Row className="text-center">
-            <Col>
-              <p>{this.props.task.description}</p>
-            </Col>
+          <Row className="text-center align-items-center p-1">
+            <Col></Col>
+            <Col xs={8}>{this.props.task.description}</Col> 
+            <Col></Col>
+              
+          </Row>
+          <Row className="text-center p-1" >
+            <Col></Col>
+            <Col xs={8}>Start Date: {startDate}</Col> 
+            <Col></Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col></Col>
+            <Col xs={8}>End Date: {endDate}</Col> 
+            <Col></Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col></Col>
+            <Col xs={8}>Duration: {this.props.task.duration}</Col> 
+            <Col></Col>
+              
           </Row>
           <Row>
-            <Col>
-              <p>Start Date: {startDate}</p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <p>End Date: {endDate}</p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <p>Duration: {this.props.task.duration}</p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
               <UpdateTask
                 task={this.props.task}
                 setTaskInfo={this.props.setTaskInfo}
                 getProjectInfo={this.props.getProjectInfo}
                 toggleSidebar={this.props.toggleSidebar}
               />
-            </Col>
-            <Col>
               <UpdateProgress
                 task={this.props.task}
                 setTaskInfo={this.props.setTaskInfo}
                 toggleSidebar={this.props.toggleSidebar}
               />
-            </Col>
           </Row>
+          <hr/>
         </Container>
       </React.Fragment>
     );
@@ -253,7 +252,7 @@ class DependencySidebar extends React.Component {
 
     return (
       <React.Fragment>
-        <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
+        <Container className="text-black text-center py-2">
           <Row>
             <Col>
               <DeleteDependency
@@ -263,12 +262,12 @@ class DependencySidebar extends React.Component {
                 toggleSidebar={this.props.toggleSidebar}
               />
             </Col>
-            <Col xs={6}>
-              <h3>{start + "→" + end}</h3>
+            <Col xs={8}>
+              <h4>{start + "→" + end}</h4>
             </Col>
             <Col className="text-right">
               <Button
-                className="btn-dark"
+                className="btn-light border-dark"
                 onClick={() => this.props.toggleSidebar(null, null)}
               >
                 <i className="fa fa-close"></i>
@@ -276,18 +275,20 @@ class DependencySidebar extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col>
-              <p>
+            <Col></Col>
+            <Col xs={8}>
                 {this.props.dependency.relationshipType === "fs"
                   ? "Finish-Start"
                   : "Start-Start"}
-              </p>
             </Col>
+            <Col></Col>
           </Row>
           <Row>
-            <Col>
-              <p>Duration: {this.props.dependency.duration}</p>
+            <Col></Col>
+            <Col xs={8}>
+              Duration: {this.props.dependency.duration}
             </Col>
+            <Col></Col>
           </Row>
           <Row>
             <Col>
@@ -300,6 +301,7 @@ class DependencySidebar extends React.Component {
               />
             </Col>
           </Row>
+          <hr/>
         </Container>
       </React.Fragment>
     );

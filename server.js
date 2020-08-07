@@ -30,6 +30,7 @@ app.post("/getProject", gq.getProjectTasks);
 app.post('/login', um.login);
 app.post('/register', um.register);
 app.post('/verify', um.verify);
+app.post('/user/get', um.getUser);
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
