@@ -38,6 +38,7 @@ async function createDependency(req,res){
 }
 
 async function updateDependency(req,res){ //update a Dependency between 2 nodes with specified fields
+    console.log('hello')
     var session = db.getSession();
     var relArr = [];
 

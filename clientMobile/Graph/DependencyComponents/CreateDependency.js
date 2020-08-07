@@ -3,18 +3,81 @@ import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight } f
 import { Icon, Label, Form, Item, Input, StyleProvider, Button } from 'native-base';
 import {ButtonGroup} from 'react-native-elements'
 
-class UpdateDependency extends Component {
+class CreateDependency extends Component{
+    constructor(props){
+        super(props);
+        this.state = {createDependencyVisibility : false, source:null, target:null}
+        this.setCreateDependencyVisibility = this.setCreateDependencyVisibility.bind(this);
+        this.handleCreateDependency = this.handleCreateDependency.bind(this);
+    }
+
+    setCreateDependencyVisibility(visible){
+        this.setState({createDependencyVisibility:visible})
+    }
+
+    handleCreateDependency(){
+        if(this.props.sourceCreateDependency === null || this.props.targetCreateDependency === null){
+            return;
+        }
+
+        this.setState({source:this.props.sourceCreateDependency, target:this.props.targetCreateDependency})
+        this.setCreateDependencyVisibility(true);
+        this.props.setCreateDependency(null);
+    }
+    
+    render(){
+        return(
+            <React.Fragment>
+                <CreateDependencyModal 
+                    createDependencyVisibility={this.state.createDependencyVisibility} 
+                    setCreateDependencyVisibility={this.setCreateDependencyVisibility} 
+                    name={this.props.getName(this.state.source)+'→'+this.props.getName(this.state.target)}
+                    source={this.state.source}
+                    target={this.state.target}
+                    projID={this.props.projID}
+                    getProjectInfo={this.props.getProjectInfo}
+                    setProjectInfo={this.props.setProjectInfo}
+                />
+                
+                {this.props.sourceCreateDependency !== null ?
+                    <React.Fragment>
+                        <TouchableOpacity onPress={this.handleCreateDependency} style={{backgroundColor:'green', height:30}}>
+                            <Text>
+                                {this.props.getName(this.props.sourceCreateDependency)+'→'+this.props.getName(this.props.targetCreateDependency)}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.props.setCreateDependency(null)} style={{backgroundColor:'red', height:30}}>
+                            <Text>
+                                clear
+                            </Text>
+                        </TouchableOpacity>
+                    </React.Fragment>
+                : null}
+            </React.Fragment>
+        )
+    }
+}
+
+class CreateDependencyModal extends Component {
 	constructor(props){
 		super(props);
 	}
 
 	render(){
 		return(
-			<Modal animationType="slide" transparent={true} visible={this.props.modalVisibility} onRequestClose={()=>this.props.toggleVisibility(true, false)}>
+			<Modal animationType="slide" transparent={true} visible={this.props.createDependencyVisibility} onRequestClose={()=>this.props.setCreateDependencyVisibility(false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <UpdateDependencyForm dependency={this.props.dependency} toggleVisibility={this.props.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency} name={this.props.name}/>
-						<TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.toggleVisibility(true, false)}>
+                        <CreateDependencyForm 
+                            setCreateDependencyVisibility={this.props.setCreateDependencyVisibility}
+                            getProjectInfo={this.props.getProjectInfo} 
+                            setProjectInfo={this.props.setProjectInfo} 
+                            name={this.props.name}
+                            source={this.props.source}
+                            target={this.props.target}
+                            projID={this.props.projID}
+                        />
+						<TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.setCreateDependencyVisibility(false)}>
                             <Text style={styles.textStyle}>Hide Modal</Text>
                         </TouchableHighlight>
                     </View>
@@ -24,14 +87,14 @@ class UpdateDependency extends Component {
 	}
 }
 
-class UpdateDependencyForm extends Component{
+class CreateDependencyForm extends Component{
     constructor(props){
         super(props);
         
         this.state ={  
-            dependencyRelationship : this.props.dependency.relationshipType,
-            selectedIndex: this.props.dependency.relationshipType === "ss" ? 0 : 1,
-            dependencyDuration: this.props.dependency.duration
+            dependencyRelationship: "ss",
+            selectedIndex: 0,
+            dependencyDuration: 0
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -51,9 +114,11 @@ class UpdateDependencyForm extends Component{
 
     formatValidateInput(){
         let data = {
-            ud_did: this.props.dependency.id,
-            ud_duration : parseInt(this.state.dependencyDuration),
-            ud_relationshipType : this.state.dependencyRelationship
+            cd_fid: this.props.target,
+            cd_sid: this.props.source,
+            cd_pid: this.props.projID,
+            cd_relationshipType: this.state.dependencyRelationship,
+            cd_duration : parseInt(this.state.dependencyDuration)
         }
 
         return data;
@@ -67,7 +132,7 @@ class UpdateDependencyForm extends Component{
         projectData.changedInfo = input;
         projectData = JSON.stringify(projectData);
         
-        const response = await fetch('http://projecttree.herokuapp.com/dependency/update', {
+        const response = await fetch('http://projecttree.herokuapp.com/dependency/add', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -77,8 +142,7 @@ class UpdateDependencyForm extends Component{
         }); 
         
         const body = await response.json();  
-        this.props.toggleVisibility(true, false);
-        this.props.displayTaskDependency(null, null);
+        this.props.setCreateDependencyVisibility(false);
         this.props.setProjectInfo(body.nodes, body.rels);
     }
 
@@ -178,4 +242,4 @@ const styles = StyleSheet.create({
     text: { margin: 6, textAlign: 'center' }
 });
 
-export default UpdateDependency;
+export default CreateDependency;

@@ -5,17 +5,19 @@ import { WebView } from 'react-native-webview';
 import ProjectModal from './GraphProjectModal';
 import CreateTask from './TaskComponents/CreateTask';
 import TaskModal from './TaskComponents/TaskModal';
-import DependencyModal from './DependencyComponents/DependencyModal'
+import DependencyModal from './DependencyComponents/DependencyModal';
+import CreateDependnecy from './DependencyComponents/CreateDependency'
 
 class GraphScreen extends Component{
     constructor(props) {
 		super(props);
-        this.state = {nodes: null, links:null, selectedTask:null, selectedDependency:null, key:0}
+        this.state = {nodes: null, links:null, selectedTask:null, selectedDependency:null, key:0, sourceCreateDependency: null, targetCreateDependency: null}
         this.getProjectInfo = this.getProjectInfo.bind(this);
         this.displayTaskDependency = this.displayTaskDependency.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
         this.reload = this.reload.bind(this);
         this.getName = this.getName.bind(this);
+        this.setCreateDependency = this.setCreateDependency.bind(this);
     }
     
     reload(){
@@ -43,7 +45,7 @@ class GraphScreen extends Component{
     }
 
     getProjectInfo(){
-        return {nodes:this.state.nodes, links:this.state.links}
+        return {nodes:this.state.nodes, rels:this.state.links}
     }
 
     getName(id){
@@ -54,11 +56,28 @@ class GraphScreen extends Component{
                 return this.state.nodes[x].name
             }
         }
+
+        return null;
     }
 
     setProjectInfo(nodes, rels){
         this.setState({nodes:nodes, links:rels});
         this.reload();
+    }
+    
+    setCreateDependency(id){
+        if(id === null){
+            this.setState({sourceCreateDependency: null, targetCreateDependency:null})
+        }
+
+        else if(this.state.sourceCreateDependency === null){
+            this.setState({sourceCreateDependency : id});
+        }
+
+        else{
+            if(id === this.state.sourceCreateDependency) return null;
+            this.setState({targetCreateDependency : id});
+        }
     }
 
     displayTaskDependency(taskID, dependencyID){
@@ -104,8 +123,18 @@ class GraphScreen extends Component{
 
         return this.state.nodes ? (
             <View style={styles.container}>
+                <CreateDependnecy 
+                    sourceCreateDependency={this.state.sourceCreateDependency} 
+                    targetCreateDependency={this.state.targetCreateDependency} 
+                    setCreateDependency={this.setCreateDependency} 
+                    getName={this.getName} 
+                    projID={this.props.project.id}
+                    setProjectInfo={this.setProjectInfo}
+                    getProjectInfo={this.getProjectInfo}
+                />
+
                 <View style={{flex:30}}>
-                    <WebViewWrapper nodes={this.state.nodes} links={this.state.links} webKey={this.state.key} displayTaskDependency={this.displayTaskDependency}/>
+                    <WebViewWrapper nodes={this.state.nodes} links={this.state.links} webKey={this.state.key} displayTaskDependency={this.displayTaskDependency} setCreateDependency={this.setCreateDependency}/>
                 </View>
                 
                 <TaskModal project={this.props.project} selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
@@ -141,7 +170,7 @@ class WebViewWrapper extends Component{
         }
 
         else{
-            console.log(message)
+            this.props.setCreateDependency(parseInt(message.substr(1)))
         }
     }
 
@@ -169,7 +198,7 @@ const styles = StyleSheet.create({
         width: deviceWidth,
         height: 750,
         marginBottom: 190,
-        marginTop: 150
+        marginTop: 250
     }
 });
 
