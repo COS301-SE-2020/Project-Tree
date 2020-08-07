@@ -46,40 +46,29 @@ class App extends Component {
 
   componentDidMount(){
     let token = localStorage.getItem('sessionToken')
-    if(localStorage.getItem('sessionToken') != null)
-    {
-      $.post("/verify", { token: token }, (response) => 
-      {
+    if(token != null){
+      $.post("/verify", { token: token }, (response) => {
         console.log(response)
-        if(response)
-        {
-            console.log("TRue")
-        }
-        else{this.handleLogout()}
+        if(!response) this.handleLogout()
       })
-    console.log(this.rightSide)
-    this.setState({
-      loggedInStatus: true })
-    }
-    else
-    {
+      $.post("/project/get", {creatorID: token}, (response) => {
+        this.setState({projects: response.projects });
+      })
+      .fail((response) => {
+          throw Error(response.message);
+      });
+      $.post("/user/get", {creatorID: token}, (response) => {
+        this.setState({user: response.user });
+      })
+      .fail((response) => {
+          throw Error(response.message);
+      });
+      this.setState({loggedInStatus: true });
+    }else{
       console.log(this.rightSide)
-      if(this.rightSide)
-        this.rightSide.classList.add("right");
+      if(this.rightSide) this.rightSide.classList.add("right");
       //<Redirect to="/"/>
     }
-    $.post("/project/get", {creatorID: token}, (response) => {
-      this.setState({projects: response.projects });
-      }).fail((response) => {
-        throw Error(response.message);
-    });
-
-    $.post("/user/get", {creatorID: token}, (response) => {
-      this.setState({user: response.user });
-      }).fail((response) => {
-        throw Error(response.message);
-    });
-
    }
   
   
