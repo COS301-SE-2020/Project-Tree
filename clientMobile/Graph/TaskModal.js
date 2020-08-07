@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight } from "react-native";
 import { Icon, Label, Form, Item, Input, StyleProvider, Button, Container } from 'native-base';
-import buttonStyling from '../native-base-theme/variables/buttonStylingProjList';
-import getTheme from '../native-base-theme/components';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
 import UpdateProgress from './UpdateProgress'
@@ -16,7 +13,11 @@ class TaskModal extends Component {
         this.toggleProgressModal = this.toggleProgressModal.bind(this)
     }
     
-    toggleVisibility(taskModal, updateModal){
+    toggleVisibility(taskModal, updateModal, selectedTask){
+        if(selectedTask !== undefined){
+            this.setState({displayTaskModal: taskModal, displayUpdateModal: updateModal});
+        }
+
         this.setState({displayTaskModal: taskModal, displayUpdateModal: updateModal});
     }
 
@@ -29,7 +30,7 @@ class TaskModal extends Component {
 
 		return(
             <React.Fragment>
-                <UpdateTask task={this.props.selectedTask} modalVisibility={this.state.displayUpdateModal} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} />
+                <UpdateTask task={this.props.selectedTask} modalVisibility={this.state.displayUpdateModal} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency}/>
                 <UpdateProgress project={this.props.project} task={this.props.selectedTask} modalVisibility={this.state.displayProgressModal} toggleProgressModal={this.toggleProgressModal} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
                 <Modal animationType="slide" transparent={true} visible={this.state.displayTaskModal} onRequestClose={()=>this.props.displayTaskDependency(null, null)}>
                     <View style={styles.centeredView}>
