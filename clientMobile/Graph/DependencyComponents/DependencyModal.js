@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight } from "react-native";
 import { Icon, Label, Form, Item, Input, StyleProvider, Button, Container } from 'native-base';
-// import DeleteTask from './DeleteTask';
-// import UpdateTask from './UpdateTask';
+import {ButtonGroup} from 'react-native-elements';
+import DeleteDependency from "./DeleteDependency";
+import UpdateDependency from "./UpdateDependency";
 
 class DependencyModal extends Component {
 	constructor(props){
@@ -22,15 +23,16 @@ class DependencyModal extends Component {
 	render(){      
         if(this.props.selectedDependency === null) return null;
 
+        let name = this.props.getName(this.props.selectedDependency.source)+"→"+this.props.getName(this.props.selectedDependency.target)
         return(
             <React.Fragment>
-                {/* <UpdateTask task={this.props.selectedTask} modalVisibility={this.state.displayUpdateModal} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency}/> */}
+                <UpdateDependency dependency={this.props.selectedDependency} modalVisibility={this.state.displayUpdateModal} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency} name={name}/>
                 <Modal animationType="slide" transparent={true} visible={this.state.displayTaskModal} onRequestClose={()=>this.props.displayTaskDependency(null, null)}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <View>
                                 <Text>
-                                    {this.props.getName(this.props.selectedDependency.source)+"→"+this.props.getName(this.props.selectedDependency.target)}
+                                    {name}
                                 </Text>
                                 <Text>
                                     {this.props.selectedDependency.relationshipType === "fs" ? "Finish→Start" : "Start→Start"}
@@ -40,16 +42,16 @@ class DependencyModal extends Component {
                                 </Text>
                             </View>
 
-                            {/* <Container>
+                            <Container>
                                 <View style={{flex:1, marginTop:200}}>
                                     <TouchableHighlight onPress={()=>this.toggleVisibility(false, true)}>
                                         <Icon type="AntDesign" name="edit" />
                                     </TouchableHighlight>
-                                    <DeleteTask task={this.props.selectedTask} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
+                                    <DeleteDependency dependency={this.props.selectedDependency} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} name={name}/>
                                 </View>
-                            </Container> */}
+                            </Container>
                             
-                            <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.displayTaskDependency(null, null)} toggleVisibility={this.toggleVisibility}>
+                            <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.displayTaskDependency(null, null)}>
                                 <Text style={styles.textStyle}>Hide Modal</Text>
                             </TouchableHighlight>
                         </View>

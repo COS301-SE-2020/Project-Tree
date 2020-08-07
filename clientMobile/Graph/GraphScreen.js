@@ -37,13 +37,13 @@ class GraphScreen extends Component{
         });
 
 		const body = await response.json();
-        if (response.status !== 200) throw Error(body.message)
+        if (response.status !== 200) throw Error(body.message);
 
-        this.setState({nodes:body.tasks, links:body.rels})
+        this.setState({nodes:body.tasks, links:body.rels});
     }
 
     getProjectInfo(){
-        return {nodes:this.state.nodes, rels:this.state.links}
+        return {nodes:this.state.nodes, links:this.state.links}
     }
 
     getName(id){
@@ -57,7 +57,7 @@ class GraphScreen extends Component{
     }
 
     setProjectInfo(nodes, rels){
-        this.setState({nodes:nodes, rels:rels});
+        this.setState({nodes:nodes, links:rels});
         this.reload();
     }
 

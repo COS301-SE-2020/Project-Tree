@@ -68,7 +68,7 @@ class TaskModal extends Component {
                                 </View>
                             </Container>
                             
-                            <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.displayTaskDependency(null, null)} toggleVisibility={this.toggleVisibility}>
+                            <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.displayTaskDependency(null, null)}>
                                 <Text style={styles.textStyle}>Hide Modal</Text>
                             </TouchableHighlight>
                         </View>

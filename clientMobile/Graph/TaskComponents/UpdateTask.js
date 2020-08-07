@@ -43,12 +43,12 @@ class UpdateTaskForm extends Component{
         }
 
         this.state ={  
-                    taskName:this.props.task.name,
-                    taskDescription:this.props.task.description, 
-                    startDate: new Date(sYear+'-'+sMonth+'-'+sDay), 
-                    endDate: new Date(eYear+'-'+eMonth+'-'+eDay), 
-                    taskDuration:this.props.task.duration, 
-                    startDatePickerVisible:false
+            taskName:this.props.task.name,
+            taskDescription:this.props.task.description, 
+            startDate: new Date(sYear+'-'+sMonth+'-'+sDay), 
+            endDate: new Date(eYear+'-'+eMonth+'-'+eDay), 
+            taskDuration:this.props.task.duration, 
+            startDatePickerVisible:false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
