@@ -196,16 +196,26 @@ class TaskSidebar extends React.Component {
             </Col>
           </Row>
           <Row className="text-center align-items-center p-1">
-              {this.props.task.description}
+            <Col></Col>
+            <Col xs={8}>{this.props.task.description}</Col> 
+            <Col></Col>
+              
           </Row>
           <Row className="text-center p-1" >
-              Start Date: {startDate}
+            <Col></Col>
+            <Col xs={8}>Start Date: {startDate}</Col> 
+            <Col></Col>
           </Row>
           <Row className="text-center p-1">
-              End Date: {endDate}
+            <Col></Col>
+            <Col xs={8}>End Date: {endDate}</Col> 
+            <Col></Col>
           </Row>
           <Row className="text-center p-1">
-              Duration: {this.props.task.duration}
+            <Col></Col>
+            <Col xs={8}>Duration: {this.props.task.duration}</Col> 
+            <Col></Col>
+              
           </Row>
           <Row>
               <UpdateTask
@@ -252,8 +262,8 @@ class DependencySidebar extends React.Component {
                 toggleSidebar={this.props.toggleSidebar}
               />
             </Col>
-            <Col xs={6}>
-              <h3>{start + "→" + end}</h3>
+            <Col xs={8}>
+              <h4>{start + "→" + end}</h4>
             </Col>
             <Col className="text-right">
               <Button
@@ -265,18 +275,20 @@ class DependencySidebar extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col>
-              <p>
+            <Col></Col>
+            <Col xs={8}>
                 {this.props.dependency.relationshipType === "fs"
                   ? "Finish-Start"
                   : "Start-Start"}
-              </p>
             </Col>
+            <Col></Col>
           </Row>
           <Row>
-            <Col>
-              <p>Duration: {this.props.dependency.duration}</p>
+            <Col></Col>
+            <Col xs={8}>
+              Duration: {this.props.dependency.duration}
             </Col>
+            <Col></Col>
           </Row>
           <Row>
             <Col>
@@ -289,6 +301,7 @@ class DependencySidebar extends React.Component {
               />
             </Col>
           </Row>
+          <hr/>
         </Container>
       </React.Fragment>
     );
