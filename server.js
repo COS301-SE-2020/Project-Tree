@@ -29,6 +29,8 @@ app.post('/dependency/add', dq.createDependency);
 app.post('/dependency/update', dq.updateDependency);
 app.post('/dependency/delete', dq.deleteDependency);
 app.post('/getProject', gq.getProjectTasks);
+app.post('/login', um.login);
+app.post('/register', um.register);
 // app.get('/mobile', function(req,res){
 // 	// res.sendFile(__dirname + '/GraphMobile.html')
 // 	res.render(__dirname +'/GraphMobile',{info:"hello"})
