@@ -80,7 +80,7 @@ class TaskInfo extends React.Component{
     } 
 
     createTaskList(){
-      let list = [`no ${this.state.taskType} tasks`];
+      let list = [`no ${this.state.taskType} tasks to display`];
       if(this.state.tasks.length !== 0 && this.state.criticalPath !== null){
         if(this.state.taskType === "CriticalPath") list = this.createCriticalPath();
         else if(this.state.taskType === "Late") list = this.createLateList();
@@ -91,6 +91,7 @@ class TaskInfo extends React.Component{
               list.push(el);
             }
           });
+          if (list.length === 0) return [`no ${this.state.taskType} tasks to display`]
         }
         if (list[0] === 'no critical path to Display' || list[0] === 'no late tasks to display') {
           return (list[0]);

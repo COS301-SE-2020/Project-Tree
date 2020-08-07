@@ -199,17 +199,19 @@ class App extends Component {
                     ) : <Redirect to="/"/>}
                   </Route>
                   <Route path="/graph" >
-                    {this.state.project != null ? (
+                    {this.state.project != null ? 
                       <GraphPage
                         project={this.state.project}
                       />
-                    ) : <Redirect to="/"/>}
+                     : <Redirect to="/"/>}
                   </Route>
                   <Route path="/user">
                     <User />
                   </Route>
                   <Route path="/home">
-                    {this.state.loggedInStatus? (<Home />) : (<Redirect to="/"/>)}
+                    {this.state.loggedInStatus? 
+                    <Home />
+                     : <Redirect to="/"/>}
                   </Route>
                   <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}

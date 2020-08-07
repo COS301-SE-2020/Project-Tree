@@ -11,11 +11,11 @@ class SideBar extends React.Component {
     super(props);
     this.state = { projects: this.props.projects};
   }
-  render() {
-    if (this.state.projects === undefined) return null;
-    const listItems = [];
+
+  OwnedProjects(){
+    const OwnedProjects = [];
     this.state.projects.forEach(project => {
-      listItems.push(
+      OwnedProjects.push(
         <Row 
           noGutters
           className="m-1"
@@ -63,11 +63,75 @@ class SideBar extends React.Component {
         </Row>
       );
     });
+    return OwnedProjects;
+  }
+
+  OtherProjects(){
+    const OtherProjects = [];
+    this.state.projects.forEach(project => {
+      OtherProjects.push(
+        <Row 
+          noGutters
+          className="m-1"
+          style={{width: "100%"}}
+          key={project.id}>
+          <Col>
+            <Container fluid className="block-example bg-secondary rounded border border-dark" style={{fontFamily:"Courier New", color: "black"}}>
+              <Row className="align-items-center py-2">
+                <Col className="text-center">
+                  {project.name}
+                </Col>
+              </Row>
+              <Row className="align-items-center py-2">
+                <Col>
+                  <Link to="/project">
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                      onClick={
+                        ()=>{
+                            this.props.setProject(project);
+                            this.props.closeSideBar(true);
+                        }
+                      }
+                    >
+                      Project Info
+                    </Button>
+                  </Link>
+                </Col>
+                <Col>
+                  <Link to="/graph">
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                      onClick={
+                        ()=>{
+                            this.props.setProject(project);
+                            this.props.closeSideBar(true);
+                        }
+                      }
+                    >
+                      Project Graph
+                    </Button>
+                  </Link>
+                </Col>
+              </Row>
+            </Container>
+          </Col>
+        </Row>
+      );
+    });
+    return OtherProjects;
+  }
+
+  render() {
+    if (this.state.projects === undefined) return null;
+    
 
     return (
       <Container className="py-1" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
-        <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/> 
-        {listItems} 
+        <h4>Owned Projects</h4>
+        <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/>
+        {this.OwnedProjects()} 
+        <hr></hr>
+        <h4>Other Projects</h4>
+        {this.OtherProjects()} 
       </Container>
     );
   }
