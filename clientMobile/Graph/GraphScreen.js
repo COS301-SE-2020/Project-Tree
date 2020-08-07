@@ -3,8 +3,9 @@ import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions } fro
 import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
 import { WebView } from 'react-native-webview';
 import ProjectModal from './GraphProjectModal';
-import CreateTask from './CreateTask';
-import TaskModal from './TaskModal';
+import CreateTask from './TaskComponents/CreateTask';
+import TaskModal from './TaskComponents/TaskModal';
+import DependencyModal from './DependencyComponents/DependencyModal'
 
 class GraphScreen extends Component{
     constructor(props) {
@@ -14,6 +15,7 @@ class GraphScreen extends Component{
         this.displayTaskDependency = this.displayTaskDependency.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
         this.reload = this.reload.bind(this);
+        this.getName = this.getName.bind(this);
     }
     
     reload(){
@@ -44,6 +46,16 @@ class GraphScreen extends Component{
         return {nodes:this.state.nodes, rels:this.state.links}
     }
 
+    getName(id){
+        for(var x=0; x<this.state.nodes.length; x++)
+        {
+            if(id === this.state.nodes[x].id)
+            {
+                return this.state.nodes[x].name
+            }
+        }
+    }
+
     setProjectInfo(nodes, rels){
         this.setState({nodes:nodes, rels:rels});
         this.reload();
@@ -62,6 +74,18 @@ class GraphScreen extends Component{
                 }
             }
         }
+
+        else if(dependencyID != null)
+        {
+            for(var x=0; x<this.state.links.length; x++)
+            {
+                if(dependencyID === this.state.links[x].id)
+                {
+                    dependency = this.state.links[x];
+                }
+            }
+        }
+
 
         this.setState({selectedTask:task, selectedDependency:dependency});
     }
@@ -85,6 +109,7 @@ class GraphScreen extends Component{
                 </View>
                 
                 <TaskModal project={this.props.project} selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
+                <DependencyModal project={this.props.project} selectedDependency={this.state.selectedDependency} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} getName={this.getName}/>
 
                 <View style={{flex:1}}>
                     <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
@@ -112,7 +137,7 @@ class WebViewWrapper extends Component{
         }
         
         else if(message[0] === 'l'){
-            console.log(message);
+            this.props.displayTaskDependency(null, parseInt(message.substr(1)))
         }
 
         else{
