@@ -1,16 +1,14 @@
 import React, { Component } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight } from "react-native";
 import { Icon, Label, Form, Item, Input, StyleProvider, Button, Container } from 'native-base';
-import DeleteTask from './DeleteTask';
-import UpdateTask from './UpdateTask';
-import UpdateProgress from './UpdateProgress'
+// import DeleteTask from './DeleteTask';
+// import UpdateTask from './UpdateTask';
 
-class TaskModal extends Component {
+class DependencyModal extends Component {
 	constructor(props){
         super(props);
         this.state = {displayTaskModal:true, displayUpdateModal:false, displayProgressModal:false}
         this.toggleVisibility = this.toggleVisibility.bind(this);
-        this.toggleProgressModal = this.toggleProgressModal.bind(this)
     }
     
     toggleVisibility(taskModal, updateModal, selectedTask){
@@ -21,52 +19,35 @@ class TaskModal extends Component {
         this.setState({displayTaskModal: taskModal, displayUpdateModal: updateModal});
     }
 
-    toggleProgressModal(taskModal, progressModal){
-        this.setState({displayTaskModal: taskModal, displayProgressModal: progressModal})
-    }
-
 	render(){      
-        if(this.props.selectedTask === null) return null;
+        if(this.props.selectedDependency === null) return null;
 
-		return(
+        return(
             <React.Fragment>
-                <UpdateTask task={this.props.selectedTask} modalVisibility={this.state.displayUpdateModal} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency}/>
-                <UpdateProgress project={this.props.project} task={this.props.selectedTask} modalVisibility={this.state.displayProgressModal} toggleProgressModal={this.toggleProgressModal} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
+                {/* <UpdateTask task={this.props.selectedTask} modalVisibility={this.state.displayUpdateModal} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency}/> */}
                 <Modal animationType="slide" transparent={true} visible={this.state.displayTaskModal} onRequestClose={()=>this.props.displayTaskDependency(null, null)}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <View>
                                 <Text>
-                                    {this.props.selectedTask.name}
+                                    {this.props.getName(this.props.selectedDependency.source)+"→"+this.props.getName(this.props.selectedDependency.target)}
                                 </Text>
                                 <Text>
-                                    {this.props.selectedTask.id}
+                                    {this.props.selectedDependency.relationshipType === "fs" ? "Finish→Start" : "Start→Start"}
                                 </Text>
                                 <Text>
-                                    {this.props.selectedTask.description}
-                                </Text>
-                                <Text>
-                                    Start Date: {this.props.selectedTask.startDate.year.low+"-"+this.props.selectedTask.startDate.month.low+"-"+this.props.selectedTask.startDate.day.low}
-                                </Text>
-                                <Text>
-                                    End Date: {this.props.selectedTask.endDate.year.low+"-"+this.props.selectedTask.endDate.month.low+"-"+this.props.selectedTask.endDate.day.low}
-                                </Text>
-                                <Text>
-                                    Duration: {this.props.selectedTask.duration}
+                                    {"Duration: "+this.props.selectedDependency.duration}
                                 </Text>
                             </View>
 
-                            <Container>
+                            {/* <Container>
                                 <View style={{flex:1, marginTop:200}}>
                                     <TouchableHighlight onPress={()=>this.toggleVisibility(false, true)}>
                                         <Icon type="AntDesign" name="edit" />
                                     </TouchableHighlight>
                                     <DeleteTask task={this.props.selectedTask} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
-                                    <TouchableHighlight onPress={()=>this.toggleProgressModal(false, true)}>
-                                        <Icon type="Entypo" name="progress-one" />
-                                    </TouchableHighlight>
                                 </View>
-                            </Container>
+                            </Container> */}
                             
                             <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.displayTaskDependency(null, null)} toggleVisibility={this.toggleVisibility}>
                                 <Text style={styles.textStyle}>Hide Modal</Text>
@@ -135,4 +116,4 @@ const styles = StyleSheet.create({
     text: { margin: 6, textAlign: 'center' }
 });
 
-export default TaskModal;
+export default DependencyModal;
