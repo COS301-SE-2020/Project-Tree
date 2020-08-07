@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight } from "react-native";
 import { Icon, Label, Form, Item, Input, StyleProvider, Button } from 'native-base';
-import buttonStyling from '../native-base-theme/variables/buttonStylingProjList';
-import getTheme from '../native-base-theme/components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 class CreateTask extends Component {
@@ -172,13 +170,11 @@ class CreateTaskForm extends Component{
                     />
                 )}
                 <View style={{ padding: 5 }}>
-                    <StyleProvider style={getTheme(buttonStyling)}>
-                        <Button block light onPress={this.handleSubmit}>
-                            <Text>
-                                Submit
-                            </Text>
-                        </Button>
-                    </StyleProvider>
+                    <Button block light onPress={this.handleSubmit}>
+                        <Text>
+                            Submit
+                        </Text>
+                    </Button>
                 </View>
             </View>
         );

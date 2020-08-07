@@ -7,6 +7,33 @@ import { NavigationContainer } from '@react-navigation/native'
 import HomeScreen from './Home/HomeScreen';
 import GraphScreen from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
+//import { createAppContainer } from 'react-navigation';
+//import { createStackNavigator} from '@react-navigation/stack';
+
+// import Splash from './User/Splash';
+// import Login from './User/Login';
+// import Register from './User/Register';
+// import drawerNav from './User/DrawerNav';
+
+// const Auth = createStackNavigator({
+// 	//Stack Navigator for Login and Sign up Screen
+// 	LoginScreen: {
+// 	  screen: LoginScreen,
+// 	  navigationOptions: {
+// 		headerShown: false,
+// 	  },
+// 	},
+// 	RegisterScreen: {
+// 	  screen: RegisterScreen,
+// 	  navigationOptions: {
+// 		title: 'Register',
+// 		headerStyle: {
+// 		  backgroundColor: '#307ecc',
+// 		},
+// 		headerTintColor: '#fff'r,
+// 	  },
+// 	},
+//   });
 
 const Tabs = AnimatedTabBarNavigator()
 

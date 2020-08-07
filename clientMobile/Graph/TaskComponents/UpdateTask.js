@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight } from "react-native";
 import { Icon, Label, Form, Item, Input, StyleProvider, Button } from 'native-base';
-import buttonStyling from '../native-base-theme/variables/buttonStylingProjList';
-import getTheme from '../native-base-theme/components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 class UpdateTask extends Component {
@@ -15,7 +13,7 @@ class UpdateTask extends Component {
 			<Modal animationType="slide" transparent={true} visible={this.props.modalVisibility} onRequestClose={()=>this.props.toggleVisibility(true, false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <UpdateTaskForm task={this.props.task} toggleVisibility={this.props.toggleVisibility}/>
+                        <UpdateTaskForm task={this.props.task} toggleVisibility={this.props.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency}/>
 						<TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.toggleVisibility(true, false)}>
                             <Text style={styles.textStyle}>Hide Modal</Text>
                         </TouchableHighlight>
@@ -36,18 +34,23 @@ class UpdateTaskForm extends Component{
         if(sDay < 10){
             sDay = "0"+sDay;
         }
-        let startDate = sYear+'-'+sMonth+'-'+sDay;
-        // console.log(this.props.task.startDate.year.low, this.props.task.startDate.month.low, this.props.task.startDate.day.low)
-        // console.log(new Date(this.props.task.startDate.year.low, (this.props.task.startDate.month.low-1), this.props.task.startDate.day.low))
+
+        let eYear = this.props.task.endDate.year.low;
+        let eMonth = this.props.task.endDate.month.low < 10 ? "0"+this.props.task.endDate.month.low : this.props.task.endDate.month.low;
+        let eDay = this.props.task.endDate.day.low;
+        if(eDay < 10){
+            eDay = "0"+eDay;
+        }
 
         this.state ={  
-                    taskName:this.props.task.name,
-                    taskDescription:this.props.task.description, 
-                    startDate: new Date(this.props.task.startDate.year.low, this.props.task.startDate.month.low, this.props.task.startDate.day.low), 
-                    endDate: new Date(this.props.task.endDate.year.low, this.props.task.endDate.month.low, this.props.task.endDate.day.low), 
-                    taskDuration:this.props.task.duration, 
-                    startDatePickerVisible:false
+            taskName:this.props.task.name,
+            taskDescription:this.props.task.description, 
+            startDate: new Date(sYear+'-'+sMonth+'-'+sDay), 
+            endDate: new Date(eYear+'-'+eMonth+'-'+eDay), 
+            taskDuration:this.props.task.duration, 
+            startDatePickerVisible:false
         };
+
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleStartDateSelect = this.handleStartDateSelect.bind(this);
         this.handleDuration = this.handleDuration.bind(this);
@@ -88,40 +91,38 @@ class UpdateTaskForm extends Component{
         }
 
         let data = {
-            ct_Name : this.state.taskName,
-            ct_startDate : this.state.startDate.toISOString().substr(0, 10),
-            ct_duration : parseInt(this.state.taskDuration),
-            ct_endDate : this.state.endDate.toISOString().substr(0, 10),
-            ct_description : this.state.taskDescription,
-            ct_pid : this.props.projectID
+            ut_id: this.props.task.id,
+            ut_name : this.state.taskName,
+            ut_startDate : this.state.startDate.toISOString().substr(0, 10),
+            ut_duration : parseInt(this.state.taskDuration),
+            ut_endDate : this.state.endDate.toISOString().substr(0, 10),
+            ut_description : this.state.taskDescription
         }
 
         return data;
     }
 
     async handleSubmit(){
-        // let input = this.formatValidateInput();
-        // if(input === null){
-        //     return;
-        // }
+        let input = this.formatValidateInput();
+        if(input === null) return;
 
-        // let projectData = await this.props.getProjectInfo();
-        // projectData.changedInfo = input;
-        // projectData = JSON.stringify(projectData)
+        let projectData = await this.props.getProjectInfo();
+        projectData.changedInfo = input;
+        projectData = JSON.stringify(projectData);
         
-        // const response = await fetch('http://projecttree.herokuapp.com/task/add', {
-        //     method: 'POST',
-        //     headers: {
-        //     Accept: 'application/json',
-        //     'Content-Type': 'application/json',
-        //     },
-        //     body: projectData,
-        // }); 
+        const response = await fetch('http://projecttree.herokuapp.com/task/update', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: projectData,
+        }); 
         
-        // const body = await response.json();  
-        // console.log(body);
-        // this.props.setModalVisible(false);
-        //await this.props.setTaskInfo(body.nodes, body.rels, body.displayNode, body.displayRel);
+        const body = await response.json();  
+        this.props.toggleVisibility(true, false);
+        this.props.displayTaskDependency(null, null);
+        this.props.setProjectInfo(body.nodes, body.rels);
     }
 
     render()
@@ -172,13 +173,11 @@ class UpdateTaskForm extends Component{
                     />
                 )}
                 <View style={{ padding: 5 }}>
-                    <StyleProvider style={getTheme(buttonStyling)}>
-                        <Button block light onPress={this.handleSubmit}>
-                            <Text>
-                                Submit
-                            </Text>
-                        </Button>
-                    </StyleProvider>
+                    <Button block light onPress={this.handleSubmit}>
+                        <Text>
+                            Submit
+                        </Text>
+                    </Button>
                 </View>
             </View>
         );
