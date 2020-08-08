@@ -343,19 +343,25 @@ class Graph extends React.Component {
                     </Button>
                   </Col>
                 ) : null}
-                <Col xs={4}>
+                <Col>
                   <Form>
-                    <Form.Check 
-                      type="switch" 
-                      id="switchEnabled"
-                      className="border rounded border-secondary pb-1"
-                      label="Display Critical Path"  
-                      checked={this.state.displayCriticalPath}
-                      onChange={e => {
-                        this.setState({ displayCriticalPath: e.target.checked });
-                        this.checked = this.state.displayCriticalPath;
-                      }}
-                    />
+                    <Button
+                      variant="outline-secondary"
+                      block
+                      size="sm"
+                      onClick={() => {this.setState({displayCriticalPath: !this.state.displayCriticalPath})}}
+                    >
+                      <Form.Check 
+                        type="switch" 
+                        id="switchEnabled"
+                        label="Display Critical Path"
+                        checked={this.state.displayCriticalPath}
+                        onChange={e => {
+                          this.setState({ displayCriticalPath: e.target.checked });
+                          this.checked = this.state.displayCriticalPath;
+                        }}
+                      />
+                    </Button>
                   </Form>
                 </Col>
                 <Col className="text-center">

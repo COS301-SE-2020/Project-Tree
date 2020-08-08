@@ -6,32 +6,14 @@ class TaskInfo extends React.Component{
     constructor(props){
         super(props);
         this.state = { 
-          project: this.props.project, 
-          tasks: this.props.tasks, 
-          criticalPath: this.props.criticalPath, 
-          taskType: "CriticalPath"};
-    }
-
-    componentDidMount(){
-      
-    }
-  
-    componentDidUpdate(prevProps) {
-      if (this.props.project !== prevProps.project) {
-        this.setState({ project: this.props.project });
-      }
-      if (this.props.tasks !== prevProps.tasks) {
-        this.setState({ tasks: this.props.tasks });
-      }
-      if (this.props.criticalPath !== prevProps.criticalPath) {
-        this.setState({ criticalPath: this.props.criticalPath });
-      }
+          taskType: "CriticalPath"
+        };
     }
 
     createCriticalPath(){
       let list = [];
-      if (this.state.criticalPath !== null && this.state.criticalPath.path !== null) {
-        this.state.criticalPath.path.segments.forEach((el,index) => {
+      if (this.props.criticalPath !== null && this.props.criticalPath.path !== null) {
+        this.props.criticalPath.path.segments.forEach((el,index) => {
           if(index === 0){
             list.push(
               {
@@ -63,8 +45,8 @@ class TaskInfo extends React.Component{
 
     createLateList(){
       let list = [];
-      if(this.state.tasks !== []){
-        this.state.tasks.forEach(el => {
+      if(this.props.tasks !== []){
+        this.props.tasks.forEach(el => {
           if(el.progress !== "Complete"){
             let today = new Date();
             if(parseInt(today.getFullYear()) <= parseInt(el.endDate.year.low)){
@@ -85,12 +67,12 @@ class TaskInfo extends React.Component{
 
     createTaskList(){
       let list = [`no ${this.state.taskType} tasks to display`];
-      if(this.state.tasks.length !== 0 && this.state.criticalPath !== null){
+      if(this.props.tasks.length !== 0 && this.props.criticalPath !== null){
         if(this.state.taskType === "CriticalPath") list = this.createCriticalPath();
         else if(this.state.taskType === "Late") list = this.createLateList();
         else{
           list = [];
-          this.state.tasks.forEach(el => {
+          this.props.tasks.forEach(el => {
             if (el.progress === this.state.taskType) {
               list.push(el);
             }

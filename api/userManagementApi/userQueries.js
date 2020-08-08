@@ -130,13 +130,13 @@ function editUser(req, res) {
 async function getUser(req,res)
 {
     let creator = await verify(req.body.creatorID);
-    if(creator!=null)
-    {
+    if ( creator != null ) {
         db.getSession()
         .run(
         `
-        MATCH (u:User) WHERE ID(u) = ${creator} 
-        RETURN u
+            MATCH (u:User) 
+            WHERE ID(u) = ${creator} 
+            RETURN u
         `
         )
         .then(result => {
