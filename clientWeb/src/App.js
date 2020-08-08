@@ -160,7 +160,8 @@ class App extends Component {
                     <Nav.Link href="#" onClick={() => this.toggleSideBar()}>
                       <i className="fa fa-navicon text-dark" style={{fontSize:"30px"}}></i>
                     </Nav.Link>
-                  ):
+                  )
+                  :
                   (
                     <Nav.Link href="#" onClick={() => this.toggleSideBar()}>
                       <i className="fa fa-navicon text-dark" style={{fontSize:"30px", transform: "rotate(90deg)"}}></i>
@@ -168,7 +169,7 @@ class App extends Component {
                   )
                 :
                 null
-                  }              
+              }
             </Nav>
             <Nav className="m-auto form-inline">
               <Nav.Link href="/">
@@ -176,7 +177,11 @@ class App extends Component {
               </Nav.Link>
             </Nav>
             <Nav className="form-inline">
+              {this.state.loggedInStatus === true ?
                 <Settings user={this.state.user}/>
+                :
+                null
+              }
             </Nav>
           </Navbar>
           <Container fluid style={{height: "100%"}}>
