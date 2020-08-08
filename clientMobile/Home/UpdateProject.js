@@ -18,7 +18,7 @@ class UpdateProject extends Component{
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(!this.props.modalVisible,false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
-                        {this.props.project !== undefined ? <CreateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible} project={this.props.project} /> : null}
+                        {this.props.project !== undefined ? <UpdateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible} project={this.props.project} /> : null}
                     </View>
                 </View>
             </Modal>
@@ -26,7 +26,7 @@ class UpdateProject extends Component{
     }
 }
 
-class CreateProjectForm extends Component{
+class UpdateProjectForm extends Component{
     constructor(props){
         super(props);
 
