@@ -12,13 +12,13 @@ class UpdateProject extends Component{
 
     render(){
         return(
-            <Modal animationType="fade" transparent={true} visible={this.props.modalVisible} onRequestClose={() => this.props.setModalVisible(!this.props.modalVisible,false)}>
+            <Modal animationType="fade" transparent={true} visible={this.props.modalVisible} onRequestClose={() => this.props.setModalVisible(!this.props.modalVisible)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(!this.props.modalVisible,false)}>
+                        <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(!this.props.modalVisible)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
-                        {this.props.project !== undefined ? <CreateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible} project={this.props.project} /> : null}
+                        {this.props.project !== undefined ? <UpdateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible} project={this.props.project} /> : null}
                     </View>
                 </View>
             </Modal>
@@ -26,7 +26,7 @@ class UpdateProject extends Component{
     }
 }
 
-class CreateProjectForm extends Component{
+class UpdateProjectForm extends Component{
     constructor(props){
         super(props);
 
@@ -135,9 +135,9 @@ class PermissionsTable extends Component{
 
         let tableHead = ['', 'Create', 'Delete', 'Update']
         let tableData = [
-                ['Package Managers', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[6], 6)],
-                ['Responsible Persons', elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[7], 7)],
-                ['Resources', elementButton(this.props.tableFormData[2], 2), elementButton(this.props.tableFormData[5], 5), elementButton(this.props.tableFormData[8], 8)]
+                ['Package Managers', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[2], 2)],
+                ['Responsible Persons', elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[5], 5)],
+                ['Resources', elementButton(this.props.tableFormData[6], 6), elementButton(this.props.tableFormData[7], 7), elementButton(this.props.tableFormData[8], 8)]
             ];
 
         return (
@@ -151,32 +151,6 @@ class PermissionsTable extends Component{
             </View>
         )
     }
-    // render() {
-    //     const elementButton = (value, index) => (
-    //         <TouchableOpacity onPress={() => this.props.setElementClicked(index)}>
-    //             <View style={styles.btn}>
-    //                 <Text style={styles.btnText}>{value}</Text>
-    //             </View>
-    //         </TouchableOpacity>
-    //     );
-
-    //     let tableData = [
-    //         ['', 'Package Managers', 'Responsible Persons', 'Resources'],
-    //         ['Create', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[6], 6)],
-    //         ['Delete', elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[7], 7)],
-    //         ['Update', elementButton(this.props.tableFormData[2], 2), elementButton(this.props.tableFormData[5], 5), elementButton(this.props.tableFormData[8], 8)]
-    //     ]
-
-    //     return (
-    //         <View style={styles.container}>
-    //             <Table style={{flexDirection: 'row'}} borderStyle={{borderWidth: 1}}>
-    //                 <TableWrapper style={{flex:1}}>
-    //                     <Cols data={tableData} heightArr={[40, 30, 30, 30, 30]} textStyle={styles.text}/>
-    //                 </TableWrapper>
-    //             </Table>
-    //         </View>
-    //     )
-    // }
 }
 
 const styles = StyleSheet.create({

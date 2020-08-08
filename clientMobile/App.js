@@ -173,6 +173,9 @@ export default class App extends Component{
 						labelStyle: {
 							fontWeight: 'bold',
 						},
+						tabStyle:{
+							height:60
+						}
 					}}
 					appearence={{
 						floating: false,
