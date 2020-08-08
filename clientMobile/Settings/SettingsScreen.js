@@ -94,19 +94,10 @@ export default class SettingsScreen extends Component {
                     </Card>
                 </Content>
             </View>
-            // <View key={i} style={{ padding: 5 }}>
-            //     <TouchableOpacity 
-            //         style={styles.projectButtons}
-            //         onPress={() => this.props.toggleActionSheet(project)}>
-            //         <Text style={styles.buttonText}>
-            //             {project.name}
-            //         </Text>
-            //     </TouchableOpacity>
-            // </View>
         );
 
         return (
-            <ScrollView style={{marginBottom:15}}>
+            <ScrollView style={{marginBottom:60}}>
                 {listItems}
             </ScrollView>
         );
@@ -152,7 +143,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        width:'33%',
+        width:'20%',
         borderColor:'#EEBB4D',
         borderWidth:2,
         borderRadius:5,
@@ -171,7 +162,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        width:'33%',
+        width:'20%',
         borderColor:'#EEBB4D',
         borderWidth:2,
         borderRadius:5,
