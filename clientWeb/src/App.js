@@ -41,7 +41,9 @@ class App extends Component {
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
     this.closeSideBar = this.closeSideBar.bind(this);
-	  this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.setUser = this.setUser.bind(this);
+
   }
 
   componentDidMount(){
@@ -88,6 +90,10 @@ class App extends Component {
       }
       this.setState({project: proj})
     }
+  }
+
+  setUser(usr){
+    this.setState({user: usr})
   }
 
   toggleSideBar(){

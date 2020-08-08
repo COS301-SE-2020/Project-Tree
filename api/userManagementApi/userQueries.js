@@ -87,9 +87,44 @@ function register(req,res){ //email, password, name, surname
         });
 }
 
-function updateInfo()
-{
-    
+function editUser(req, res) {
+    let creator = await verify(req.body.creatorID);
+    if(creator!=null)
+    {
+        db.getSession()
+        .run(
+            `
+            MATCH (a) 
+            WHERE ID(a) = ${req.body.up_id}
+            SET a += {
+                name:"${req.body.um_name}",
+                surname:"${req.body.um_sname}",
+                email:"${req.body.um_email}",
+            } 
+            RETURN a
+          `
+        )
+        .then(result => {
+            let user={
+                id: result.records[0]._fields[0].identity.low,
+                name: result.records[0]._fields[0].properties.name,
+                sname: result.records[0]._fields[0].properties.sname,
+                email: result.records[0]._fields[0].properties.email,
+            }
+            res.status(200);
+            res.send({user});
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send(err);
+          });
+    }
+    else
+    {
+        res.status(400)
+        res.send({user:null})
+    }
 }
 
 async function getUser(req,res)
@@ -174,7 +209,7 @@ module.exports =
 {
     login,
     register,
-    updateInfo,
+    editUser,
     verify,
     getUser
 };
