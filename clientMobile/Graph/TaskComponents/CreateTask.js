@@ -18,11 +18,11 @@ class CreateTask extends Component {
 		return(
 			<React.Fragment>
 				<CreateTaskModal projectID={this.props.projectID} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo}/>
-				<View style={{flex:1}}>
+				{/* <View style={{flex:1}}> */}
 					<TouchableOpacity onPress={()=>this.setModalVisible(true)} style={styles.floatinBtn}>
 						<Icon type="AntDesign" name="plus" />
 					</TouchableOpacity>
-				</View>
+				{/* </View> */}
 			</React.Fragment>
 		)
 	}
@@ -31,13 +31,13 @@ class CreateTask extends Component {
 class CreateTaskModal extends Component{
     render(){
         return(
-            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={()=>this.props.setModalVisible(false)}>
+            <Modal animationType="fade" transparent={true} visible={this.props.modalVisible} onRequestClose={()=>this.props.setModalVisible(false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
+                        <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
+                            <Icon type="FontAwesome" name="close" />
+                        </TouchableOpacity>
                         <CreateTaskForm projectID={this.props.projectID} setModalVisible={this.props.setModalVisible} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo}/>
-						<TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={() => this.props.setModalVisible(false)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight>
                     </View>
                 </View>
             </Modal>
@@ -127,7 +127,7 @@ class CreateTaskForm extends Component{
     render()
     {
         return(
-            <View style={{width:300, height:300}}>
+            <View>
                 <Form>
                     <Item floatingLabel>
                         <Label>Name of Task</Label>
@@ -169,12 +169,12 @@ class CreateTaskForm extends Component{
                     onChange={this.handleStartDateSelect}
                     />
                 )}
-                <View style={{ padding: 5 }}>
-                    <Button block light onPress={this.handleSubmit}>
+                <View styles={{padding:10}}>
+                    <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
                         <Text>
                             Submit
                         </Text>
-                    </Button>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -183,27 +183,33 @@ class CreateTaskForm extends Component{
 
 const styles = StyleSheet.create({
 	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		marginTop: 22
+		// flex: 1,
+		// justifyContent: "center",
+		// alignItems: "center",
+        // marginTop: 22
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(100,100,100, 0.8)',
+        padding: 20,
 	},
-	modalView: {
-		margin: 20,
-		backgroundColor: "white",
-		borderRadius: 20,
-		padding: 35,
-		alignItems: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-		width: 0,
-		height: 2
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
+	modalView:{
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 100,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
         elevation: 5,
-        width : 350,
-        height: 600
+        height: 450,
+        width: 350
 	},
 	openButton: {
 		backgroundColor: "#F194FF",
@@ -221,20 +227,66 @@ const styles = StyleSheet.create({
 		textAlign: "center"
 	},
     floatinBtn: {
-        backgroundColor: 'lightgreen',
-        width: 45,
-        height: 45,
-        borderRadius: 45,
+        height: 50,
+        width: 50,
+        borderRadius: 200,
         position: 'absolute',
-        bottom: 12,
-        right: 12,
-	},
-	container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
-    head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },
-    wrapper: { flexDirection: 'row' },
-    title: { flex: 1, backgroundColor: '#f6f8fa' },
-    row: {  height: 40  },
-    text: { margin: 6, textAlign: 'center' }
+        bottom: 72,
+        right: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor:'#EEBB4D',
+    },
+    hideButton:{
+        flex:0.5,
+        backgroundColor:'#fff',
+        alignItems:'flex-end',
+        marginRight:10,
+        marginTop:10,
+        bottom:0
+    },
+    submitButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        marginTop:15,
+    },
+	container:{
+        flex:1,
+        paddingTop:20,
+        backgroundColor:'#fff'
+    },
+    head:{
+        height:40, 
+        backgroundColor:'#f1f8ff',
+        width:200
+    },
+    wrapper:{
+        flexDirection:'row'
+    },
+    title:{
+        flex:1,
+        backgroundColor:'#f6f8fa'
+    },
+    row:{
+        height:40
+    },
+    text:{
+        margin:6,
+        textAlign:'center'
+    }
 });
 
 export default CreateTask;

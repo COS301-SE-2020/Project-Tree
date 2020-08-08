@@ -133,19 +133,16 @@ class GraphScreen extends Component{
                     getProjectInfo={this.getProjectInfo}
                 />
 
-                <View style={{flex:30}}>
+                <View style={{flex:1}}>
                     <WebViewWrapper nodes={this.state.nodes} links={this.state.links} webKey={this.state.key} displayTaskDependency={this.displayTaskDependency} setCreateDependency={this.setCreateDependency}/>
+                    {/* <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} /> */}                    
                 </View>
                 
                 <TaskModal project={this.props.project} selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
                 <DependencyModal project={this.props.project} selectedDependency={this.state.selectedDependency} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} getName={this.getName}/>
 
-                <View style={{flex:1}}>
+                <View>
                     <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
-                </View>
-
-                <View style={{flex:1}}>
-                    <ProjectModal project={this.props.project}/>
                 </View>
             </View>
         ) : null;
@@ -195,10 +192,9 @@ let deviceHeight = Math.round(Dimensions.get('window').height)-30;
 
 const styles = StyleSheet.create({
     container: {
-        width: deviceWidth,
-        height: 750,
-        marginBottom: 190,
-        marginTop: 250
+        width: '100%',
+        height: '100%',
+        marginBottom: 60,
     }
 });
 
