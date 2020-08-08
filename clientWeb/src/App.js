@@ -47,10 +47,10 @@ class App extends Component {
   componentDidMount(){
     let token = localStorage.getItem('sessionToken')
     if(token != null){
-      $.post("/verify", { token: token }, (response) => {
+      /* $.post("/verify", { token: token }, (response) => {
         console.log(response)
         if(!response) this.handleLogout()
-      })
+      }) */
       $.post("/project/get", {creatorID: token}, (response) => {
         this.setState({projects: response.projects });
       })
@@ -212,25 +212,26 @@ class App extends Component {
                   <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
                     <div className="row">
-                    <div className="column" style={{backgroundColor: "white"}}>
-                     <div className="login">
-                      <div className="container" ref={ref => (this.container = ref)}>
-                        {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
-                        {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
-                      </div>
-                      <RightSide
-                          current={current}
-                          currentActive={currentActive}
-                          containerRef={ref => (this.rightSide = ref)}
-                          onClick={this.changeState.bind(this)}
-                        /></div>
-                        </div>
-                        <div className="column">  
-                          <div className="carosal">
-                           <About/>
+                      <div className="column" style={{backgroundColor: "white"}}>
+                        <div className="login">
+                          <div className="container" ref={ref => (this.container = ref)}>
+                            {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
+                            {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
                           </div>
-                        </div>                   
-                     </div>
+                            <RightSide
+                              current={current}
+                              currentActive={currentActive}
+                              containerRef={ref => (this.rightSide = ref)}
+                              onClick={this.changeState.bind(this)}
+                            />
+                        </div>
+                      </div>
+                      <div className="column">
+                        <div className="carosal">
+                          <About/>
+                        </div>
+                      </div>
+                    </div>
                   </Route>
                 </Switch>
               </Col>

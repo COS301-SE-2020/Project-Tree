@@ -220,18 +220,14 @@ function getProgress(req, res) {
 }
 
 async function getProjects(req, res) {
-  console.log(req.body.creatorID)
   let creator = await uq.verify(req.body.creatorID);
-  console.log(" sss",creator)
-  if(creator != null)
-  {
-    console.log("INSIDE: " , creator)
+  if(creator != null)  {
     await db.getSession()
     .run(
       `
-      MATCH (user)-[:MANAGES]->(project) 
-      WHERE ID(user) = ${creator}
-      return project
+        MATCH (user)-[:MANAGES]->(project) 
+        WHERE ID(user) = ${creator}
+        return project
       `
     )
     .then(result => {
