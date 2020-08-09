@@ -26,7 +26,7 @@ class GraphScreen extends Component{
         this.setState({key: this.state.key+1})
     }
 
-    async componentDidUpdate(){
+    async componentDidMount(){
         this._isMounted = true;
 
         if(this.props.project === null){
@@ -136,7 +136,6 @@ class GraphScreen extends Component{
 
                 <View style={{flex:1}}>
                     <WebViewWrapper nodes={this.state.nodes} links={this.state.links} webKey={this.state.key} displayTaskDependency={this.displayTaskDependency} setCreateDependency={this.setCreateDependency}/>
-                    {/* <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} /> */}                    
                 </View>
                 
                 <TaskModal project={this.props.project} selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />

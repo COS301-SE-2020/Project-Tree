@@ -124,18 +124,12 @@ class Graph extends Component{
   constructor(props) {
     super(props);
     let drawerState = globalSelectedProject === null ? true : false;
-    this.state = {drawerVisible:drawerState, selectedProject:null};
-    this.setCurrentProject = this.setCurrentProject.bind(this);
+    this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
     this.setDrawerVisible = this.setDrawerVisible.bind(this);
 	}
   
   setDrawerVisible(mode){
     this.setState({drawerVisible:mode});
-  }
-
-	setCurrentProject(project){
-    this.setState({selectedProject:project});
-    globalSelectedProject = project;
   }
   
 	render(){
@@ -169,34 +163,35 @@ class Graph extends Component{
         </View>
       )
     }
+
 		return(
       <Screen>
-			<Drawer
-				type="overlay"
-				open={this.state.drawerVisible}
-				content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={globalSelectedProject} navigation={this.props.navigation}/>}
-				tapToClose={true}
-				openDrawerOffset={0.2} 
-				panCloseMask={0.2}
-				closedDrawerOffset={-3}
-				tweenHandler={(ratio) => ({
-					main: { opacity:(2-ratio)/2 }
-				})}
-        	>
-          	{globalSelectedProject !== null ?
-            <React.Fragment>
-				<TouchableOpacity style={{height:60}} onPress={()=>{this.setState({drawerVisible:true})}}>
-					<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-				</TouchableOpacity>
-				<GraphScreen 
-					project={globalSelectedProject}
-					navigation={this.props.navigation}
-				/>
-            </React.Fragment>
-           : 
-            <TouchableOpacity style={{height:60}} onPress={()=>{this.setDrawerVisible(true)}}>
-              	<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
+        <Drawer
+          type="overlay"
+          open={this.state.drawerVisible}
+          content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={globalSelectedProject} navigation={this.props.navigation}/>}
+          tapToClose={true}
+          openDrawerOffset={0.2} 
+          panCloseMask={0.2}
+          closedDrawerOffset={-3}
+          tweenHandler={(ratio) => ({
+            main: { opacity:(2-ratio)/2 }
+          })}
+        >
+          {this.state.selectedProject !== null ?
+          <React.Fragment>
+            <TouchableOpacity style={{height:60}} onPress={()=>{this.setState({drawerVisible:true})}}>
+              <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
             </TouchableOpacity>
+            <GraphScreen 
+              project={this.state.selectedProject}
+              navigation={this.props.navigation}
+            />
+          </React.Fragment>
+          : 
+          <TouchableOpacity style={{height:60}} onPress={()=>{this.setDrawerVisible(true)}}>
+            <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
+          </TouchableOpacity>
           }
         </Drawer>
 			</Screen>

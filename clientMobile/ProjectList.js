@@ -68,7 +68,7 @@ class ProjectListDrawer extends Component {
     componentWillUnmount(){
         this._isMounted = false;
     }
-    //"#96BB7C"
+
     render() {
         return (
             <View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>

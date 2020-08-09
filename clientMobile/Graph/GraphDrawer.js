@@ -15,12 +15,11 @@ export default class GraphDrawer extends Component {
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>{this.props.project.name}</Text>
                         <Text style={styles.modalText}>{this.props.project.description}</Text>
-						<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
+						<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{
+							backgroundColor:'#96BB7C',
 							alignItems:'center',
 							justifyContent:'center',
 							height:45,
-							borderColor:'#EEBB4D',
-							borderWidth:2,
 							borderRadius:5,
 							shadowColor:'#000',
 							shadowOffset:{
@@ -31,8 +30,8 @@ export default class GraphDrawer extends Component {
 							shadowRadius:2,  
 							elevation:3}}
 						>
-							<Text style={{color:'white'}}>
-								Project Info
+							<Text style={{color:'black', fontSize:15}}>
+								View Project
 							</Text>
 						</TouchableHighlight>
                     </View>
@@ -54,18 +53,20 @@ const styles = StyleSheet.create({
 	},
 	modalView: {
 		margin: 20,
-		backgroundColor: "white",
+		backgroundColor: "#184D47",
+		borderColor:"#EEBB4D",
+		borderWidth: 5,
 		borderRadius: 20,
 		padding: 35,
 		alignItems: "center",
-		shadowColor: "#000",
+		shadowColor: "white",
 		shadowOffset: {
 		width: 0,
 		height: 2
 		},
 		shadowOpacity: 0.25,
 		shadowRadius: 3.84,
-		elevation: 5
+		elevation: 10
 	},
 	openButton: {
 		backgroundColor: "#F194FF",
@@ -80,7 +81,8 @@ const styles = StyleSheet.create({
 	},
 	modalText: {
 		marginBottom: 15,
-		textAlign: "center"
+		textAlign: "center",
+		color: 'white'
 	},
     floatinBtn: {
 		height: 50,
