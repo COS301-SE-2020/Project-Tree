@@ -103,31 +103,16 @@ export default class SettingsScreen extends Component {
                             </CardItem>
                             <CardItem style={{flexDirection:'row', justifyContent:'space-between'}}>
                                 <TouchableOpacity style={styles.viewButton} onPress={()=>{this.props.navigation.navigate('Project Tree')}}>
-                                    <Icon type="FontAwesome" name="eye"></Icon>
+                                    <Icon type="FontAwesome" name="eye" style={{color:'white'}}></Icon>
                                 </TouchableOpacity>
                                 <DeleteProject project={this.props.project} setProjectInfo={this.setProjectInfo}/>
                                 <TouchableOpacity style={styles.editButton} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
-                                    <Icon type="FontAwesome" name="edit" ></Icon>
+                                    <Icon type="FontAwesome" name="edit" style={{color:'white'}}></Icon>
                                 </TouchableOpacity>
                             </CardItem>
                             <CardItem>
                                 <Body>
                                     {this.settingPermissions(this.props.project)}
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-
                                 </Body>
                             </CardItem>
                         </Card>
@@ -170,10 +155,9 @@ const styles = StyleSheet.create({
     text:{
         margin:6, 
         textAlign:'center'
-        
     },
     viewButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
@@ -192,7 +176,7 @@ const styles = StyleSheet.create({
         //margin:3,
     },
     editButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
@@ -207,7 +191,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity:0.8,
         shadowRadius:2,  
-        elevation:1,
-        //margin:3,
+        elevation:1
     }
 })

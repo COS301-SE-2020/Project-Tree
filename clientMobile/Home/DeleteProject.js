@@ -42,7 +42,7 @@ export default class DeleteProject extends Component{
     render(){
         return(
             <TouchableOpacity style={styles.deleteButton} onPress={() => this.deleteConfirmation()}>
-                <Icon type="FontAwesome" name="trash"></Icon>
+                <Icon type="FontAwesome" name="trash" style={{color:'#FFF'}}></Icon>
             </TouchableOpacity>
         );
     }
@@ -50,7 +50,7 @@ export default class DeleteProject extends Component{
 
 const styles = StyleSheet.create({
     deleteButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity:0.8,
         shadowRadius:2,  
-        elevation:1,
-        //margin:3,
+        elevation:1
     }
 });

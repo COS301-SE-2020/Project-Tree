@@ -133,7 +133,7 @@ class GraphScreen extends Component{
                 <DependencyModal project={this.props.project} selectedDependency={this.state.selectedDependency} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} getName={this.getName}/>
 
                 <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                    <TouchableOpacity style={styles.floatinBtn}>
+                    <TouchableOpacity style={styles.floatinBtn} onPress={()=>{this.props.setDrawerVisible(true)}}>
                         <IconEntypo name="menu-fold" size={25}/>
                     </TouchableOpacity>
                     <CreateDependency 
