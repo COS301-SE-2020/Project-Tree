@@ -52,7 +52,9 @@ class ProjectPage extends React.Component {
       <Container fluid className="py-2" style={{height: "40%"}}>
         <Row className="m-2">
           <Col sm={12} md={6} xl={4}><ProjectInfo project={this.props.project} setProject={project => this.props.setProject(project)}/></Col>
-          <Col sm={12} md={6} xl={8} style={{border: "black solid 1px"}}> 
+          <Col sm={12} md={6} xl={4} style={{border: "black solid 1px"}}>
+          </Col>
+          <Col sm={12} md={12} xl={4} style={{border: "black solid 1px"}}> 
             <ProjectDashboard project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
           </Col>
         </Row>

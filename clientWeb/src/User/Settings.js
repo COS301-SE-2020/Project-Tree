@@ -13,11 +13,12 @@ function stringifyFormData(fd) {
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user};
+    this.state = { show: false, toggleEdit: false, user: this.props.user };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
-    this.toggleEdit = this.toggleEdit.bind(this);
+    this.openEdit = this.openEdit.bind(this);
+    this.closeEdit = this.closeEdit.bind(this);
   }
 
   showModal() {
@@ -38,11 +39,19 @@ class Settings extends React.Component {
     window.location.reload(false);
   }
 
-  toggleEdit() {
+  openEdit() {
     this.setState({
-      toggleEdit: !this.state.toggleEdit
+      toggleEdit: true
     })
   }
+
+  closeEdit() {
+    this.setState({
+      toggleEdit: false,
+      user: this.props.user
+    })
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.user!== prevProps.user) {
       this.setState({ user: this.props.user});
@@ -137,14 +146,33 @@ class Settings extends React.Component {
               </Container>
             </Modal.Body>
               <Container>
-                <Row>
-                  <Col>
-                  <Button block variant="secondary" className="m-2" onClick={() => {this.toggleEdit()}}>
-                  
-                Edit preferences
-                  </Button> 
-                  </Col>
-                </Row>
+                  {
+                    this.state.toggleEdit === true?
+                      (
+                        <Row>
+                          <Col>
+                            <Button block variant="secondary" className="m-2" onClick={() => {this.closeEdit()}}>
+                              Cancel
+                            </Button> 
+                          </Col>
+                          <Col>
+                            <Button type="submit" block variant="secondary" className="m-2">
+                              save Change
+                            </Button> 
+                          </Col>
+                        </Row>
+                      )
+                    :
+                      (
+                        <Row>
+                          <Col>
+                            <Button block variant="secondary" className="m-2" onClick={() => {this.openEdit()}}>
+                              Edit Details
+                            </Button> 
+                          </Col>
+                        </Row>
+                      )
+                  }
                 <Row>
                   <Col>
                     <Button block  variant="dark" className="m-2" onClick={() => this.handleLogout()}>Logout</Button>
