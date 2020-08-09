@@ -157,7 +157,7 @@ class Settings extends React.Component {
                           </Col>
                           <Col>
                             <Button type="submit" block variant="secondary" className="m-2">
-                              save Change
+                              Save changes
                             </Button> 
                           </Col>
                         </Row>

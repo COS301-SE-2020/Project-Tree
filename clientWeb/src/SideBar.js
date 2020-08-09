@@ -125,7 +125,7 @@ class SideBar extends React.Component {
         <h4 className="text-white">Owned Projects</h4>
         <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/>
         {this.OwnedProjects()} 
-        <hr></hr>
+        <hr style={{backgroundColor:"white"}}></hr>
         <h4 className="text-white" >Other Projects</h4>
         {this.OtherProjects()} 
       </Container>
