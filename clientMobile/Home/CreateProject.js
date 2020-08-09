@@ -24,7 +24,7 @@ class CreateProject extends Component{
                     setCurrentProject={this.props.setCurrentProject}
                 />
 
-                <View style={{ padding: 5 }}>
+                <View style={{padding:5,paddingTop:15}}>
                     <TouchableOpacity style={styles.createButton} onPress={()=>{
                         this.setModalVisible(true);
                         this.props.setDrawerVisible(false);
@@ -49,9 +49,9 @@ class CreateProjectModal extends Component{
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
                         <CreateProjectForm 
-                        setProjectInfo={this.props.setProjectInfo} 
-                        setModalVisible={this.props.setModalVisible} 
-                        setCurrentProject={this.props.setCurrentProject}/>
+                            setProjectInfo={this.props.setProjectInfo} 
+                            setModalVisible={this.props.setModalVisible} 
+                            setCurrentProject={this.props.setCurrentProject}/>
                     </View>
                 </View>
             </Modal>
@@ -163,9 +163,9 @@ class PermissionsTable extends Component{
 
         let tableHead = ['', 'Create', 'Delete', 'Update']
         let tableData = [
-                ['Package Managers', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[6], 6)],
-                ['Responsible Persons', elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[7], 7)],
-                ['Resources', elementButton(this.props.tableFormData[2], 2), elementButton(this.props.tableFormData[5], 5), elementButton(this.props.tableFormData[8], 8)]
+                ['Package Managers', elementButton(this.props.tableFormData[0], 0), elementButton(this.props.tableFormData[1], 1), elementButton(this.props.tableFormData[2], 2)],
+                ['Responsible Persons', elementButton(this.props.tableFormData[3], 3), elementButton(this.props.tableFormData[4], 4), elementButton(this.props.tableFormData[5], 5)],
+                ['Resources', elementButton(this.props.tableFormData[6], 6), elementButton(this.props.tableFormData[7], 7), elementButton(this.props.tableFormData[8], 8)]
             ];
 
         return (
@@ -206,12 +206,6 @@ const styles = StyleSheet.create({
         elevation: 5,
         height: 440,
         width: 350
-    },
-    openButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
     },
     textStyle: {
         color: "white",
@@ -261,7 +255,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity:0.8,
         shadowRadius:2,  
-        elevation:3
+        elevation:3,
+        margin:0
     },
     whiteText:{
         color:'#fff'

@@ -68,6 +68,9 @@ class CreateDependencyModal extends Component {
 			<Modal animationType="slide" transparent={true} visible={this.props.createDependencyVisibility} onRequestClose={()=>this.props.setCreateDependencyVisibility(false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
+                        <TouchableOpacity style={styles.hideButton} onPress={()=>this.props.setCreateDependencyVisibility(false)}>
+                            <Icon type="FontAwesome" name="close" />
+                        </TouchableOpacity>
                         <CreateDependencyForm 
                             setCreateDependencyVisibility={this.props.setCreateDependencyVisibility}
                             getProjectInfo={this.props.getProjectInfo} 
@@ -77,9 +80,9 @@ class CreateDependencyModal extends Component {
                             target={this.props.target}
                             projID={this.props.projID}
                         />
-						<TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.setCreateDependencyVisibility(false)}>
+						{/* <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.setCreateDependencyVisibility(false)}>
                             <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight>
+                        </TouchableHighlight> */}
                     </View>
                 </View>
             </Modal>
@@ -155,7 +158,7 @@ class CreateDependencyForm extends Component{
         return(
             <View>
                 <View>
-                    <Text>
+                    <Text style={styles.modalText}>
                         {this.props.name}
                     </Text>
                 </View>
@@ -174,12 +177,12 @@ class CreateDependencyForm extends Component{
                         />
                     </Item>
                 </Form>
-                <View style={{ padding: 5 }}>
-                    <Button block light onPress={this.handleSubmit}>
+                <View styles={{padding:10}}>
+                    <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
                         <Text>
                             Submit
                         </Text>
-                    </Button>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -187,40 +190,57 @@ class CreateDependencyForm extends Component{
 }
 
 const styles = StyleSheet.create({
-	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		marginTop: 22
+	centeredView:{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(100,100,100, 0.8)',
+        padding: 20,
 	},
-	modalView: {
-		margin: 20,
-		backgroundColor: "white",
-		borderRadius: 20,
-		padding: 35,
-		alignItems: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-		width: 0,
-		height: 2
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
+	modalView:{
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 100,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
         elevation: 5,
-        width : 350,
-        height: 600
-	},
-	openButton: {
-		backgroundColor: "#F194FF",
-		borderRadius: 20,
-		padding: 10,
-		elevation: 2
-	},
-	textStyle: {
-		color: "white",
-		fontWeight: "bold",
-		textAlign: "center"
-	},
+        height: 450,
+        width: 350
+    },
+    hideButton:{
+        flex:0.5,
+        backgroundColor:'#fff',
+        alignItems:'flex-end',
+        marginRight:10,
+        marginTop:10,
+        bottom:0
+    },
+    submitButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        marginTop:15,
+    },
 	modalText: {
 		marginBottom: 15,
 		textAlign: "center"
