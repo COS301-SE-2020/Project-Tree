@@ -18,7 +18,7 @@ class SideBar extends React.Component {
           style={{width: "100%"}}
           key={project.id}>
           <Col>
-            <Container fluid className="block-example bg-secondary rounded border border-dark" style={{fontFamily:"Courier New", color: "black"}}>
+            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
                   {project.name}
@@ -72,7 +72,7 @@ class SideBar extends React.Component {
           style={{width: "100%"}}
           key={project.id}>
           <Col>
-            <Container fluid className="block-example bg-secondary rounded border border-dark" style={{fontFamily:"Courier New", color: "black"}}>
+            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
                   {project.name}
@@ -122,11 +122,11 @@ class SideBar extends React.Component {
 
     return (
       <Container className="py-1" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
-        <h4>Owned Projects</h4>
+        <h4 className="text-white">Owned Projects</h4>
         <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/>
         {this.OwnedProjects()} 
-        <hr></hr>
-        <h4>Other Projects</h4>
+        <hr style={{backgroundColor:"white"}}></hr>
+        <h4 className="text-white" >Other Projects</h4>
         {this.OtherProjects()} 
       </Container>
     );
