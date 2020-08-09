@@ -56,7 +56,7 @@ function makeElement(node, criticalPathNodes) {
       statusColor = '#ffae42'
   }
     var borderColor = '#000';
-    if(criticalPathNodes.includes(node.id)) borderColor = "#00f";
+    if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
 
     return new joint.shapes.standard.Rectangle({
         id: node.id,
