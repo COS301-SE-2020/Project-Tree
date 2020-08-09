@@ -71,17 +71,23 @@ class ProjectListDrawer extends Component {
   
     render() {
         return (
-            <View style={{flex:1, backgroundColor:"#96BB7C"}}>
-                <ProjectList 
-                    projects={this.state.projects} 
-                    setCurrentProject={this.props.setCurrentProject}
-                    setDrawerVisible={this.props.setDrawerVisible}
-                />
-                <CreateProject 
-                    setProjectInfo={this.setProjectInfo} 
-                    setDrawerVisible={this.props.setDrawerVisible}
-                    setCurrentProject={this.props.setCurrentProject}
-                />
+            <View style={{flex:1, backgroundColor:"#96BB7C", paddingBottom:60}}>
+                <View style={{flex:9}}>
+                    <ScrollView>
+                        <ProjectList 
+                            projects={this.state.projects} 
+                            setCurrentProject={this.props.setCurrentProject}
+                            setDrawerVisible={this.props.setDrawerVisible}
+                        />
+                    </ScrollView>
+                </View>
+                <View style={{flex:1}}>
+                    <CreateProject 
+                        setProjectInfo={this.setProjectInfo} 
+                        setDrawerVisible={this.props.setDrawerVisible}
+                        setCurrentProject={this.props.setCurrentProject}
+                    />
+                </View>
             </View>
         );
     }
