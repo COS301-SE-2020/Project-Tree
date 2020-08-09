@@ -49,25 +49,14 @@ class App extends Component {
   componentDidMount(){
     let token = localStorage.getItem('sessionToken')
     if(token != null){
-      /* $.post("/verify", { token: token }, (response) => {
-        console.log(response)
-        if(!response) this.handleLogout()
-      }) */
       $.post("/project/get", {creatorID: token}, (response) => {
         this.setState({projects: response.projects });
       })
       .fail((response) => {
           throw Error(response.message);
       });
-      $.post("/user/get", {creatorID: token}, (response) => {
-        this.setState({user: response.user });
-      })
-      .fail((response) => {
-          throw Error(response.message);
-      });
       this.setState({loggedInStatus: true });
     }else{
-      console.log(this.rightSide)
       if(this.rightSide) this.rightSide.classList.add("right");
       //<Redirect to="/"/>
     }
@@ -145,7 +134,6 @@ class App extends Component {
       loggedInStatus: false,
       user: {}
     });
-    console.log(this.rightSide)
     if(!this.rightSide)
         this.rightSide.classList.add("right");
     window.location.reload(false);

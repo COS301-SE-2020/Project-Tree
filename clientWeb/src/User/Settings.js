@@ -2,18 +2,19 @@ import React from "react";
 import { Modal, Button, Col, Row, Container, Form} from "react-bootstrap";
 import $ from "jquery";
 
-function stringifyFormData(fd) {
+function formData(fd) {
   const data = {};
   for (let key of fd.keys()) {
     data[key] = fd.get(key);
   }
-  return JSON.stringify(data, null, 2);
+  console.log("formdata", data);
+  return data;
 }
 
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user};
+    this.state = { show: false, toggleEdit: false, user: {}};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -22,12 +23,20 @@ class Settings extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount(){
+    $.post("/user/get", {token: localStorage.getItem('sessionToken')}, (response) => {
+      this.setState({user: response.user});
+    })
+    .fail((response) => {
+        throw Error(response.message);
+    });
+  }
+
   showModal() {
     this.setState({ show: true });
   }
 
   hideModal() {
-    console.log("STATE",  this.state)
     this.setState({ show: false });
   }
 
@@ -48,37 +57,23 @@ class Settings extends React.Component {
   }
 
   closeEdit() {
-    this.setState({
-      toggleEdit: false,
-      user: this.props.user
+    $.post("/user/get", {token: localStorage.getItem('sessionToken')}, (response) => {
+      this.setState({toggleEdit: false, user: response.user });
     })
-  }
-
-  componentDidUpdate(prevProps) 
-  {
-     console.log(this.state)
-    // console.log(this.state.user)
-    if (this.props.user !== prevProps.user) {
-     // console.log(prevProps.user)
-     this.setState({ user: this.props.user});
-     // console.log(this.state.user.name)
-    }
-    else
-    {
-      console.log(this.state.id)
-      //this.setState({ user: prevProps.user});
-    }
-    
+    .fail((response) => {
+        throw Error(response.message);
+    });
   }
 
   async handleSubmit(event) {
     event.preventDefault();
+    console.log(event.target);
     let data = new FormData(event.target);
-    data = await stringifyFormData(data);
-    console.log("POP:   ", JSON.parse(data))
-    $.post("/user/edit", JSON.parse(data), (response) => {
-      this.hideModal()
-     // this.setState({ show: false });
+    data = await formData(data);
+    console.log(data.name);
+    $.post("/user/edit", {user: data, token: localStorage.getItem('sessionToken')} , (response) => {
+      this.setState({user: response.user, prevUser: response.user });
+      this.closeEdit();
     })
     .fail(() => {
       alert("Unable to update user preferences");
@@ -105,7 +100,7 @@ class Settings extends React.Component {
               <Container>
                 <Row>Name: &nbsp;
                   {this.state.toggleEdit === false ?
-                  this.props.user.name
+                  this.state.user.name
                   :
                   (
                     <Form.Control
@@ -124,7 +119,7 @@ class Settings extends React.Component {
                 </Row>
                 <Row>Surname: &nbsp;
                   {this.state.toggleEdit === false ?
-                    this.props.user.sname
+                    this.state.user.sname
                     :
                     (
                       <Form.Control
@@ -143,7 +138,7 @@ class Settings extends React.Component {
                 </Row>
                 <Row>Email: &nbsp;
                 {this.state.toggleEdit === false ?
-                    this.props.user.email
+                    this.state.user.email
                     :
                     (
                       <Form.Control
@@ -162,7 +157,7 @@ class Settings extends React.Component {
                 </Row>
                 <Row>Birthdate: &nbsp;
                 {this.state.toggleEdit === false ?
-                    this.props.user.birthday
+                    this.state.user.birthday
                     :
                     (
                       <Form.Control
