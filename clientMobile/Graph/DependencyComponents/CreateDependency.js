@@ -242,14 +242,15 @@ const styles = StyleSheet.create({
 	},
     CreateDependencyBtn:{
         height: 50,
-        width: 200,
+        //width: 200,
         borderRadius: 5,
         borderColor:'green',
         borderWidth:3,
         position: 'absolute',
         bottom: 72,
-        justifyContent: 'center',
         left:136,
+        right:74,
+        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor:'#EEBB4D'
     },
