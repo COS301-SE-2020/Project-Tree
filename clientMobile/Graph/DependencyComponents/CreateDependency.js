@@ -41,12 +41,12 @@ class CreateDependency extends Component{
                 
                 {this.props.sourceCreateDependency !== null ?
                     <React.Fragment>
-                        <TouchableOpacity onPress={this.handleCreateDependency} style={{backgroundColor:'green', height:30}}>
+                        <TouchableOpacity onPress={this.handleCreateDependency} style={styles.CreateDependencyBtn}>
                             <Text>
                                 {this.props.getName(this.props.sourceCreateDependency)+'→'+this.props.getName(this.props.targetCreateDependency)}
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>this.props.setCreateDependency(null)} style={{backgroundColor:'red', height:30}}>
+                        <TouchableOpacity onPress={()=>this.props.setCreateDependency(null)} style={styles.ClearDependencyBtn}>
                             <Text>
                                 clear
                             </Text>
@@ -153,7 +153,7 @@ class CreateDependencyForm extends Component{
         const buttons = [{ element: component1 }, { element: component2 }]
 
         return(
-            <View style={{width:300, height:300}}>
+            <View>
                 <View>
                     <Text>
                         {this.props.name}
@@ -225,15 +225,28 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 		textAlign: "center"
 	},
-    floatinBtn: {
-        backgroundColor: 'lightgreen',
-        width: 45,
-        height: 45,
-        borderRadius: 45,
+    CreateDependencyBtn:{
+        height: 50,
+        width: 200,
+        borderRadius: 5,
         position: 'absolute',
-        bottom: 12,
-        right: 12,
-	},
+        bottom: 72,
+        justifyContent: 'center',
+        left:136,
+        alignItems: 'center',
+        backgroundColor:'#EEBB4D'
+    },
+    ClearDependencyBtn:{
+        height: 50,
+        width: 50,
+        borderRadius: 200,
+        position: 'absolute',
+        bottom: 72,
+        justifyContent: 'center',
+        left: 74,
+        alignItems: 'center',
+        backgroundColor:'#EEBB4D'
+    },
 	container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
     head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },
     wrapper: { flexDirection: 'row' },

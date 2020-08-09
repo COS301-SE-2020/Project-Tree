@@ -6,7 +6,8 @@ import ProjectModal from './GraphDrawer';
 import CreateTask from './TaskComponents/CreateTask';
 import TaskModal from './TaskComponents/TaskModal';
 import DependencyModal from './DependencyComponents/DependencyModal';
-import CreateDependency from './DependencyComponents/CreateDependency'
+import CreateDependency from './DependencyComponents/CreateDependency';
+import IconEntypo from 'react-native-vector-icons/AntDesign'
 
 class GraphScreen extends Component{
     _isMounted = false;
@@ -124,24 +125,26 @@ class GraphScreen extends Component{
 
         return this.state.nodes ? (
             <View style={styles.container}>
-                <CreateDependency 
-                    sourceCreateDependency={this.state.sourceCreateDependency} 
-                    targetCreateDependency={this.state.targetCreateDependency} 
-                    setCreateDependency={this.setCreateDependency} 
-                    getName={this.getName} 
-                    projID={this.props.project.id}
-                    setProjectInfo={this.setProjectInfo}
-                    getProjectInfo={this.getProjectInfo}
-                />
-
-                <View style={{flex:1}}>
+                <View style={{flex:8}}>
                     <WebViewWrapper nodes={this.state.nodes} links={this.state.links} webKey={this.state.key} displayTaskDependency={this.displayTaskDependency} setCreateDependency={this.setCreateDependency}/>
                 </View>
                 
                 <TaskModal project={this.props.project} selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
                 <DependencyModal project={this.props.project} selectedDependency={this.state.selectedDependency} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} getName={this.getName}/>
 
-                <View>
+                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                    <TouchableOpacity style={styles.floatinBtn}>
+                        <IconEntypo name="menu-fold" size={25}/>
+                    </TouchableOpacity>
+                    <CreateDependency 
+                        sourceCreateDependency={this.state.sourceCreateDependency} 
+                        targetCreateDependency={this.state.targetCreateDependency} 
+                        setCreateDependency={this.setCreateDependency} 
+                        getName={this.getName} 
+                        projID={this.props.project.id}
+                        setProjectInfo={this.setProjectInfo}
+                        getProjectInfo={this.getProjectInfo}
+                    />
                     <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
                 </View>
             </View>
@@ -196,6 +199,17 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         marginBottom: 60,
+    },
+    floatinBtn:{
+        height: 50,
+        width: 50,
+        borderRadius: 200,
+        position: 'absolute',
+        bottom: 72,
+        left: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor:'#EEBB4D'
     }
 });
 

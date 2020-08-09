@@ -180,9 +180,9 @@ class Graph extends Component{
         >
           {this.state.selectedProject !== null ?
           <React.Fragment>
-            <TouchableOpacity style={{height:60}} onPress={()=>{this.setState({drawerVisible:true})}}>
+            {/* <TouchableOpacity style={{height:60}} onPress={()=>{this.setState({drawerVisible:true})}}>
               <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <GraphScreen 
               project={this.state.selectedProject}
               navigation={this.props.navigation}
