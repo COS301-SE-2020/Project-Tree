@@ -10,6 +10,7 @@ import HomeScreen from './Home/HomeScreen';
 import GraphScreen from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
 import ProjectList from './ProjectList';
+import GraphDrawer from './Graph/GraphProjectModal';
 console.disableYellowBox = true; 
 //import { createAppContainer } from 'react-navigation';
 //import { createStackNavigator} from '@react-navigation/stack';
@@ -116,26 +117,6 @@ class Home extends Component{
 			</Screen>
 		)
 	}
-}
-
-class GraphDrawer extends Component{
-  render()
-  {
-    if(this.props.project === null)
-    {
-      return(
-        null
-      )
-    }
-
-    return(
-      <View>
-        <Text>
-          {this.props.project.name}
-        </Text>
-      </View>
-    )
-  }
 }
 
 class Graph extends Component{

@@ -19,9 +19,9 @@ class GraphProjectModal extends Component {
 			<React.Fragment>
 				<GraphModal modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} project={this.props.project} />
 				{/* <View style={{flex:1}}> */}
-					<TouchableOpacity onPress={()=>this.setModalVisible(true)} style={styles.floatinBtn}>
+					{/* <TouchableOpacity onPress={()=>this.setModalVisible(true)} style={styles.floatinBtn}>
 						<Icon type="FontAwesome5" name="info" />
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 				{/* </View> */}
 			</React.Fragment>
 		)
@@ -30,6 +30,10 @@ class GraphProjectModal extends Component {
 
 class GraphModal extends Component{
     render(){
+		if(this.props.project === null){
+			return null;
+		}
+
 		const tableData = []
         const tempArr = []
         for(let x = 0; x < this.props.project.permissions.length; x++){
@@ -43,7 +47,7 @@ class GraphModal extends Component{
 
         while(tempArr.length) tableData.push(tempArr.splice(0,3));
         return(
-            <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={()=>this.props.setModalVisible(!this.props.modalVisible)}>
+            // <Modal animationType="slide" transparent={true} visible={this.props.modalVisible} onRequestClose={()=>this.props.setModalVisible(!this.props.modalVisible)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>{this.props.project.name}</Text>
@@ -62,7 +66,7 @@ class GraphModal extends Component{
                         </TouchableHighlight>
                     </View>
                 </View>
-            </Modal>
+            // </Modal>
         )
     }
 }
@@ -72,7 +76,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 22
+		marginTop: 22,
+		backgroundColor:'red'
 	},
 	modalView: {
 		margin: 20,

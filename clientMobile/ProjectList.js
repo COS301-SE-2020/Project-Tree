@@ -68,10 +68,10 @@ class ProjectListDrawer extends Component {
     componentWillUnmount(){
         this._isMounted = false;
     }
-  
+    //"#96BB7C"
     render() {
         return (
-            <View style={{flex:1, backgroundColor:"#96BB7C", paddingBottom:60}}>
+            <View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>
                 <View style={{flex:9}}>
                     <ScrollView>
                         <ProjectList 

@@ -29,7 +29,7 @@ class CreateProject extends Component{
                         this.setModalVisible(true);
                         this.props.setDrawerVisible(false);
                         }}>
-                        <Text style={styles.buttonText}>
+                        <Text style={{color:'#fff'}}>
                             Create Project
                         </Text>
                     </TouchableOpacity>
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
         
     },
     createButton:{
-        backgroundColor:'#fff',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
