@@ -47,9 +47,7 @@ class CreateDependency extends Component{
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={()=>this.props.setCreateDependency(null)} style={styles.ClearDependencyBtn}>
-                            <Text>
-                                clear
-                            </Text>
+                            <Icon type="MaterialIcons" name="clear" />
                         </TouchableOpacity>
                     </React.Fragment>
                 : null}
@@ -80,9 +78,6 @@ class CreateDependencyModal extends Component {
                             target={this.props.target}
                             projID={this.props.projID}
                         />
-						{/* <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.setCreateDependencyVisibility(false)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight> */}
                     </View>
                 </View>
             </Modal>
@@ -249,6 +244,8 @@ const styles = StyleSheet.create({
         height: 50,
         width: 200,
         borderRadius: 5,
+        borderColor:'green',
+        borderWidth:3,
         position: 'absolute',
         bottom: 72,
         justifyContent: 'center',
@@ -260,6 +257,8 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         borderRadius: 200,
+        borderWidth:3,
+        borderColor: 'red',
         position: 'absolute',
         bottom: 72,
         justifyContent: 'center',

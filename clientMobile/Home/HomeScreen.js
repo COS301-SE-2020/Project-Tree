@@ -113,21 +113,6 @@ export default class SettingsScreen extends Component {
                             <CardItem>
                                 <Body>
                                     {this.settingPermissions(this.props.project)}
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-                                    <Text>MORE INFO</Text>
-
                                 </Body>
                             </CardItem>
                         </Card>
