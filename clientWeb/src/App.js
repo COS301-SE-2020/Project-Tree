@@ -217,7 +217,7 @@ class App extends Component {
                   </Route>
                   <Route path="/home">
                     {this.state.loggedInStatus? 
-                    <Home />
+                    <Home projects={this.state.projects} setProject={project => this.setProject(project)}/>
                      : <Redirect to="/"/>}
                   </Route>
                   <Route path="/">

@@ -87,7 +87,7 @@ function register(req,res){ //email, password, name, surname
         });
 }
 
-function editUser(req, res) {
+async function editUser(req, res) {
     let creator = await verify(req.body.creatorID);
     if(creator!=null)
     {
