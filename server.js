@@ -38,9 +38,12 @@ app.post('/getProject', gq.getProjectTasks);
 app.post("/mobile", async (req, res) => {
 	taskArr = req.body.nodes
 	relArr = req.body.links
+	direction = req.body.graphDir
+	//console.log(direction)
 	res.render("GraphMobile", {
 		tasks: taskArr,
-		rels: relArr
+		rels: relArr,
+		graphDirection: direction
 	})
 });
 

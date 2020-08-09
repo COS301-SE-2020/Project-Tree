@@ -172,15 +172,16 @@ class WebViewWrapper extends Component{
     }
 
     render(){
+        let dir = "TB"
         return(
             <WebView
                 key={this.props.webKey}
                 ref={(ref) => this.myWebView = ref}
                 renderLoading={this.ActivityIndicatorLoadingView}
                 startInLoadingState={true}
-                source={{uri:'http://projecttree.herokuapp.com/mobile',
+                source={{uri:'http://192.168.137.1:5000/mobile',
                         method: 'POST',
-                        body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+''}}
+                        body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+'&graphDir='+JSON.stringify(dir)+''}}
                 onMessage={event => this.handleOnMessage(event)}
             />
         );

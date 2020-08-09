@@ -17,9 +17,6 @@ class UpdateTask extends Component {
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
                         <UpdateTaskForm task={this.props.task} toggleVisibility={this.props.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency}/>
-						{/* <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.toggleVisibility(true, false)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight> */}
                     </View>
                 </View>
             </Modal>
@@ -246,15 +243,6 @@ const styles = StyleSheet.create({
 	modalText: {
 		marginBottom: 15,
 		textAlign: "center"
-	},
-    floatinBtn: {
-        backgroundColor: 'lightgreen',
-        width: 45,
-        height: 45,
-        borderRadius: 45,
-        position: 'absolute',
-        bottom: 12,
-        right: 12,
 	},
 	container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
     head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },
