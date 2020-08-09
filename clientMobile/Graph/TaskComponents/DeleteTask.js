@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, Button } from "react-native";
+import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View, Button } from "react-native";
 import { Icon } from 'native-base';
 
 class DeleteTask extends Component{ 
@@ -43,11 +43,32 @@ class DeleteTask extends Component{
     
     render(){
         return(
-            <TouchableHighlight onPress={() => this.deleteConfirmation()}>
-                <Icon type="FontAwesome" name="trash" />
-            </TouchableHighlight>
+            <TouchableOpacity style={styles.deleteButton} onPress={() => this.deleteConfirmation()}>
+                <Icon type="FontAwesome" name="trash" ><Text>&nbsp;Delete</Text></Icon>
+            </TouchableOpacity>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    deleteButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        margin:3,
+    }
+});
 
 export default DeleteTask;

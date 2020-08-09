@@ -88,12 +88,6 @@ const styles = StyleSheet.create({
         height: 650,
         width: 350
     },
-    openButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-    },
     textStyle: {
         color: "white",
         fontWeight: "bold",
@@ -194,76 +188,5 @@ const styles = StyleSheet.create({
         margin:3,
     }
 });
-
-// const styles = StyleSheet.create({
-//     centeredView: {
-//         flex: 1,
-//         justifyContent: "center",
-//         alignItems: "center",
-//         marginTop: 22
-//     },
-//     modalView: {
-//         margin: 20,
-//         backgroundColor: "white",
-//         borderRadius: 20,
-//         padding: 10,
-//         alignItems: "center",
-//         shadowColor: "#000",
-//         shadowOffset: {
-//             width: 0,
-//             height: 2
-//         },
-//         shadowOpacity: 0.25,
-//         shadowRadius: 3.84,
-//         elevation: 5,
-//         height: 440,
-//         width: 350
-//     },
-//     openButton:{
-//         backgroundColor: "#F194FF",
-//         borderRadius: 20,
-//         padding: 10,
-//         elevation: 2
-//     },
-//     textStyle:{
-//         color: "white",
-//         fontWeight: "bold",
-//         textAlign: "center"
-//     },
-//     modalText:{
-//         marginBottom: 15,
-//         textAlign: "center"
-//     },
-//     container:{
-//         flex:1,
-//         paddingTop:20,
-//         backgroundColor:'#fff',
-//     },
-//     head:{
-//         height:40,
-//         backgroundColor:'#96BB7C',
-//     },
-//     wrapper:{
-//         flexDirection:'row'
-//     },
-//     title:{
-//         flex:1,
-//         backgroundColor:'#f6f8fa'
-//     },
-//     row:{
-//         height:40
-//     },
-//     text:{
-//         margin:6,
-//         textAlign:'center'
-//     },
-//     hideButton:{
-//         flex:0.15,
-//         backgroundColor:'#fff',
-//         alignItems:'flex-end',
-//         marginRight:10,
-//         marginTop:10
-//     },
-// });
 
 export default ProjectModal;

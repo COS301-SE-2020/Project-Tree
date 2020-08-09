@@ -101,7 +101,6 @@ class UpdateProjectForm extends Component{
     render(){
         return(
             <React.Fragment>
-                <Text>All fields are optional</Text>
                 <Form>
                     <Item>
                         <Input onChangeText={val => this.setState({ projName: val })} value={this.state.projName}/>
@@ -155,10 +154,6 @@ class PermissionsTable extends Component{
 
 const styles = StyleSheet.create({
     centeredView: {
-        // flex: 1,
-        // justifyContent: "center",
-        // alignItems: "center",
-        // marginTop: 22,
         position: 'absolute',
         width: '100%',
         height: '100%',
@@ -229,7 +224,7 @@ const styles = StyleSheet.create({
         elevation:1,
         margin:3,
     },
-    ontainer:{
+    container:{
         flex:1,
         paddingTop:20,
         backgroundColor:'#fff',

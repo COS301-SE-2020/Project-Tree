@@ -18,11 +18,11 @@ class GraphProjectModal extends Component {
 		return(
 			<React.Fragment>
 				<GraphModal modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} project={this.props.project} />
-				<View style={{flex:1}}>
+				{/* <View style={{flex:1}}> */}
 					<TouchableOpacity onPress={()=>this.setModalVisible(true)} style={styles.floatinBtn}>
 						<Icon type="FontAwesome5" name="info" />
 					</TouchableOpacity>
-				</View>
+				{/* </View> */}
 			</React.Fragment>
 		)
 	}
@@ -105,20 +105,40 @@ const styles = StyleSheet.create({
 		textAlign: "center"
 	},
     floatinBtn: {
-        backgroundColor: 'lightgreen',
-        width: 45,
-        height: 45,
-        borderRadius: 45,
-        position: 'absolute',
-        bottom: 12,
-        right: 12,
+		height: 50,
+		width: 50,
+		borderRadius: 200,
+		position: 'absolute',
+		bottom: 72,
+		right: 20,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor:'#96BB7C'
 	},
-	container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
-    head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },
-    wrapper: { flexDirection: 'row' },
-    title: { flex: 1, backgroundColor: '#f6f8fa' },
-    row: {  height: 40  },
-    text: { margin: 6, textAlign: 'center' }
+	container:{
+		flex:1,
+		paddingTop:30,
+		backgroundColor:'#fff'
+	},
+    head:{
+		height:40,
+		backgroundColor:'#f1f8ff',
+		width:200
+	},
+    wrapper:{
+		flexDirection:'row'
+	},
+    title:{
+		flex:1,
+		backgroundColor:'#f6f8fa'
+	},
+    row:{
+		height:40
+	},
+    text:{
+		margin:6,
+		textAlign:'center'
+	}
 });
 
 export default GraphProjectModal;

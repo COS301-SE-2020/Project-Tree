@@ -36,7 +36,7 @@ export default class SettingsScreen extends Component {
             }
         });
         const body = await response.json();
-        this.setState({projects:body.nodes, project:body.nodes[0]});
+        this.setState({projects:body.nodes, project:body.nodes[1]});
     }
 
     settingPermissions(proj){

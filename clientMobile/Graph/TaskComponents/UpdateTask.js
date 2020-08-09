@@ -10,13 +10,16 @@ class UpdateTask extends Component {
 
 	render(){
 		return(
-			<Modal animationType="slide" transparent={true} visible={this.props.modalVisibility} onRequestClose={()=>this.props.toggleVisibility(true, false)}>
+			<Modal animationType="fade" transparent={true} visible={this.props.modalVisibility} onRequestClose={()=>this.props.toggleVisibility(true, false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
+                        <TouchableOpacity style={styles.hideButton} onPress={() => this.props.toggleVisibility(true,false)}>
+                            <Icon type="FontAwesome" name="close" />
+                        </TouchableOpacity>
                         <UpdateTaskForm task={this.props.task} toggleVisibility={this.props.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency}/>
-						<TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.toggleVisibility(true, false)}>
+						{/* <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.toggleVisibility(true, false)}>
                             <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight>
+                        </TouchableHighlight> */}
                     </View>
                 </View>
             </Modal>
@@ -128,7 +131,7 @@ class UpdateTaskForm extends Component{
     render()
     {
         return(
-            <View style={{width:300, height:300}}>
+            <View>
                 <Form>
                     <Item floatingLabel>
                         <Label>Name of Task</Label>
@@ -172,12 +175,12 @@ class UpdateTaskForm extends Component{
                     onChange={this.handleStartDateSelect}
                     />
                 )}
-                <View style={{ padding: 5 }}>
-                    <Button block light onPress={this.handleSubmit}>
+                <View styles={{padding:10}}>
+                    <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
                         <Text>
                             Submit
                         </Text>
-                    </Button>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -186,34 +189,55 @@ class UpdateTaskForm extends Component{
 
 const styles = StyleSheet.create({
 	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		marginTop: 22
-	},
-	modalView: {
-		margin: 20,
-		backgroundColor: "white",
-		borderRadius: 20,
-		padding: 35,
-		alignItems: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-		width: 0,
-		height: 2
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(100,100,100, 0.8)',
+        padding: 20,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 100,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
         elevation: 5,
-        width : 350,
-        height: 600
-	},
-	openButton: {
-		backgroundColor: "#F194FF",
-		borderRadius: 20,
-		padding: 10,
-		elevation: 2
-	},
+        height: 450,
+        width: 350
+    },
+    hideButton:{
+        flex:0.5,
+        backgroundColor:'#fff',
+        alignItems:'flex-end',
+        marginRight:10,
+        marginTop:10
+    },
+    submitButton:{
+        backgroundColor:'#96BB7C',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderColor:'#EEBB4D',
+        borderWidth:2,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1,
+        margin:3,
+    },
 	textStyle: {
 		color: "white",
 		fontWeight: "bold",
