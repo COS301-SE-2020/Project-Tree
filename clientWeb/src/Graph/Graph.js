@@ -23,13 +23,39 @@ function makeLink(edge, criticalPathLinks) {
 }
 
 function makeElement(node, criticalPathNodes) {
-    var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
-    
-    var letterSize = 12;
-    var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-    var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
+  var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
+  
+  var letterSize = 12;
+  var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+  var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
 
-    var statusColor = '#fff'
+  var statusColor = '#fff'
+  if(node.progress === "Incomplete"){
+    let today = new Date();
+    if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
+      if(parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)){
+        if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
+          if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))          {
+            if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
+              statusColor = '#ff6961'
+            }
+          }
+        }
+        else{
+          statusColor = '#ff6961'
+        }
+      }
+    }
+    else{
+      statusColor = '#ff6961'
+    }
+  }
+  else if(node.progress === "Complete"){
+      statusColor = '#77dd77'
+  }
+  else if(node.progress === "Issue"){
+      statusColor = '#ffae42'
+  }
     if(node.progress === "Incomplete"){
       let today = new Date();
       if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
@@ -56,7 +82,7 @@ function makeElement(node, criticalPathNodes) {
       statusColor = '#ffae42'
   }
     var borderColor = '#000';
-    if(criticalPathNodes.includes(node.id)) borderColor = "#00f";
+    if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
 
     return new joint.shapes.standard.Rectangle({
         id: node.id,

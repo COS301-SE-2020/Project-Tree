@@ -194,7 +194,7 @@ class App extends Component {
             <Row style={{height: "100%"}}>
               {this.state.showSideBar !== false ? 
               (
-                <Col  xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto", backgroundColor: "#184D47" }}>
+                <Col  xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto", backgroundColor: "#303030" }}>
                   <SideBar closeSideBar={() => this.closeSideBar()} projects={this.state.projects} setProject={project => this.setProject(project)}/>
                 </Col>
               ) : null}

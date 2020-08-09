@@ -129,6 +129,10 @@ class GraphPage extends React.Component{
                   getProjectInfo={this.getProjectInfo}
                 />
               ) : null}
+              {this.state.task == null && this.state.dependency ==null ?  (
+                <LegendSidebar
+                />
+              ) : null}
             </Col>
             <Col
               xs={9}
@@ -302,6 +306,24 @@ class DependencySidebar extends React.Component {
             </Col>
           </Row>
           <hr/>
+        </Container>
+      </React.Fragment>
+    );
+  }
+}
+
+class LegendSidebar extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        <Container className="text-black text-center py-2">
+          <Row><Col className="text-center"><h4>Task progress key</h4></Col></Row>
+          <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "white", color:"black", width: "120px"}}>Incomplete</Col><Col></Col></Row>
+          <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "#77dd77",  color:"black", width: "120px"}}>Complete</Col><Col></Col></Row>
+          <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "#ff6961", color:"black", width: "120px"}}>Overdue</Col><Col></Col></Row>
+          <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "#ffae42",  color:"black", width: "120px"}}>Issue</Col><Col></Col></Row>
+          <Row><Col></Col><Col className="text-center border rounded border-primary m-1 p-1" xs={6} style={{backgroundColor: "white", color:"black", width: "120px"}}>Critical Path</Col><Col></Col></Row>
+        <hr/>
         </Container>
       </React.Fragment>
     );
