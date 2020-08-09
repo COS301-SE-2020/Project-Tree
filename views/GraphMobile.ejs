@@ -120,11 +120,11 @@
         }
         
         function makeElement(node) {
-            var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
+            //var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
     
-            var letterSize = 12;
-            var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-            var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
+            var letterSize = 24;
+            // var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+            // var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
 
             var statusColor = '#fff'
             if(node.progress === "Incomplete"){
@@ -155,19 +155,22 @@
 
             return new joint.shapes.standard.Rectangle({
                 id: node.id,
-                size: { width: width, height: height },
-                attrs: {
+                size:{
+                    width:10,
+                    height:10
+                },
+                attrs:{
                     type:'node',
                     body: {
                         fill: statusColor
                     },
-                    text: { 
-                    text: node.name, 
-                    'font-size': letterSize, 
-                    'font-family': 'monospace',
+                    text:{ 
+                        text: node.name, 
+                        'font-size': letterSize, 
+                        'font-family': 'monospace',
                     },
-                    rect: {
-                        rx: 10, ry: 10,
+                    rect:{
+                        //rx: 10, ry: 10,
                         stroke: '#000',
                         //magnet: true
                         transform: 'translate(1, 1)'
@@ -178,7 +181,7 @@
         
         // Main.
         // -----
-        var graphScale = 1
+        var graphScale = 3
         
         // Just give the viewport a little padding.
         V(paper.viewport).translate(20, 20);
@@ -197,8 +200,8 @@
                 graphlib: graphlib,
                 setLinkVertices: false,
                 rankDir: "TB",
-                nodeSep: 100,
-                rankSep: 100
+                nodeSep: 2,
+                rankSep: 50
             });
         }
         layout();

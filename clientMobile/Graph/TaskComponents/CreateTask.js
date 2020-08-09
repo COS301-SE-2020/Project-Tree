@@ -182,11 +182,7 @@ class CreateTaskForm extends Component{
 }
 
 const styles = StyleSheet.create({
-	centeredView: {
-		// flex: 1,
-		// justifyContent: "center",
-		// alignItems: "center",
-        // marginTop: 22
+	centeredView:{
         position: 'absolute',
         width: '100%',
         height: '100%',
@@ -211,27 +207,27 @@ const styles = StyleSheet.create({
         height: 450,
         width: 350
 	},
-	openButton: {
+	openButton:{
 		backgroundColor: "#F194FF",
 		borderRadius: 20,
 		padding: 10,
 		elevation: 2
 	},
-	textStyle: {
+	textStyle:{
 		color: "white",
 		fontWeight: "bold",
 		textAlign: "center"
 	},
-	modalText: {
+	modalText:{
 		marginBottom: 15,
 		textAlign: "center"
 	},
-    floatinBtn: {
+    floatinBtn:{
         height: 50,
         width: 50,
         borderRadius: 200,
         position: 'absolute',
-        bottom: 72,
+        bottom: 132,
         right: 20,
         justifyContent: 'center',
         alignItems: 'center',
