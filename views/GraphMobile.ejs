@@ -9,7 +9,18 @@
                 height: 100vh; 
                 width: 100vw;
             }
+            .btn{
+                width: 9em;
+                height: 3em;
+                border-radius: 5px;
+                border-color:#EEBB4D;
+                border-width:3px;
+                border-style: solid;
+                background-color: #184D47;
+                color: white;
+            }
         </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.css" />
         <meta name="viewport" content="height=device-height, width=device-width, user-scalable=no" />
     </head>
@@ -26,10 +37,12 @@
             </textarea>
             <br/>
         </div>
-        <div id="paper"></div>
-        <!-- <p ontouchstart="TouchStart()" ontouchmove="TouchMove()">Touch me!</p> 
-        ontouchstart="TouchStart()" ontouchmove="TouchMove()" ontouchend="TouchEnd()"-->
-        
+        <div style="text-align: center;">
+            <button class="btn" onclick="zoomIn()"><i class="fa fa-search-plus"></i></button>
+            <button class="btn" onclick="zoomOut()"><i class="fa fa-search-minus"></i></button>
+            <button class="btn" onclick="resetZoom()"><i class="fa fa-undo"></i></button>
+        </div><br />
+        <div id="paper"></div>        
 
         <!-- dependencies -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
@@ -53,11 +66,15 @@
             linkPinning: false,
             interactive: false
         });
+        paperScale(0.8,0.8)
 
+        /*
+        *   Detect and handle clicks on nodes and links
+        */ 
         paper.on('element:pointerdown', (event) => {handleDownNodeClick()});
         paper.on('element:pointerup', (event) => {handleUpNodeClick(event.model.id)})
         paper.on('link:pointerdown', (event) => {handleLinkClick(event.model.id)});
-        
+
         var initialDownClick = null;
         function handleDownNodeClick(){
             nodeTouch = true;
@@ -79,14 +96,15 @@
             window.ReactNativeWebView.postMessage('l'+input);
         }
 
+        /*
+        *   Page Panning
+        */
         paper.on('blank:pointerdown', (event, x, y) =>{
-            dragStartPosition = { x: x, y: y};
+            dragStartPosition = { x: x*graphScale, y: y*graphScale};
         });
-
         paper.on('blank:pointerup', ()=>{
             dragStartPosition = null;
-        });
-        
+        });        
         paper.on('blank:pointermove', (event, x, y)=>{
             if (dragStartPosition){
                 paper.translate(
@@ -95,7 +113,33 @@
                 );
             }
         });
-        
+
+        /*
+        *   Functions to zoom the page
+        */
+        var graphScale = 0.8
+        function paperScale(sx, sy){
+            paper.scale(sx, sy);
+        };
+
+        function zoomOut(){
+            graphScale -= 0.1;
+            this.paperScale(graphScale, graphScale);
+        };
+
+        function zoomIn(){
+            graphScale += 0.1;
+            this.paperScale(graphScale, graphScale);
+        }
+
+        function resetZoom(){
+            graphScale = 0.8;
+            this.paperScale(graphScale, graphScale);
+        };
+
+        /*
+        *   Build graph by creating nodes and links
+        */
         function buildGraph(data) {
             var elements = [];
             var links = [];
@@ -115,6 +159,8 @@
                 id:edge.id,
                 source:{id:edge.source},
                 target:{id:edge.target},
+                connector:{name:'rounded'},
+                router:{name:'manhattan'},
                 attrs: {
                     type:'link'
                 }
@@ -122,12 +168,7 @@
         }
         
         function makeElement(node) {
-            //var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
-    
             var letterSize = 16;
-            // var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-            // var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
-
             var width = 100
             var height = 80
 
@@ -191,13 +232,6 @@
             });
         }
         
-        // Main.
-        // -----
-        var graphScale = 3
-        
-        // Just give the viewport a little padding.
-        //V(paper.viewport).translate(20, 20);
-        
         $('#btn-layout').on('click', layout);
         
         function layout() {      
@@ -214,7 +248,7 @@
                 setLinkVertices: false,
                 rankDir: graphDirection,
                 nodeSep: 10,
-                rankSep: 40
+                rankSep: 50
             });
         }
         layout();
