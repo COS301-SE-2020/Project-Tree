@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, Text, TouchableOpacity} from 'react-native'
+import {View, Text, TouchableOpacity, TouchableHighlight} from 'react-native'
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import IconFeather from 'react-native-vector-icons/Feather'
 import IconEntypo from 'react-native-vector-icons/Entypo'
@@ -10,7 +10,7 @@ import HomeScreen from './Home/HomeScreen';
 import GraphScreen from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
 import ProjectList from './ProjectList';
-import GraphDrawer from './Graph/GraphProjectModal';
+import GraphDrawer from './Graph/GraphDrawer';
 console.disableYellowBox = true; 
 //import { createAppContainer } from 'react-navigation';
 //import { createStackNavigator} from '@react-navigation/stack';
@@ -89,7 +89,6 @@ class Home extends Component{
 	}
 
 	render(){
-    let project = globalSelectedProject;
 		return(
 			<Screen>
 				<Drawer
@@ -140,13 +139,42 @@ class Graph extends Component{
   }
   
 	render(){
-    let project = globalSelectedProject;
+    if(globalSelectedProject === null){
+      return(
+        <View style={{
+          justifyContent:"center", 
+          alignItems:"center",
+          flex:1}}
+        >
+          <TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
+            alignItems:'center',
+            justifyContent:'center',
+            height:45,
+            borderColor:'#EEBB4D',
+            borderWidth:2,
+            borderRadius:5,
+            shadowColor:'#000',
+            shadowOffset:{
+                width:0,
+                height:1
+            },
+            shadowOpacity:0.8,
+            shadowRadius:2,  
+            elevation:3}}
+          >
+            <Text style={{color:'white'}}>
+              Please select a project
+            </Text>
+          </TouchableHighlight>
+        </View>
+      )
+    }
 		return(
       <Screen>
 			<Drawer
 				type="overlay"
 				open={this.state.drawerVisible}
-				content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={globalSelectedProject}/>}
+				content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={globalSelectedProject} navigation={this.props.navigation}/>}
 				tapToClose={true}
 				openDrawerOffset={0.2} 
 				panCloseMask={0.2}
@@ -166,7 +194,7 @@ class Graph extends Component{
 				/>
             </React.Fragment>
            : 
-            <TouchableOpacity style={{height:60}} onPress={()=>console.log('hello')}>
+            <TouchableOpacity style={{height:60}} onPress={()=>{this.setDrawerVisible(true)}}>
               	<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
             </TouchableOpacity>
           }
