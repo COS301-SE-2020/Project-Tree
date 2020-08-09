@@ -105,16 +105,16 @@ class Home extends Component{
 						}
 					})}
         		>
-				<TouchableOpacity style={{height:45}} onPress={()=>{this.setState({drawerVisible:true})}}>
-					<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-				</TouchableOpacity>
-				<HomeScreen 
-					project={this.state.selectedProject} 
-					setCurrentProject={this.setCurrentProject} 
-					setDrawerVisible={this.setDrawerVisible}
-					navigation={this.props.navigation}
-				/>
-			</Drawer>
+          <TouchableOpacity style={{height:45}} onPress={()=>{this.setState({drawerVisible:true})}}>
+            <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
+          </TouchableOpacity>
+          <HomeScreen 
+            project={this.state.selectedProject} 
+            setCurrentProject={this.setCurrentProject} 
+            setDrawerVisible={this.setDrawerVisible}
+            navigation={this.props.navigation}
+          />
+			  </Drawer>
 			</Screen>
 		)
 	}
