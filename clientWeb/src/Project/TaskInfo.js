@@ -50,13 +50,15 @@ class TaskInfo extends React.Component{
           if(el.progress !== "Complete"){
             let today = new Date();
             if(parseInt(today.getFullYear()) <= parseInt(el.endDate.year.low)){
-              if(parseInt(today.getMonth()+1)<=parseInt(el.endDate.month.low)){
-                if(parseInt(today.getMonth()+1)===parseInt(el.endDate.month.low)){
-                  if(parseInt(today.getDate()) > parseInt(el.endDate.day.low)){
-                    list.push(el);
+              if(parseInt(today.getFullYear()) === parseInt(el.endDate.year.low)){
+                if(parseInt(today.getMonth()+1)<=parseInt(el.endDate.month.low)){
+                  if(parseInt(today.getMonth()+1)===parseInt(el.endDate.month.low)){
+                    if(parseInt(today.getDate()) > parseInt(el.endDate.day.low)){
+                      list.push(el);
+                    }
                   }
-                }
-              } else list.push(el);
+                } else list.push(el);
+              }
             } else list.push(el);
           }
         });
@@ -106,14 +108,16 @@ class TaskInfo extends React.Component{
                 color = '#fff';
                 let today = new Date();
                 if(parseInt(today.getFullYear()) <= parseInt(el.endDate.year.low)){
-                  if(parseInt(today.getMonth()+1)<=parseInt(el.endDate.month.low)){
-                    if(parseInt(today.getMonth()+1)===parseInt(el.endDate.month.low)){
-                      if(parseInt(today.getDate()) > parseInt(el.endDate.day.low)){
-                        color = '#ff6961'
+                  if(parseInt(today.getFullYear()) === parseInt(el.endDate.year.low)){
+                    if(parseInt(today.getMonth()+1)<=parseInt(el.endDate.month.low)){
+                      if(parseInt(today.getMonth()+1)===parseInt(el.endDate.month.low)){
+                        if(parseInt(today.getDate()) > parseInt(el.endDate.day.low)){
+                          color = '#ff6961';
+                        }
                       }
                     }
+                    else color = '#ff6961';
                   }
-                  else color = '#ff6961';
                 } else color = '#ff6961';
                 break;
             }
