@@ -37,7 +37,7 @@ class DeleteTask extends Component{
         }); 
         
         const body = await response.json();  
-        this.props.toggleVisibility(false, false);
+        this.props.toggleVisibility(true, false, null);
         this.props.setProjectInfo(body.nodes, body.rels);
     }
     

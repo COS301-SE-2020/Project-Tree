@@ -114,8 +114,8 @@ class CreateDependencyForm extends Component{
 
     formatValidateInput(){
         let data = {
-            cd_fid: this.props.target,
-            cd_sid: this.props.source,
+            cd_fid: this.props.source,
+            cd_sid: this.props.target,
             cd_pid: this.props.projID,
             cd_relationshipType: this.state.dependencyRelationship,
             cd_duration : parseInt(this.state.dependencyDuration)
