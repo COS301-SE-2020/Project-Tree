@@ -9,6 +9,8 @@ import DependencyModal from './DependencyComponents/DependencyModal';
 import CreateDependnecy from './DependencyComponents/CreateDependency'
 
 class GraphScreen extends Component{
+    _isMounted = false;
+
     constructor(props) {
 		super(props);
         this.state = {nodes: null, links:null, selectedTask:null, selectedDependency:null, key:0, sourceCreateDependency: null, targetCreateDependency: null}
@@ -25,6 +27,8 @@ class GraphScreen extends Component{
     }
 
     async componentDidUpdate(){
+        this._isMounted = true;
+
         if(this.props.project === null){
             return;
         }
@@ -41,7 +45,11 @@ class GraphScreen extends Component{
 		const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
 
-        this.setState({nodes:body.tasks, links:body.rels});
+        if(this._isMounted === true) this.setState({nodes:body.tasks, links:body.rels});
+    }
+
+    componentWillUnmount(){
+        this._isMounted = false;
     }
 
     getProjectInfo(){
@@ -113,7 +121,7 @@ class GraphScreen extends Component{
         if(this.props.project === null){
             return null;
         }
-        
+
         return this.state.nodes ? (
             <View style={styles.container}>
                 <CreateDependnecy 

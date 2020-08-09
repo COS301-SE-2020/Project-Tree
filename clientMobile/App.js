@@ -73,7 +73,7 @@ class Home extends Component{
 	constructor(props) {
     super(props);
     let drawerState = globalSelectedProject === null ? true : false;
-    this.state = {drawerVisible:drawerState, selectedProject:null};
+    this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
     this.setCurrentProject = this.setCurrentProject.bind(this);
     this.setDrawerVisible = this.setDrawerVisible.bind(this);
 	}
