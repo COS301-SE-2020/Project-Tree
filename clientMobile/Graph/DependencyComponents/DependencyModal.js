@@ -8,16 +8,17 @@ import UpdateDependency from "./UpdateDependency";
 class DependencyModal extends Component {
 	constructor(props){
         super(props);
-        this.state = {displayTaskModal:true, displayUpdateModal:false, displayProgressModal:false}
+        this.state = {displayDependencyModal:true, displayUpdateModal:false, displayProgressModal:false}
         this.toggleVisibility = this.toggleVisibility.bind(this);
     }
     
-    toggleVisibility(taskModal, updateModal, selectedTask){
-        if(selectedTask !== undefined){
-            this.setState({displayTaskModal: taskModal, displayUpdateModal: updateModal});
+    toggleVisibility(dependencyModal, updateModal, selectedDependency){
+        if(selectedDependency !== undefined){
+            this.setState({displayDependencyModal: dependencyModal, displayUpdateModal: updateModal});
+            this.props.displayTaskDependency(null, null);
         }
 
-        this.setState({displayTaskModal: taskModal, displayUpdateModal: updateModal});
+        this.setState({displayDependencyModal: dependencyModal, displayUpdateModal: updateModal});
     }
 
 	render(){      
@@ -27,7 +28,7 @@ class DependencyModal extends Component {
         return(
             <React.Fragment>
                 <UpdateDependency dependency={this.props.selectedDependency} modalVisibility={this.state.displayUpdateModal} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency} name={name}/>
-                <Modal animationType="fade" transparent={true} visible={this.state.displayTaskModal} onRequestClose={()=>this.props.displayTaskDependency(null, null)}>
+                <Modal animationType="fade" transparent={true} visible={this.state.displayDependencyModal} onRequestClose={()=>this.props.displayTaskDependency(null, null)}>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <TouchableOpacity style={styles.hideButton} onPress={()=>this.props.displayTaskDependency(null, null)}>

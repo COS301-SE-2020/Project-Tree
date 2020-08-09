@@ -6,7 +6,7 @@ import ProjectModal from './GraphDrawer';
 import CreateTask from './TaskComponents/CreateTask';
 import TaskModal from './TaskComponents/TaskModal';
 import DependencyModal from './DependencyComponents/DependencyModal';
-import CreateDependnecy from './DependencyComponents/CreateDependency'
+import CreateDependency from './DependencyComponents/CreateDependency'
 
 class GraphScreen extends Component{
     _isMounted = false;
@@ -124,7 +124,7 @@ class GraphScreen extends Component{
 
         return this.state.nodes ? (
             <View style={styles.container}>
-                <CreateDependnecy 
+                <CreateDependency 
                     sourceCreateDependency={this.state.sourceCreateDependency} 
                     targetCreateDependency={this.state.targetCreateDependency} 
                     setCreateDependency={this.setCreateDependency} 
@@ -179,7 +179,7 @@ class WebViewWrapper extends Component{
                 ref={(ref) => this.myWebView = ref}
                 renderLoading={this.ActivityIndicatorLoadingView}
                 startInLoadingState={true}
-                source={{uri:'http://192.168.137.1:5000/mobile',
+                source={{uri:'http://projecttree.herokuapp.com/mobile',
                         method: 'POST',
                         body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+'&graphDir='+JSON.stringify(dir)+''}}
                 onMessage={event => this.handleOnMessage(event)}

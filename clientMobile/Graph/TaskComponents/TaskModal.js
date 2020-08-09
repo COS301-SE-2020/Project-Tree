@@ -16,6 +16,7 @@ class TaskModal extends Component {
     toggleVisibility(taskModal, updateModal, selectedTask){
         if(selectedTask !== undefined){
             this.setState({displayTaskModal: taskModal, displayUpdateModal: updateModal});
+            this.props.displayTaskDependency(null, null)
         }
 
         this.setState({displayTaskModal: taskModal, displayUpdateModal: updateModal});

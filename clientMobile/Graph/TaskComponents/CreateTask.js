@@ -18,11 +18,9 @@ class CreateTask extends Component {
 		return(
 			<React.Fragment>
 				<CreateTaskModal projectID={this.props.projectID} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo}/>
-				{/* <View style={{flex:1}}> */}
 					<TouchableOpacity onPress={()=>this.setModalVisible(true)} style={styles.floatinBtn}>
 						<Icon type="AntDesign" name="plus" />
 					</TouchableOpacity>
-				{/* </View> */}
 			</React.Fragment>
 		)
 	}
