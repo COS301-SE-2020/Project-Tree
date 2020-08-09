@@ -13,12 +13,13 @@ function stringifyFormData(fd) {
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user };
+    this.state = { show: false, toggleEdit: false, user: this.props.user};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.openEdit = this.openEdit.bind(this);
     this.closeEdit = this.closeEdit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   showModal() {
@@ -26,6 +27,7 @@ class Settings extends React.Component {
   }
 
   hideModal() {
+    console.log("STATE",  this.state)
     this.setState({ show: false });
   }
 
@@ -52,17 +54,31 @@ class Settings extends React.Component {
     })
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.user!== prevProps.user) {
-      this.setState({ user: this.props.user});
+  componentDidUpdate(prevProps) 
+  {
+     console.log(this.state)
+    // console.log(this.state.user)
+    if (this.props.user !== prevProps.user) {
+     // console.log(prevProps.user)
+     this.setState({ user: this.props.user});
+     // console.log(this.state.user.name)
     }
+    else
+    {
+      console.log(this.state.id)
+      //this.setState({ user: prevProps.user});
+    }
+    
   }
+
   async handleSubmit(event) {
     event.preventDefault();
-    let data = stringifyFormData(new FormData(event.target));
+    let data = new FormData(event.target);
+    data = await stringifyFormData(data);
+    console.log("POP:   ", JSON.parse(data))
     $.post("/user/edit", JSON.parse(data), (response) => {
-      this.setState({ show: false });
-      this.props.setUser(response);
+      this.hideModal()
+     // this.setState({ show: false });
     })
     .fail(() => {
       alert("Unable to update user preferences");
@@ -81,7 +97,8 @@ class Settings extends React.Component {
           <i className="fa fa-cogs text-dark" style={{fontSize:"30px"}}></i>
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
-           <Form><Modal.Header closeButton>
+          <Form onSubmit={this.handleSubmit}>
+             <Modal.Header closeButton>
               <Modal.Title > Image </Modal.Title> 
             </Modal.Header>
             <Modal.Body>
@@ -94,7 +111,7 @@ class Settings extends React.Component {
                     <Form.Control
                     required
                     type="text"
-                    name="edit"
+                    name="name"
                     value={this.state.user.name}
                     onChange={(e) => {
                       let usr = this.state.user;
@@ -113,7 +130,7 @@ class Settings extends React.Component {
                       <Form.Control
                       required
                       type="text"
-                      name="edit"
+                      name="sname"
                       value={this.state.user.sname}
                       onChange={(e) => {
                         let usr = this.state.user;
@@ -132,7 +149,7 @@ class Settings extends React.Component {
                       <Form.Control
                       required
                       type="email"
-                      name="edit"
+                      name="email"
                       value={this.state.user.email}
                       onChange={(e) => {
                         let usr = this.state.user;
@@ -143,6 +160,33 @@ class Settings extends React.Component {
                       />
                     )}
                 </Row>
+                <Row>Birthdate: &nbsp;
+                {this.state.toggleEdit === false ?
+                    this.props.user.birthday
+                    :
+                    (
+                      <Form.Control
+                      required
+                      type="date"
+                      name="bday"
+                      id="bday"
+                      value={this.state.user.birthday}
+                      onChange={(e) => {
+                        let usr = this.state.user;
+                        usr.birthday = e.target.value;
+                        this.setState({user: usr });
+                        this.value = this.state.user.birthday;
+                    }}
+                      />
+                    )}
+                </Row>
+                <input
+                  hidden
+                  type="number"
+                  id="userId"
+                  name="userId"
+                  value={this.state.user.id}
+                />
               </Container>
             </Modal.Body>
               <Container>
@@ -157,7 +201,7 @@ class Settings extends React.Component {
                           </Col>
                           <Col>
                             <Button type="submit" block variant="secondary" className="m-2">
-                              save Change
+                              Save Changes
                             </Button> 
                           </Col>
                         </Row>

@@ -122,6 +122,13 @@ export class Register extends React.Component
                     <label htmlFor="password">Password</label>
                     <input type='password' id="password" name="password" value={password}  onChange={this.onChange} required />
                   </div>
+                <input
+                  hidden
+                  type="date"
+                  name="um_date"
+                  id="um_date"
+                  value={" "}
+                  onChange={() => {}}/>
                   <div style={{ fontSize: 12, color: "red" }}>
                      <p>{this.state.passwordError}</p>
                      <p>{this.state.passwordError1}</p>                     

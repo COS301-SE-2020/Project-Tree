@@ -138,8 +138,7 @@ class App extends Component {
    }
    
   handleLogout() {
-    window.location.reload(false);
-    //localStorage.clear();   
+    localStorage.clear();   
     this._isMounted = false;
     localStorage.clear();
     this.setState({
@@ -149,6 +148,7 @@ class App extends Component {
     console.log(this.rightSide)
     if(!this.rightSide)
         this.rightSide.classList.add("right");
+    window.location.reload(false);
   }
 
   render() {

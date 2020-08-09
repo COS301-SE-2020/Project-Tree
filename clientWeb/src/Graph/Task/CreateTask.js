@@ -71,7 +71,6 @@ class CreateTask extends React.Component {
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
-
     const response = await fetch("/task/add", {
       method: "POST",
       headers: {

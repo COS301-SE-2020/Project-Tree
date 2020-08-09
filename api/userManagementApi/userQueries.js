@@ -2,6 +2,18 @@ const db = require('../DB');
 const { JWT } = require('jose');
 const bcrypt = require('bcrypt');
 
+function b64toBlob(dataURI) {
+
+    var byteString = atob(dataURI.split(',')[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: 'image/jpeg' });
+}
+
 function login(req,res){ //email, password,
     db.getSession()
     .run(`
@@ -43,6 +55,7 @@ function login(req,res){ //email, password,
 }
 
 function register(req,res){ //email, password, name, surname
+    let x = " "
     db.getSession()
         .run(`
                 Match (n:User { email: "${req.body.email}" })
@@ -58,7 +71,8 @@ function register(req,res){ //email, password, name, surname
                                 email:"${req.body.email}",
                                 password:"${hash}", 
                                 name:"${req.body.name}",
-                                sname:"${req.body.sname}"
+                                sname:"${req.body.sname}",
+                                birthday: "${req.body.um_date}"
                             })
                             RETURN a
                         `)
@@ -88,28 +102,34 @@ function register(req,res){ //email, password, name, surname
 }
 
 async function editUser(req, res) {
-    let creator = await verify(req.body.creatorID);
+
+    console.log(req.body.sname)
+    //let creator = await verify(req.body.ct_pid);
+    creator = " "
     if(creator!=null)
     {
         db.getSession()
         .run(
             `
             MATCH (a) 
-            WHERE ID(a) = ${req.body.up_id}
+            WHERE ID(a) = ${req.body.userId}
             SET a += {
-                name:"${req.body.um_name}",
-                surname:"${req.body.um_sname}",
-                email:"${req.body.um_email}",
+                name:"${req.body.name}",
+                sname:"${req.body.sname}",
+                email:"${req.body.email}",
+                birthday:"${req.body.bday}"
             } 
             RETURN a
           `
         )
         .then(result => {
+            console.log(result.records[0]._fields[0].properties)
             let user={
                 id: result.records[0]._fields[0].identity.low,
                 name: result.records[0]._fields[0].properties.name,
                 sname: result.records[0]._fields[0].properties.sname,
                 email: result.records[0]._fields[0].properties.email,
+                birthday: result.records[0]._fields[0].properties.bday
             }
             res.status(200);
             res.send({user});
@@ -130,7 +150,8 @@ async function editUser(req, res) {
 async function getUser(req,res)
 {
     let creator = await verify(req.body.creatorID);
-    if ( creator != null ) {
+    console.log(req.body.creatorID)
+      if ( creator != null ) {
         db.getSession()
         .run(
         `
@@ -140,11 +161,13 @@ async function getUser(req,res)
         `
         )
         .then(result => {
+            console.log(result.records[0]._fields[0].properties)
             let user={
                 id: result.records[0]._fields[0].identity.low,
                 name: result.records[0]._fields[0].properties.name,
                 sname: result.records[0]._fields[0].properties.sname,
                 email: result.records[0]._fields[0].properties.email,
+                birthday: result.records[0]._fields[0].properties.birthday
             }
             res.status(200);
             res.send({user});
