@@ -95,7 +95,7 @@ class UpdateProjectForm extends Component{
         }); 
 
         const body = await response.json();
-        this.props.setProjectInfo(body)
+        this.props.setProjectInfo(body, false)
     }
 
     render(){

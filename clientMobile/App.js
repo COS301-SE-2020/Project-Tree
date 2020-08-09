@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
-import {View, Text} from 'react-native'
+import {View, Text, TouchableOpacity} from 'react-native'
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import IconFeather from 'react-native-vector-icons/Feather'
 import IconEntypo from 'react-native-vector-icons/Entypo'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import Drawer from 'react-native-drawer'
-// import HomeScreen from './Home/HomeScreen';
+import HomeScreen from './Home/HomeScreen';
 import GraphScreen from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
-import ProjectList from './ProjectList'
+import ProjectList from './ProjectList';
+console.disableYellowBox = true; 
 //import { createAppContainer } from 'react-navigation';
 //import { createStackNavigator} from '@react-navigation/stack';
 
@@ -43,8 +44,9 @@ const Tabs = AnimatedTabBarNavigator()
 const Screen = styled.View
 `
 	flex: 1;
-	background-color: #f2f2f2;
+  background-color: #f2f2f2;
 `
+
 var globalSelectedProject = null
 
 const FeatherTabBarIcon = (props) => {
@@ -67,25 +69,18 @@ const EntypoTabBarIcon = (props) => {
 	)
 }
 
-class HomeScreen extends Component{
-  render(){
-    return(
-      <View>
-        <Text>
-          {this.props.project!==null ? this.props.project.name : "Select a project"}
-        </Text>
-      </View>
-    )
-  }
-}
-
 class Home extends Component{
 	constructor(props) {
     super(props);
-    this.state = {selectedProject:null}
-		this.setCurrentProject = this.setCurrentProject.bind(this);
+    let drawerState = globalSelectedProject === null ? true : false;
+    this.state = {drawerVisible:drawerState, selectedProject:null};
+    this.setCurrentProject = this.setCurrentProject.bind(this);
+    this.setDrawerVisible = this.setDrawerVisible.bind(this);
 	}
 
+  setDrawerVisible(mode){
+    this.setState({drawerVisible:mode});
+  }
 
 	setCurrentProject(project){
     this.setState({selectedProject:project});
@@ -98,9 +93,9 @@ class Home extends Component{
 			<Screen>
 				<Drawer
           type="overlay"
-          open={false}
-          content={<ProjectList setCurrentProject={this.setCurrentProject}/>}
-          tapToClose={false}
+          open={this.state.drawerVisible}
+          content={<ProjectList setCurrentProject={this.setCurrentProject} setDrawerVisible={this.setDrawerVisible}/>}
+          tapToClose={true}
           openDrawerOffset={0.2} 
           panCloseMask={0.2}
           closedDrawerOffset={-3}
@@ -108,20 +103,53 @@ class Home extends Component{
             main: { opacity:(2-ratio)/2 }
           })}
         >
-          <HomeScreen project={project} />
+          <TouchableOpacity onPress={()=>{this.setState({drawerVisible:true})}}>
+            <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:10, marginTop:10}}/>
+          </TouchableOpacity>
+          <HomeScreen 
+            project={this.state.selectedProject} 
+            setCurrentProject={this.setCurrentProject} 
+            setDrawerVisible={this.setDrawerVisible}
+            navigation={this.props.navigation}
+          />
         </Drawer>
 			</Screen>
 		)
 	}
 }
 
+class GraphDrawer extends Component{
+  render()
+  {
+    if(this.props.project === null)
+    {
+      return(
+        null
+      )
+    }
+
+    return(
+      <View>
+        <Text>
+          {this.props.project.name}
+        </Text>
+      </View>
+    )
+  }
+}
+
 class Graph extends Component{
   constructor(props) {
     super(props);
-    this.state = {selectedProject:null}
-		this.setCurrentProject = this.setCurrentProject.bind(this);
+    let drawerState = globalSelectedProject === null ? true : false;
+    this.state = {drawerVisible:drawerState, selectedProject:null};
+    this.setCurrentProject = this.setCurrentProject.bind(this);
+    this.setDrawerVisible = this.setDrawerVisible.bind(this);
 	}
-
+  
+  setDrawerVisible(mode){
+    this.setState({drawerVisible:mode});
+  }
 
 	setCurrentProject(project){
     this.setState({selectedProject:project});
@@ -134,9 +162,9 @@ class Graph extends Component{
       <Screen>
 				<Drawer
           type="overlay"
-          open={false}
-          content={<ProjectList setCurrentProject={this.setCurrentProject}/>}
-          tapToClose={false}
+          open={this.state.drawerVisible}
+          content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={globalSelectedProject}/>}
+          tapToClose={true}
           openDrawerOffset={0.2} 
           panCloseMask={0.2}
           closedDrawerOffset={-3}
@@ -144,7 +172,21 @@ class Graph extends Component{
             main: { opacity:(2-ratio)/2 }
           })}
         >
-          <GraphScreen project={project}/>
+          {globalSelectedProject !== null ?
+            <React.Fragment>
+              <TouchableOpacity onPress={()=>{this.setState({drawerVisible:true})}}>
+                <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:10, marginTop:10}}/>
+              </TouchableOpacity>
+              <GraphScreen 
+                project={globalSelectedProject}
+                navigation={this.props.navigation}
+              />
+            </React.Fragment>
+           : 
+            <TouchableOpacity onPress={()=>console.log('hello')}>
+              <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:10, marginTop:10}}/>
+            </TouchableOpacity>
+          }
         </Drawer>
 			</Screen>
 		)
@@ -199,7 +241,7 @@ export default class App extends Component{
 							),
 						}}
 					/>
-					<Tabs.Screen
+         <Tabs.Screen
 						name="Project Tree"
 						component={Graph}
 						options={{
@@ -211,7 +253,7 @@ export default class App extends Component{
 								/>
 							),
 						}}
-					/>
+          />
 					<Tabs.Screen
 						name="Settings"
 						component={Settings}

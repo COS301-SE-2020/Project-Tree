@@ -24,7 +24,7 @@ class GraphScreen extends Component{
         this.setState({key: this.state.key+1})
     }
 
-    async componentDidMount(){
+    async componentDidUpdate(){
         if(this.props.project === null){
             return;
         }
@@ -110,17 +110,10 @@ class GraphScreen extends Component{
     }
 
     render(){
-        
-        if(this.props.project == null){
-            return(
-                <View>
-                    <Text>
-                        Please select a project to view
-                    </Text>
-                </View>
-            );
+        if(this.props.project === null){
+            return null;
         }
-
+        
         return this.state.nodes ? (
             <View style={styles.container}>
                 <CreateDependnecy 

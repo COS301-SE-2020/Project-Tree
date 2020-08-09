@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Content} from 'native-base';
 import {Text, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
-// import ProjectModal from './ProjectModal'
-// import CreateProject from './CreateProject'
-// import UpdateProject from './UpdateProject'
+import CreateProject from './Home/CreateProject'
 
 class ProjectListDrawer extends Component {
+    _isMounted = false;
+
     constructor(props){
         super(props);
         this.state = {projects:null, project:null, modalVisible:false, tableData: null, editing:false };
@@ -50,7 +50,8 @@ class ProjectListDrawer extends Component {
             
     }
 
-    async componentDidMount(){
+    async componentDidUpdate(){
+        this._isMounted = true
         const response = await fetch('http://projecttree.herokuapp.com/project/get',{
             method: 'POST',
             headers: {
@@ -60,13 +61,27 @@ class ProjectListDrawer extends Component {
             body:null,
         });
         const body = await response.json();
-        this.setState({projects:body.nodes});
+
+        if(this._isMounted === true) this.setState({projects:body.nodes});
+    }
+
+    componentWillUnmount(){
+        this._isMounted = false;
     }
   
     render() {
         return (
-            <View style={{flex:1, backgroundColor:"#184D47"}}>
-                <ProjectList projects={this.state.projects} setCurrentProject={this.props.setCurrentProject}/>
+            <View style={{flex:1, backgroundColor:"#96BB7C"}}>
+                <ProjectList 
+                    projects={this.state.projects} 
+                    setCurrentProject={this.props.setCurrentProject}
+                    setDrawerVisible={this.props.setDrawerVisible}
+                />
+                <CreateProject 
+                    setProjectInfo={this.setProjectInfo} 
+                    setDrawerVisible={this.props.setDrawerVisible}
+                    setCurrentProject={this.props.setCurrentProject}
+                />
             </View>
         );
     }
@@ -79,9 +94,12 @@ class ProjectList extends React.Component{
         const listItems = projects.map((project, i) =>
             <View key={i} style={{ padding: 5 }}>
                 <TouchableOpacity 
-                    style={styles.projectButtons}
-                    onPress={() => this.props.setCurrentProject(project)}>
-                    <Text style={styles.buttonText}>
+                    style={(i%2)==0 ? styles.projectButtons1 : styles.projectButtons2}
+                    onPress={() => {
+                        this.props.setCurrentProject(project);
+                        this.props.setDrawerVisible(false);
+                    }}>
+                    <Text style={(i%2)==0 ? styles.buttonText1 : styles.buttonText2}>
                         {project.name}
                     </Text>
                 </TouchableOpacity>
@@ -97,7 +115,7 @@ class ProjectList extends React.Component{
 }
 
 const styles = StyleSheet.create({
-    projectButtons:{
+    projectButtons1:{
         backgroundColor:'#EEBB4D',
         alignItems:'center',
         justifyContent:'center',
@@ -112,8 +130,26 @@ const styles = StyleSheet.create({
         shadowRadius:2,  
         elevation:3
     },
-    buttonText:{
+    projectButtons2:{
+        backgroundColor:'#184D47',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:3
+    },
+    buttonText1:{
         color:'#000'
+    },
+    buttonText2:{
+        color:'#FFF'
     }
 })
 

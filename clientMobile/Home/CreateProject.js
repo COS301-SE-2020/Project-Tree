@@ -17,9 +17,18 @@ class CreateProject extends Component{
     render(){
         return(
             <React.Fragment>
-                <CreateProjectModal modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.props.setProjectInfo}/>
+                <CreateProjectModal 
+                    modalVisible={this.state.modalVisible} 
+                    setModalVisible={this.setModalVisible} 
+                    setProjectInfo={this.props.setProjectInfo}
+                    setCurrentProject={this.props.setCurrentProject}
+                />
+
                 <View style={{ padding: 5 }}>
-                    <TouchableOpacity style={styles.createButton} onPress={()=>this.setModalVisible(true)}>
+                    <TouchableOpacity style={styles.createButton} onPress={()=>{
+                        this.setModalVisible(true);
+                        this.props.setDrawerVisible(false);
+                        }}>
                         <Text style={styles.buttonText}>
                             Create Project
                         </Text>
@@ -39,7 +48,10 @@ class CreateProjectModal extends Component{
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
-                        <CreateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible}/>
+                        <CreateProjectForm 
+                        setProjectInfo={this.props.setProjectInfo} 
+                        setModalVisible={this.props.setModalVisible} 
+                        setCurrentProject={this.props.setCurrentProject}/>
                     </View>
                 </View>
             </Modal>
@@ -106,6 +118,7 @@ class CreateProjectForm extends Component{
 
         const body = await response.json();
         this.props.setProjectInfo(body)
+        this.props.setCurrentProject(body)
     }
 
     render(){

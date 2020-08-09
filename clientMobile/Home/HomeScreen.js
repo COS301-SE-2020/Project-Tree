@@ -9,26 +9,14 @@ export default class SettingsScreen extends Component {
     constructor(props){
         super(props);
         this.state = {projects:null, project:null, modalVisible:false, tableData: null, editing:false };
-        //this.toggleActionSheet = this.toggleActionSheet.bind(this);
         this.setModalVisible = this.setModalVisible.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
         this.setEditing = this.setEditing.bind(this)
     }
 
-    setProjectInfo(project){
-        let projects = this.state.projects;
-        if(project.delete === undefined){
-            projects = projects.map((proj) => {
-                if(proj.id === project.id) proj = project;
-                return proj;
-            });
-            if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
-            this.setState({projects: projects, project: project})
-        }
-        else{
-            projects = projects.filter(proj => proj.id !== project.delete);
-            this.setState({projects: projects});
-        } 
+    setProjectInfo(project, drawerVisible){
+        this.props.setCurrentProject(project);
+        this.props.setDrawerVisible(drawerVisible);
     }
 
     setEditing(val){
@@ -86,37 +74,45 @@ export default class SettingsScreen extends Component {
         )
     }
     render() {
-        if(this.state.projects === null) return null;
+        if(this.props.project === null) 
+            return(
+                <View>
+                    <Text>
+                        Please select a project
+                    </Text>
+                </View>
+            );
+
         return (
             <ScrollView style={styles.cardView}>
                 <View>
                     <Content>
-                        {this.state.project !== null && this.state.modalVisible === true ? <UpdateProject project={this.state.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo} setEditing={this.setEditing} /> : null}
+                        {this.props.project !== null && this.state.modalVisible === true ? <UpdateProject project={this.props.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo} setEditing={this.setEditing} /> : null}
                         <Card>
                             <CardItem>
                                 <Body style={{alignItems:'center', justifyContent:'center'}}>
-                                    <Text>{this.state.project.name}</Text>
+                                    <Text>{this.props.project.name}</Text>
                                 </Body>
                             </CardItem>
                             <CardItem>
                                 <Body>
                                     <Text>
-                                        {this.state.project.description}
+                                        {this.props.project.description}
                                     </Text>
                                 </Body>
                             </CardItem>
                             <CardItem style={{flexDirection:'row', justifyContent:'space-between'}}>
-                                <TouchableOpacity style={styles.viewButton} onPress={()=>{this.props.setCurrentProject(this.state.project);}}>
+                                <TouchableOpacity style={styles.viewButton} onPress={()=>{this.props.navigation.navigate('Project Tree')}}>
                                     <Icon type="FontAwesome" name="eye"></Icon>
                                 </TouchableOpacity>
-                                <DeleteProject project={this.state.project} setProjectInfo={this.props.setProjectInfo}/>
+                                <DeleteProject project={this.props.project} setProjectInfo={this.setProjectInfo}/>
                                 <TouchableOpacity style={styles.editButton} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
                                     <Icon type="FontAwesome" name="edit" ></Icon>
                                 </TouchableOpacity>
                             </CardItem>
                             <CardItem>
                                 <Body>
-                                    {this.settingPermissions(this.state.project)}
+                                    {this.settingPermissions(this.props.project)}
                                     <Text>MORE INFO</Text>
                                     <Text>MORE INFO</Text>
                                     <Text>MORE INFO</Text>
