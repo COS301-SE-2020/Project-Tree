@@ -2,12 +2,12 @@ import React from "react";
 import { Modal, Button, Col, Row, Container, Form} from "react-bootstrap";
 import $ from "jquery";
 
-function formData(fd) {
+function stringifyFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
+    console.log(key, fd.get(key));
     data[key] = fd.get(key);
   }
-  console.log("formdata", data);
   return data;
 }
 
@@ -21,6 +21,7 @@ class Settings extends React.Component {
     this.openEdit = this.openEdit.bind(this);
     this.closeEdit = this.closeEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
   }
 
   componentDidMount(){
@@ -67,11 +68,16 @@ class Settings extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    console.log(event.target);
-    let data = new FormData(event.target);
-    data = await formData(data);
-    console.log(data.name);
-    $.post("/user/edit", {user: data, token: localStorage.getItem('sessionToken')} , (response) => {
+    let data = new FormData();
+    data.append('name', this.state.user.name);
+    data.append('sname', this.state.user.sname);
+    data.append('email', this.state.user.email);
+    data.append('bday', this.state.user.birthday);
+    data.append('profilePicture', JSON.stringify(this.state.user.profilepicture));
+    data.append('token', localStorage.getItem('sessionToken'));
+    data = await stringifyFormData(data);
+    console.log(data);
+    $.post("/user/edit", data , (response) => {
       this.setState({user: response.user, prevUser: response.user });
       this.closeEdit();
     })
@@ -92,9 +98,21 @@ class Settings extends React.Component {
           <i className="fa fa-cogs text-dark" style={{fontSize:"30px"}}></i>
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
-          <Form onSubmit={this.handleSubmit}>
-             <Modal.Header closeButton>
-              <Modal.Title > Image </Modal.Title> 
+          <Form onSubmit={this.handleSubmit} enctype="multipart/form-data">
+             <Modal.Header>
+              <Modal.Title >
+                 <img src="storage/default.jpg" height="80" width="80"/>
+                {this.state.toggleEdit === false ?
+                  "   " +this.state.user.name + " " + this.state.user.sname
+                  :
+                        <input type="file" id="myFile" name="profilePic" /* value={this.state.user.profilepicture} */ onChange={(e)=>{
+                          let usr = this.state.user;
+                            usr.profilepicture = e.target.files[0];
+                            this.setState({user: usr });
+                            //this.value = this.state.user.profilepicture;
+                     }}/>
+                }
+              </Modal.Title> 
             </Modal.Header>
             <Modal.Body>
               <Container>
@@ -161,7 +179,6 @@ class Settings extends React.Component {
                     :
                     (
                       <Form.Control
-                      required
                       type="date"
                       name="bday"
                       id="bday"
@@ -174,7 +191,7 @@ class Settings extends React.Component {
                     }}
                       />
                     )}
-                </Row>
+                </Row>                               
                 <input
                   hidden
                   type="number"
@@ -215,7 +232,7 @@ class Settings extends React.Component {
                 <Row>
                   <Col>
                     <Button block  variant="dark" className="m-2" onClick={() => this.handleLogout()}>Logout</Button>
-                  </Col>
+                  </Col>                 
                 </Row>
               </Container>
               </Form> 
