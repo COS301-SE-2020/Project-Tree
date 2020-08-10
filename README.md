@@ -6,15 +6,16 @@ The project entails the development of a project management system. The system r
 ## Links
 | Document                          | Links                                                                                         |
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
-| SRS                              	| [Software Requirements Specification](https://drive.google.com/file/d/1l6Cgjnm5o0mMwBth8ciSjw5qBNZSv1nR/view?usp=sharing)                                      	        |
+| SRS                              	| [Software Requirements Specification V2](https://drive.google.com/file/d/1n98-NLL15CfXkzxZjh6qA4oEXYbvMa7F/view?usp=sharing)                                      	        |
 | Project management tool        | [Asana](https://app.asana.com/0/1175793006340426/board)                                       |  
 | Project Tree Application        | [Prototype](https://projecttree.herokuapp.com/)     |
+| User Manual       | [User Manual](https://drive.google.com/file/d/1gPZr6EWH1bM36_Yq4nx0D55inuCIZRNa/view?usp=sharing)     |
 
 ## Demos
 | Demo                          	  | Link                                                                                        	|
 |----------------------------------	|---------------------------------------------------------------------------------------------	|
-| Demo 1                            | https://drive.google.com/file/d/17IvRjiCgk0UrZ-0tS3sZzuLqDuC2974h/view?usp=sharing                     	                                                    |
-| Demo 2                            | N/A                                                                                           |
+| Demo 1                            | https://drive.google.com/file/d/17IvRjiCgk0UrZ-0tS3sZzuLqDuC2974h/view?usp=sharing            |
+| Demo 2                            | https://drive.google.com/file/d/1y-Tusz-JW2x_LZHjYNQ9Dgiep79vkA6B/view?usp=sharing            |
 | Demo 3                            | N/A                                                                                     	    |
 | Demo 4                            | N/A                                                                                           |
 
@@ -40,6 +41,12 @@ I am currently a Computer Science Student at The University of Pretoria
   - Implemented helper functions for above function (getSuccessorNodes, getPredecessorNodes, getDependencies, compareDates, addDays)
 
 </details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of progress dashboard
+  - Implementation of react web app framework/routing
+  
+</details>
 
 ### Damian Venter (u18076514)
 
@@ -61,6 +68,12 @@ Undergraduate student studying BIT at the University of Pretoria.
   - Set up hosting on grapheneDB and Heroku
 
 </details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of graphing/View Projects
+  - Implementation of task progress
+  
+</details>
 
 ### Dayne Moonsamy (u16148721)
 
@@ -80,6 +93,13 @@ Final year undergraduate student studying Computer Science at The University of 
   - Implementation of deleting tasks
   - Implementation of deleting dependencies
 
+</details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of Create Projects
+  - Implementation of Modals/forms for tasks 
+  - Implementation of graphing/view project
+  
 </details>
 
 ### Brandon Robinson (u18021353)
@@ -103,6 +123,13 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
   - Implementation of Update Task Dependencies
 
 </details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of Update Projects
+  - Implementation of Modals/forms for dependencies and projects
+  - Project page server call optimization
+  
+</details>
 
 ### Amber Grill (u18164022)
 
@@ -122,4 +149,10 @@ Final year student studying BSc IT at the University of Pretoria.
   - Implementation of Create Tasks
   - Implementation of Create Dependencies
 
+</details>
+<details><summary> What I did for Demo 2</summary>
+  
+  - Implementation of Delete Projects
+  - Implementation and design of bootstrap UI for the web app
+  
 </details>
