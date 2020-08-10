@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #toolbar{
+                display: none;
+            }
+            #paper{
+                height: 100vh; 
+                width: 100vw;
+            }
+            .btn{
+                width: 20%;
+                height: 3em;
+                border-radius: 5px;
+                border-color:#EEBB4D;
+                border-width:3px;
+                border-style: solid;
+                background-color: #184D47;
+                color: white;
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.css" />
+        <meta name="viewport" content="height=device-height, width=device-width, user-scalable=no" />
+    </head>
+    <body>
+        <div id="toolbar">
+            <textarea id="adjacency-list">
+                {
+                    "nodes": <%= tasks %>,
+                    "rels": <%= rels %>
+                }
+            </textarea>
+            <textarea id="graphdirection">
+                <%= graphDirection %>
+            </textarea>
+            <br/>
+        </div>
+        <div style="display:flex; justify-content:space-around;">
+            <button class="btn" onclick="zoomIn()"><i class="fa fa-search-plus"></i></button>
+            <button class="btn" onclick="zoomOut()"><i class="fa fa-search-minus"></i></button>
+            <button class="btn" onclick="resetZoom()"><i class="fa fa-undo"></i></button>
+        </div><br />
+        <div id="paper"></div>        
+
+        <!-- dependencies -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/graphlib/2.1.8/graphlib.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.4/dagre-d3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.js"></script>
+        <!-- code -->
+    <script type="text/javascript">
+        var dragStartPosition
+        var nodeTouch = false;
+        var count = 0;
+
+        var graph = new joint.dia.Graph();
+        var paper = new joint.dia.Paper({
+            el: $('#paper'),
+            gridSize: 1,
+            model: graph,
+            linkPinning: false,
+            interactive: false
+        });
+        paperScale(0.8,0.8)
+
+        /*
+        *   Detect and handle clicks on nodes and links
+        */ 
+        paper.on('element:pointerdown', (event) => {handleDownNodeClick()});
+        paper.on('element:pointerup', (event) => {handleUpNodeClick(event.model.id)})
+        paper.on('link:pointerdown', (event) => {handleLinkClick(event.model.id)});
+
+        var initialDownClick = null;
+        function handleDownNodeClick(){
+            nodeTouch = true;
+            initialDownClick = performance.now();
+        }
+
+        function handleUpNodeClick(input){
+            if((performance.now()-initialDownClick) < 600){
+                window.ReactNativeWebView.postMessage('n'+input);
+            }
+
+            else{
+                window.ReactNativeWebView.postMessage('c'+input);
+            }
+        }
+
+        function handleLinkClick(input){
+            nodeTouch = true;
+            window.ReactNativeWebView.postMessage('l'+input);
+        }
+
+        /*
+        *   Page Panning
+        */
+        paper.on('blank:pointerdown', (event, x, y) =>{
+            dragStartPosition = { x: x*graphScale, y: y*graphScale};
+        });
+        paper.on('blank:pointerup', ()=>{
+            dragStartPosition = null;
+        });        
+        paper.on('blank:pointermove', (event, x, y)=>{
+            if (dragStartPosition){
+                paper.translate(
+                    event.clientX - dragStartPosition.x, 
+                    event.clientY - dragStartPosition.y
+                );
+            }
+        });
+
+        /*
+        *   Functions to zoom the page
+        */
+        var graphScale = 0.8
+        function paperScale(sx, sy){
+            paper.scale(sx, sy);
+        };
+
+        function zoomOut(){
+            graphScale -= 0.1;
+            this.paperScale(graphScale, graphScale);
+        };
+
+        function zoomIn(){
+            graphScale += 0.1;
+            this.paperScale(graphScale, graphScale);
+        }
+
+        function resetZoom(){
+            graphScale = 0.8;
+            this.paperScale(graphScale, graphScale);
+        };
+
+        /*
+        *   Build graph by creating nodes and links
+        */
+        function buildGraph(data) {
+            var elements = [];
+            var links = [];
+            
+            _.each(data.nodes, function(node) {
+            elements.push(makeElement(node));
+            })
+            
+            _.each(data.rels, function(edge) {
+            links.push(makeLink(edge)); 
+            })
+            return elements.concat(links);
+        }
+        
+        function makeLink(edge) {
+            return new joint.shapes.standard.Link({
+                id:edge.id,
+                source:{id:edge.source},
+                target:{id:edge.target},
+                connector:{name:'rounded'},
+                router:{name:'manhattan'},
+                attrs: {
+                    type:'link'
+                }
+            })
+        }
+        
+        function makeElement(node) {
+            var letterSize = 16;
+            var width = 100
+            var height = 80
+
+            var wraptext = joint.util.breakText(node.name, {
+                width: width-20,
+                height: height
+            });
+
+            var statusColor = '#fff'
+            if(node.progress === "Incomplete"){
+                let today = new Date();
+                if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
+                    if(parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)){
+                        if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
+                            if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
+                            {
+                                if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
+                                    statusColor = '#ff6961'
+                                }
+                            }
+                        }
+                        else{
+                            statusColor = '#ff6961'
+                        }
+                    }
+                }
+                else{
+                    statusColor = '#ff6961'
+                }
+            }
+            else if(node.progress === "Complete"){
+                statusColor = '#77dd77'
+            }
+            else if(node.progress === "Issue"){
+                statusColor = '#ffae42'
+            }
+
+            return new joint.shapes.standard.Rectangle({
+                id: node.id,
+                size:{
+                    width:width,
+                    height:height
+                },
+                attrs:{
+                    type:'node',
+                    body: {
+                        fill: statusColor
+                    },
+                    text:{ 
+                        text: wraptext, 
+                        'font-size': letterSize, 
+                        'font-family': 'monospace',
+                    },
+                    rect:{
+                        rx: 10, ry: 10,
+                        stroke: '#000',
+                        //magnet: true
+                        transform: 'translate(1, 1)'
+                    }
+                }
+            });
+        }
+        
+        $('#btn-layout').on('click', layout);
+        
+        function layout() {      
+            try {
+                var dataList = eval('dataList = ' + $('#adjacency-list').val());
+                var graphDirection = eval($('#graphdirection').val())
+            } catch (e) { alert(e); }
+
+            var cells = buildGraph(dataList);
+            graph.resetCells(cells);
+            joint.layout.DirectedGraph.layout(graph, {
+                dagre: dagre,
+                graphlib: graphlib,
+                setLinkVertices: false,
+                rankDir: graphDirection,
+                nodeSep: 10,
+                rankSep: 50
+            });
+        }
+        layout();
+
+        </script>
+    </body>
+</html>

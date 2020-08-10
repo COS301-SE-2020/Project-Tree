@@ -1,13 +1,18 @@
-const express = require("express");
-const path = require("path");
-var tq = require("./api/projectApi/taskQueries");
-var dq = require("./api/projectApi/dependencyQueries");
-var pq = require("./api/projectApi/projectQueries");
-var gq = require("./api/projectApi/graphQueries");
+const express = require('express');
+var bodyParser = require("body-parser"); 
+const path = require('path');
+var tq = require('./api/projectApi/taskQueries');
+var dq = require('./api/projectApi/dependencyQueries');
+var pq = require('./api/projectApi/projectQueries');
+var gq = require('./api/projectApi/graphQueries');
 var um = require('./api/userManagementApi/userQueries');
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+app.set("view engine", "ejs"); 
+app.set("views", __dirname + "/views");
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -30,6 +35,17 @@ app.post("/getProject", gq.getProjectTasks);
 app.post('/login', um.login);
 app.post('/register', um.register);
 app.post('/verify', um.verify);
+app.post("/mobile", async (req, res) => {
+	taskArr = req.body.nodes
+	relArr = req.body.links
+	direction = req.body.graphDir
+	//console.log(direction)
+	res.render("GraphMobile", {
+		tasks: taskArr,
+		rels: relArr,
+		graphDirection: direction
+	})
+});
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
