@@ -103,7 +103,7 @@ class Settings extends React.Component {
               <Modal.Title >
                  <img src="storage/default.jpg" height="80" width="80"/>
                 {this.state.toggleEdit === false ?
-                  "   " +this.props.user.name + " " + this.props.user.sname
+                  "   " +this.state.user.name + " " + this.state.user.sname
                   :
                         <input type="file" id="myFile" name="profilePic" /* value={this.state.user.profilepicture} */ onChange={(e)=>{
                           let usr = this.state.user;
