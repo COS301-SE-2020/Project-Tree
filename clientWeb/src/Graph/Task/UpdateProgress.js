@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button, ButtonGroup } from "react-bootstrap";
+import { Form, Modal, Button } from "react-bootstrap";
 
 class UpdateProgress extends React.Component {
   constructor(props) {
@@ -60,38 +60,36 @@ class UpdateProgress extends React.Component {
 
     return (
       <React.Fragment>
-        <Button className="btn-light" onClick={this.showModal}>
+        <Button className="ml-3" variant="outline-dark" onClick={this.showModal}>
           <i className="fa fa-edit"> </i> Update Progress{" "}
         </Button>
         <Modal show={this.state.Show} onHide={this.hideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
               <Modal.Title>Update Progress</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-              <ButtonGroup aria-label="Basic example">
-                <Button
+            <Modal.Body className="text-center">
+                <Button className="m-2"
                   variant="secondary"
                   onClick={() => this.setProgress("Complete")}
                 >
                   Complete
                 </Button>
-                <Button
+                <Button className="m-2"
                   variant="secondary"
                   onClick={() => this.setProgress("Issue")}
                 >
                   Issue
                 </Button>
-                <Button
+                <Button className="m-2"
                   variant="secondary"
                   onClick={() => this.setProgress("Incomplete")}
                 >
                   Incomplete
                 </Button>
-              </ButtonGroup>
               <br />
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>

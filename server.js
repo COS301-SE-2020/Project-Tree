@@ -35,6 +35,8 @@ app.post("/getProject", gq.getProjectTasks);
 app.post('/login', um.login);
 app.post('/register', um.register);
 app.post('/verify', um.verify);
+app.post('/user/get', um.getUser);
+app.post('/user/edit', um.editUser);
 app.post("/mobile", async (req, res) => {
 	taskArr = req.body.nodes
 	relArr = req.body.links

@@ -71,7 +71,6 @@ class CreateTask extends React.Component {
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
-
     const response = await fetch("/task/add", {
       method: "POST",
       headers: {
@@ -96,7 +95,7 @@ class CreateTask extends React.Component {
       <React.Fragment>
         <Modal show={this.state.Show} onHide={this.hideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
               <Modal.Title>Create Task</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -186,7 +185,7 @@ class CreateTask extends React.Component {
                 />
               </Form.Group>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>

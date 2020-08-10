@@ -48,13 +48,13 @@ class UpdateProject extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button className="btn-dark" onClick={() => {this.showModal()}}>
+        <Button style={{backgroundColor:"#184D47", color:"white", borderColor:"#184D47"}}onClick={() => {this.showModal()}}>
           <i className="fa fa-edit"> </i> Edit{" "}
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
           <Form onSubmit={event => {this.handleSubmit(event)}}>
-            <Modal.Header closeButton>
-              <Modal.Title>Update Project</Modal.Title>
+            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+              <Modal.Title>Edit Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <input
@@ -95,10 +95,10 @@ class UpdateProject extends React.Component {
                   }}
                 />
               </Form.Group>
-              <Table bordered hover>
+              <Table bordered striped hover>
                 <thead>
                   <tr>
-                    <td className="text-center" colSpan="4">
+                    <td className="text-center" colSpan="4" style={{backgroundColor:"#184D47", color:"white"}}>
                       Project Permisions
                     </td>
                   </tr>
@@ -240,7 +240,7 @@ class UpdateProject extends React.Component {
               </Table>
               <br />
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>

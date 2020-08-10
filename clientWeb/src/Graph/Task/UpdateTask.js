@@ -134,12 +134,12 @@ class UpdateTask extends React.Component {
 
     return (
       <React.Fragment>
-        <Button className="btn-light" onClick={this.ShowModal}>
+        <Button variant="outline-dark" className="mr-4 ml-3"  onClick={this.ShowModal}>
           <i className="fa fa-edit"> </i> Edit{" "}
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
               <Modal.Title>Update Task</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -224,7 +224,7 @@ class UpdateTask extends React.Component {
               </Form.Group>
               <br />
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>

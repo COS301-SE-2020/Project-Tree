@@ -5,7 +5,7 @@ import $ from "jquery";
 import dagre from "dagre";
 import graphlib from "graphlib";
 import CreateDependency from "./Dependency/CreateDependency";
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
 
 function makeLink(edge, criticalPathLinks) {
@@ -23,13 +23,39 @@ function makeLink(edge, criticalPathLinks) {
 }
 
 function makeElement(node, criticalPathNodes) {
-    var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
-    
-    var letterSize = 12;
-    var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-    var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
+  var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
+  
+  var letterSize = 12;
+  var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+  var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
 
-    var statusColor = '#fff'
+  var statusColor = '#fff'
+  if(node.progress === "Incomplete"){
+    let today = new Date();
+    if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
+      if(parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)){
+        if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
+          if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))          {
+            if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
+              statusColor = '#ff6961'
+            }
+          }
+        }
+        else{
+          statusColor = '#ff6961'
+        }
+      }
+    }
+    else{
+      statusColor = '#ff6961'
+    }
+  }
+  else if(node.progress === "Complete"){
+      statusColor = '#77dd77'
+  }
+  else if(node.progress === "Issue"){
+      statusColor = '#ffae42'
+  }
     if(node.progress === "Incomplete"){
       let today = new Date();
       if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
@@ -56,7 +82,7 @@ function makeElement(node, criticalPathNodes) {
       statusColor = '#ffae42'
   }
     var borderColor = '#000';
-    if(criticalPathNodes.includes(node.id)) borderColor = "#00f";
+    if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
 
     return new joint.shapes.standard.Rectangle({
         id: node.id,
@@ -109,7 +135,16 @@ var paper = null;
 class Graph extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { graph: null, paper: null, criticalPath: this.props.criticalPath };
+    this.state = { 
+      graph: null, 
+      paper: null, 
+      createTask: false,
+      createDependency: false,
+      graphScale: 1,
+      source: null,
+      target: null,
+      alert: null,
+      displayCriticalPath:true };
     this.handleClick = this.handleClick.bind(this);
     this.drawGraph = this.drawGraph.bind(this);
     this.addTask = this.addTask.bind(this);
@@ -122,14 +157,6 @@ class Graph extends React.Component {
     this.closeCreateDependency = this.closeCreateDependency.bind(this);
     this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
     this.clearDependency = this.clearDependency.bind(this);
-    this.state = {
-      createTask: false,
-      createDependency: false,
-      graphScale: 1,
-      source: null,
-      target: null,
-      alert: null,
-    };
   }
 
   recDepCheck(curr, target) {
@@ -279,7 +306,7 @@ class Graph extends React.Component {
   }
 
   render() {
-    if(this.props.displayCriticalPath){
+    if(this.state.displayCriticalPath){
       $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
           this.drawGraph(response);
       })
@@ -297,7 +324,7 @@ class Graph extends React.Component {
       dependency = this.state.source.name + "→";
     }
 
-    if(this.props.displayCriticalPath){
+    if(this.state.displayCriticalPath){
       $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
           this.drawGraph(response);
       })
@@ -308,10 +335,9 @@ class Graph extends React.Component {
   
     return (
       <React.Fragment>
-        <Container className="text-center py-2">
+        <Container className="text-center py-2" fluid>
           <Row>
-            <Col></Col>
-            <Col xs={6}>
+            <Col className="alignSelfCenter">
               {this.state.alert != null ? (
                 <Row>
                   Please select another node that is not higher in the same
@@ -343,6 +369,27 @@ class Graph extends React.Component {
                     </Button>
                   </Col>
                 ) : null}
+                <Col>
+                  <Form>
+                    <Button
+                      variant="outline-secondary"
+                      block
+                      size="sm"
+                      onClick={() => {this.setState({displayCriticalPath: !this.state.displayCriticalPath})}}
+                    >
+                      <Form.Check 
+                        type="switch" 
+                        id="switchEnabled"
+                        label="Display Critical Path"
+                        checked={this.state.displayCriticalPath}
+                        onChange={e => {
+                          this.setState({ displayCriticalPath: e.target.checked });
+                          this.checked = this.state.displayCriticalPath;
+                        }}
+                      />
+                    </Button>
+                  </Form>
+                </Col>
                 <Col className="text-center">
                   <Button
                     variant="outline-secondary"
@@ -375,7 +422,6 @@ class Graph extends React.Component {
                 </Col>
               </Row>
             </Col>
-            <Col></Col>
           </Row>
         </Container>
         <div
