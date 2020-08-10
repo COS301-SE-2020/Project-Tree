@@ -20,6 +20,7 @@ class Settings extends React.Component {
     this.openEdit = this.openEdit.bind(this);
     this.closeEdit = this.closeEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
   }
 
   showModal() {
@@ -27,7 +28,6 @@ class Settings extends React.Component {
   }
 
   hideModal() {
-    console.log("STATE",  this.state)
     this.setState({ show: false });
   }
 
@@ -56,26 +56,15 @@ class Settings extends React.Component {
 
   componentDidUpdate(prevProps) 
   {
-     console.log(this.state)
-    // console.log(this.state.user)
     if (this.props.user !== prevProps.user) {
-     // console.log(prevProps.user)
      this.setState({ user: this.props.user});
-     // console.log(this.state.user.name)
-    }
-    else
-    {
-      console.log(this.state.id)
-      //this.setState({ user: prevProps.user});
-    }
-    
+    }   
   }
 
   async handleSubmit(event) {
     event.preventDefault();
     let data = new FormData(event.target);
     data = await stringifyFormData(data);
-    console.log("POP:   ", JSON.parse(data))
     $.post("/user/edit", JSON.parse(data), (response) => {
       this.hideModal()
      // this.setState({ show: false });
@@ -97,9 +86,21 @@ class Settings extends React.Component {
           <i className="fa fa-cogs text-dark" style={{fontSize:"30px"}}></i>
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
-          <Form onSubmit={this.handleSubmit}>
-             <Modal.Header closeButton>
-              <Modal.Title > Image </Modal.Title> 
+          <Form onSubmit={this.handleSubmit} enctype="multipart/form-data">
+             <Modal.Header>
+              <Modal.Title >
+                 <img src="storage/default.jpg" height="80" width="80"/>
+                {this.state.toggleEdit === false ?
+                  "   " +this.props.user.name + " " + this.props.user.sname
+                  :
+                        <input type="file" id="myFile" name="profilePic" /* value={this.state.user.profilepicture} */ onChange={(e)=>{
+                          let usr = this.state.user;
+                            usr.profilepicture = e.target.files[0];
+                            this.setState({user: usr });
+                            //this.value = this.state.user.profilepicture;
+                     }}/>
+                }
+              </Modal.Title> 
             </Modal.Header>
             <Modal.Body>
               <Container>
@@ -166,7 +167,6 @@ class Settings extends React.Component {
                     :
                     (
                       <Form.Control
-                      required
                       type="date"
                       name="bday"
                       id="bday"
@@ -179,7 +179,7 @@ class Settings extends React.Component {
                     }}
                       />
                     )}
-                </Row>
+                </Row>                               
                 <input
                   hidden
                   type="number"
@@ -220,7 +220,7 @@ class Settings extends React.Component {
                 <Row>
                   <Col>
                     <Button block  variant="dark" className="m-2" onClick={() => this.handleLogout()}>Logout</Button>
-                  </Col>
+                  </Col>                 
                 </Row>
               </Container>
               </Form> 

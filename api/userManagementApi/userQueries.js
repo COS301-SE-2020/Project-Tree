@@ -1,18 +1,10 @@
 const db = require('../DB');
 const { JWT } = require('jose');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path')
 
-function b64toBlob(dataURI) {
 
-    var byteString = atob(dataURI.split(',')[1]);
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: 'image/jpeg' });
-}
 
 function login(req,res){ //email, password,
     db.getSession()
@@ -28,7 +20,6 @@ function login(req,res){ //email, password,
             console.log()
             bcrypt.compare(req.body.password, hash, function(err, result) {
                 if(result){
-                    //console.log("JERE")
                     res.status(200);
                     res.send({
                         sessionToken : JWT.sign({email: req.body.email, hash}, process.env.ACCESS_TOKEN_SECRET), 
@@ -54,8 +45,10 @@ function login(req,res){ //email, password,
     })
 }
 
-function register(req,res){ //email, password, name, surname
-    let x = " "
+
+async function register(req,res){ //email, password, name, surname
+    let x = "storage/default.jpg"
+    console.log(path.dirname)
     db.getSession()
         .run(`
                 Match (n:User { email: "${req.body.email}" })
@@ -72,7 +65,8 @@ function register(req,res){ //email, password, name, surname
                                 password:"${hash}", 
                                 name:"${req.body.name}",
                                 sname:"${req.body.sname}",
-                                birthday: "${req.body.um_date}"
+                                birthday: "${req.body.um_date}",
+                                profilepicture: "${x}"
                             })
                             RETURN a
                         `)
@@ -102,9 +96,8 @@ function register(req,res){ //email, password, name, surname
 }
 
 async function editUser(req, res) {
-
-    console.log(req.body.sname)
-    //let creator = await verify(req.body.ct_pid);
+    
+    let creator = await verify(req.body.ct_pid);
     creator = " "
     if(creator!=null)
     {
@@ -167,7 +160,8 @@ async function getUser(req,res)
                 name: result.records[0]._fields[0].properties.name,
                 sname: result.records[0]._fields[0].properties.sname,
                 email: result.records[0]._fields[0].properties.email,
-                birthday: result.records[0]._fields[0].properties.birthday
+                birthday: result.records[0]._fields[0].properties.birthday,
+                profilepicture: result.records[0]._fields[0].properties.profilepicture
             }
             res.status(200);
             res.send({user});
