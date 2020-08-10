@@ -5,15 +5,16 @@ import $ from "jquery";
 function stringifyFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
+    console.log(key, fd.get(key));
     data[key] = fd.get(key);
   }
-  return JSON.stringify(data, null, 2);
+  return data;
 }
 
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user};
+    this.state = { show: false, toggleEdit: false, user: {}};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -21,6 +22,15 @@ class Settings extends React.Component {
     this.closeEdit = this.closeEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
+  }
+
+  componentDidMount(){
+    $.post("/user/get", {token: localStorage.getItem('sessionToken')}, (response) => {
+      this.setState({user: response.user});
+    })
+    .fail((response) => {
+        throw Error(response.message);
+    });
   }
 
   showModal() {
@@ -48,26 +58,28 @@ class Settings extends React.Component {
   }
 
   closeEdit() {
-    this.setState({
-      toggleEdit: false,
-      user: this.props.user
+    $.post("/user/get", {token: localStorage.getItem('sessionToken')}, (response) => {
+      this.setState({toggleEdit: false, user: response.user });
     })
-  }
-
-  componentDidUpdate(prevProps) 
-  {
-    if (this.props.user !== prevProps.user) {
-     this.setState({ user: this.props.user});
-    }   
+    .fail((response) => {
+        throw Error(response.message);
+    });
   }
 
   async handleSubmit(event) {
     event.preventDefault();
-    let data = new FormData(event.target);
+    let data = new FormData();
+    data.append('name', this.state.user.name);
+    data.append('sname', this.state.user.sname);
+    data.append('email', this.state.user.email);
+    data.append('bday', this.state.user.birthday);
+    data.append('profilePicture', JSON.stringify(this.state.user.profilepicture));
+    data.append('token', localStorage.getItem('sessionToken'));
     data = await stringifyFormData(data);
-    $.post("/user/edit", JSON.parse(data), (response) => {
-      this.hideModal()
-     // this.setState({ show: false });
+    console.log(data);
+    $.post("/user/edit", data , (response) => {
+      this.setState({user: response.user, prevUser: response.user });
+      this.closeEdit();
     })
     .fail(() => {
       alert("Unable to update user preferences");
@@ -106,7 +118,7 @@ class Settings extends React.Component {
               <Container>
                 <Row>Name: &nbsp;
                   {this.state.toggleEdit === false ?
-                  this.props.user.name
+                  this.state.user.name
                   :
                   (
                     <Form.Control
@@ -125,7 +137,7 @@ class Settings extends React.Component {
                 </Row>
                 <Row>Surname: &nbsp;
                   {this.state.toggleEdit === false ?
-                    this.props.user.sname
+                    this.state.user.sname
                     :
                     (
                       <Form.Control
@@ -144,7 +156,7 @@ class Settings extends React.Component {
                 </Row>
                 <Row>Email: &nbsp;
                 {this.state.toggleEdit === false ?
-                    this.props.user.email
+                    this.state.user.email
                     :
                     (
                       <Form.Control
@@ -163,7 +175,7 @@ class Settings extends React.Component {
                 </Row>
                 <Row>Birthdate: &nbsp;
                 {this.state.toggleEdit === false ?
-                    this.props.user.birthday
+                    this.state.user.birthday
                     :
                     (
                       <Form.Control
