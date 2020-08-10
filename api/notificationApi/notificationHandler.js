@@ -43,12 +43,12 @@ function getEmails(data){
 }
 
 data = {
-    fromName: "William Agar",
-    recipients: [{email:"wda1999@gmaiil.com", id:1}, {email:"ambzgrill@gmail.com", id:2}],
+    fromName: "Amber Grill",
+    recipients: [{email:"ambzgrill@gmail.com", id:1}, {email:"damianventer1@gmail.com", id:2}],
     timestamp: "date",
-    message: "Hello There",
-    taskName: "Task A",
-    projectName: "Project 1",
+    message: "Please finish your work damian, you're extremely behind!",
+    taskName: "Do math",
+    projectName: "Fix yourself",
     projectID: 5,
     mode:0
 }
