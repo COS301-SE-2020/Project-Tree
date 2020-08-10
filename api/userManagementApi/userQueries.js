@@ -108,10 +108,10 @@ async function editUser(req, res) {
             MATCH (a) 
             WHERE ID(a) = ${userId}
             SET a += {
-                name:"${req.body.user.name}",
-                sname:"${req.body.user.sname}",
-                email:"${req.body.user.email}",
-                birthday:"${req.body.user.bday}"
+                name:"${req.body.name}",
+                sname:"${req.body.sname}",
+                email:"${req.body.email}",
+                birthday:"${req.body.bday}"
             } 
             RETURN a
           `
