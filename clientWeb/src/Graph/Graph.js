@@ -377,14 +377,13 @@ class Graph extends React.Component {
                       size="sm"
                       onClick={() => {this.setState({displayCriticalPath: !this.state.displayCriticalPath})}}
                     >
-                      <Form.Check 
+                      <Form.Check
                         type="switch" 
                         id="switchEnabled"
                         label="Display Critical Path"
                         checked={this.state.displayCriticalPath}
                         onChange={e => {
-                          this.setState({ displayCriticalPath: e.target.checked });
-                          this.checked = this.state.displayCriticalPath;
+                          this.setState({ displayCriticalPath: this.state.displayCriticalPath });
                         }}
                       />
                     </Button>
