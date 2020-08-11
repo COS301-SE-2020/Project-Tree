@@ -12,7 +12,7 @@ class NoticeBoardScreen extends Component{
     }
 
     async sendNotification(){
-        data = {
+        let data = {
             fromName: "D",
             recipients: [{email:"u18052071@tuks.co.za", id:211}],
             timestamp: new Date("2020-08-13T08:46:17.672000000Z"),
@@ -138,17 +138,16 @@ class NotificationList extends Component{
                 <Text>
                     <Text style={{fontWeight:'bold', fontSize:20}}>
                         {message.fromName}
-                        {" - "}
-                        {message.taskName !== undefined ? message.taskName : null}
+                        {message.taskName !== undefined ? " - "+message.taskName : null}
                         {" "}
                     </Text>
-                    <Text>
+                    <Text style={{fontSize:15}}>
                         {message.timestamp.hour.low < 10 ? "0"+message.timestamp.hour.low : message.timestamp.hour.low}
                         {":"}
                         {message.timestamp.minute.low < 10 ? "0"+message.timestamp.minute.low : message.timestamp.minute.low}
                     </Text>
                 </Text>
-                <Text>
+                <Text style={{paddingTop:15, fontSize:15}}>
                     {message.message}
                 </Text>
             </View>
