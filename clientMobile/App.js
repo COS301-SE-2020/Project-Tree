@@ -9,6 +9,7 @@ import Drawer from 'react-native-drawer'
 import HomeScreen from './Home/HomeScreen';
 import GraphScreen from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
+import NoticeBoardScreen from './NoticeBoard/NoticeBoardScreen'
 import ProjectList from './ProjectList';
 import GraphDrawer from './Graph/GraphDrawer';
 console.disableYellowBox = true; 
@@ -105,93 +106,93 @@ class Home extends Component{
 						}
 					})}
         		>
-          <TouchableOpacity style={{height:45}} onPress={()=>{this.setState({drawerVisible:true})}}>
-            <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-          </TouchableOpacity>
-          <HomeScreen 
-            project={this.state.selectedProject} 
-            setCurrentProject={this.setCurrentProject} 
-            setDrawerVisible={this.setDrawerVisible}
-            navigation={this.props.navigation}
-          />
-			  </Drawer>
+					<TouchableOpacity style={{height:45}} onPress={()=>{this.setState({drawerVisible:true})}}>
+						<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
+					</TouchableOpacity>
+					<HomeScreen 
+						project={this.state.selectedProject} 
+						setCurrentProject={this.setCurrentProject} 
+						setDrawerVisible={this.setDrawerVisible}
+						navigation={this.props.navigation}
+					/>
+			  	</Drawer>
 			</Screen>
 		)
 	}
 }
 
 class Graph extends Component{
-  constructor(props) {
-    super(props);
-    let drawerState = globalSelectedProject === null ? true : false;
-    this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
-    this.setDrawerVisible = this.setDrawerVisible.bind(this);
+  	constructor(props) {
+		super(props);
+		let drawerState = globalSelectedProject === null ? true : false;
+		this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
+		this.setDrawerVisible = this.setDrawerVisible.bind(this);
 	}
   
-  setDrawerVisible(mode){
-    this.setState({drawerVisible:mode});
-  }
+	setDrawerVisible(mode){
+		this.setState({drawerVisible:mode});
+	}
   
 	render(){
-    if(globalSelectedProject === null){
-      return(
-        <View style={{
-          justifyContent:"center", 
-          alignItems:"center",
-          flex:1}}
-        >
-          <TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
-            alignItems:'center',
-            justifyContent:'center',
-            height:45,
-            borderColor:'#EEBB4D',
-            borderWidth:2,
-            borderRadius:5,
-            shadowColor:'#000',
-            shadowOffset:{
-                width:0,
-                height:1
-            },
-            shadowOpacity:0.8,
-            shadowRadius:2,  
-            elevation:3}}
-          >
-            <Text style={{color:'white'}}>
-              Please select a project
-            </Text>
-          </TouchableHighlight>
-        </View>
-      )
-    }
+		if(globalSelectedProject === null){
+			return(
+				<View style={{
+				justifyContent:"center", 
+				alignItems:"center",
+				flex:1}}
+				>
+				<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
+					alignItems:'center',
+					justifyContent:'center',
+					height:45,
+					borderColor:'#EEBB4D',
+					borderWidth:2,
+					borderRadius:5,
+					shadowColor:'#000',
+					shadowOffset:{
+						width:0,
+						height:1
+					},
+					shadowOpacity:0.8,
+					shadowRadius:2,  
+					elevation:3}}
+				>
+					<Text style={{color:'white'}}>
+					Please select a project
+					</Text>
+				</TouchableHighlight>
+				</View>
+			)
+		}
 
 		return(
-      <Screen>
-        <Drawer
-          type="overlay"
-          open={this.state.drawerVisible}
-          content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={globalSelectedProject} navigation={this.props.navigation}/>}
-          tapToClose={true}
-          openDrawerOffset={0.2} 
-          panCloseMask={0.2}
-          closedDrawerOffset={-3}
-          tweenHandler={(ratio) => ({
-            main: { opacity:(2-ratio)/2 }
-          })}
-        >
-          {this.state.selectedProject !== null ?
-          <React.Fragment>
-            <GraphScreen 
-              project={this.state.selectedProject}
-              navigation={this.props.navigation}
-              setDrawerVisible={this.setDrawerVisible}
-            />
-          </React.Fragment>
-          : 
-          <TouchableOpacity style={{height:60}} onPress={()=>{this.setDrawerVisible(true)}}>
-            <IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-          </TouchableOpacity>
-          }
-        </Drawer>
+			<Screen>
+				<Drawer
+				type="overlay"
+				open={this.state.drawerVisible}
+				content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={globalSelectedProject} navigation={this.props.navigation}/>}
+				tapToClose={true}
+				openDrawerOffset={0.2} 
+				panCloseMask={0.2}
+				closedDrawerOffset={-3}
+				tweenHandler={(ratio) => ({
+					main: { opacity:(2-ratio)/2 }
+				})}
+				>
+					{this.state.selectedProject !== null ?
+					<React.Fragment>
+						<GraphScreen 
+						project={this.state.selectedProject}
+						navigation={this.props.navigation}
+						setDrawerVisible={this.setDrawerVisible}
+						/>
+					</React.Fragment>
+					: 
+					<TouchableOpacity style={{height:60}} onPress={()=>{this.setDrawerVisible(true)}}>
+						<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
+					</TouchableOpacity>
+					}
+				</Drawer>
 			</Screen>
 		)
 	}
@@ -203,6 +204,49 @@ class Settings extends Component{
 			<Screen>
 				<SettingsScreen/>
 			</Screen>
+		)
+	}
+}
+
+class NoticeBoard extends Component{
+	constructor(props) {
+		super(props);
+		this.state = {selectedProject:globalSelectedProject};
+	}
+	render(){
+		// if(globalSelectedProject === null){
+		// 	return(
+		// 		<View style={{
+		// 		justifyContent:"center", 
+		// 		alignItems:"center",
+		// 		flex:1}}
+		// 		>
+		// 		<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
+		// 			alignItems:'center',
+		// 			justifyContent:'center',
+		// 			height:45,
+		// 			borderColor:'#EEBB4D',
+		// 			borderWidth:2,
+		// 			borderRadius:5,
+		// 			shadowColor:'#000',
+		// 			shadowOffset:{
+		// 				width:0,
+		// 				height:1
+		// 			},
+		// 			shadowOpacity:0.8,
+		// 			shadowRadius:2,  
+		// 			elevation:3}}
+		// 		>
+		// 			<Text style={{color:'white'}}>
+		// 			Please select a project
+		// 			</Text>
+		// 		</TouchableHighlight>
+		// 		</View>
+		// 	)
+		// }
+
+		return(
+			<NoticeBoardScreen project={this.state.selectedProject}/>
 		)
 	}
 }
@@ -230,7 +274,7 @@ export default class App extends Component{
 						shadow: true,
 						tabBarBackground: '#184D47'
 					}}
-					initialRouteName="Home">
+					initialRouteName="Notice Board">
 					
 					<Tabs.Screen
 						name="Home"
@@ -245,7 +289,7 @@ export default class App extends Component{
 							),
 						}}
 					/>
-         <Tabs.Screen
+         			<Tabs.Screen
 						name="Project Tree"
 						component={Graph}
 						options={{
@@ -257,7 +301,20 @@ export default class App extends Component{
 								/>
 							),
 						}}
-          />
+          			/>
+					<Tabs.Screen
+						name="Notice Board"
+						component={NoticeBoard}
+						options={{
+							tabBarIcon: ({ focused, color }) => (
+								<EntypoTabBarIcon
+									focused={focused}
+									tintColor={color}
+									name="message"
+								/>
+							),
+						}}
+          			/>
 					<Tabs.Screen
 						name="Settings"
 						component={Settings}

@@ -1,23 +1,63 @@
 var emailHandler = require('./emailNotifications');
+var noticeBoardHandler = require('./noticeBoard');
+const db = require("../DB");
 
-function sendNotification(data)
-{
-    //mode 0: email
-    //mode 1: notice board
-    //mode 2: notice board and email
+function sendNotification(req, res){
+    // mode 0: email
+    // mode 1: notice board
+    // mode 2: notice board and email
+    let data = req.body;
 
     if(data.mode === 0){
         let emails = getEmails(data.recipients);
-        emailHandler.sendEmailNotification(data.fromName, data.taskName, data.projectName, emails, data.message);
+        emailHandler.sendEmailNotification(data.fromName, data.taskName, data.projName, emails, data.message);
     }
 
     else if(data.mode === 1){
-        console.log('notice board')
+        let ids = getIds(data.recipients)
+        noticeBoardHandler.sendNoticeBoardNotification(ids, data.fromName, data.taskName, data.projName, data.projID, data.timestamp, data.message);
     }
 
     else{
         console.log('other')
     }
+
+    res.status(200);
+    res.send({response:"okay"});
+}
+
+async function retrieveNotifications(req, res){
+    let data = req.body;
+
+    await db.getSession()
+    .run(
+        `
+            Match (b), (a:User)
+            WHERE id(a) = ${data.userID} and (b)-[:SENT_TO]->(a) and b.projID= ${data.projID}
+            WITH b
+            ORDER BY b.timestamp
+            RETURN b
+        `
+    )
+    .then(result => {
+      let messageArr = [];
+      result.records.forEach((record) => {
+        messageArr.push({
+          id: record._fields[0].identity.low,
+          fromName: record._fields[0].properties.fromName,
+          taskName: record._fields[0].properties.taskName,
+          message: record._fields[0].properties.message,
+          timestamp: record._fields[0].properties.timestamp
+        });
+      });
+      res.status(200);
+      res.send({ notifications: messageArr });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
 }
 
 function getIds(data){
@@ -42,15 +82,7 @@ function getEmails(data){
     return emails;
 }
 
-data = {
-    fromName: "William Agar",
-    recipients: [{email:"wda1999@gmaiil.com", id:1}, {email:"ambzgrill@gmail.com", id:2}],
-    timestamp: "date",
-    message: "Hello There",
-    taskName: "Task A",
-    projectName: "Project 1",
-    projectID: 5,
-    mode:0
+module.exports = {
+    sendNotification,
+    retrieveNotifications
 }
-
-sendNotification(data);

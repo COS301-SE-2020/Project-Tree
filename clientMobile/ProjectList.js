@@ -62,7 +62,7 @@ class ProjectListDrawer extends Component {
         });
         const body = await response.json();
 
-        if(this._isMounted === true) this.setState({projects:body.nodes});
+        if(this._isMounted === true) this.setState({projects:body.projects});
     }
 
     componentWillUnmount(){

@@ -2,7 +2,6 @@ var nodemailer = require('nodemailer');
 var templates = require('./emailTemplates');
 
 function sendEmailNotification(fromName, taskName, projectName, to, message){
-    console.log(fromName, taskName, projectName, to, message)
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
