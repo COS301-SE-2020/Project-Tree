@@ -47,10 +47,9 @@ class SendProjectNotification extends React.Component {
           className="my-2"
           style={{backgroundColor:"#184D47", color:"white", borderColor:"#184D47"}}
           onClick={() => {this.showModal()}}
-          block
-          size="sm"
+
         >
-            Send Notification
+            <i className="fa fa-bell-o">  </i> Send Notification {" "}
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
           <Form onSubmit={event => {this.handleSubmit(event)}}>

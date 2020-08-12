@@ -63,7 +63,7 @@ class ProjectInfo extends React.Component{
               </Table>
             </Col>
           </Row>
-          <Row className="align-items-center py-2">
+          <Row className="align-items-center py-1">
             <Col xs={6} className="text-center">
               <UpdateProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
             </Col>
