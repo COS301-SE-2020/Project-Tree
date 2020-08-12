@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
 import DeleteProject from "./DeleteProject";
 
@@ -64,11 +64,10 @@ class ProjectInfo extends React.Component{
             </Col>
           </Row>
           <Row className="align-items-center py-2">
-            <Col></Col>
             <Col xs={6} className="text-center">
               <UpdateProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
             </Col>
-            <Col></Col>
+            <Col> <SendProjectNotification/> </Col>
           </Row>
         </Container>
       </React.Fragment>
