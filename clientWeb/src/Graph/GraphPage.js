@@ -12,7 +12,7 @@ import $ from "jquery";
 class GraphPage extends React.Component{
   constructor(props) {
     super(props);
-    this.state = { project: this.props.project, task:null, dependency:null, nodes:null, links:null};
+    this.state = { project: this.props.project, task:null, dependency:null, nodes:null, links:null, allUsers:null};
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
     this.getProjectInfo = this.getProjectInfo.bind(this);
@@ -21,6 +21,13 @@ class GraphPage extends React.Component{
   componentDidMount() {
     $.post( "/getProject", {id: this.state.project.id} , response => {
       this.setState({ nodes: response.tasks, links: response.rels });
+    })
+    .fail(err => {
+      throw Error(err);
+    });
+
+    $.post( "/getAllUsers", response => {
+      this.setState({ allUsers: response.users });
     })
     .fail(err => {
       throw Error(err);
@@ -149,6 +156,7 @@ class GraphPage extends React.Component{
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
                   getProjectInfo={this.getProjectInfo}
+                  allUsers={this.state.allUsers}
                 />
               ) : null}
             </Col>
