@@ -128,7 +128,7 @@ class CreateTask extends React.Component {
 
     this.hideModal();
 
-    await fetch("/assignPeople", {
+    await fetch("/people/assignPeople", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -141,6 +141,7 @@ class CreateTask extends React.Component {
         this.state.resourcesList,
       ])
     });
+    await console.log('done')
   }
 
   render() {

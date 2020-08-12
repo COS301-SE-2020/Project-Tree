@@ -91,7 +91,31 @@ async function getAllUsers(req,res){
     res.send({ users: usersArr });
 }
 
+async function getProjectUsers(req,res){
+  let session = db.getSession();
+  var projID = parseInt(req.body.id);
+  let usersArr = []
+  await session
+    .run(
+      `
+      MATCH (n)-[r]->(m)-[:PART_OF]->(j) WHERE ID(j)=${projID} RETURN n,r,m
+      `
+    )
+    .then(function (result) {
+      result.records.forEach(function (record) {
+        usersArr.push({
+          record
+        });
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+    res.send({ projectUsers: usersArr });
+}
+
 module.exports = {
   assignPeople,
-  getAllUsers
+  getAllUsers,
+  getProjectUsers
 };

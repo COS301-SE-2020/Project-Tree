@@ -49,8 +49,9 @@ app.post("/mobile", async (req, res) => {
 		graphDirection: direction
 	})
 });
-app.post("/getAllUsers",personQueries.getAllUsers);
-app.post("/assignPeople",personQueries.assignPeople);
+app.post("/people/getAllUsers",personQueries.getAllUsers);
+app.post("/people/assignPeople",personQueries.assignPeople);
+app.post("/people/projectUsers",personQueries.getProjectUsers)
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files

@@ -85,7 +85,7 @@ function makeElement(node, criticalPathNodes) {
     if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
 
     return new joint.shapes.standard.Rectangle({
-        id: node.id,
+        id: 'n'+node.id,
         size: { width: width, height: height },
         attrs: {
             type:'node',
@@ -208,7 +208,7 @@ class Graph extends React.Component {
 
   handleClick(clickedNode) {
     if (clickedNode.model.attributes.attrs.type === "node") {
-      this.props.toggleSidebar(clickedNode.model.id, null);
+      this.props.toggleSidebar(parseInt(clickedNode.model.id.substr(1)), null);
     } else if (clickedNode.model.attributes.attrs.type === "link") {
       this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)));
     }
