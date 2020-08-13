@@ -1,4 +1,4 @@
-const uq = require("../UserManagementApi/userQueries");
+const uq = require("../userManagementApi/userQueries");
 const { JWT } = require('jose');
 
 const db = require("../DB");

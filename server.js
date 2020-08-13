@@ -6,6 +6,7 @@ var dq = require('./api/projectApi/dependencyQueries');
 var pq = require('./api/projectApi/projectQueries');
 var gq = require('./api/projectApi/graphQueries');
 var um = require('./api/userManagementApi/userQueries');
+var personQueries = require('./api/projectApi/personQueries');
 var nh = require('./api/notificationApi/notificationHandler');
 
 const app = express();
@@ -49,9 +50,11 @@ app.post("/mobile", async (req, res) => {
 		graphDirection: direction
 	})
 });
+app.post("/people/getAllUsers",personQueries.getAllUsers);
+app.post("/people/assignPeople",personQueries.assignPeople);
+app.post("/people/projectUsers",personQueries.getProjectUsers)
 app.post('/sendNotification', nh.sendNotification)
 app.post('/retrieveNotifications', nh.retrieveNotifications)
-	
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
