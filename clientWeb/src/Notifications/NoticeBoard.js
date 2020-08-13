@@ -19,8 +19,8 @@ class NoticeBoard extends Component{
         this._isMounted = true;
 
         let data = {
-            projID : 212,
-            userID : 211
+            projID : this.props.project.id,
+            userID : this.props.user.id
         }
 
         data = JSON.stringify(data);

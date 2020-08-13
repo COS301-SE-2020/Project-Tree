@@ -36,7 +36,7 @@ class SendProjectNotification extends React.Component {
 
     let data = {
       type: 'project',     //personal, task, project, auto
-      fromName: "Amber Grill",
+      fromName: this.props.user.name + " " + this.props.user.sname,
       recipients: [],
       timestamp: timestamp,
       message: notification.sn_Message,

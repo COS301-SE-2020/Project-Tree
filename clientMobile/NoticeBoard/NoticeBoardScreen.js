@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions, TouchableHighlight, ScrollView, Image } from 'react-native'
 import { isEmpty } from 'lodash';
 import SendProjectNotification from './ProjectWideNotification';
+import {Spinner} from 'native-base'
 
 class NoticeBoardScreen extends Component{
     _isMounted = false;
@@ -41,11 +42,7 @@ class NoticeBoardScreen extends Component{
     render(){
         if(this.state.messages === null){
             return(
-                <View>
-                    <Text>
-                        Waiting - Spinner
-                    </Text>
-                </View>
+                <Spinner />
             )
         }
 

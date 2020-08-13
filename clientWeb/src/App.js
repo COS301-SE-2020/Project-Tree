@@ -35,7 +35,7 @@ class App extends Component {
       project: null, 
       showSideBar: false,
       loggedInStatus: false,
-      user: {},
+      user: null,
       isLogginActive: true
     };
     this.setProject = this.setProject.bind(this);
@@ -55,6 +55,14 @@ class App extends Component {
       .fail((response) => {
           throw Error(response.message);
       });
+
+      $.post("/user/get", {token}, (response) => {
+        this.setState({user: response.user});
+      })
+      .fail((response) => {
+          throw Error(response.message);
+      });
+
       this.setState({loggedInStatus: true });
     }else{
       if(this.rightSide) this.rightSide.classList.add("right");
@@ -190,7 +198,7 @@ class App extends Component {
                 <Switch>
                   <Route path="/project" component={ProjectPage}>
                     {this.state.project != null ? (
-                      <ProjectPage project={this.state.project} setProject={project => this.setProject(project)}/>
+                      <ProjectPage project={this.state.project} setProject={project => this.setProject(project)} user={this.state.user}/>
                     ) : <Redirect to="/"/>}
                   </Route>
                   <Route path="/graph" >
