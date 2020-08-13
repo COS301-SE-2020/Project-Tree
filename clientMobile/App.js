@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, Text, TouchableOpacity, TouchableHighlight} from 'react-native'
+import {View, Text, TouchableOpacity, TouchableHighlight, ActivityIndicator} from 'react-native'
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import IconFeather from 'react-native-vector-icons/Feather'
 import IconEntypo from 'react-native-vector-icons/Entypo'
@@ -12,35 +12,20 @@ import SettingsScreen from './Settings/SettingsScreen';
 import ProjectList from './ProjectList';
 import GraphDrawer from './Graph/GraphDrawer';
 console.disableYellowBox = true; 
-//import { createAppContainer } from 'react-navigation';
-//import { createStackNavigator} from '@react-navigation/stack';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator} from '@react-navigation/stack';
+import {Auth} from "./User/Components/Auth";
+import RootStackScreen from './User/RootStackScreen';
 
-// import Splash from './User/Splash';
-// import Login from './User/Login';
-// import Register from './User/Register';
-// import drawerNav from './User/DrawerNav';
+import {AuthContext} from './User/Components/context'
+import AsyncStorage from '@react-native-community/async-storage';
+import LoginScreen from './User/LoginScreen'
+import RegisterScreen from './User/RegisterScreen'
+import { forEach } from 'lodash'
 
-// const Auth = createStackNavigator({
-// 	//Stack Navigator for Login and Sign up Screen
-// 	LoginScreen: {
-// 	  screen: LoginScreen,
-// 	  navigationOptions: {
-// 		headerShown: false,
-// 	  },
-// 	},
-// 	RegisterScreen: {
-// 	  screen: RegisterScreen,
-// 	  navigationOptions: {
-// 		title: 'Register',
-// 		headerStyle: {
-// 		  backgroundColor: '#307ecc',
-// 		},
-// 		headerTintColor: '#fff'r,
-// 	  },
-// 	},
-//   });
 
 const Tabs = AnimatedTabBarNavigator()
+const RootStack = createStackNavigator();
 
 const Screen = styled.View
 `
@@ -48,7 +33,11 @@ const Screen = styled.View
   background-color: #f2f2f2;
 `
 
-var globalSelectedProject = null
+var globalSelectedProject = null;
+// globalLogout = true Logged in
+// 				= false Logged out
+var globalLogout = false;
+
 
 const FeatherTabBarIcon = (props) => {
 	return (
@@ -74,9 +63,19 @@ class Home extends Component{
 	constructor(props) {
 		super(props);
 		let drawerState = globalSelectedProject === null ? true : false;
-		this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
+		this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject, token: null};
 		this.setCurrentProject = this.setCurrentProject.bind(this);
 		this.setDrawerVisible = this.setDrawerVisible.bind(this);
+	}
+
+	async componentDidMount()
+	{
+		AsyncStorage.getItem('sessionToken')
+		.then((value) => {
+			const data = JSON.parse(value);
+			console.log("check	", data)
+			this.setState({token: data});
+		});
 	}
 
 	setDrawerVisible(mode){
@@ -94,7 +93,7 @@ class Home extends Component{
 				<Drawer
 					type="overlay"
 					open={this.state.drawerVisible}
-					content={<ProjectList setCurrentProject={this.setCurrentProject} setDrawerVisible={this.setDrawerVisible}/>}
+					content={this.state.token !== null ? <ProjectList setCurrentProject={this.setCurrentProject} setDrawerVisible={this.setDrawerVisible} token={this.state.token}/>:null}
 					tapToClose={true}
 					openDrawerOffset={0.2} 
 					panCloseMask={0.2}
@@ -111,7 +110,7 @@ class Home extends Component{
           <HomeScreen 
             project={this.state.selectedProject} 
             setCurrentProject={this.setCurrentProject} 
-            setDrawerVisible={this.setDrawerVisible}
+			setDrawerVisible={this.setDrawerVisible}
             navigation={this.props.navigation}
           />
 			  </Drawer>
@@ -197,21 +196,167 @@ class Graph extends Component{
 	}
 }
 
-class Settings extends Component{
+class SplashScreen extends Component{
 	render(){
 		return(
 			<Screen>
-				<SettingsScreen/>
+				<SplashScreen/>
 			</Screen>
 		)
 	}
 }
 
-export default class App extends Component{
+
+class Register extends Component{
 	render(){
 		return(
-			<NavigationContainer>
-				<Tabs.Navigator
+			<Screen>
+				<RegisterScreen/>
+			</Screen>
+		)
+	}
+}
+
+class Settings extends Component{
+	
+	constructor(props) 
+	{
+		super(props);		
+		this.handleLogout = this.handleLogout.bind(this);
+	}
+
+	async handleLogout() 
+	{			
+		try {
+			console.log("1")
+			const keys = await AsyncStorage.getAllKeys();
+			await AsyncStorage.multiRemove(keys);
+			globalLogout = false;
+		}
+		catch(exception) {
+			return false;
+		}
+	}
+	
+	render(){
+		return(
+			<Screen>
+				<SettingsScreen handleLogout={this.handleLogout}/>
+			</Screen>
+		)
+	}
+
+}
+
+
+export default class App extends Component{
+
+	constructor(props) 
+	{
+		super(props);
+		this.state = { 
+		  loggedInStatus: globalLogout,
+		  user: {},
+		  sessionToken: null,
+		  switch: true,
+		};
+		
+		this.handleLogin = this.handleLogin.bind(this);
+		this.switchScreen = this.switchScreen.bind(this);
+		this.handleLogout = this.handleLogout.bind(this);		
+		this.checkKey = this.checkKey.bind(this);		
+	}
+
+	async checkKey()
+	{
+		AsyncStorage.getItem('sessionToken')
+		.then((value) => {
+		const data = JSON.parse(value);
+		console.log("X:	",data);
+		});
+	}
+
+	handleLogout()
+	{
+		//console.log("s	",globalLogout)
+		this.setState({
+			loggedInStatus: false,
+			user: null,
+			sessionToken: null,
+			switch: true,
+		});
+	}
+
+	switchScreen(flag)
+	{
+		if(flag == "Register")
+		{
+			this.setState
+			({
+				switch: false,
+			});
+		}
+		else{
+			this.setState
+			({
+				switch: true,
+			});
+		}
+	}
+	
+	async handleLogin(data)
+	{
+		// console.log(globalLogout)
+		try {
+			await AsyncStorage.setItem('sessionToken', JSON.stringify(data.sessionToken));
+			} 
+			catch(e) {
+			console.log("No luck");
+			}  
+			this.setState(
+			{
+				loggedInStatus: data.status,
+				user: data.id,
+				sessionToken: data.sessionToken
+			});
+			globalLogout=true;
+			// console.log(globalLogout)
+			// console.log(this.state)
+	}
+
+	async componentDidMount()
+	{
+		if(globalLogout === false)
+		{
+			this.handleLogout();
+		}
+		else
+		{
+			this.state.loggedInStatus = true
+		}
+		console.log("Global2:	",this.state.loggedInStatus)
+
+		// AsyncStorage.getItem('sessionToken')
+		// .then((item) => {
+		// 	if (item) 
+		// 	{
+		// 		console.log("ALREADY LOGGED IN")
+		// 		this.setState({loggedInStatus: true });	
+		// 		globalLogin = false;
+		// 	}
+		// });
+	}
+	
+
+	render(){
+		console.log(this.state.loggedInStatus, "::	loggedInStatus")
+		console.log(globalLogout, "::	global")
+		console.log(this.checkKey())
+		if(this.state.loggedInStatus === true)
+		{ 
+		return(
+				<NavigationContainer>
+				 <Tabs.Navigator
 					tabBarOptions={{
 						activeTintColor: 'black',
 						inactiveTintColor: 'white',
@@ -245,7 +390,7 @@ export default class App extends Component{
 							),
 						}}
 					/>
-         <Tabs.Screen
+         			<Tabs.Screen
 						name="Project Tree"
 						component={Graph}
 						options={{
@@ -257,7 +402,7 @@ export default class App extends Component{
 								/>
 							),
 						}}
-          />
+         		 	/>
 					<Tabs.Screen
 						name="Settings"
 						component={Settings}
@@ -271,8 +416,17 @@ export default class App extends Component{
 							),
 						}}
 					/>
-				</Tabs.Navigator>
-			</NavigationContainer>
-		)
+				</Tabs.Navigator>				
+				</NavigationContainer>)
+		}
+		else
+		{	
+			if(this.state.switch)	
+				return(<LoginScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+			else
+				return(<RegisterScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+
+		}		
 	}
 }
+

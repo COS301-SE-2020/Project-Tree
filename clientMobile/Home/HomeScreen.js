@@ -27,17 +27,22 @@ export default class SettingsScreen extends Component {
         this.setState({ modalVisible: visible});
     }
 
-    async componentDidMount(){
-        const response = await fetch('http://projecttree.herokuapp.com/project/get',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        });
-        const body = await response.json();
-        this.setState({projects:body.nodes, project:body.nodes[1]});
-    }
+    // async componentDidMount(){
+    //     console.log(this.props.checkKey())
+    //     const response = await fetch('http://10.0.2.2:5000/project/get',{
+    //         method: 'POST',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             key: this.props.key
+    //           })
+    //     });
+    //     const body = await response.json();
+    //     //console.log(body)
+    //     this.setState({projects:body.projects, project:body.projects[1]});
+    // }
 
     settingPermissions(proj){
         const tableData = []

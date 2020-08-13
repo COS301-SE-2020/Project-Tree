@@ -50,26 +50,38 @@ class ProjectListDrawer extends Component {
             
     }
 
-    async componentDidUpdate(){
-        this._isMounted = true
-        const response = await fetch('http://projecttree.herokuapp.com/project/get',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body:null,
-        });
-        const body = await response.json();
+    async componentDidMount() {    
+            console.log("Token  ",this.props.token)
+            this._isMounted = true
+            // if(this.props.token == null)
+            // {
+            //     return
+            // }
+            let userToken = {creatorID: this.props.token};
+            console.log("userToken:     ", userToken)
+            const response = await fetch('http://10.0.2.2:5000/project/get',{
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userToken),
+            });
+    
+            const body = await response.json();
+            if(this._isMounted === true) this.setState({projects:body.projects});
+    
+      }
 
-        if(this._isMounted === true) this.setState({projects:body.nodes});
-    }
+    // async componentDidMount(){
+    //     }
 
     componentWillUnmount(){
         this._isMounted = false;
     }
 
     render() {
+        console.log(this.props.token)
         return (
             <View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>
                 <View style={{flex:9}}>

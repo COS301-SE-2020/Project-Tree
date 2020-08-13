@@ -3,6 +3,7 @@ const { JWT } = require('jose');
 const bcrypt = require('bcrypt');
 
 function login(req,res){ //email, password,
+    console.log(req.body)
     db.getSession()
     .run(`
             Match (n:User { email: "${req.body.email}" })
@@ -41,6 +42,7 @@ function login(req,res){ //email, password,
 }
 
 function register(req,res){ //email, password, name, surname
+    console.log("DSA", req.body)
     db.getSession()
         .run(`
                 Match (n:User { email: "${req.body.email}" })
@@ -57,6 +59,7 @@ function register(req,res){ //email, password, name, surname
                                 password:"${hash}", 
                                 name:"${req.body.name}",
                                 sname:"${req.body.sname}"
+                                birthday: "${req.body.um_date}",
                             })
                             RETURN a
                         `)

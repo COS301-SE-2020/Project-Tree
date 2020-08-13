@@ -207,6 +207,8 @@ function getProgress(req, res) {
 }
 
 function getProjects(req, res) {
+  console.log("req.body")
+  console.log(req.body)
   db.getSession()
     .run(
       `
