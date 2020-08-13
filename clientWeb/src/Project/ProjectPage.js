@@ -53,9 +53,9 @@ class ProjectPage extends React.Component {
     return (
       <Container fluid style={{maxHeight: "40%"}}>
         <Row className="m-2">
-          <Col sm={12} md={6} xl={4} style={{height: "366px"}}><ProjectInfo project={this.props.project} setProject={project => this.props.setProject(project)}/></Col>
+          <Col sm={12} md={6} xl={4} style={{height: "366px"}}><ProjectInfo project={this.props.project} user={this.props.user} setProject={project => this.props.setProject(project)}/></Col>
           <Col sm={12} md={6} xl={4} style={{border: "black solid 1px", overflowY: "scroll", height: "366px"}} className="border rounded"> 
-            <NoticeBoard/>
+            {this.props.project != null && this.props.user != null ? <NoticeBoard project={this.props.project} user={this.props.user}/> : null}
           </Col>
           <Col sm={12} md={12} xl={4} style={{border: "black solid 1px", height: "366px"}} className="border rounded"> 
             <ProjectDashboard project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>

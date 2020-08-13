@@ -67,7 +67,7 @@ class ProjectInfo extends React.Component{
             <Col xs={6} className="text-center">
               <UpdateProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
             </Col>
-            <Col> <SendProjectNotification project={this.props.project}/> </Col>
+            <Col> <SendProjectNotification project={this.props.project} user={this.props.user}/> </Col>
           </Row>
         </Container>
       </React.Fragment>
