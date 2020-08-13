@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 
 function stringifyFormData(fd) {
   const data = {};
@@ -84,19 +84,19 @@ class CreateTask extends React.Component {
   addPacMan(person){
     let tempPacManList = this.state.pacManList;
     tempPacManList.push(person);
-    this.setState({pacManList:tempPacManList});
+    this.setState({pacManList:tempPacManList,pacManSearchTerm:''});
   }
 
   addResPerson(person){
     let tempResPersonList = this.state.resPersonList;
     tempResPersonList.push(person);
-    this.setState({resPersonList:tempResPersonList});
+    this.setState({resPersonList:tempResPersonList,resPersonSearchTerm:''});
   }
 
   addResource(person){
     let tempResourceList = this.state.resourcesList;
     tempResourceList.push(person);
-    this.setState({resourceList:tempResourceList});
+    this.setState({resourceList:tempResourceList,resourcesSearchTerm:''});
   }
 
   async handleSubmit(event) {
@@ -141,7 +141,6 @@ class CreateTask extends React.Component {
         this.state.resourcesList,
       ])
     });
-    await console.log('done')
   }
 
   render() {
@@ -163,6 +162,7 @@ class CreateTask extends React.Component {
           this.state.resourcesSearchTerm.toLowerCase()) !== -1;
       }
     );
+
     return (
       <React.Fragment>
         <Modal show={this.state.Show} onHide={this.hideModal}>
@@ -233,8 +233,9 @@ class CreateTask extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                  <Form.Label>Package Manager</Form.Label>
-                  <div>
+                <Form.Label>Package Manager</Form.Label>
+                <Row>
+                  <Col>
                     <input type='text'
                       value={this.state.pacManSearchTerm}
                       onChange={(e)=>this.updateSearch(e,0)}
@@ -246,11 +247,18 @@ class CreateTask extends React.Component {
                           </li>
                       })}
                     </ul>:null}
-                  </div>
+                  </Col>
+                  <Col>
+                    {this.state.pacManList.map((person) => {
+                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                    })}
+                  </Col>
+                </Row>
               </Form.Group>
               <Form.Group>
-                  <Form.Label>Responsible Person(s)</Form.Label>
-                  <div>
+                <Form.Label>Responsible Person(s)</Form.Label>
+                <Row>
+                  <Col>
                     <input type='text'
                       value={this.state.resPersonSearchTerm}
                       onChange={(e)=>this.updateSearch(e,1)}
@@ -262,11 +270,18 @@ class CreateTask extends React.Component {
                           </li>
                       })}
                     </ul>:null}
-                  </div>
+                  </Col>
+                  <Col>
+                    {this.state.resPersonList.map((person) => {
+                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                    })}
+                  </Col>
+                </Row>
               </Form.Group>
               <Form.Group>
-                  <Form.Label>Resource(s)</Form.Label>
-                  <div>
+                <Form.Label>Resource(s)</Form.Label>
+                <Row>
+                  <Col>
                     <input type='text'
                       value={this.state.resourcesSearchTerm}
                       onChange={(e)=>this.updateSearch(e,2)}
@@ -278,7 +293,13 @@ class CreateTask extends React.Component {
                           </li>
                       })}
                     </ul>:null}
-                  </div>
+                  </Col>
+                  <Col>
+                    {this.state.resourcesList.map((person) => {
+                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                    })}
+                  </Col>
+                </Row>
               </Form.Group>
               <Form.Group>
                 <input

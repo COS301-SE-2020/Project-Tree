@@ -48,7 +48,21 @@ class GraphPage extends React.Component{
       })
       .fail(err => {
         throw Error(err);
+      });
+
+      $.post( "/people/getAllUsers", {id: this.state.project.id} , response => {
+        this.setState({ allUsers: response.users });
       })
+      .fail(err => {
+        throw Error(err);
+      });
+  
+      $.post( "/people/projectUsers", {id: this.state.project.id} , response => {
+        this.setState({projUsers:response.projectUsers});
+      })
+      .fail(err => {
+        throw Error(err);
+      });
     }
   }
 
@@ -190,21 +204,21 @@ class TaskSidebar extends React.Component {
 
     // Get the users that are part of the selected task
     for(let x = 0; x < this.props.projUsers.length; x++){
-      if(this.props.projUsers[x].record._fields[1].end.low === this.props.task.id){
+      if(this.props.projUsers[x][1].end === this.props.task.id){
         taskUsers.push(this.props.projUsers[x])
       }
     }
 
     // Assign users to their respective roles by putting them in arrays
     for(let x = 0; x < taskUsers.length; x++){
-      if(taskUsers[x].record._fields[1].type === "PACKAGE_MANAGER"){
-        taskPacMans.push(taskUsers[x].record._fields[0])
+      if(taskUsers[x][1].type === "PACKAGE_MANAGER"){
+        taskPacMans.push(taskUsers[x][0])
       }
-      if(taskUsers[x].record._fields[1].type === "RESPONSIBLE_PERSON"){
-        taskResPersons.push(taskUsers[x].record._fields[0])
+      if(taskUsers[x][1].type === "RESPONSIBLE_PERSON"){
+        taskResPersons.push(taskUsers[x][0])
       }
-      if(taskUsers[x].record._fields[1].type === "RESOURCE"){
-        taskResources.push(taskUsers[x].record._fields[0])
+      if(taskUsers[x][1].type === "RESOURCE"){
+        taskResources.push(taskUsers[x][0])
       }
     }
 
@@ -217,9 +231,11 @@ class TaskSidebar extends React.Component {
   }
 
   printUsers(people){
+    let list = [];
     for(let x = 0; x < people.length; x++){
-      return <li>{people[x].properties.name}&nbsp;{people[x].properties.sname}</li>
+      list.push(<p key={people[x].id}>{people[x].name}&nbsp;{people[x].surname}</p>)
     }
+    return list
   }
 
   render() {
@@ -302,13 +318,11 @@ class TaskSidebar extends React.Component {
               />
           </Row>
           <hr/>
-          Package managers:<br />
+          <b>Package managers:</b><br /><br />
           {this.printUsers(taskPacMans)}
-          <br />
-          Responsible persons:<br />
+          <b>Responsible persons:</b><br /><br />
           {this.printUsers(taskResPersons)}
-          <br />
-          Resources:<br />
+          <b>Resources:</b><br /><br />
           {this.printUsers(taskResources)}
           
         </Container>
