@@ -14,7 +14,7 @@ function returnFormData(fd) {
 class SendProjectNotification extends React.Component {
   constructor() {
     super();
-    this.state={show: false}
+    this.state={show: false, mode: 2}
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,7 +43,7 @@ class SendProjectNotification extends React.Component {
       taskName: undefined,
       projName: this.props.project.name,
       projID: this.props.project.id,
-      mode: 1
+      mode: this.state.mode
     }
 
     console.log(data);
@@ -83,6 +83,24 @@ class SendProjectNotification extends React.Component {
                   required
                 />
               </Form.Group>
+              <Button className="m-2"
+                  variant="secondary"
+                  onClick={()=>{this.setState({mode:0})}}
+                >
+                  Email
+                </Button>
+                <Button className="m-2"
+                  variant="secondary"
+                  onClick={()=>{this.setState({mode:1})}}
+                >
+                  Notice Board
+                </Button>
+                <Button className="m-2"
+                  variant="secondary"
+                  onClick={()=>{this.setState({mode:2})}}
+                >
+                  Both
+                </Button>
             </Modal.Body>
             <Modal.Footer style={{backgroundColor:"#184D47"}}>
               <Button variant="secondary" onClick={() => {this.hideModal()}}>
