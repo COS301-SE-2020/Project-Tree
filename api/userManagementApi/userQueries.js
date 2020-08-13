@@ -43,6 +43,49 @@ function login(req,res){ //email, password,
     })
 }
 
+function checkpermission(req, res){
+    /* let userId = await verify(req.body.token);
+    if(userId!=null)
+    {
+        db.getSession()
+        .run(
+            `
+            MATCH (a) 
+            WHERE ID(a) = ${userId}
+            SET a += {
+                name:"${req.body.name}",
+                sname:"${req.body.sname}",
+                email:"${req.body.email}",
+                birthday:"${req.body.bday}"
+            } 
+            RETURN a
+          `
+        )
+        .then(result => {
+            let user={
+                id: result.records[0]._fields[0].identity.low,
+                name: result.records[0]._fields[0].properties.name,
+                sname: result.records[0]._fields[0].properties.sname,
+                email: result.records[0]._fields[0].properties.email,
+                birthday: result.records[0]._fields[0].properties.bday
+            }
+            console.log("user", user)
+            res.status(200);
+            res.send({user});
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send(err);
+          });
+    }
+    else
+    {
+        res.status(400)
+        res.send({user:null})
+    } */
+}
+
 
 async function register(req,res){ //email, password, name, surname
     let x = "storage/default.jpg"
@@ -93,7 +136,6 @@ async function register(req,res){ //email, password, name, surname
 }
 
 async function editUser(req, res) {
-    console.log(req.body)
     let userId = await verify(req.body.token);
     if(userId!=null)
     {
@@ -217,5 +259,6 @@ module.exports =
     register,
     editUser,
     verify,
-    getUser
+    getUser,
+    checkpermission
 };

@@ -8,7 +8,11 @@ import ProjectDashboard from "./ProjectDashboard";
 class ProjectPage extends React.Component {
   constructor(props) {
     super(props); 
-    this.state = { project: this.props.project, tasks: [], criticalPath: null };
+    this.state = { 
+      project: this.props.project, 
+      tasks: [], 
+      criticalPath: null 
+    };
     
   }
 
@@ -51,7 +55,13 @@ class ProjectPage extends React.Component {
     return (
       <Container fluid className="py-2" style={{height: "40%"}}>
         <Row className="m-2">
-          <Col sm={12} md={6} xl={4}><ProjectInfo project={this.props.project} setProject={project => this.props.setProject(project)}/></Col>
+          <Col sm={12} md={6} xl={4}>
+            <ProjectInfo 
+              project={this.props.project} 
+              setProject={project => this.props.setProject(project)}
+              userPermission={this.props.userPermission}
+          />
+          </Col>
           <Col sm={12} md={6} xl={4} style={{border: "black solid 1px"}}>
           </Col>
           <Col sm={12} md={12} xl={4} style={{border: "black solid 1px"}}> 

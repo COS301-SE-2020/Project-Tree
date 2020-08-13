@@ -36,7 +36,13 @@ class App extends Component {
       showSideBar: false,
       loggedInStatus: false,
       user: {},
-      isLogginActive: true
+      isLogginActive: true,
+      userPermission: {
+        create: false,
+        update: false,
+        delete: false,
+        project: false
+      }
     };
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
@@ -60,8 +66,7 @@ class App extends Component {
       if(this.rightSide) this.rightSide.classList.add("right");
       //<Redirect to="/"/>
     }
-   }
-  
+  }
   
   setProject(proj){
     if(proj.delete != null){
@@ -70,14 +75,35 @@ class App extends Component {
         if(this.state.projects[i].id !== proj.delete) projects.push(this.state.projects[i]);
       }
       this.setState({projects: projects})
-      this.setState({project: null});
+      this.setState({
+        project: null, 
+        userPermission: {
+          create: false,
+          update: false,
+          delete: false,
+          project: false
+        }
+      });
     }else{
       if(!this.state.projects.includes(proj)){
         let projects = this.state.projects;
         projects.push(proj);
         this.setState({projects: projects, redirect: "project"});
       }
-      this.setState({project: proj})
+      /* $.post("/user/checkpermission", {creatorID: localStorage.getItem('sessionToken'), project: proj}, (response) => {
+        this.setState({projects: response.projects });
+      })
+      .fail((response) => {
+          throw Error(response.message);
+      }); */
+      this.setState({
+        project: proj, 
+        userPermission: {
+          create: proj.permissions[0],
+          update: proj.permissions[2],
+          delete: proj.permissions[1],
+          project: false
+        }})
     }
   }
 
@@ -190,13 +216,18 @@ class App extends Component {
                 <Switch>
                   <Route path="/project" component={ProjectPage}>
                     {this.state.project != null ? (
-                      <ProjectPage project={this.state.project} setProject={project => this.setProject(project)}/>
+                      <ProjectPage 
+                        project={this.state.project} 
+                        setProject={project => this.setProject(project)}
+                        userPermission={this.state.userPermission}
+                      />
                     ) : <Redirect to="/"/>}
                   </Route>
                   <Route path="/graph" >
                     {this.state.project != null ? 
                       <GraphPage
                         project={this.state.project}
+                        userPermission={this.state.userPermission}
                       />
                      : <Redirect to="/"/>}
                   </Route>

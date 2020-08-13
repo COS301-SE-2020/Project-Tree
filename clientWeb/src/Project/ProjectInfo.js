@@ -11,8 +11,13 @@ class ProjectInfo extends React.Component{
       <React.Fragment>
         <Container className="block-example border rounded border-secondary">
           <Row className="align-items-center bg-secondary py-2">
-            <Col className="text-left"> 
-              <DeleteProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
+            <Col className="text-left">
+              {
+              this.props.userPermission['project'] === true?
+                <DeleteProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
+              :
+                null
+              }
             </Col>
             <Col className="text-white">
               {this.props.project.name}
@@ -37,9 +42,9 @@ class ProjectInfo extends React.Component{
                   </tr>
                   <tr>
                     <td></td>
-                    <td>Create </td>
-                    <td>Delete </td>
-                    <td>Update </td>
+                    <td>Create</td>
+                    <td>Delete</td>
+                    <td>Update</td>
                   </tr>
                   <tr>
                     <td>Package Manager</td>
@@ -66,7 +71,12 @@ class ProjectInfo extends React.Component{
           <Row className="align-items-center py-2">
             <Col></Col>
             <Col xs={6} className="text-center">
-              <UpdateProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
+              {
+              this.props.userPermission['project'] === true?
+                <UpdateProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
+              :
+                null
+              }
             </Col>
             <Col></Col>
           </Row>

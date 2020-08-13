@@ -171,6 +171,8 @@ class Graph extends React.Component {
   }
 
   toggleCreateDependency(clickedNode) {
+    if(this.props.userPermission['create'] !== true) alert('you cannot do that');
+
     var new_source_targetID = clickedNode.model.id;
     this.setState({ alert: null });
 
@@ -215,7 +217,8 @@ class Graph extends React.Component {
   }
 
   addTask() {
-    this.setState({ createTask: true });
+    if(this.props.userPermission['create'] === true) this.setState({ createTask: true });
+    else alert('you cannot do that');
   }
 
   paperScale(sx, sy) {
