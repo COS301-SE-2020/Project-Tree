@@ -1,4 +1,4 @@
-const uq = require("../UserManagementApi/userQueries");
+const uq = require("../userManagementApi/userQueries");
 const { JWT } = require('jose');
 
 const db = require("../DB");
@@ -220,7 +220,10 @@ function getProgress(req, res) {
 }
 
 async function getProjects(req, res) {
+  console.log(req.body)
   let creator = await uq.verify(req.body.creatorID);
+  console.log(creator)
+
   if(creator != null)  {
     await db.getSession()
     .run(

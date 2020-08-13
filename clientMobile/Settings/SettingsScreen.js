@@ -1,179 +1,132 @@
 import React, { Component } from 'react';
-import { Image, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
-import DeleteProject from '../Home/DeleteProject'
+import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
+import { 
+    View, 
+    Text, 
+    TouchableOpacity, 
+    TextInput,
+    Platform,
+    StyleSheet ,
+    StatusBar,
+    Alert
+} from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';import DeleteProject from '../Home/DeleteProject'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
 export default class SettingsScreen extends Component {
     constructor(props){
         super(props);
         this.state = {
-            projects:null
+            loggedIn:null
         }
     }
 
     async componentDidMount(){
-        const response = await fetch('http://projecttree.herokuapp.com/project/get',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        });
-        const body = await response.json();
-        this.setState({projects:body.nodes});
+      
     }
 
-    settingPermissions(proj){
-        const tableData = []
-        const tempData = ['Package Managers',null,null,null,'Responsible Persons',null,null,null,'Resources',null,null,null]
-        const tempArr = []
-        for(let x = 0; x < proj.permissions.length; x++){
-            if(proj.permissions[x] === true){
-                tempArr.push('x')
-            }
-            else{
-                tempArr.push('')
-            }
-        }
-
-        let tempIndex = 0
-        for(let x = 0; x < tempData.length; x++){
-            if(tempData[x] === null){
-                tempData[x] = tempArr[tempIndex];
-                tempIndex++;
-            }
-        }
-
-        while(tempData.length) tableData.push(tempData.splice(0,4));
-
-        return(
-            <View style={styles.container}>
-                <Table borderStyle={{borderWidth:1}}>
-                    <Row data={['','Create','Delete','Update']} flexArr={[2,1,1,1]} style={styles.head} textStyle={styles.text}/>
-                    <TableWrapper style={styles.wrapper}>
-                        <Rows data={tableData} flexArr={[2,1,1,1]} style={styles.row} textStyle={styles.text}/>
-                    </TableWrapper>
-                </Table>
-            </View>
-        )
-    }
-    render() {
-        if(this.state.projects === null) return null;
-        const projects = this.state.projects;
-        const listItems = projects.map((project, i) =>
-            <View key={i} style={{ padding: 5, height:400, margin:5}}>
-                <Content>
-                    <Card style={styles.centeredView}>
-                        <CardItem>
-                            <Left>
-                                <Body style={{alignItems:'center', justifyContent:'center'}}>
-                                    <Text>{project.name}</Text>
-                                </Body>
-                            </Left>
-                        </CardItem>
-                        <CardItem>
-                            <Body>
-                                <ScrollView style={{height:40}}>
-                                    <Text>
-                                        {project.description}
-                                    </Text>
-                                </ScrollView>
-                                {this.settingPermissions(project)}
-                            </Body>
-                        </CardItem>
-                        <CardItem style={{flex:1, flexDirection:'row'}}>
-                            <TouchableOpacity style={styles.viewButton}>
-                                <Icon type="FontAwesome" name="eye"></Icon>
-                            </TouchableOpacity>
-                            <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} modalVisible={this.props.modalVisible} setModalVisible={this.props.setModalVisible}/>
-                            <TouchableOpacity style={styles.editButton}>
-                                <Icon type="FontAwesome" name="edit" ></Icon>
-                            </TouchableOpacity>
-                        </CardItem>
-                    </Card>
-                </Content>
-            </View>
-        );
-
+   
+        render() {
         return (
-            <ScrollView style={{marginBottom:60}}>
-                {listItems}
-            </ScrollView>
-        );
+            <View style={styles.container}>
+                    <StatusBar backgroundColor='#184D47' barStyle="light-content"/>
+                <View style={styles.header}>
+                    <Text style={styles.text_header}>User Details</Text>
+                </View>
+                <Animatable.View 
+                    animation="fadeInUp"
+                    style={[styles.footer, {
+                        backgroundColor: "silver"
+                    }]} >
+                        <View style={styles.button}>
+                            
+                            <TouchableOpacity
+                                onPress={() => {this.props.handleLogout()}}
+                                style={[styles.signIn, {
+                                    borderColor: '#DC143C',
+                                    borderWidth: 2,
+                                    marginTop: 65
+                                }]}>
+                                <Text style={[styles.textSign, {
+                                    color: '#DC143C'
+                                }]}>Logout</Text>
+                            </TouchableOpacity>
+                        </View>           
+                </Animatable.View>
+            </View>
+            );
     }
+
 }
 
 const styles = StyleSheet.create({
-    centeredView: {
-        //flex:1,
-        margin:5,
+    container: {
+      flex: 1, 
+      backgroundColor: '#184D47'
+    },
+    header: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingBottom: 10,
+    },
+    footer: {
+        flex: 3,
+        backgroundColor: '#fff',
+        paddingTop: 50,
+        // borderTopLeftRadius: 30,
+        // borderTopRightRadius: 30,
+        paddingHorizontal: 20,
+        paddingVertical: 30,
+    },
+    text_header: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 30
+    },
+    text_footer: {
+        color: '#05375a',
+        fontSize: 20
+    },
+    action: {
+        flexDirection: 'row',
+        marginTop: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        paddingBottom: 5
+    },
+    actionError: {
+        flexDirection: 'row',
+        marginTop: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#FF0000',
+        paddingBottom: 5
+    },
+    textInput: {
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : -12,
+        paddingLeft: 10,
+        color: 'black',
+    },
+    errorMsg: {
+        color: '#FF0000',
+        fontSize: 14,
+    },
+    button: {
+        alignItems: 'center',
+        marginTop: 20
+    },
+    signIn: {
         width: '100%',
-        height: '100%',
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius: 10
     },
-    container:{
-        flex:1,
-        paddingTop:20,
-        backgroundColor:'#fff',
-        width:'100%'
-    },
-    head:{
-        height:40,
-        backgroundColor:'#96BB7C',
-    },
-    wrapper:{
-        flexDirection:'row'
-    },
-    title:{
-        flex:1,
-        backgroundColor:'#f6f8fa'
-    },
-    row:{
-        height:40
-    },
-    text:{
-        margin:6, 
-        textAlign:'center'
-        
-    },
-    viewButton:{
-        backgroundColor:'#96BB7C',
-        alignItems:'center',
-        justifyContent:'center',
-        height:45,
-        width:'20%',
-        borderColor:'#EEBB4D',
-        borderWidth:2,
-        borderRadius:5,
-        shadowColor:'#000',
-        shadowOffset:{
-            width:0,
-            height:0.1
-        },
-        shadowOpacity:0.8,
-        shadowRadius:2,  
-        elevation:1,
-        margin:3,
-    },
-    editButton:{
-        backgroundColor:'#96BB7C',
-        alignItems:'center',
-        justifyContent:'center',
-        height:45,
-        width:'20%',
-        borderColor:'#EEBB4D',
-        borderWidth:2,
-        borderRadius:5,
-        shadowColor:'#000',
-        shadowOffset:{
-            width:0,
-            height:0.1
-        },
-        shadowOpacity:0.8,
-        shadowRadius:2,  
-        elevation:1,
-        margin:3,
+    textSign: {
+        fontSize: 18,
+        fontWeight: 'bold'
     }
-})
+  });

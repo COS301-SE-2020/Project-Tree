@@ -50,20 +50,21 @@ class ProjectListDrawer extends Component {
             
     }
 
-    async componentDidUpdate(){
+    async componentDidMount() {    
         this._isMounted = true
-        const response = await fetch('http://10.0.2.2/project/get',{
+        let userToken = {creatorID: this.props.token};
+        const response = await fetch('http://10.0.2.2:5000/project/get',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body:null,
+            body: JSON.stringify(userToken),
         });
-        const body = await response.json();
 
-        if(this._isMounted === true) this.setState({projects:body.projects});
-    }
+        const body = await response.json();
+        if(this._isMounted === true) this.setState({projects:body.projects});    
+      }
 
     componentWillUnmount(){
         this._isMounted = false;

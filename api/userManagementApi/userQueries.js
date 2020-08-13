@@ -1,20 +1,13 @@
 const db = require('../DB');
 const { JWT } = require('jose');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path')
 
-function b64toBlob(dataURI) {
 
-    var byteString = atob(dataURI.split(',')[1]);
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: 'image/jpeg' });
-}
 
 function login(req,res){ //email, password,
+    console.log(req.body)
     db.getSession()
     .run(`
             Match (n:User { email: "${req.body.email}" })
@@ -51,8 +44,10 @@ function login(req,res){ //email, password,
     })
 }
 
-function register(req,res){ //email, password, name, surname
-    let x = " "
+
+async function register(req,res){ //email, password, name, surname
+    let x = "storage/default.jpg"
+    console.log(path.dirname)
     db.getSession()
         .run(`
                 Match (n:User { email: "${req.body.email}" })
@@ -69,7 +64,8 @@ function register(req,res){ //email, password, name, surname
                                 password:"${hash}", 
                                 name:"${req.body.name}",
                                 sname:"${req.body.sname}",
-                                birthday: "${req.body.um_date}"
+                                birthday: "${req.body.um_date}",
+                                profilepicture: "${x}"
                             })
                             RETURN a
                         `)
@@ -108,10 +104,10 @@ async function editUser(req, res) {
             MATCH (a) 
             WHERE ID(a) = ${userId}
             SET a += {
-                name:"${req.body.user.name}",
-                sname:"${req.body.user.sname}",
-                email:"${req.body.user.email}",
-                birthday:"${req.body.user.bday}"
+                name:"${req.body.name}",
+                sname:"${req.body.sname}",
+                email:"${req.body.email}",
+                birthday:"${req.body.bday}"
             } 
             RETURN a
           `
@@ -159,7 +155,8 @@ async function getUser(req,res)
                 name: result.records[0]._fields[0].properties.name,
                 sname: result.records[0]._fields[0].properties.sname,
                 email: result.records[0]._fields[0].properties.email,
-                birthday: result.records[0]._fields[0].properties.birthday
+                birthday: result.records[0]._fields[0].properties.birthday,
+                profilepicture: result.records[0]._fields[0].properties.profilepicture
             }
             res.status(200);
             res.send({user});
