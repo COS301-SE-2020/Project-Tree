@@ -7,6 +7,7 @@ import UpdateTask from "./Task/UpdateTask";
 import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
+import SendTaskNotification from "../Notifications/SendTaskNotification";
 import $ from "jquery";
 
 class GraphPage extends React.Component{
@@ -305,17 +306,18 @@ class TaskSidebar extends React.Component {
               
           </Row>
           <Row>
-              <UpdateTask
+           <Col><UpdateTask
                 task={this.props.task}
                 setTaskInfo={this.props.setTaskInfo}
                 getProjectInfo={this.props.getProjectInfo}
                 toggleSidebar={this.props.toggleSidebar}
-              />
-              <UpdateProgress
+              /></Col> 
+            <Col><UpdateProgress
                 task={this.props.task}
                 setTaskInfo={this.props.setTaskInfo}
                 toggleSidebar={this.props.toggleSidebar}
-              />
+              /></Col>
+              <Col><SendTaskNotification project={this.props.project} user={this.props.user} taskPacMans={taskPacMans} taskResPersons={taskResPersons} taskResources={taskResources}/></Col>
           </Row>
           <hr/>
           <b>Package managers:</b><br /><br />
