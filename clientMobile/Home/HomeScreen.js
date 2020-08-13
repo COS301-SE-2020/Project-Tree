@@ -5,7 +5,7 @@ import DeleteProject from '../Home/DeleteProject'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import UpdateProject from './UpdateProject'
 
-export default class SettingsScreen extends Component {
+export default class HomeScreen extends Component {
     constructor(props){
         super(props);
         this.state = {projects:null, project:null, modalVisible:false, tableData: null, editing:false };
@@ -25,18 +25,6 @@ export default class SettingsScreen extends Component {
 
     setModalVisible = (visible) => {
         this.setState({ modalVisible: visible});
-    }
-
-    async componentDidMount(){
-        const response = await fetch('http://projecttree.herokuapp.com/project/get',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        });
-        const body = await response.json();
-        this.setState({projects:body.nodes, project:body.nodes[1]});
     }
 
     settingPermissions(proj){
