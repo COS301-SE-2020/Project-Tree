@@ -1,13 +1,18 @@
-import React, { Component } from "react";
-import ProgressDashboard from "./ProgressDashboard";
-import '.././App.css';
+import React from "react";
+import { Redirect } from "react-router-dom";
 
-class Home extends Component {
+class Home extends React.Component {
   render() {
+    if(this.props.projects !== undefined && this.props.projects !== null){
+      if(this.props.projects.length !== 0){
+        this.props.setProject(this.props.projects[0]);
+        return (
+          <Redirect to="/project"/>
+        )
+      }
+    }
     return (
-      <React.Fragment>
-        <ProgressDashboard toggleGraphPage={this.props.toggleGraphPage} />
-      </React.Fragment>
+      <h4>Please Create Project by opening the tab on the left</h4>
     );
   }
 }

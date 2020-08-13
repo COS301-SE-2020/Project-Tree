@@ -5,12 +5,13 @@ import Home from "./Home/Home";
 import User from "./User/User";
 import ProjectPage from "./Project/ProjectPage";
 import GraphPage from "./Graph/GraphPage";
-import { Container, Row, Col, Navbar, Nav, Button  } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Nav } from "react-bootstrap";
 import SideBar from "./SideBar";
 import $ from "jquery";
 import logo from './Images/Logo.png';
 import { Login, Register } from "./User/index";
-
+import Settings from "./User/Settings"
+import About from "./About"
 
 function RightSide(props){
   return (
@@ -40,47 +41,25 @@ class App extends Component {
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
     this.closeSideBar = this.closeSideBar.bind(this);
-	  this.handleLogin = this.handleLogin.bind(this);
-	  this.handleLogout = this.handleLogout.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.setUser = this.setUser.bind(this);
+
   }
 
   componentDidMount(){
-    console.log(localStorage.getItem('sessionToken'))
-    if(localStorage.getItem('sessionToken') != null)
-    {
-      // let x = localStorage.getItem('sessionToken');
-      // console.log(x)
-      // sconsole.log(x)
-      // console.log(localStorage.getItem('sessionToken'))
-      // axios.post(`/verify`, {token: x}, null)
-      // .then(response => console.log("response"))
-      // .catch(err => console.warn(err))
-
-      $.post("/verify", { foo: 'bar' }, (response) => {
-        if(response)
-        {
-            console.log("TRue")
-        }
-        else
-            alert( "Nope" );
+    let token = localStorage.getItem('sessionToken')
+    if(token != null){
+      $.post("/project/get", {creatorID: token}, (response) => {
+        this.setState({projects: response.projects });
       })
-      .fail(() => {
-        })
-    console.log(this.rightSide)
-    this.setState({
-      loggedInStatus: true })
-    }
-    else
-    {
-      if(this.rightSide != null)
-        this.rightSide.classList.add("right");
+      .fail((response) => {
+          throw Error(response.message);
+      });
+      this.setState({loggedInStatus: true });
+    }else{
+      if(this.rightSide) this.rightSide.classList.add("right");
       //<Redirect to="/"/>
     }
-    $.post("/project/get", (response) => {
-      this.setState({projects: response.projects });
-      }).fail((response) => {
-        throw Error(response.message);
-    });
    }
   
   
@@ -100,6 +79,10 @@ class App extends Component {
       }
       this.setState({project: proj})
     }
+  }
+
+  setUser(usr){
+    this.setState({user: usr})
   }
 
   toggleSideBar(){
@@ -140,15 +123,19 @@ class App extends Component {
       loggedInStatus: data.status,
       user: data.id
     });
+    window.location.reload(false);
    }
    
   handleLogout() {
+    localStorage.clear();   
+    this._isMounted = false;
     localStorage.clear();
     this.setState({
       loggedInStatus: false,
       user: {}
     });
-    this._isMounted = false;
+    if(!this.rightSide)
+        this.rightSide.classList.add("right");
     window.location.reload(false);
   }
 
@@ -159,41 +146,46 @@ class App extends Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"arial black", backgroundColor: "#96BB7C"}}>
-            <Nav className="mr-auto form-inline ">
+          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C"}}>
+            <Nav className="form-inline ">
+              {this.state.loggedInStatus === true ?
+                this.state.showSideBar === false ?
+                  (
+                    <Nav.Link href="#" onClick={() => this.toggleSideBar()}>
+                      <i className="fa fa-navicon text-dark" style={{fontSize:"30px"}}></i>
+                    </Nav.Link>
+                  )
+                  :
+                  (
+                    <Nav.Link href="#" onClick={() => this.toggleSideBar()}>
+                      <i className="fa fa-navicon text-dark" style={{fontSize:"30px", transform: "rotate(90deg)"}}></i>
+                    </Nav.Link>
+                  )
+                :
+                null
+              }
+            </Nav>
+            <Nav className="m-auto form-inline">
               <Nav.Link href="/">
                 <img src={logo} alt="Logo" style={{width:"80px"}}/>
               </Nav.Link>
-              {this.state.showSideBar === false ?
-                (
-                  <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
-                    Open Project List
-                  </Nav.Link>
-                ):
-                (
-                  <Nav.Link href="#" variant="dark" onClick={() => this.toggleSideBar()}>
-                    Close Project List
-                  </Nav.Link>
-                )
-              }
             </Nav>
-            <Nav>
-              <Nav.Link>
-               <Button onClick={() => this.handleLogout()}>Logout</Button>
-              </Nav.Link>
-              <Nav.Link className="form-inline" href="/user">
-                <i className="fa fa-cogs" style={{fontSize:"30px"}}></i>
-              </Nav.Link>
+            <Nav className="form-inline">
+              {this.state.loggedInStatus === true ?
+                <Settings user={this.state.user}/>
+                :
+                null
+              }
             </Nav>
           </Navbar>
           <Container fluid style={{height: "100%"}}>
             <Row style={{height: "100%"}}>
               {this.state.showSideBar !== false ? 
               (
-                <Col xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto"}}>
+                <Col  xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto", backgroundColor: "#303030" }}>
                   <SideBar closeSideBar={() => this.closeSideBar()} projects={this.state.projects} setProject={project => this.setProject(project)}/>
                 </Col>
-              ) : null}              
+              ) : null}
               <Col>  
                 <Switch>
                   <Route path="/project" component={ProjectPage}>
@@ -202,31 +194,42 @@ class App extends Component {
                     ) : <Redirect to="/"/>}
                   </Route>
                   <Route path="/graph" >
-                    {this.state.project != null ? (
+                    {this.state.project != null ? 
                       <GraphPage
                         project={this.state.project}
                       />
-                    ) : <Redirect to="/"/>}
+                     : <Redirect to="/"/>}
                   </Route>
                   <Route path="/user">
                     <User />
                   </Route>
                   <Route path="/home">
-                    {this.state.loggedInStatus? (<Home />) : (<Redirect to="/"/>)}
+                    {this.state.loggedInStatus? 
+                    <Home projects={this.state.projects} setProject={project => this.setProject(project)}/>
+                     : <Redirect to="/"/>}
                   </Route>
-                  <Route exact path="/">
+                  <Route path="/">
                     {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
-                    <div className="login">
-                      <div className="container" ref={ref => (this.container = ref)}>
-                        {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
-                        {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
+                    <div className="row">
+                      <div className="column" style={{backgroundColor: "white"}}>
+                        <div className="login">
+                          <div className="container" ref={ref => (this.container = ref)}>
+                            {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
+                            {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
+                          </div>
+                            <RightSide
+                              current={current}
+                              currentActive={currentActive}
+                              containerRef={ref => (this.rightSide = ref)}
+                              onClick={this.changeState.bind(this)}
+                            />
+                        </div>
                       </div>
-                      <RightSide
-                          current={current}
-                          currentActive={currentActive}
-                          containerRef={ref => (this.rightSide = ref)}
-                          onClick={this.changeState.bind(this)}
-                        />
+                      <div className="column">
+                        <div className="carosal">
+                          <About/>
+                        </div>
+                      </div>
                     </div>
                   </Route>
                 </Switch>
