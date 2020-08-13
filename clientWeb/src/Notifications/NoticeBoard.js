@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { isEmpty } from 'lodash';
 import { Row, Col, Container} from 'react-bootstrap';
+import f1 from '../Images/female1.png';
+import f2 from '../Images/female2.png';
+import m1 from '../Images/male1.png';
+import m2 from '../Images/male2.png';
+
 
 class NoticeBoard extends Component{
     _isMounted = false;
@@ -84,12 +89,20 @@ class NoticeBoard extends Component{
 
 class NotificationList extends Component{
 
+    returnRandomUser(){
+        let index = Math.round((Math.random() * (4 - 1) + 1));
+        if(index===1) return <img src={f1} alt="user"style={{height:"70px", width:"70px"}} />
+        if(index===2) return <img src={f2} alt="user" style={{height:"70px", width:"70px"}} />
+        if(index===3) return <img src={m1} alt="user"style={{height:"70px", width:"70px"}} />
+        if(index===4) return <img src={m2} alt="user" style={{height:"70px", width:"70px"}} />
+    }
+
     sortMessages(){
         let messages = [];
         let dailyMessages = [];
         let currentMessage = this.props.messages[0];
         for(var count=0; count<this.props.messages.length; count++){
-            if(this.props.messages[count].timestamp.day.low == currentMessage.timestamp.day.low && this.props.messages[count].timestamp.month.low == currentMessage.timestamp.month.low){
+            if(this.props.messages[count].timestamp.day.low === currentMessage.timestamp.day.low && this.props.messages[count].timestamp.month.low === currentMessage.timestamp.month.low){
                 dailyMessages.push(this.props.messages[count]);
                 currentMessage = this.props.messages[count];
             }
@@ -115,10 +128,13 @@ class NotificationList extends Component{
 
         let messageList = messages.map((dailyMessages, i) =>
             <Container key={i}>
-                <Row >
-                    {monthNames[dailyMessages[0].timestamp.month.low-1]+" "+dailyMessages[0].timestamp.day.low}
+                <Row>
+                    <Col className="text-center" style={{fontSize: "20px", color: "#184D47"}}>
+                         {monthNames[dailyMessages[0].timestamp.month.low-1]+" "+dailyMessages[0].timestamp.day.low} 
+                    </Col>
                 </Row>
-                {this.createDailyMessageList(dailyMessages)}
+                <hr style={{backgroundColor: "#EEBB4D"}}/>
+                <Row>{this.createDailyMessageList(dailyMessages)}</Row>
             </Container>
         );
 
@@ -129,36 +145,37 @@ class NotificationList extends Component{
         let messageList = messages.map((message, i) =>
             <Container key={i}>
                 <Row>
-                    <Col style={{fontWeight:'bold', fontSize:20}}>
+                    <Col>{this.returnRandomUser()}</Col>
+                    <Col xs={8} >
                         {message.fromName}
                         {" - "}
                         {message.taskName !== undefined ? message.taskName : null}
                         {" "}
                     </Col>
-                    <Col>
+                    <Col className="text-right">
                         {message.timestamp.hour.low < 10 ? "0"+message.timestamp.hour.low : message.timestamp.hour.low}
                         {":"}
                         {message.timestamp.minute.low < 10 ? "0"+message.timestamp.minute.low : message.timestamp.minute.low}
                     </Col>
                 </Row>
                 <Row>
+                    <Col>
                     {message.message}
+                    </Col>
                 </Row>
+                <hr  align="left" style={{backgroundColor: "#96BB7C", width: "75%"}}/>
             </Container>
         );
 
         return messageList;
     }
-
     render(){
         let messages = this.sortMessages();
         let messageComponents = this.createMessageList(messages);
 
         return(
             <React.Fragment>
-                <Row>
-                        {messageComponents}
-                </Row>
+                    {messageComponents}
             </React.Fragment>            
         )
     }
