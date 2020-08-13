@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions, TouchableHighlight, ScrollView } from 'react-native'
+import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions, TouchableHighlight, ScrollView, Image } from 'react-native'
 import { isEmpty } from 'lodash';
+import SendProjectNotification from './ProjectWideNotification';
 
 class NoticeBoardScreen extends Component{
     _isMounted = false;
@@ -8,33 +9,6 @@ class NoticeBoardScreen extends Component{
     constructor(props) {
 		super(props);
         this.state = {messages:null};
-        this.sendNotification = this.sendNotification.bind(this);
-    }
-
-    async sendNotification(){
-        let data = {
-            fromName: "D",
-            recipients: [{email:"u18052071@tuks.co.za", id:211}],
-            timestamp: new Date("2020-08-13T08:46:17.672000000Z"),
-            message: "general kenobi",
-            taskName: "Task A",
-            projName: "Project 1",
-            projID: 212,
-            mode:1
-        }
-
-        data = JSON.stringify(data);
-
-        const response = await fetch('http://10.0.2.2:5000/sendNotification',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: data
-        });
-
-        console.log("sent")
     }
 
     async componentDidMount(){
@@ -76,12 +50,10 @@ class NoticeBoardScreen extends Component{
         }
 
         return(
-                // <TouchableHighlight onPress={()=>{this.sendNotification()}}>
-                //     <Text>
-                //         Send Notification
-                //     </Text>
-                // </TouchableHighlight>
+            <React.Fragment>
+                <SendProjectNotification />
                 <NotificationList messages={this.state.messages}/>
+            </React.Fragment>
         )
     } 
 }
@@ -122,9 +94,12 @@ class NotificationList extends Component{
 
         let messageList = messages.map((dailyMessages, i) =>
             <View key={i}>
-                <Text style={{paddingTop:30, fontWeight:'bold', fontSize:25}}>
-                    {monthNames[dailyMessages[0].timestamp.month.low-1]+" "+dailyMessages[0].timestamp.day.low}
-                </Text>
+                <View style={{alignItems:"center"}}>
+                    <Text style={{paddingTop:30, fontWeight:'bold', fontSize:25, color: '#184D47'}}>
+                        {monthNames[dailyMessages[0].timestamp.month.low-1]+" "+dailyMessages[0].timestamp.day.low}
+                    </Text>
+                    <View style={{backgroundColor: '#EEBB4D', height: 2, width: "70%"}}></View>
+                </View>
                 {this.createDailyMessageList(dailyMessages)}
             </View>
         );
@@ -132,24 +107,39 @@ class NotificationList extends Component{
         return messageList;
     }
 
+    returnRandomUser(){
+        let index = Math.round((Math.random() * (4 - 1) + 1));
+        if(index===1) return <Image source={require('../Assets/female1.png')} style={{height:70, width:70}} />
+        if(index===2) return <Image source={require('../Assets/female2.png')} style={{height:70, width:70}} />
+        if(index===3) return <Image source={require('../Assets/male1.png')} style={{height:70, width:70}} />
+        if(index===4) return <Image source={require('../Assets/male2.png')} style={{height:70, width:70}} />
+    }
+
     createDailyMessageList(messages){
         let messageList = messages.map((message, i) =>
-            <View key={i} style={{paddingTop:10, paddingBottom:10}}>
-                <Text>
-                    <Text style={{fontWeight:'bold', fontSize:20}}>
-                        {message.fromName}
-                        {message.taskName !== undefined ? " - "+message.taskName : null}
-                        {" "}
+            <View key={i} style={{paddingTop:10, paddingBottom:10, flexDirection:'row'}}>
+                <View>
+                    {this.returnRandomUser()}
+                </View>
+                <View style={{paddingLeft:5, marginRight:50}}>
+                    <Text>
+                        <Text style={{fontWeight:'bold'}}>
+                            {message.fromName}
+                            {message.type === "project" ? " - " + "Project Wide" : null}
+                            {message.type === "task" ? " - " + message.taskName : null}
+                            {" "}
+                        </Text>
+                        <Text style={{color:'grey'}}>
+                            {message.timestamp.hour.low < 10 ? "0"+message.timestamp.hour.low : message.timestamp.hour.low}
+                            {":"}
+                            {message.timestamp.minute.low < 10 ? "0"+message.timestamp.minute.low : message.timestamp.minute.low}
+                        </Text>
                     </Text>
-                    <Text style={{fontSize:15}}>
-                        {message.timestamp.hour.low < 10 ? "0"+message.timestamp.hour.low : message.timestamp.hour.low}
-                        {":"}
-                        {message.timestamp.minute.low < 10 ? "0"+message.timestamp.minute.low : message.timestamp.minute.low}
+                    <View style={{backgroundColor: '#96BB7C', height: 1, width: "100%"}}></View>
+                    <Text style={{paddingTop:15, fontSize:17}}>
+                        {message.message}
                     </Text>
-                </Text>
-                <Text style={{paddingTop:15, fontSize:15}}>
-                    {message.message}
-                </Text>
+                </View>
             </View>
         );
 
@@ -162,7 +152,7 @@ class NotificationList extends Component{
 
         return(
             <React.Fragment>
-                <View style={{paddingLeft:20, flex:1, marginBottom:60}}>
+                <View style={{paddingLeft:20, paddingRight:20, flex:1, marginBottom:60}}>
                     <ScrollView>
                         {messageComponents}
                     </ScrollView>

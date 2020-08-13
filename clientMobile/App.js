@@ -3,6 +3,7 @@ import {View, Text, TouchableOpacity, TouchableHighlight} from 'react-native'
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import IconFeather from 'react-native-vector-icons/Feather'
 import IconEntypo from 'react-native-vector-icons/Entypo'
+import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import Drawer from 'react-native-drawer'
@@ -64,6 +65,16 @@ const FeatherTabBarIcon = (props) => {
 const EntypoTabBarIcon = (props) => {
 	return (
 		<IconEntypo
+			name={props.name}
+			size={props.size ? props.size : 24}
+			color={props.tintColor}
+		/>
+	)
+}
+
+const AntDesignTabBarIcon = (props) => {
+	return (
+		<IconAntDesign
 			name={props.name}
 			size={props.size ? props.size : 24}
 			color={props.tintColor}
@@ -141,26 +152,26 @@ class Graph extends Component{
 				alignItems:"center",
 				flex:1}}
 				>
-				<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
-					alignItems:'center',
-					justifyContent:'center',
-					height:45,
-					borderColor:'#EEBB4D',
-					borderWidth:2,
-					borderRadius:5,
-					shadowColor:'#000',
-					shadowOffset:{
-						width:0,
-						height:1
-					},
-					shadowOpacity:0.8,
-					shadowRadius:2,  
-					elevation:3}}
-				>
-					<Text style={{color:'white'}}>
-					Please select a project
-					</Text>
-				</TouchableHighlight>
+					<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
+						alignItems:'center',
+						justifyContent:'center',
+						height:45,
+						borderColor:'#EEBB4D',
+						borderWidth:2,
+						borderRadius:5,
+						shadowColor:'#000',
+						shadowOffset:{
+							width:0,
+							height:1
+						},
+						shadowOpacity:0.8,
+						shadowRadius:2,  
+						elevation:3}}
+					>
+						<Text style={{color:'white'}}>
+						Please select a project
+						</Text>
+					</TouchableHighlight>
 				</View>
 			)
 		}
@@ -307,10 +318,10 @@ export default class App extends Component{
 						component={NoticeBoard}
 						options={{
 							tabBarIcon: ({ focused, color }) => (
-								<EntypoTabBarIcon
+								<AntDesignTabBarIcon
 									focused={focused}
 									tintColor={color}
-									name="message"
+									name="notification"
 								/>
 							),
 						}}

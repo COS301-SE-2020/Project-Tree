@@ -1,20 +1,20 @@
 const db = require("../DB");
 
-function sendNoticeBoardNotification(ids, fromName, taskName, projName, projID, timestamp, message){
+function sendNoticeBoardNotification(ids, fromName, taskName, projName, projID, timestamp, message, type){
     let queriesArray = [];
     for(var index=0; index<ids.length; index++){
-        queriesArray = addNewQuery(queriesArray, ids[index], fromName, taskName, projName, projID, timestamp, message)
+        queriesArray = addNewQuery(queriesArray, ids[index], fromName, taskName, projName, projID, timestamp, message, type)
     }
 
     excecuteQueries(queriesArray);
 }
 
-function addNewQuery(queriesArray, id, fromName, taskName, projName, projID, timestamp, message) {
+function addNewQuery(queriesArray, id, fromName, taskName, projName, projID, timestamp, message, type) {
     let query = `
         MATCH (b:User)
         WHERE ID(b) = ${id}
         CREATE (a:Notification {fromName:'${fromName}', projName:'${projName}', taskName:'${taskName}', projID:${projID}, 
-        message:'${message}', timestamp:datetime('${timestamp}')})-[:SENT_TO]->(b)
+        message:'${message}', timestamp:datetime('${timestamp}'), type:('${type}')})-[:SENT_TO]->(b)
         RETURN a
       `;
     queriesArray.push(query);
