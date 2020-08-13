@@ -147,6 +147,8 @@ class GraphPage extends React.Component{
                   setTaskInfo={this.setTaskInfo}
                   getProjectInfo={this.getProjectInfo}
                   projUsers={this.state.projUsers}
+                  user={this.props.user}
+                  project={this.state.project}
                 />
               ) : null}
               {this.state.dependency !== null ? (
@@ -317,7 +319,7 @@ class TaskSidebar extends React.Component {
                 setTaskInfo={this.props.setTaskInfo}
                 toggleSidebar={this.props.toggleSidebar}
               /></Col>
-              <Col><SendTaskNotification project={this.props.project} user={this.props.user} taskPacMans={taskPacMans} taskResPersons={taskResPersons} taskResources={taskResources}/></Col>
+              <Col><SendTaskNotification task={this.props.task} project={this.props.project} user={this.props.user} taskPacMans={taskPacMans} taskResPersons={taskResPersons} taskResources={taskResources}/></Col>
           </Row>
           <hr/>
           <b>Package managers:</b><br /><br />

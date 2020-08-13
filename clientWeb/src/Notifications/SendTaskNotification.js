@@ -40,7 +40,7 @@ class SendTaskNotification extends React.Component {
       recipients: this.state.notificationRec,
       timestamp: timestamp,
       message: notification.sn_Message,
-      taskName: undefined,
+      taskName: this.props.task.name,
       projName: this.props.project.name,
       projID: this.props.project.id,
       mode: this.state.mode
@@ -48,12 +48,13 @@ class SendTaskNotification extends React.Component {
 
     console.log(data);
   
-    // $.post("/sendNotification",  data, (response) => {
-    //   this.setState({ show: false });
-    // })
-    // .fail(() => {
-    //   alert("Unable to send notification");
-    // })
+    $.post("/sendNotification",  data, (response) => {
+      console.log(response.response);
+      this.setState({ show: false });
+    })
+    .fail(() => {
+      alert("Unable to send notification");
+    })
   }
 
   notifyUsers(){
