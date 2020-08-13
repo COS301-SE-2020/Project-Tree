@@ -17,7 +17,6 @@ import { createStackNavigator} from '@react-navigation/stack';
 import {Auth} from "./User/Components/Auth";
 import RootStackScreen from './User/RootStackScreen';
 
-import {AuthContext} from './User/Components/context'
 import AsyncStorage from '@react-native-community/async-storage';
 import LoginScreen from './User/LoginScreen'
 import RegisterScreen from './User/RegisterScreen'
@@ -73,7 +72,6 @@ class Home extends Component{
 		AsyncStorage.getItem('sessionToken')
 		.then((value) => {
 			const data = JSON.parse(value);
-			console.log("check	", data)
 			this.setState({token: data});
 		});
 	}
@@ -120,11 +118,12 @@ class Home extends Component{
 }
 
 class Graph extends Component{
-  constructor(props) {
-    super(props);
-    let drawerState = globalSelectedProject === null ? true : false;
-    this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
-    this.setDrawerVisible = this.setDrawerVisible.bind(this);
+	constructor(props) 
+	{
+		super(props);
+		let drawerState = globalSelectedProject === null ? true : false;
+		this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
+		this.setDrawerVisible = this.setDrawerVisible.bind(this);
 	}
   
   setDrawerVisible(mode){
@@ -226,12 +225,13 @@ class Settings extends Component{
 	}
 
 	async handleLogout() 
-	{			
+	{	
 		try {
-			console.log("1")
+			console.log("Deleting Key ....")
 			const keys = await AsyncStorage.getAllKeys();
 			await AsyncStorage.multiRemove(keys);
-			globalLogout = false;
+			//console.log(this.props.setLogout())
+			this.props.setLogout(false);
 		}
 		catch(exception) {
 			return false;
@@ -245,7 +245,6 @@ class Settings extends Component{
 			</Screen>
 		)
 	}
-
 }
 
 
@@ -254,8 +253,9 @@ export default class App extends Component{
 	constructor(props) 
 	{
 		super(props);
-		this.state = { 
-		  loggedInStatus: globalLogout,
+		this.state =
+		{ 
+		  loggedInStatus: false,
 		  user: {},
 		  sessionToken: null,
 		  switch: true,
@@ -263,8 +263,18 @@ export default class App extends Component{
 		
 		this.handleLogin = this.handleLogin.bind(this);
 		this.switchScreen = this.switchScreen.bind(this);
-		this.handleLogout = this.handleLogout.bind(this);		
+		this.setLogout = this.setLogout.bind(this);		
 		this.checkKey = this.checkKey.bind(this);		
+	}
+
+	async setLogout(mode)
+	{
+		this.setState(
+			{
+				loggedInStatus: mode,
+				user: {},
+				sessionToken: null
+			});
 	}
 
 	async checkKey()
@@ -272,18 +282,7 @@ export default class App extends Component{
 		AsyncStorage.getItem('sessionToken')
 		.then((value) => {
 		const data = JSON.parse(value);
-		console.log("X:	",data);
-		});
-	}
-
-	handleLogout()
-	{
-		//console.log("s	",globalLogout)
-		this.setState({
-			loggedInStatus: false,
-			user: null,
-			sessionToken: null,
-			switch: true,
+		console.log("checkKey:	",data);
 		});
 	}
 
@@ -306,12 +305,11 @@ export default class App extends Component{
 	
 	async handleLogin(data)
 	{
-		// console.log(globalLogout)
 		try {
 			await AsyncStorage.setItem('sessionToken', JSON.stringify(data.sessionToken));
 			} 
 			catch(e) {
-			console.log("No luck");
+				console.log("Could not set key");
 			}  
 			this.setState(
 			{
@@ -319,39 +317,20 @@ export default class App extends Component{
 				user: data.id,
 				sessionToken: data.sessionToken
 			});
-			globalLogout=true;
+			//globalLogout=true;
 			// console.log(globalLogout)
 			// console.log(this.state)
 	}
 
 	async componentDidMount()
 	{
-		if(globalLogout === false)
-		{
-			this.handleLogout();
-		}
-		else
-		{
-			this.state.loggedInStatus = true
-		}
-		console.log("Global2:	",this.state.loggedInStatus)
-
-		// AsyncStorage.getItem('sessionToken')
-		// .then((item) => {
-		// 	if (item) 
-		// 	{
-		// 		console.log("ALREADY LOGGED IN")
-		// 		this.setState({loggedInStatus: true });	
-		// 		globalLogin = false;
-		// 	}
-		// });
-	}
 	
+	}	
 
 	render(){
 		console.log(this.state.loggedInStatus, "::	loggedInStatus")
-		console.log(globalLogout, "::	global")
-		console.log(this.checkKey())
+		console.log(globalLogout, "::	global variable")
+		this.checkKey()
 		if(this.state.loggedInStatus === true)
 		{ 
 		return(
@@ -404,8 +383,8 @@ export default class App extends Component{
 						}}
          		 	/>
 					<Tabs.Screen
-						name="Settings"
-						component={Settings}
+						name="Settings"/*  children={()=><handleLogout propName={propValue}/>} */
+						children={()=><Settings setLogout={this.setLogout}/>}						
 						options={{
 							tabBarIcon: ({ focused, color }) => (
 								<FeatherTabBarIcon
@@ -414,7 +393,9 @@ export default class App extends Component{
 									name="settings"
 								/>
 							),
-						}}
+						
+						}
+					}															
 					/>
 				</Tabs.Navigator>				
 				</NavigationContainer>)
