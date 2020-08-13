@@ -4,7 +4,7 @@ import ProjectInfo from "./ProjectInfo";
 import TaskInfo from "./TaskInfo";
 import $ from "jquery";
 import ProjectDashboard from "./ProjectDashboard";
-import NoticeBoard from "../NotificationBoard/NoticeBoard";
+import NoticeBoard from "../Notifications/NoticeBoard";
 
 
 class ProjectPage extends React.Component {
@@ -54,7 +54,8 @@ class ProjectPage extends React.Component {
       <Container fluid style={{maxHeight: "40%"}}>
         <Row className="m-2">
           <Col sm={12} md={6} xl={4} style={{height: "366px"}}><ProjectInfo project={this.props.project} setProject={project => this.props.setProject(project)}/></Col>
-          <Col sm={12} md={6} xl={4} style={{border: "black solid 1px", overflowY: "scroll", height: "366px"}} className="border rounded"> <NoticeBoard/>
+          <Col sm={12} md={6} xl={4} style={{border: "black solid 1px", overflowY: "scroll", height: "366px"}} className="border rounded"> 
+            <NoticeBoard/>
           </Col>
           <Col sm={12} md={12} xl={4} style={{border: "black solid 1px", height: "366px"}} className="border rounded"> 
             <ProjectDashboard project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>

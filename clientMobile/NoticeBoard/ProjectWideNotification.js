@@ -48,14 +48,14 @@ export default class SendProjectWideNotificationWrapper extends Component{
                             Send Project Wide notification
 						</Text>
 					</TouchableHighlight>
-                    <SendProjectWideNotificationModal project={project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible}/>
+                    <SendNotificationModal project={project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} type={'project'}/>
 			    </View>
             </React.Fragment>
         )
     }
 }
 
-class SendProjectWideNotificationModal extends Component{
+class SendNotificationModal extends Component{
     constructor(props){
         super(props);
     }
@@ -68,7 +68,7 @@ class SendProjectWideNotificationModal extends Component{
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
-                        <SendProjectWideNotificationForm setModalVisible={this.props.setModalVisible} project={this.props.project}/>
+                        <SendNotificationForm setModalVisible={this.props.setModalVisible} project={this.props.project} type={this.props.type}/>
                     </View>
                 </View>
             </Modal>
@@ -76,7 +76,7 @@ class SendProjectWideNotificationModal extends Component{
     }
 }
 
-class SendProjectWideNotificationForm extends Component{
+class SendNotificationForm extends Component{
     constructor(props){
         super(props);
         this.state = {message: null, mode: 0}
@@ -94,7 +94,7 @@ class SendProjectWideNotificationForm extends Component{
             return;
         }
 
-        await sendNotification('project', "William Agar", [], new Date(), this.state.message, undefined, this.props.project.name, this.props.project.id, this.state.mode);
+        await sendNotification(this.props.type, "William Agar", [], new Date(), this.state.message, undefined, this.props.project.name, this.props.project.id, this.state.mode);
         this.props.setModalVisible(false);
     }
 

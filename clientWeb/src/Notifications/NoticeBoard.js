@@ -13,34 +13,7 @@ class NoticeBoard extends Component{
     constructor(props) {
 		super(props);
         this.state = {messages:null};
-        // this.sendNotification = this.sendNotification.bind(this);
     }
-
-    // async sendNotification(){
-    //     let data = {
-    //         fromName: "D",
-    //         recipients: [{email:"u18052071@tuks.co.za", id:211}],
-    //         timestamp: new Date("2020-08-13T08:46:17.672000000Z"),
-    //         message: "general kenobi",
-    //         taskName: "Task A",
-    //         projName: "Project 1",
-    //         projID: 212,
-    //         mode:1
-    //     }
-
-    //     data = JSON.stringify(data);
-
-    //     const response = await fetch('/sendNotification',{
-    //         method: 'POST',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: data
-    //     });
-
-    //     console.log("sent")
-    // }
 
     async componentDidMount(){
         this._isMounted = true;
@@ -77,12 +50,7 @@ class NoticeBoard extends Component{
         }
 
         return(
-                // <TouchableHighlight onPress={()=>{this.sendNotification()}}>
-                //     <Text>
-                //         Send Notification
-                //     </Text>
-                // </TouchableHighlight>
-                <NotificationList messages={this.state.messages}/>
+            <NotificationList messages={this.state.messages}/>
         )
     } 
 }
@@ -149,7 +117,8 @@ class NotificationList extends Component{
                     <Col xs={8} >
                         {message.fromName}
                         {" - "}
-                        {message.taskName !== undefined ? message.taskName : null}
+                        {message.type === 'task' ? message.taskName : null}
+                        {message.type === 'project' ? "Project Wide" : null}
                         {" "}
                     </Col>
                     <Col className="text-right">

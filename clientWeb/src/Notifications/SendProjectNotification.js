@@ -3,12 +3,12 @@ import { Form, Modal, Button } from "react-bootstrap";
 import $ from "jquery";
 
 
-function stringifyFormData(fd) {
+function returnFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
     data[key] = fd.get(key);
   }
-  return JSON.stringify(data, null, 2);
+  return data;
 }
 
 class SendProjectNotification extends React.Component {
@@ -30,10 +30,26 @@ class SendProjectNotification extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    let data = stringifyFormData(new FormData(event.target));
-    $.post("/sendNotification",  JSON.parse(data), (response) => {
+
+    let notification = returnFormData(new FormData(event.target));
+    let timestamp = (new Date().toISOString());
+
+    let data = {
+      type: 'project',     //personal, task, project, auto
+      fromName: "Amber Grill",
+      recipients: [],
+      timestamp: timestamp,
+      message: notification.sn_Message,
+      taskName: undefined,
+      projName: this.props.project.name,
+      projID: this.props.project.id,
+      mode: 1
+    }
+
+    console.log(data);
+  
+    $.post("/sendNotification",  data, (response) => {
       this.setState({ show: false });
-      this.props.setProject(response);
     })
     .fail(() => {
       alert("Unable to send notification");
