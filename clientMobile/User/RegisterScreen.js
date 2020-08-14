@@ -2,9 +2,7 @@ import React, {Component} from 'react';
 import { 
     View, 
     Text, 
-    Button, 
-    TouchableOpacity, 
-    Dimensions,
+    TouchableOpacity,
     TextInput,
     Platform,
     StyleSheet,
@@ -212,7 +210,7 @@ class RegisterScreen extends Component{
 render(){
     return (
       <View style={styles.container}>
-          {/* <StatusBar backgroundColor='#009387' barStyle="light-content"/> */}
+          <StatusBar backgroundColor='grey' barStyle="light-content"/>
         <View style={styles.header}>
             <Text style={styles.text_header}>Register</Text>
         </View>
@@ -338,8 +336,6 @@ render(){
                     Please read our 
                 </Text>
                 <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Terms of service</Text>
-                <Text style={styles.color_textPrivate}>{" "}and</Text>
-                <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Privacy policy</Text>
                 <Text style={styles.color_textPrivate}>
                     before clicking the Create Account button below  
                 </Text>    
@@ -382,14 +378,15 @@ export default RegisterScreen;
 styles = StyleSheet.create({
     container: {
       flex: 1, 
-      backgroundColor: '#296d98',
+      backgroundColor: '#EEBB4D',
       alignItems: 'center',
     },
     header: {
         flex: 1,
         justifyContent: 'flex-end',
         paddingHorizontal: 20,
-        paddingBottom: 50
+        paddingTop: 40,
+        paddingBottom: 80
     },
     footer: {
         flex: Platform.OS === 'ios' ? 3 : 5,
@@ -402,7 +399,8 @@ styles = StyleSheet.create({
     text_header: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: 40,
+        fontFamily: 'sans-serif-medium'
     },
     text_footer: {
         color: '#05375a',

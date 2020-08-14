@@ -176,6 +176,7 @@ async function getUser(req,res)
 
 async function verify(token)
 {
+    console.log(token)
     let answer = "initial"
     bool = false;
      try {

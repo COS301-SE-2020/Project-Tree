@@ -14,10 +14,9 @@ import NoticeBoard from './NoticeBoard/NoticeBoardScreen'
 console.disableYellowBox = true; 
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from '@react-navigation/stack';
-import {Auth} from "./User/Components/Auth";
-import RootStackScreen from './User/RootStackScreen';
 
 import AsyncStorage from '@react-native-community/async-storage';
+import SplashScreen from './User/SplashScreen'
 import LoginScreen from './User/LoginScreen'
 import RegisterScreen from './User/RegisterScreen'
 import { forEach } from 'lodash'
@@ -61,15 +60,15 @@ const AntDesignTabBarIcon = (props) => {
 	)
 }
 
-class SplashScreen extends Component{
-	render(){
-		return(
-			<Screen>
-				<SplashScreen/>
-			</Screen>
-		)
-	}
-}
+// class SplashScreen extends Component{
+// 	render(){
+// 		return(
+// 			<Screen>
+// 				<SplashScreen/>
+// 			</Screen>
+// 		)
+// 	}
+// }
 
 
 class Register extends Component{
@@ -93,7 +92,6 @@ class Settings extends Component{
 	async handleLogout() 
 	{	
 		try {
-			console.log("Deleting Key ....")
 			const keys = await AsyncStorage.getAllKeys();
 			await AsyncStorage.multiRemove(keys);
 			this.props.setLogout(false);
@@ -118,18 +116,18 @@ export default class App extends Component{
 		super(props);
 		this.state =
 		{ 
-		  loggedInStatus: true,
+		  loggedInStatus: false,
 		  user: {},
 		  sessionToken: null,
 		  switch: true,
 		  selectedProject: null,
-		  userInfo: null
+		  userInfo: null,
+		  switchToLog: false
 		};
 		
 		this.handleLogin = this.handleLogin.bind(this);
 		this.switchScreen = this.switchScreen.bind(this);
-		this.setLogout = this.setLogout.bind(this);		
-		this.checkKey = this.checkKey.bind(this);		
+		this.setLogout = this.setLogout.bind(this);			
 		this.setSelectedProject = this.setSelectedProject.bind(this);
 	}
 
@@ -147,28 +145,27 @@ export default class App extends Component{
 			});
 	}
 
-	async checkKey()
-	{
-		AsyncStorage.getItem('sessionToken')
-		.then((value) => {
-		const data = JSON.parse(value);
-		console.log("checkKey:	",data);
-		});
-	}
-
 	switchScreen(flag)
 	{
+		//console.log(flag)
 		if(flag == "Register")
 		{
 			this.setState
 			({
-				switch: false,
+				switch: false
+			});
+		}
+		else if(flag == "Splash")
+		{
+			this.setState
+			({
+				switchToLog: true
 			});
 		}
 		else{
 			this.setState
 			({
-				switch: true,
+				switch: true
 			});
 		}
 	}
@@ -176,9 +173,10 @@ export default class App extends Component{
 	async handleLogin(data)
 	{
 		try {
-			await AsyncStorage.setItem('sessionToken', JSON.stringify('eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6IndkYTE5OTlAZ21haWwuY29tIiwiaGFzaCI6IiQyYiQxMCRJeEcxS0pDMzg5NkFmU0xPRnJtS3JPOWthV0lDN3UyUUVUQ2FrWENxbkpwelFJUi4zNEFZbSIsImlhdCI6MTU5NzM0MjM4Nn0.-Z6CKRelWiNDdgdv4KK_OmeQYkbknweJqrJGeQ-SYeA'));
+			await AsyncStorage.setItem('sessionToken', JSON.stringify(data.sessionToken));
 			} 
-			catch(e) {
+			catch(e) 
+			{
 				console.log("Could not set key");
 			}  
 			this.setState(
@@ -187,26 +185,44 @@ export default class App extends Component{
 				user: data.id,
 				sessionToken: data.sessionToken
 			});
+	}
+
+	async componentDidMount()
+	{
+		AsyncStorage.getItem('sessionToken')
+		.then((value) => {
+			if(value)
+				this.setState({loggedInStatus: true});
+		});
 	}	
 
 	async setUserInfo(){
 		if(this.state.userInfo != null) return;
-		let token = 'eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6IndkYTE5OTlAZ21haWwuY29tIiwiaGFzaCI6IiQyYiQxMCRJeEcxS0pDMzg5NkFmU0xPRnJtS3JPOWthV0lDN3UyUUVUQ2FrWENxbkpwelFJUi4zNEFZbSIsImlhdCI6MTU5NzM0MjM4Nn0.-Z6CKRelWiNDdgdv4KK_OmeQYkbknweJqrJGeQ-SYeA'
-		let userToken = {token: token};
+
+		let tokenVal = null
+		await AsyncStorage.getItem('sessionToken')
+		.then(async (value) => {
+			if(value){
+				tokenVal = JSON.parse(value);
+			}
+		});
+
+		let userToken = {token: tokenVal};
 
 		const response = await fetch('http://10.0.2.2:5000/user/get',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body:JSON.stringify(userToken)
-        });
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body:JSON.stringify(userToken)
+		});
 
 		const body = await response.json();
 		if (response.status !== 200) throw Error(body.message);
 
 		this.setState({userInfo:body.user});
+		
 	}
 
 	render(){
@@ -296,10 +312,16 @@ export default class App extends Component{
 		}
 		else
 		{	
-			if(this.state.switch)	
-				return(<LoginScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
-			else
-				return(<RegisterScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+			if(this.state.switchToLog)
+			{
+				if(this.state.switch)	
+					return(<LoginScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+				else{
+					return(<RegisterScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+				}
+			}
+			else	
+				return(<SplashScreen switchScreen={this.switchScreen}/>)
 
 		}		
 	}

@@ -38,7 +38,7 @@ export default class SettingsScreen extends Component {
                 <Animatable.View 
                     animation="fadeInUp"
                     style={[styles.footer, {
-                        backgroundColor: "silver"
+                        backgroundColor: "white"
                     }]} >
                         <View style={styles.button}>
                             

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { 
     View, 
     Text, 
@@ -9,51 +9,54 @@ import {
     Image
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useTheme } from '@react-navigation/native';
 
-const SplashScreen = ({navigation}) => {
-    const { colors } = useTheme();
+class SplashScreen extends Component {
 
-    return (
-      <View style={styles.container}>
-          <StatusBar backgroundColor='#009387' barStyle="light-content"/>
-        <View style={styles.header}>
-            <Animatable.Image 
-                animation="rubberBand"
-                duraton="1500"
-            source={require('../Images/aboutreact.png')}
-            style={styles.logo}
-            //resizeMode="stretch"
-            />
-        </View>
-        <Animatable.View 
-            style={[styles.footer, {
-                backgroundColor: colors.background
-            }]}
-            animation="fadeInUpBig"
-        >
-            <Text style={[styles.title, {
-                color: colors.text
-            }]}>Welcome to Project Tree</Text>
-            <Text style={styles.text}>Click to Login</Text>
-            <View style={styles.button}>
-            <TouchableOpacity
-                        onPress={() => {()=>navigation.navigate('SignInScreen')}}
-                        style={[styles.signIn, {
-                            borderColor: '#DC143C',
-                            borderWidth: 1,
-                            marginTop: 15
-                        }]}
-                    >
-                        <Text style={[styles.textSign, {
-                            color: '#DC143C'
-                        }]}>Sign In</Text>
-                    </TouchableOpacity>
+    constructor(props)
+    {
+		super(props);
+        
+    }
+    render(){
+        return (
+        <View style={styles.container}>
+            <StatusBar backgroundColor='#009387' barStyle="light-content"/>
+            <View style={styles.header}>
+                <Animatable.Image 
+                    animation="rubberBand"
+                    duraton="1500"
+                source={require('../Images/pic2.png')}
+                style={styles.logo}
+                //resizeMode="stretch"
+                />
             </View>
-        </Animatable.View>
-      </View>
-    );
+            <Animatable.View 
+                style={[styles.footer, {
+                    backgroundColor: "white"
+                }]}
+                animation="fadeInUpBig"
+            >
+                <Text style={[styles.title, {
+                }]}>Welcome to Project Tree</Text>
+                <Text style={styles.text}>Click to Login</Text>
+                <View style={styles.button}>
+                <TouchableOpacity
+                        onPress={() => {this.props.switchScreen("Splash")}}
+                            style={[styles.signIn, {
+                                borderColor: '#05375a',
+                                borderWidth: 1,
+                                marginTop: 15
+                            }]}
+                        >
+                            <Text style={[styles.textSign, {
+                                color: 'black'
+                            }]}>Sign In</Text>
+                        </TouchableOpacity>
+                </View>
+            </Animatable.View>
+        </View>
+        );
+    }
 };
 
 export default SplashScreen;
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
   },
   footer: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: 'grey',
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30,
       paddingVertical: 50,
@@ -90,8 +93,9 @@ const styles = StyleSheet.create({
       fontWeight: 'bold'
   },
   text: {
-      color: 'grey',
-      marginTop:5
+      color: '#05375a',
+      marginTop:5,
+      fontSize: 15
   },
   button: {
       alignItems: 'flex-end',
