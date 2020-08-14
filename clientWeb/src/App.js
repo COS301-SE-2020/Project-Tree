@@ -99,7 +99,11 @@ class App extends Component {
         this.setState({projects: projects, redirect: "project"});
       }
       this.setState({project: proj });
-      $.post("/user/checkpermission", {creatorID: localStorage.getItem('sessionToken'), project: proj}, response => {
+      let data = {};
+      data.token = localStorage.getItem('sessionToken');
+      data.project = proj;
+      $.post("/user/checkpermission", {data:JSON.stringify(data)}, response => {
+        console.log(response);
         this.setState({
           userPermission: {
             create: response.create,

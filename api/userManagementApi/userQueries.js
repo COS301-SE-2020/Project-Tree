@@ -2,7 +2,8 @@ const db = require('../DB');
 const { JWT } = require('jose');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
+const { response } = require('express');
 
 
 
@@ -43,18 +44,109 @@ function login(req,res){ //email, password,
     })
 }
 
-async function checkpermission(req, res){
-    let userId = await verify(req.body.token);
+async function checkPermissionInternal(token, project){
+    let userId = await verify(token);
+    let err = "";
+    let temp = 4;
     if(userId!=null)
     {
-        res.status(200);
-        res.send({create:false, update: false, delete: false, project: false});
+      await db.getSession()
+      .run(
+        `
+          MATCH p = (a)-[r:MANAGES]->(j)
+          WHERE ID(j)=${project.id} AND ID(a)=${userId}
+          RETURN p
+        `
+      )
+      .then(async result => {
+        if(result.records[0]._fields[0].start.identity.low == userId){
+          if(temp >= 0) temp = 0;
+          return;
+        }
+        await db.getSession()
+        .run(
+          `
+            MATCH (n:User)-[r *..]->(m:Task)-[:PART_OF]->(j)<-[:MANAGES]-(b:User)
+            WHERE ID(j)=${project.id} AND ID(n)=${userId} 
+            RETURN r,b
+          `
+        )
+        .then(result => {
+          console.log("result", result);
+          console.log("userId", userId);
+          result.records.forEach(record => {
+            if(record._fields[0].type == 'PACKAGE_MANAGER')
+              if(temp >= 1) temp = 1;
+            
+            if(record._fields[0].type == 'RESPONSIBLE_PERSON')
+              if(temp >= 2) temp = 2;
+            
+            if(record._fields[0].type == 'RESOURCE')
+              if(temp >= 3) temp = 3;
+          });
+        })
+        .catch(error => {
+          err = error;
+        });
+      })
+      .catch(error => {
+        err = error;
+      });
+      if(err != "") return {error: err};
+      switch (temp) {
+        case 0:
+          return {
+            create: true,
+            update: true,
+            delete: true,
+            project: true
+          };
+        case 1:
+          return {
+            create: project.permissions[0],
+            update: project.permissions[2],
+            delete: project.permissions[1],
+            project: false
+          };
+        case 2:
+          return {
+            create: project.permissions[3],
+            update: project.permissions[5],
+            delete: project.permissions[4],
+            project: false
+          };
+        case 3:
+          return {
+            create: project.permissions[6],
+            update: project.permissions[8],
+            delete: project.permissions[7],
+            project: false
+          };
+        default:
+          return {
+            create: false,
+            update: false,
+            delete: false,
+            project: false
+          };
+      }
+    }else{
+      return {error:"can not verify user"};
     }
-    else
-    {
-        res.status(400)
-        res.send({error:"can not verify user"})
-    }
+}
+
+async function checkPermission(req, res){
+  body = JSON.parse(req.body.data);
+  let response = "asshole";
+  response = await checkPermissionInternal(body.token, body.project);
+  console.log(response);
+  if(response.error != undefined){
+    res.status(200);
+    res.send(response);
+  }else{
+    res.status(200);
+    res.send(response);
+  }
 }
 
 
@@ -231,5 +323,6 @@ module.exports =
     editUser,
     verify,
     getUser,
-    checkpermission
+    checkPermission,
+    checkPermissionInternal
 };
