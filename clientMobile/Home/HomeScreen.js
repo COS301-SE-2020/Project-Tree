@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Image, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Spinner } from 'native-base';
 import DeleteProject from '../Home/DeleteProject'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import UpdateProject from './UpdateProject'
@@ -12,6 +12,7 @@ import { withNavigation } from 'react-navigation';
 import ProjectList from './ProjectList';
 import { useNavigation } from '@react-navigation/native';
 import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
+import ProgressDashboard from './ProgressDashboard';
 
 function GoToTree() {
     const navigation = useNavigation();
@@ -33,30 +34,80 @@ class Home extends Component{
 	constructor(props) {
 		super(props);
 		let drawerState = this.props.project === null ? true : false;
-		this.state = {drawerVisible:drawerState, token: null};
-		this.setDrawerVisible = this.setDrawerVisible.bind(this);
+		this.state = {drawerVisible:drawerState, token: null, projects:null};
+        this.setDrawerVisible = this.setDrawerVisible.bind(this);
+        this.setProjectInfo = this.setProjectInfo.bind(this);
+        this.getProjectInfo = this.getProjectInfo.bind(this);
 	}
 
 	async componentDidMount()
 	{
 		AsyncStorage.getItem('sessionToken')
-		.then((value) => {
-			const data = JSON.parse(value);
-			this.setState({token: data});
-		});
-	}
+		.then(async (value) => {
+            const data = JSON.parse(value);
+            await this.getProjectInfo(data)
+        });      
+    }
+
+    async getProjectInfo(token){
+        this._isMounted = true
+        let userToken = {creatorID: token};
+        const response = await fetch('http://10.0.2.2:5000/project/get',{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userToken),
+        });
+        const body = await response.json();
+
+        if(this._isMounted === true) this.setState({projects:body.projects, token:token}); 
+    }
+
+    setProjectInfo(project){
+        let projects = this.state.projects;
+        if(project.delete === undefined){
+            projects = projects.map((proj) => {
+                if(proj.id === project.id) proj = project;
+                return proj;
+            });
+            if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
+            this.setState({projects: projects});
+            this.props.setSelectedProject(project);
+        }
+        else{
+            projects = projects.filter(proj => proj.id !== project.delete);
+            this.setState({projects: projects});
+            this.props.setSelectedProject(null);
+        } 
+    }
+        
+    componentWillUnmount(){
+        this._isMounted = false;
+    }
 
 	setDrawerVisible(mode){
 		this.setState({drawerVisible:mode});
 	}
 
 	render(){
+        if(this.state.projects === null){
+            return <Spinner />
+        } 
+
 		return(
 			<Screen>
 				<Drawer
 					type="overlay"
 					open={this.state.drawerVisible}
-					content={this.state.token !== null ? <ProjectList setCurrentProject={this.props.setSelectedProject} setDrawerVisible={this.setDrawerVisible} token={this.state.token}/>:null}
+                    content={this.state.token !== null ? <ProjectList 
+                        setCurrentProject={this.props.setSelectedProject} 
+                        setDrawerVisible={this.setDrawerVisible} 
+                        token={this.state.token}
+                        projects={this.state.projects}
+                        setProjectInfo={this.setProjectInfo}
+                        />:null}
 					tapToClose={true}
 					openDrawerOffset={0.2} 
 					panCloseMask={0.2}
@@ -75,7 +126,8 @@ class Home extends Component{
                         user={this.props.user} 
 						setCurrentProject={this.props.setSelectedProject} 
 						setDrawerVisible={this.setDrawerVisible}
-						navigation={this.props.navigation}
+                        navigation={this.props.navigation}
+                        setProjectInfo={this.setProjectInfo}
 					/>
 			  	</Drawer>
 			</Screen>
@@ -153,7 +205,7 @@ class HomeScreen extends Component {
             <ScrollView style={styles.cardView}>
                 <View>
                     <Content>
-                        {this.props.project !== null && this.state.modalVisible === true ? <UpdateProject project={this.props.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.setProjectInfo} setEditing={this.setEditing} /> : null}
+                        {this.props.project !== null && this.state.modalVisible === true ? <UpdateProject project={this.props.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.props.setProjectInfo} setEditing={this.setEditing} /> : null}
                         <Card>
                             <CardItem>
                                 <Body style={{alignItems:'center', justifyContent:'center'}}>
@@ -169,13 +221,18 @@ class HomeScreen extends Component {
                             </CardItem>
                             <CardItem style={{flexDirection:'row', justifyContent:'space-between'}}>
                                 <GoToTree />
-                                <DeleteProject project={this.props.project} setProjectInfo={this.setProjectInfo}/>
+                                <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo}/>
                                 <TouchableOpacity style={styles.editButton} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
                                     <Icon type="FontAwesome" name="edit" style={{color:'white'}}></Icon>
                                 </TouchableOpacity>
                             </CardItem>
                             <CardItem>
                                 <SendProjectNotification project={this.props.project} user={this.props.user}/>
+                            </CardItem>
+                            <CardItem>
+                                <View style={{width:'100%', alignItems:"center"}}>
+                                    <ProgressDashboard project={this.props.project}/>
+                                </View>
                             </CardItem>
                             <CardItem>
                                 <Body>

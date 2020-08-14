@@ -36,7 +36,7 @@ export default class DeleteProject extends Component{
         }); 
         
         const body = await response.json();
-        this.props.setProjectInfo(null, true)
+        this.props.setProjectInfo(body)
     }
     
     render(){

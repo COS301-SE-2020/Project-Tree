@@ -11,24 +11,7 @@ class ProjectListDrawer extends Component {
         this.state = {projects:null, project:null, modalVisible:false, tableData: null, editing:false };
         this.toggleActionSheet = this.toggleActionSheet.bind(this);
         this.setModalVisible = this.setModalVisible.bind(this);
-        this.setProjectInfo = this.setProjectInfo.bind(this);
         this.setEditing = this.setEditing.bind(this)
-    }
-
-    setProjectInfo(project){
-        let projects = this.state.projects;
-        if(project.delete === undefined){
-            projects = projects.map((proj) => {
-                if(proj.id === project.id) proj = project;
-                return proj;
-            });
-            if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
-            this.setState({projects: projects, project: project})
-        }
-        else{
-            projects = projects.filter(proj => proj.id !== project.delete);
-            this.setState({projects: projects});
-        } 
     }
 
     setEditing(val){
@@ -50,33 +33,15 @@ class ProjectListDrawer extends Component {
             
     }
 
-    async componentDidMount() {    
-        this._isMounted = true
-        let userToken = {creatorID: this.props.token};
-        const response = await fetch('http://10.0.2.2:5000/project/get',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userToken),
-        });
-
-        const body = await response.json();
-        if(this._isMounted === true) this.setState({projects:body.projects});    
-      }
-
-    componentWillUnmount(){
-        this._isMounted = false;
-    }
-
     render() {
+        if(this.props.projects === null) return null;
+
         return (
             <View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>
                 <View style={{flex:9}}>
                     <ScrollView>
                         <ProjectList 
-                            projects={this.state.projects} 
+                            projects={this.props.projects} 
                             setCurrentProject={this.props.setCurrentProject}
                             setDrawerVisible={this.props.setDrawerVisible}
                         />
@@ -85,7 +50,7 @@ class ProjectListDrawer extends Component {
                 <View style={{flex:1}}>
                     <CreateProject 
                         token={this.props.token}
-                        setProjectInfo={this.setProjectInfo} 
+                        setProjectInfo={this.props.setProjectInfo} 
                         setDrawerVisible={this.props.setDrawerVisible}
                         setCurrentProject={this.props.setCurrentProject}
                     />

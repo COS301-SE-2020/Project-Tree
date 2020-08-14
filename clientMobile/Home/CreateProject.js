@@ -120,8 +120,7 @@ class CreateProjectForm extends Component{
         }); 
 
         const body = await response.json();
-        this.props.setProjectInfo(body)
-        this.props.setCurrentProject(body)
+        this.props.setProjectInfo(body);
     }
 
     render(){

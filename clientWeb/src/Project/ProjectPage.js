@@ -46,7 +46,6 @@ class ProjectPage extends React.Component {
           alert( "Unable to get Critical Path" );
       })
     }
-    
   }
 
   render() {
