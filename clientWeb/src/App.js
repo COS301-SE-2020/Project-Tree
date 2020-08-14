@@ -90,20 +90,19 @@ class App extends Component {
         projects.push(proj);
         this.setState({projects: projects, redirect: "project"});
       }
-      /* $.post("/user/checkpermission", {creatorID: localStorage.getItem('sessionToken'), project: proj}, (response) => {
-        this.setState({projects: response.projects });
+      this.setState({project: proj });
+      $.post("/user/checkpermission", {creatorID: localStorage.getItem('sessionToken'), project: proj}, response => {
+        this.setState({
+          userPermission: {
+            create: response.create,
+            update: response.update,
+            delete: response.delete,
+            project: response.project
+          }})
       })
       .fail((response) => {
-          throw Error(response.message);
-      }); */
-      this.setState({
-        project: proj, 
-        userPermission: {
-          create: proj.permissions[0],
-          update: proj.permissions[2],
-          delete: proj.permissions[1],
-          project: false
-        }})
+          console.log(response.error);
+      });
     }
   }
 
