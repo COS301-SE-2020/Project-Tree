@@ -31,7 +31,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      projects: null,
+      ownedProjects: null,
+      otherProjects: null,
       project: null, 
       showSideBar: false,
       loggedInStatus: false,
@@ -55,8 +56,8 @@ class App extends Component {
   componentDidMount(){
     let token = localStorage.getItem('sessionToken')
     if(token != null){
-      $.post("/project/get", {creatorID: token}, (response) => {
-        this.setState({projects: response.projects });
+      $.post("/project/get", {token}, (response) => {
+        this.setState({ownedProjects: response.ownedProjects, otherProjects: response.otherProjects });
       })
       .fail((response) => {
           throw Error(response.message);
@@ -78,11 +79,11 @@ class App extends Component {
   
   setProject(proj){
     if(proj.delete != null){
-      let projects = [];
-      for (let i = 0; i < this.state.projects.length; i++) {
-        if(this.state.projects[i].id !== proj.delete) projects.push(this.state.projects[i]);
+      let ownedProjects = [];
+      for (let i = 0; i < this.state.ownedProjects.length; i++) {
+        if(this.state.ownedProjects[i].id !== proj.delete) ownedProjects.push(this.state.ownedProjects[i]);
       }
-      this.setState({projects: projects})
+      this.setState({ownedProjects: ownedProjects})
       this.setState({
         project: null, 
         userPermission: {
@@ -93,10 +94,10 @@ class App extends Component {
         }
       });
     }else{
-      if(!this.state.projects.includes(proj)){
-        let projects = this.state.projects;
-        projects.push(proj);
-        this.setState({projects: projects, redirect: "project"});
+      if(!this.state.ownedProjects.includes(proj) && !this.state.otherProjects.includes(proj)){
+        let ownedProjects = this.state.ownedProjects;
+        ownedProjects.push(proj);
+        this.setState({ownedProjects: ownedProjects});
       }
       this.setState({project: proj });
       let data = {};
@@ -127,7 +128,7 @@ class App extends Component {
     {
       return;
     }
-    if(this.state.projects != null) this.setState({showSideBar: !this.state.showSideBar});
+    if(this.state.ownedProjects != null && this.state.otherProjects != null) this.setState({showSideBar: !this.state.showSideBar});
     else this.setState({showSideBar: this.state.showSideBar});
   }
 
@@ -220,7 +221,7 @@ class App extends Component {
               {this.state.showSideBar !== false ? 
               (
                 <Col  xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto", backgroundColor: "#303030" }}>
-                  <SideBar closeSideBar={() => this.closeSideBar()} projects={this.state.projects} setProject={project => this.setProject(project)}/>
+                  <SideBar closeSideBar={() => this.closeSideBar()} ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects} setProject={project => this.setProject(project)}/>
                 </Col>
               ) : null}
               <Col>  
@@ -249,7 +250,7 @@ class App extends Component {
                   </Route>
                   <Route path="/home">
                     {this.state.loggedInStatus? 
-                    <Home projects={this.state.projects} setProject={project => this.setProject(project)}/>
+                    <Home ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects} setProject={project => this.setProject(project)}/>
                      : <Redirect to="/"/>}
                   </Route>
                   <Route path="/">
