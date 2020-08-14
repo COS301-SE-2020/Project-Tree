@@ -10,7 +10,7 @@ import Drawer from 'react-native-drawer'
 import Home from './Home/HomeScreen';
 import Graph from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
-import NoticeBoardScreen from './NoticeBoard/NoticeBoardScreen'
+import NoticeBoard from './NoticeBoard/NoticeBoardScreen'
 console.disableYellowBox = true; 
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from '@react-navigation/stack';
@@ -112,45 +112,6 @@ class Settings extends Component{
 	}
 }
 
-class NoticeBoard extends Component{
-	render(){
-		// if(globalSelectedProject === null){
-		// 	return(
-		// 		<View style={{
-		// 		justifyContent:"center", 
-		// 		alignItems:"center",
-		// 		flex:1}}
-		// 		>
-		// 		<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
-		// 			alignItems:'center',
-		// 			justifyContent:'center',
-		// 			height:45,
-		// 			borderColor:'#EEBB4D',
-		// 			borderWidth:2,
-		// 			borderRadius:5,
-		// 			shadowColor:'#000',
-		// 			shadowOffset:{
-		// 				width:0,
-		// 				height:1
-		// 			},
-		// 			shadowOpacity:0.8,
-		// 			shadowRadius:2,  
-		// 			elevation:3}}
-		// 		>
-		// 			<Text style={{color:'white'}}>
-		// 			Please select a project
-		// 			</Text>
-		// 		</TouchableHighlight>
-		// 		</View>
-		// 	)
-		// }
-
-		return(
-			<NoticeBoardScreen project={null}/>
-		)
-	}
-}
-
 export default class App extends Component{
 	constructor(props) 
 	{
@@ -161,7 +122,8 @@ export default class App extends Component{
 		  user: {},
 		  sessionToken: null,
 		  switch: true,
-		  selectedProject: null
+		  selectedProject: null,
+		  userInfo: null
 		};
 		
 		this.handleLogin = this.handleLogin.bind(this);
@@ -227,13 +189,33 @@ export default class App extends Component{
 			});
 	}	
 
+	async setUserInfo(){
+		if(this.state.userInfo != null) return;
+		let token = 'eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6IndkYTE5OTlAZ21haWwuY29tIiwiaGFzaCI6IiQyYiQxMCRJeEcxS0pDMzg5NkFmU0xPRnJtS3JPOWthV0lDN3UyUUVUQ2FrWENxbkpwelFJUi4zNEFZbSIsImlhdCI6MTU5NzM0MjM4Nn0.-Z6CKRelWiNDdgdv4KK_OmeQYkbknweJqrJGeQ-SYeA'
+		let userToken = {token: token};
+
+		const response = await fetch('http://10.0.2.2:5000/user/get',{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify(userToken)
+        });
+
+		const body = await response.json();
+		if (response.status !== 200) throw Error(body.message);
+
+		this.setState({userInfo:body.user});
+	}
+
 	render(){
-		this.checkKey();
 		if(this.state.loggedInStatus === true)
 		{ 
-		return(
+			this.setUserInfo()
+			return(
 				<NavigationContainer>
-				 <Tabs.Navigator
+					<Tabs.Navigator
 					tabBarOptions={{
 						activeTintColor: 'black',
 						inactiveTintColor: 'white',
@@ -252,11 +234,11 @@ export default class App extends Component{
 						shadow: true,
 						tabBarBackground: '#184D47'
 					}}
-					initialRouteName="Notice Board">
+					initialRouteName="Home">
 					
 					<Tabs.Screen
 						name="Home"
-						children={()=><Home project={this.state.selectedProject} setSelectedProject={this.setSelectedProject} />}
+						children={()=><Home user={this.state.userInfo} project={this.state.selectedProject} setSelectedProject={this.setSelectedProject} />}
 						options={{
 							tabBarIcon: ({ focused, color }) => (
 								<FeatherTabBarIcon
@@ -267,7 +249,7 @@ export default class App extends Component{
 							),
 						}}
 					/>
-         			<Tabs.Screen
+					<Tabs.Screen
 						name="Project Tree"
 						children={()=><Graph project={this.state.selectedProject} />}
 						options={{
@@ -279,10 +261,10 @@ export default class App extends Component{
 								/>
 							),
 						}}
-          			/>
+					/>
 					<Tabs.Screen
 						name="Notice Board"
-						component={NoticeBoard}
+						children={()=><NoticeBoard project={this.state.selectedProject} user={this.state.userInfo}/>}
 						options={{
 							tabBarIcon: ({ focused, color }) => (
 								<AntDesignTabBarIcon
@@ -292,7 +274,7 @@ export default class App extends Component{
 								/>
 							),
 						}}
-          			/>
+					/>
 					<Tabs.Screen
 						name="Settings"
 						children={()=><Settings setLogout={this.setLogout}/>}						
@@ -309,7 +291,8 @@ export default class App extends Component{
 					}															
 					/>
 				</Tabs.Navigator>				
-				</NavigationContainer>)
+				</NavigationContainer>
+			)
 		}
 		else
 		{	

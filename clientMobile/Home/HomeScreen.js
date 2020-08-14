@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { withNavigation } from 'react-navigation';
 import ProjectList from './ProjectList';
 import { useNavigation } from '@react-navigation/native';
+import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
 
 function GoToTree() {
     const navigation = useNavigation();
@@ -70,7 +71,8 @@ class Home extends Component{
 						<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
 					</TouchableOpacity>
 					<HomeScreen 
-						project={this.props.project} 
+                        project={this.props.project}
+                        user={this.props.user} 
 						setCurrentProject={this.props.setSelectedProject} 
 						setDrawerVisible={this.setDrawerVisible}
 						navigation={this.props.navigation}
@@ -171,6 +173,9 @@ class HomeScreen extends Component {
                                 <TouchableOpacity style={styles.editButton} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
                                     <Icon type="FontAwesome" name="edit" style={{color:'white'}}></Icon>
                                 </TouchableOpacity>
+                            </CardItem>
+                            <CardItem>
+                                <SendProjectNotification project={this.props.project} user={this.props.user}/>
                             </CardItem>
                             <CardItem>
                                 <Body>

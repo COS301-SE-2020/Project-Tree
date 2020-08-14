@@ -6,10 +6,7 @@ const db = require("../DB");
 
 
  async function createProject(req, res) {
-
-  //(async () => console.log(await uq.verify(req.body.creatorID)))()
   let creator = await uq.verify(req.body.creatorID);
-  console.log(creator)
   req.body.cp_pm_Create != undefined
     ? (cp_pm_Create = true)
     : (cp_pm_Create = false);
@@ -220,9 +217,7 @@ function getProgress(req, res) {
 }
 
 async function getProjects(req, res) {
-  console.log(req.body)
   let creator = await uq.verify(req.body.creatorID);
-  console.log(creator)
 
   if(creator != null)  {
     await db.getSession()

@@ -84,6 +84,7 @@ class ProjectListDrawer extends Component {
                 </View>
                 <View style={{flex:1}}>
                     <CreateProject 
+                        token={this.props.token}
                         setProjectInfo={this.setProjectInfo} 
                         setDrawerVisible={this.props.setDrawerVisible}
                         setCurrentProject={this.props.setCurrentProject}

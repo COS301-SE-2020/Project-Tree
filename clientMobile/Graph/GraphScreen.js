@@ -11,7 +11,6 @@ import IconEntypo from 'react-native-vector-icons/AntDesign';
 import Drawer from 'react-native-drawer'
 import styled from 'styled-components/native'
 import GraphDrawer from './GraphDrawer';
-import { withNavigation } from 'react-navigation';
 import { useNavigation } from '@react-navigation/native';
 
 function GoToHome() {

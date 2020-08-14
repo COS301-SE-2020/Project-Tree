@@ -16,11 +16,6 @@ export default class SendProjectWideNotificationWrapper extends Component{
     }
 
     render(){
-        project={
-            id:212,
-            name:"Project - William"
-        }
-
         return(
             <React.Fragment>
                 <View style={{
@@ -48,7 +43,7 @@ export default class SendProjectWideNotificationWrapper extends Component{
                             Send Project Wide notification
 						</Text>
 					</TouchableHighlight>
-                    <SendNotificationModal project={project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} type={'project'}/>
+                    <SendNotificationModal project={this.props.project} user={this.props.user} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} type={'project'}/>
 			    </View>
             </React.Fragment>
         )
@@ -68,7 +63,7 @@ class SendNotificationModal extends Component{
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
-                        <SendNotificationForm setModalVisible={this.props.setModalVisible} project={this.props.project} type={this.props.type}/>
+                        <SendNotificationForm setModalVisible={this.props.setModalVisible} project={this.props.project} user={this.props.user} type={this.props.type}/>
                     </View>
                 </View>
             </Modal>
@@ -94,7 +89,7 @@ class SendNotificationForm extends Component{
             return;
         }
 
-        await sendNotification(this.props.type, "William Agar", [], new Date(), this.state.message, undefined, this.props.project.name, this.props.project.id, this.state.mode);
+        await sendNotification(this.props.type, this.props.user.name+" "+this.props.user.sname, [], new Date(), this.state.message, undefined, this.props.project.name, this.props.project.id, this.state.mode);
         this.props.setModalVisible(false);
     }
 

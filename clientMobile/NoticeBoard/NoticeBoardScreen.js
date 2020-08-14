@@ -1,8 +1,57 @@
 import React, { Component } from 'react';
 import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions, TouchableHighlight, ScrollView, Image } from 'react-native'
 import { isEmpty } from 'lodash';
-import SendProjectNotification from './ProjectWideNotification';
-import {Spinner} from 'native-base'
+import {Spinner} from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+
+function GoToHome() {
+    const navigation = useNavigation();
+  
+    return (
+        <View style={{
+        justifyContent:"center", 
+        alignItems:"center",
+        flex:1}}
+        >
+            <TouchableHighlight 
+            onPress={() => {navigation.navigate('Home');}} 
+            style={{backgroundColor:'#184D47',
+                alignItems:'center',
+                justifyContent:'center',
+                height:45,
+                borderColor:'#EEBB4D',
+                borderWidth:2,
+                borderRadius:5,
+                shadowColor:'#000',
+                shadowOffset:{
+                    width:0,
+                    height:1
+                },
+                shadowOpacity:0.8,
+                shadowRadius:2,  
+                elevation:3}}
+            >
+                <Text style={{color:'white'}}>
+                Please select a project
+                </Text>
+            </TouchableHighlight>
+        </View>
+    );
+}
+
+class NoticeBoard extends Component{
+	render(){
+		if(this.props.project === null){
+			return(
+				<GoToHome />
+			)
+		}
+
+		return(
+			<NoticeBoardScreen project={this.props.project} user={this.props.user}/>
+		)
+	}
+}
 
 class NoticeBoardScreen extends Component{
     _isMounted = false;
@@ -16,8 +65,8 @@ class NoticeBoardScreen extends Component{
         this._isMounted = true;
 
         data = {
-            projID : 212,
-            userID : 211
+            projID : this.props.project.id,
+            userID : this.props.user.id
         }
 
         data = JSON.stringify(data);
@@ -48,7 +97,6 @@ class NoticeBoardScreen extends Component{
 
         return(
             <React.Fragment>
-                <SendProjectNotification />
                 <NotificationList messages={this.state.messages}/>
             </React.Fragment>
         )
@@ -159,4 +207,4 @@ class NotificationList extends Component{
     }
 }
 
-export default NoticeBoardScreen;
+export default NoticeBoard;

@@ -18,6 +18,7 @@ class CreateProject extends Component{
         return(
             <React.Fragment>
                 <CreateProjectModal 
+                    token={this.props.token}
                     modalVisible={this.state.modalVisible} 
                     setModalVisible={this.setModalVisible} 
                     setProjectInfo={this.props.setProjectInfo}
@@ -49,6 +50,7 @@ class CreateProjectModal extends Component{
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
                         <CreateProjectForm 
+                            token={this.props.token}
                             setProjectInfo={this.props.setProjectInfo} 
                             setModalVisible={this.props.setModalVisible} 
                             setCurrentProject={this.props.setCurrentProject}/>
@@ -92,6 +94,7 @@ class CreateProjectForm extends Component{
         }
 
         let data = {
+            creatorID : this.props.token,
             cp_Name : this.state.projName,
             cp_Description : this.state.projDescription,
             cp_pm_Create : permissions[0],
