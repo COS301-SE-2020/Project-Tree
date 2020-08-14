@@ -66,7 +66,7 @@ async function checkPermissionInternal(token, project){
         await db.getSession()
         .run(
           `
-            MATCH (n:User)-[r *..]->(m:Task)-[:PART_OF]->(j)<-[:MANAGES]-(b:User)
+            MATCH (n:User)-[r]->(m:Task)-[:PART_OF]->(j)
             WHERE ID(j)=${project.id} AND ID(n)=${userId} 
             RETURN r,b
           `
@@ -139,7 +139,6 @@ async function checkPermission(req, res){
   body = JSON.parse(req.body.data);
   let response = "asshole";
   response = await checkPermissionInternal(body.token, body.project);
-  console.log(response);
   if(response.error != undefined){
     res.status(200);
     res.send(response);

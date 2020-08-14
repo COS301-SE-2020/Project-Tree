@@ -10,7 +10,7 @@ class SideBar extends React.Component {
 
   OwnedProjects(){
     const OwnedProjects = [];
-    this.props.projects.forEach(project => {
+    this.props.ownedProjects.forEach(project => {
       OwnedProjects.push(
         <Row 
           noGutters
@@ -64,7 +64,7 @@ class SideBar extends React.Component {
 
   OtherProjects(){
     const OtherProjects = [];
-    this.props.projects.forEach(project => {
+    this.props.otherProjects.forEach(project => {
       OtherProjects.push(
         <Row 
           noGutters
@@ -117,9 +117,8 @@ class SideBar extends React.Component {
   }
 
   render() {
-    if (this.props.projects === undefined) return null;
+    if (this.props.ownedProjects === undefined || this.props.otherProjects === undefined) return null;
     
-
     return (
       <Container className="py-1" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
         <h4 className="text-white">Owned Projects</h4>
