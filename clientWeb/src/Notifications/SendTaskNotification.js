@@ -33,11 +33,12 @@ class SendTaskNotification extends React.Component {
 
     let notification = returnFormData(new FormData(event.target));
     let timestamp = (new Date().toISOString());
+    console.log(this.state.notificationRec)
 
     let data = {
       type: 'task',     //personal, task, project, auto
       fromName: this.props.user.name + " " + this.props.user.sname,
-      recipients: this.state.notificationRec,
+      recipients: JSON.stringify(this.state.notificationRec),
       timestamp: timestamp,
       message: notification.sn_Message,
       taskName: this.props.task.name,
@@ -45,8 +46,6 @@ class SendTaskNotification extends React.Component {
       projID: this.props.project.id,
       mode: this.state.mode
     }
-
-    console.log(data);
   
     $.post("/sendNotification",  data, (response) => {
       console.log(response.response);
