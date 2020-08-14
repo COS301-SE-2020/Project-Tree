@@ -19,17 +19,17 @@ class ProjectInfo extends React.Component{
                 null
               }
             </Col>
-            <Col className="text-white">
+            <Col xs={6} className="text-white text-center" style={{fontSize: "22px"}}>
               {this.props.project.name}
             </Col>
             <Col className="text-right" >
               <Link to="/graph">
-                <Button variant="warning" size="md">View Graph</Button>
+                <Button variant="warning" size="md" style={{fontSize: "18px"}}>View Graph</Button>
               </Link>
             </Col>
           </Row> 
           <Row className="align-items-center py-2">
-            <Col className="align-items-center text-center">
+            <Col className="align-items-center text-center" style={{fontSize: "20px"}}>
               {this.props.project.description}
             </Col>
           </Row> 

@@ -118,16 +118,6 @@ class CreateTask extends React.Component {
     const body = await response.json();
 
     let newTask = body.displayNode;
-
-    await this.props.setTaskInfo(
-      body.nodes,
-      body.rels,
-      body.displayNode,
-      body.displayRel
-    );
-
-    this.hideModal();
-
     await fetch("/people/assignPeople", {
       method: "POST",
       headers: {
@@ -141,6 +131,15 @@ class CreateTask extends React.Component {
         this.state.resourcesList,
       ])
     });
+
+    await this.props.setTaskInfo(
+      body.nodes,
+      body.rels,
+      body.displayNode,
+      body.displayRel
+    );
+
+    this.hideModal();
   }
 
   render() {

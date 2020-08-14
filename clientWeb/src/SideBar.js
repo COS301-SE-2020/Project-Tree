@@ -18,7 +18,7 @@ class SideBar extends React.Component {
           style={{width: "100%"}}
           key={project.id}>
           <Col>
-            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47"}}>
+            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47", fontSize: "20px"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
                   {project.name}
@@ -27,7 +27,7 @@ class SideBar extends React.Component {
               <Row className="align-items-center py-2">
                 <Col>
                   <Link to="/project">
-                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black",  fontSize: "15px"}}
                       onClick={
                         ()=>{
                             this.props.setProject(project);
@@ -41,7 +41,7 @@ class SideBar extends React.Component {
                 </Col>
                 <Col>
                   <Link to="/graph">
-                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black",  fontSize: "15px"}}
                       onClick={
                         ()=>{
                             this.props.setProject(project);
@@ -72,7 +72,7 @@ class SideBar extends React.Component {
           style={{width: "100%"}}
           key={project.id}>
           <Col>
-            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47"}}>
+            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47", fontSize: "20px"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
                   {project.name}
@@ -81,7 +81,7 @@ class SideBar extends React.Component {
               <Row className="align-items-center py-2">
                 <Col>
                   <Link to="/project">
-                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black",  fontSize: "15px"}}
                       onClick={
                         ()=>{
                             this.props.setProject(project);
@@ -95,7 +95,7 @@ class SideBar extends React.Component {
                 </Col>
                 <Col>
                   <Link to="/graph">
-                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black",  fontSize: "15px"}}
                       onClick={
                         ()=>{
                             this.props.setProject(project);
