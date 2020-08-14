@@ -4,6 +4,8 @@ import ProjectInfo from "./ProjectInfo";
 import TaskInfo from "./TaskInfo";
 import $ from "jquery";
 import ProjectDashboard from "./ProjectDashboard";
+import NoticeBoard from "../Notifications/NoticeBoard";
+
 
 class ProjectPage extends React.Component {
   constructor(props) {
@@ -53,18 +55,20 @@ class ProjectPage extends React.Component {
 
   render() {
     return (
-      <Container fluid className="py-2" style={{height: "40%"}}>
+      <Container fluid style={{maxHeight: "40%"}}>
         <Row className="m-2">
           <Col sm={12} md={6} xl={4}>
             <ProjectInfo 
               project={this.props.project} 
               setProject={project => this.props.setProject(project)}
               userPermission={this.props.userPermission}
+              user={this.props.user}
           />
           </Col>
-          <Col sm={12} md={6} xl={4} style={{border: "black solid 1px"}}>
+          <Col sm={12} md={6} xl={4} style={{border: "black solid 1px", overflowY: "scroll", height: "366px"}} className="border rounded"> 
+            {this.props.project != null && this.props.user != null ? <NoticeBoard project={this.props.project} user={this.props.user}/> : null}
           </Col>
-          <Col sm={12} md={12} xl={4} style={{border: "black solid 1px"}}> 
+          <Col sm={12} md={12} xl={4} style={{border: "black solid 1px", height: "366px"}} className="border rounded"> 
             <ProjectDashboard project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
           </Col>
         </Row>

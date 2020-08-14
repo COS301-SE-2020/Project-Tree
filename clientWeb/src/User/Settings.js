@@ -24,13 +24,10 @@ class Settings extends React.Component {
 
   }
 
-  componentDidMount(){
-    $.post("/user/get", {token: localStorage.getItem('sessionToken')}, (response) => {
-      this.setState({user: response.user});
-    })
-    .fail((response) => {
-        throw Error(response.message);
-    });
+  componentDidUpdate(prevProps) {
+    if (this.props.user !== prevProps.user) {
+      this.setState({user: this.props.user });
+    }
   }
 
   showModal() {

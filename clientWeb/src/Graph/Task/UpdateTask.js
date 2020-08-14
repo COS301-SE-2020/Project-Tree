@@ -134,7 +134,7 @@ class UpdateTask extends React.Component {
 
     return (
       <React.Fragment>
-        <Button variant="outline-dark" className="mr-4 ml-3"  onClick={this.ShowModal}>
+        <Button variant="outline-dark"  onClick={this.ShowModal}>
           <i className="fa fa-edit"> </i> Edit{" "}
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
 import DeleteProject from "./DeleteProject";
 
@@ -68,8 +68,7 @@ class ProjectInfo extends React.Component{
               </Table>
             </Col>
           </Row>
-          <Row className="align-items-center py-2">
-            <Col></Col>
+          <Row className="align-items-center py-1">
             <Col xs={6} className="text-center">
               {
               this.props.userPermission['project'] === true?
@@ -78,7 +77,7 @@ class ProjectInfo extends React.Component{
                 null
               }
             </Col>
-            <Col></Col>
+            <Col> <SendProjectNotification project={this.props.project} user={this.props.user}/> </Col>
           </Row>
         </Container>
       </React.Fragment>

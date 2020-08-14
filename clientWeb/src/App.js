@@ -35,7 +35,7 @@ class App extends Component {
       project: null, 
       showSideBar: false,
       loggedInStatus: false,
-      user: {},
+      user: null,
       isLogginActive: true,
       userPermission: {
         create: false,
@@ -61,6 +61,14 @@ class App extends Component {
       .fail((response) => {
           throw Error(response.message);
       });
+
+      $.post("/user/get", {token}, (response) => {
+        this.setState({user: response.user});
+      })
+      .fail((response) => {
+          throw Error(response.message);
+      });
+
       this.setState({loggedInStatus: true });
     }else{
       if(this.rightSide) this.rightSide.classList.add("right");
@@ -219,6 +227,7 @@ class App extends Component {
                         project={this.state.project} 
                         setProject={project => this.setProject(project)}
                         userPermission={this.state.userPermission}
+                        user={this.state.user}
                       />
                     ) : <Redirect to="/"/>}
                   </Route>
@@ -227,6 +236,7 @@ class App extends Component {
                       <GraphPage
                         project={this.state.project}
                         userPermission={this.state.userPermission}
+                        user={this.state.user}
                       />
                      : <Redirect to="/"/>}
                   </Route>

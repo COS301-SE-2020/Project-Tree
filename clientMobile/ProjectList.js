@@ -52,7 +52,7 @@ class ProjectListDrawer extends Component {
 
     async componentDidUpdate(){
         this._isMounted = true
-        const response = await fetch('http://projecttree.herokuapp.com/project/get',{
+        const response = await fetch('http://10.0.2.2/project/get',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -62,7 +62,7 @@ class ProjectListDrawer extends Component {
         });
         const body = await response.json();
 
-        if(this._isMounted === true) this.setState({projects:body.nodes});
+        if(this._isMounted === true) this.setState({projects:body.projects});
     }
 
     componentWillUnmount(){
