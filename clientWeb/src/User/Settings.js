@@ -26,6 +26,7 @@ class Settings extends React.Component {
 
   componentDidMount(){
     $.post("/user/get", {token: localStorage.getItem('sessionToken')}, (response) => {
+      console.log(response)
       this.setState({user: response.user});
     })
     .fail((response) => {

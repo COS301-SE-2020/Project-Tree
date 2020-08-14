@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
 import { 
     View, 
     Text, 
@@ -14,7 +13,6 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 
-import { Auth } from './Components/Auth';
 
 class LoginScreen extends Component {
 
@@ -225,7 +223,7 @@ const styles = StyleSheet.create({
     text_header: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: 40,
     },
     text_footer: {
         color: '#05375a',

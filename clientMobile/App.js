@@ -14,17 +14,15 @@ import GraphDrawer from './Graph/GraphDrawer';
 console.disableYellowBox = true; 
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator} from '@react-navigation/stack';
-import {Auth} from "./User/Components/Auth";
-import RootStackScreen from './User/RootStackScreen';
 
 import AsyncStorage from '@react-native-community/async-storage';
+import SplashScreen from './User/SplashScreen'
 import LoginScreen from './User/LoginScreen'
 import RegisterScreen from './User/RegisterScreen'
 import { forEach } from 'lodash'
 
 
 const Tabs = AnimatedTabBarNavigator()
-const RootStack = createStackNavigator();
 
 const Screen = styled.View
 `
@@ -33,9 +31,6 @@ const Screen = styled.View
 `
 
 var globalSelectedProject = null;
-// globalLogout = true Logged in
-// 				= false Logged out
-var globalLogout = false;
 
 
 const FeatherTabBarIcon = (props) => {
@@ -195,15 +190,15 @@ class Graph extends Component{
 	}
 }
 
-class SplashScreen extends Component{
-	render(){
-		return(
-			<Screen>
-				<SplashScreen/>
-			</Screen>
-		)
-	}
-}
+// class SplashScreen extends Component{
+// 	render(){
+// 		return(
+// 			<Screen>
+// 				<SplashScreen/>
+// 			</Screen>
+// 		)
+// 	}
+// }
 
 
 class Register extends Component{
@@ -227,10 +222,8 @@ class Settings extends Component{
 	async handleLogout() 
 	{	
 		try {
-			console.log("Deleting Key ....")
 			const keys = await AsyncStorage.getAllKeys();
 			await AsyncStorage.multiRemove(keys);
-			//console.log(this.props.setLogout())
 			this.props.setLogout(false);
 		}
 		catch(exception) {
@@ -259,12 +252,31 @@ export default class App extends Component{
 		  user: {},
 		  sessionToken: null,
 		  switch: true,
+		  switchToLog: false
 		};
 		
 		this.handleLogin = this.handleLogin.bind(this);
 		this.switchScreen = this.switchScreen.bind(this);
 		this.setLogout = this.setLogout.bind(this);		
-		this.checkKey = this.checkKey.bind(this);		
+		this.checkKey = this.checkKey.bind(this);
+		this.switchSplash = this.switchSplash.bind(this)		
+	}
+
+	async switchSplash(flag)
+	{
+		if(flag == "Move")
+		{
+			this.setState
+			({
+				switchToLog: true,
+			});
+		}
+		else{
+			this.setState
+			({
+				switchToLog: false,
+			});
+		}
 	}
 
 	async setLogout(mode)
@@ -282,23 +294,30 @@ export default class App extends Component{
 		AsyncStorage.getItem('sessionToken')
 		.then((value) => {
 		const data = JSON.parse(value);
-		console.log("checkKey:	",data);
 		});
 	}
 
 	switchScreen(flag)
 	{
+		//console.log(flag)
 		if(flag == "Register")
 		{
 			this.setState
 			({
-				switch: false,
+				switch: false
+			});
+		}
+		else if(flag == "Splash")
+		{
+			this.setState
+			({
+				switchToLog: true
 			});
 		}
 		else{
 			this.setState
 			({
-				switch: true,
+				switch: true
 			});
 		}
 	}
@@ -308,7 +327,8 @@ export default class App extends Component{
 		try {
 			await AsyncStorage.setItem('sessionToken', JSON.stringify(data.sessionToken));
 			} 
-			catch(e) {
+			catch(e) 
+			{
 				console.log("Could not set key");
 			}  
 			this.setState(
@@ -317,20 +337,19 @@ export default class App extends Component{
 				user: data.id,
 				sessionToken: data.sessionToken
 			});
-			//globalLogout=true;
-			// console.log(globalLogout)
-			// console.log(this.state)
 	}
 
 	async componentDidMount()
 	{
-	
+		AsyncStorage.getItem('sessionToken')
+		.then((value) => {
+			if(value)
+				this.setState({loggedInStatus: true});
+		});
 	}	
 
 	render(){
-		console.log(this.state.loggedInStatus, "::	loggedInStatus")
-		console.log(globalLogout, "::	global variable")
-		this.checkKey()
+		//console.log(this.state.loggedInStatus, "::	loggedInStatus")
 		if(this.state.loggedInStatus === true)
 		{ 
 		return(
@@ -402,10 +421,16 @@ export default class App extends Component{
 		}
 		else
 		{	
-			if(this.state.switch)	
-				return(<LoginScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
-			else
-				return(<RegisterScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+			if(this.state.switchToLog)
+			{
+				if(this.state.switch)	
+					return(<LoginScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+				else{
+					return(<RegisterScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+				}
+			}
+			else	
+				return(<SplashScreen switchScreen={this.switchScreen}/>)
 
 		}		
 	}

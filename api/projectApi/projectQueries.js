@@ -220,7 +220,7 @@ function getProgress(req, res) {
 }
 
 async function getProjects(req, res) {
-  console.log(req.body)
+  console.log(req.body.creatorID)
   let creator = await uq.verify(req.body.creatorID);
   console.log(creator)
 

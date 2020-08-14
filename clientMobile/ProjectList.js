@@ -97,6 +97,7 @@ class ProjectListDrawer extends Component {
 class ProjectList extends React.Component{
     render(){
         if(this.props.projects === null) return null;
+        console.log(this.props.projects)
         const projects = this.props.projects;
         const listItems = projects.map((project, i) =>
             <View key={i} style={{ padding: 5 }}>
