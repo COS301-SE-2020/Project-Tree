@@ -59,21 +59,20 @@ async function checkPermissionInternal(token, project){
         `
       )
       .then(async result => {
-        if(result.records[0]._fields[0].start.identity.low == userId){
-          if(temp >= 0) temp = 0;
-          return;
-        }
+        if(result.records.length   != 0)
+          if(result.records[0]._fields[0].start.identity.low == userId){
+            if(temp >= 0) temp = 0;
+            return;
+          }
         await db.getSession()
         .run(
           `
             MATCH (n:User)-[r]->(m:Task)-[:PART_OF]->(j)
             WHERE ID(j)=${project.id} AND ID(n)=${userId} 
-            RETURN r,b
+            RETURN r
           `
         )
         .then(result => {
-          console.log("result", result);
-          console.log("userId", userId);
           result.records.forEach(record => {
             if(record._fields[0].type == 'PACKAGE_MANAGER')
               if(temp >= 1) temp = 1;
@@ -137,8 +136,7 @@ async function checkPermissionInternal(token, project){
 
 async function checkPermission(req, res){
   body = JSON.parse(req.body.data);
-  let response = "asshole";
-  response = await checkPermissionInternal(body.token, body.project);
+  let response = await checkPermissionInternal(body.token, body.project);
   if(response.error != undefined){
     res.status(200);
     res.send(response);
@@ -223,7 +221,6 @@ async function editUser(req, res) {
                 email: result.records[0]._fields[0].properties.email,
                 birthday: result.records[0]._fields[0].properties.bday
             }
-            console.log("user", user)
             res.status(200);
             res.send({user});
           })

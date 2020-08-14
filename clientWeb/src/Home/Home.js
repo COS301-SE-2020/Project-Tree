@@ -12,7 +12,7 @@ class Home extends React.Component {
       }
     }
     return (
-      <h4>Please Create Project by opening the tab on the left</h4>
+      <h4>Home</h4>
     );
   }
 }

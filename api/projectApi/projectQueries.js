@@ -262,7 +262,7 @@ async function getProjects(req, res) {
       `
         MATCH (user:User)-[r]->(m:Task)-[:PART_OF]->(j) 
         WHERE ID(user) = ${userId}
-        return j
+        return DISTINCT j
       `
     )
     .then(result => {
