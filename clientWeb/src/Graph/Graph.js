@@ -16,8 +16,8 @@ function makeLink(edge, criticalPathLinks) {
       source: { id: edge.source },
       target: { id: edge.target },
       attrs: {
-          type:'link',
-          line: {stroke:strokeColor}
+        type:'link',
+        line: {stroke:strokeColor}
       }
   })
 }
@@ -35,7 +35,7 @@ function makeElement(node, criticalPathNodes) {
     if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
       if(parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)){
         if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
-          if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))          {
+          if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low)){
             if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
               statusColor = '#ff6961'
             }
@@ -59,39 +59,39 @@ function makeElement(node, criticalPathNodes) {
     if(node.progress === "Incomplete"){
       let today = new Date();
       if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
-          if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
-              if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
-              {
-                  if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
-                      statusColor = '#ff6961'
-                  }
-              }
-          }
-          else{
+        if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
+          if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
+          {
+            if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
               statusColor = '#ff6961'
+            }
           }
+        }
+        else{
+          statusColor = '#ff6961'
+        }
       }
       else{
-          statusColor = '#ff6961'
+        statusColor = '#ff6961'
       }
   }
   else if(node.progress === "Complete"){
-      statusColor = '#77dd77'
+    statusColor = '#77dd77'
   }
   else if(node.progress === "Issue"){
-      statusColor = '#ffae42'
+    statusColor = '#ffae42'
   }
     var borderColor = '#000';
     if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
 
     return new joint.shapes.standard.Rectangle({
-        id: 'n'+node.id,
+        id: `${node.id}`,
         size: { width: width, height: height },
         attrs: {
             type:'node',
             body: {
-                fill: statusColor,
-                stroke: borderColor
+              fill: statusColor,
+              stroke: borderColor
             },
             text: { 
               text: node.name, 
@@ -114,11 +114,12 @@ function buildGraph(nodes,rels, criticalPath) {
   let criticalPathLinks = [];
   let criticalPathNodes = [];
   if(criticalPath !== null && criticalPath.path !== null)
-      criticalPath.path.segments.forEach(element => {
-          criticalPathNodes.push(element.start.identity.low);
-          criticalPathLinks.push(element.relationship.identity.low);
-          criticalPathNodes.push(element.end.identity.low);
-      });
+    criticalPath.path.segments.forEach(element => {
+      criticalPathNodes.push(element.start.identity.low);
+      criticalPathLinks.push(element.relationship.identity.low);
+      criticalPathNodes.push(element.end.identity.low);
+    });
+
   _.each(nodes, function(node) {
     elements.push(makeElement(node, criticalPathNodes));
   })
@@ -171,10 +172,10 @@ class Graph extends React.Component {
   }
 
   toggleCreateDependency(clickedNode) {
-    var new_source_targetID = clickedNode.model.id;
+    var new_source_targetID = parseInt(clickedNode.model.id);
     this.setState({ alert: null });
 
-    if (new_source_targetID == null) {
+    if (new_source_targetID === null) {
       this.setState({ source: null, target: null });
       return;
     }
@@ -207,8 +208,9 @@ class Graph extends React.Component {
   }
 
   handleClick(clickedNode) {
+    console.log(clickedNode.model.id)
     if (clickedNode.model.attributes.attrs.type === "node") {
-      this.props.toggleSidebar(parseInt(clickedNode.model.id.substr(1)), null);
+      this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
     } else if (clickedNode.model.attributes.attrs.type === "link") {
       this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)));
     }
@@ -278,9 +280,9 @@ class Graph extends React.Component {
   async drawGraph(criticalPath) {
         
     if(this.state.graph === null || this.state.graph === undefined){
-        return;
+      return;
     }
-    
+
     var cells = buildGraph(this.props.nodes,this.props.links, criticalPath);
     this.state.graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(this.state.graph, {
@@ -308,10 +310,10 @@ class Graph extends React.Component {
   render() {
     if(this.state.displayCriticalPath){
       $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
-          this.drawGraph(response);
+        this.drawGraph(response);
       })
       .fail(() => {
-          alert( "Unable to get Critical Path" );
+        alert( "Unable to get Critical Path" );
       })
     }else this.drawGraph(null);
 
@@ -323,15 +325,6 @@ class Graph extends React.Component {
     } else if (this.state.source != null) {
       dependency = this.state.source.name + "→";
     }
-
-    if(this.state.displayCriticalPath){
-      $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
-          this.drawGraph(response);
-      })
-      .fail(() => {
-          alert( "Unable to get Critical Path" );
-      })
-    }else this.drawGraph(null);
   
     return (
       <React.Fragment>
