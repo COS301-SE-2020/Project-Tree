@@ -7,7 +7,6 @@ const path = require('path')
 
 
 function login(req,res){ //email, password,
-    console.log(req.body)
     db.getSession()
     .run(`
             Match (n:User { email: "${req.body.email}" })
@@ -94,7 +93,6 @@ async function register(req,res){ //email, password, name, surname
 }
 
 async function editUser(req, res) {
-    console.log(req.body)
     let userId = await verify(req.body.token);
     if(userId!=null)
     {
@@ -176,15 +174,16 @@ async function getUser(req,res)
 
 async function verify(token)
 {
-    console.log(token)
     let answer = "initial"
     bool = false;
      try {
          var user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, { maxAge: 1440 });
          var milliseconds = +new Date;        
          var seconds = milliseconds / 1000;
-         if(seconds - user.iat > 86400)
-             return (null)
+         if(seconds - user.iat > 86400){
+            return (null)
+         }
+            
          await db.getSession()
          .run(`
                  Match (n:User { email: "${user.email}" })
@@ -199,18 +198,18 @@ async function verify(token)
          .catch(err => 
          {
             return (null)
-
          });
      } 
      catch (err) 
      {
+         console.log(err)
         return (null)
-
      }
     if(bool)
         return answer;
-    else
+    else{
         return null
+    }
  }
 
 module.exports =

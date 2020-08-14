@@ -37,32 +37,30 @@ class Home extends Component{
 		this.state = {drawerVisible:drawerState, token: null, projects:null};
         this.setDrawerVisible = this.setDrawerVisible.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
-        this.getProjectInfo = this.getProjectInfo.bind(this);
 	}
 
 	async componentDidMount()
 	{
-		AsyncStorage.getItem('sessionToken')
+        let token = null
+		await AsyncStorage.getItem('sessionToken')
 		.then(async (value) => {
-            const data = JSON.parse(value);
-            await this.getProjectInfo(data)
-        });      
-    }
+            token = JSON.parse(value);
+            const response = await fetch('http://10.0.2.2:5000/project/get',{
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({creatorID: token}),
+            });
+            const body = await response.json();
 
-    async getProjectInfo(token){
-        this._isMounted = true
-        let userToken = {creatorID: token};
-        const response = await fetch('http://10.0.2.2:5000/project/get',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userToken),
-        });
-        const body = await response.json();
+            this.setState({projects:body.projects, token:token});
+        }); 
 
-        if(this._isMounted === true) this.setState({projects:body.projects, token:token}); 
+        // let userToken = {creatorID: token};
+        // console.log(userToken)
+         
     }
 
     setProjectInfo(project){
@@ -101,13 +99,13 @@ class Home extends Component{
 				<Drawer
 					type="overlay"
 					open={this.state.drawerVisible}
-                    content={this.state.token !== null ? <ProjectList 
+                    content={this.state.token !== null && this.state.projects !== undefined? <ProjectList 
                         setCurrentProject={this.props.setSelectedProject} 
                         setDrawerVisible={this.setDrawerVisible} 
                         token={this.state.token}
                         projects={this.state.projects}
                         setProjectInfo={this.setProjectInfo}
-                        />:null}
+                        /> : null}
 					tapToClose={true}
 					openDrawerOffset={0.2} 
 					panCloseMask={0.2}
