@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Content} from 'native-base';
 import {Text, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
-import CreateProject from './Home/CreateProject'
+import CreateProject from './CreateProject'
 
 class ProjectListDrawer extends Component {
     _isMounted = false;

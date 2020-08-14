@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions } from 'react-native'
+import { View, BackHandler, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Dimensions } from 'react-native'
 import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
 import { WebView } from 'react-native-webview';
 import ProjectModal from './GraphDrawer';
@@ -7,7 +7,106 @@ import CreateTask from './TaskComponents/CreateTask';
 import TaskModal from './TaskComponents/TaskModal';
 import DependencyModal from './DependencyComponents/DependencyModal';
 import CreateDependency from './DependencyComponents/CreateDependency';
-import IconEntypo from 'react-native-vector-icons/AntDesign'
+import IconEntypo from 'react-native-vector-icons/AntDesign';
+import Drawer from 'react-native-drawer'
+import styled from 'styled-components/native'
+import GraphDrawer from './GraphDrawer';
+import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
+
+function GoToHome() {
+    const navigation = useNavigation();
+  
+    return (
+        <View style={{
+        justifyContent:"center", 
+        alignItems:"center",
+        flex:1}}
+        >
+            <TouchableHighlight 
+            onPress={() => {navigation.navigate('Home');}} 
+            style={{backgroundColor:'#184D47',
+                alignItems:'center',
+                justifyContent:'center',
+                height:45,
+                borderColor:'#EEBB4D',
+                borderWidth:2,
+                borderRadius:5,
+                shadowColor:'#000',
+                shadowOffset:{
+                    width:0,
+                    height:1
+                },
+                shadowOpacity:0.8,
+                shadowRadius:2,  
+                elevation:3}}
+            >
+                <Text style={{color:'white'}}>
+                Please select a project
+                </Text>
+            </TouchableHighlight>
+        </View>
+    );
+}
+
+
+const Screen = styled.View
+`
+	flex: 1;
+  background-color: #f2f2f2;
+`
+
+class Graph extends Component{
+	constructor(props) 
+	{
+		super(props);
+		this.state = {drawerVisible:false};
+		this.setDrawerVisible = this.setDrawerVisible.bind(this);
+	}
+  
+	setDrawerVisible(mode){
+		this.setState({drawerVisible:mode});
+	}
+  
+	render(){
+		if(this.props.project === null){
+			return(
+				<GoToHome />
+			)
+		}
+
+		return(
+			<Screen>
+				<Drawer
+				type="overlay"
+				open={this.state.drawerVisible}
+				content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={this.props.project} navigation={this.props.navigation}/>}
+				tapToClose={true}
+				openDrawerOffset={0.2} 
+				panCloseMask={0.2}
+				closedDrawerOffset={-3}
+				tweenHandler={(ratio) => ({
+					main: { opacity:(2-ratio)/2 }
+				})}
+				>
+					{this.props.project !== null ?
+					<React.Fragment>
+						<GraphScreen 
+						project={this.props.project}
+						navigation={this.props.navigation}
+						setDrawerVisible={this.setDrawerVisible}
+						/>
+					</React.Fragment>
+					: 
+					<TouchableOpacity style={{height:60}} onPress={()=>{this.setDrawerVisible(true)}}>
+						<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
+					</TouchableOpacity>
+					}
+				</Drawer>
+			</Screen>
+		)
+	}
+}
 
 class GraphScreen extends Component{
     _isMounted = false;
@@ -213,4 +312,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default GraphScreen;
+export default Graph;

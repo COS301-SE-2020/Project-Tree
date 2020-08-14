@@ -1,7 +1,32 @@
 import React, { Component } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight } from "react-native";
-import { Icon } from 'native-base';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import { useNavigation } from '@react-navigation/native';
+
+function GoToHome() {
+    const navigation = useNavigation();
+  
+    return (
+        <TouchableHighlight onPress={()=>{navigation.navigate("Home")}} style={{
+			backgroundColor:'#96BB7C',
+			alignItems:'center',
+			justifyContent:'center',
+			height:45,
+			borderRadius:5,
+			shadowColor:'#000',
+			shadowOffset:{
+				width:0,
+				height:1
+			},
+			shadowOpacity:0.8,
+			shadowRadius:2,  
+			elevation:3}}
+		>
+			<Text style={{color:'black', fontSize:15}}>
+				View Project
+			</Text>
+		</TouchableHighlight>
+    );
+}
 
 export default class GraphDrawer extends Component {
 	constructor(props){
@@ -15,25 +40,7 @@ export default class GraphDrawer extends Component {
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>{this.props.project.name}</Text>
                         <Text style={styles.modalText}>{this.props.project.description}</Text>
-						<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{
-							backgroundColor:'#96BB7C',
-							alignItems:'center',
-							justifyContent:'center',
-							height:45,
-							borderRadius:5,
-							shadowColor:'#000',
-							shadowOffset:{
-								width:0,
-								height:1
-							},
-							shadowOpacity:0.8,
-							shadowRadius:2,  
-							elevation:3}}
-						>
-							<Text style={{color:'black', fontSize:15}}>
-								View Project
-							</Text>
-						</TouchableHighlight>
+						<GoToHome />
                     </View>
                 </View>
 			</React.Fragment>
