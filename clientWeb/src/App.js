@@ -205,6 +205,7 @@ class App extends Component {
                     {this.state.project != null ? 
                       <GraphPage
                         project={this.state.project}
+                        user={this.state.user}
                       />
                      : <Redirect to="/"/>}
                   </Route>
