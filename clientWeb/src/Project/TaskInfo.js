@@ -124,7 +124,7 @@ class TaskInfo extends React.Component{
             list[i]=(
                 <Col 
                   key={i}
-                  style={{fontFamily:"Courier New", fontSize: "15px",backgroundColor: `${color}`, maxWidth: "300px", minWidth:"250px", fontWeight: "bold"}}
+                  style={{fontFamily:"Courier New", fontSize: "18px",backgroundColor: `${color}`, maxWidth: "300px", minWidth:"250px", fontWeight: "bold"}}
                   className="rounded border border-dark m-1 align-items-center"
                 >
                   <Row><Col className="text-center">{el.name} <hr/></Col></Row>
@@ -146,13 +146,13 @@ class TaskInfo extends React.Component{
     render(){
       return(
           <React.Fragment>
-              <Container fluid>
+              <Container fluid  style={{fontSize:"20px",}}>
                 <Row >
                     <Form.Control
                       as="select"
                       id="taskType"
                       value={this.state.taskType}
-                      style={{width:"250px", borderColor: "#EEBB4D", backgroundColor:"white"}}
+                      style={{width:"250px", borderColor: "#EEBB4D", backgroundColor:"white", fontSize: "20px"}}
                       onChange={(e) => {
                         this.setState({ taskType: e.target.value });
                         this.value = this.state.taskType;

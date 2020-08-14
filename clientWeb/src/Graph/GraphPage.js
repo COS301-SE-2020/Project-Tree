@@ -262,7 +262,7 @@ class TaskSidebar extends React.Component {
 
     return (
       <React.Fragment>
-        <Container className="text-dark text-center bg-light py-2">
+        <Container className="text-dark text-center bg-light py-2" style={{fontSize: "19px"}}>
           <Row className="text-center">
             <Col>
               {" "}
@@ -286,25 +286,17 @@ class TaskSidebar extends React.Component {
             </Col>
           </Row>
           <Row className="text-center align-items-center p-1">
-            <Col></Col>
-            <Col xs={8}>{this.props.task.description}</Col> 
-            <Col></Col>
+            <Col className="text-center">{this.props.task.description}</Col> 
               
           </Row>
           <Row className="text-center p-1" >
-            <Col></Col>
-            <Col xs={8}>Start Date: {startDate}</Col> 
-            <Col></Col>
+            <Col className="text-center">Start Date: {startDate}</Col> 
           </Row>
           <Row className="text-center p-1">
-            <Col></Col>
-            <Col xs={8}>End Date: {endDate}</Col> 
-            <Col></Col>
+            <Col className="text-center">End Date: {endDate}</Col> 
           </Row>
           <Row className="text-center p-1">
-            <Col></Col>
-            <Col xs={8}>Duration: {this.props.task.duration}</Col> 
-            <Col></Col>
+            <Col className="text-center" >Duration: {this.props.task.duration}</Col> 
               
           </Row>
           <Row>
@@ -319,7 +311,14 @@ class TaskSidebar extends React.Component {
                 setTaskInfo={this.props.setTaskInfo}
                 toggleSidebar={this.props.toggleSidebar}
               /></Col>
-              <Col><SendTaskNotification task={this.props.task} project={this.props.project} user={this.props.user} taskPacMans={taskPacMans} taskResPersons={taskResPersons} taskResources={taskResources}/></Col>
+              <Col><SendTaskNotification 
+              task={this.props.task} p
+              roject={this.props.project} 
+              user={this.props.user} 
+              taskPacMans={taskPacMans} 
+              taskResPersons={taskResPersons} 
+              taskResources={taskResources}/>
+              </Col>
           </Row>
           <hr/>
           <b>Package managers:</b><br /><br />
@@ -410,7 +409,7 @@ class LegendSidebar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container className="text-black text-center py-2">
+        <Container className="text-black text-center py-2" style={{fontSize: "20px"}}>
           <Row><Col className="text-center"><h4>Task progress key</h4></Col></Row>
           <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "white", color:"black", width: "120px"}}>Incomplete</Col><Col></Col></Row>
           <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "#77dd77",  color:"black", width: "120px"}}>Complete</Col><Col></Col></Row>

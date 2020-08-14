@@ -154,7 +154,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C"}}>
+          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C", maxHeight: "10%"}}>
             <Nav className="form-inline ">
               {this.state.loggedInStatus === true ?
                 this.state.showSideBar === false ?
@@ -175,7 +175,7 @@ class App extends Component {
             </Nav>
             <Nav className="m-auto form-inline">
               <Nav.Link href="/">
-                <img src={logo} alt="Logo" style={{width:"80px"}}/>
+                <img src={logo} alt="Logo" style={{width:"110px"}}/>
               </Nav.Link>
             </Nav>
             <Nav className="form-inline">

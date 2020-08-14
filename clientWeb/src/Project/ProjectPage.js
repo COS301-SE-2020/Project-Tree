@@ -51,18 +51,18 @@ class ProjectPage extends React.Component {
 
   render() {
     return (
-      <Container fluid style={{maxHeight: "40%"}}>
+      <Container fluid>
         <Row className="m-2">
-          <Col sm={12} md={6} xl={4} style={{height: "366px"}}><ProjectInfo project={this.props.project} user={this.props.user} setProject={project => this.props.setProject(project)}/></Col>
-          <Col sm={12} md={6} xl={4} style={{border: "black solid 1px", overflowY: "scroll", height: "366px"}} className="border rounded"> 
+          <Col ><ProjectInfo project={this.props.project} user={this.props.user} setProject={project => this.props.setProject(project)}/></Col>
+          <Col style={{border: "black solid 1px", overflowY: "scroll", height: "366px"}} className="border rounded"> 
             {this.props.project != null && this.props.user != null ? <NoticeBoard project={this.props.project} user={this.props.user}/> : null}
           </Col>
-          <Col sm={12} md={12} xl={4} style={{border: "black solid 1px", height: "366px"}} className="border rounded"> 
+          <Col style={{border: "black solid 1px"}} className="border rounded"> 
             <ProjectDashboard project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
           </Col>
         </Row>
-        <Row style={{height: "100%"}} className="m-1" >
-          <Col xs={12} sm={12}><TaskInfo project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/></Col>
+        <Row  className="m-1" >
+          <Col><TaskInfo project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/></Col>
         </Row>
       </Container>
     );
