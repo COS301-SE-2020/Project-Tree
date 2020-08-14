@@ -10,11 +10,13 @@ import CreateTask from "./Task/CreateTask";
 
 function makeLink(edge, criticalPathLinks) {
   var strokeColor = '#000';
-  if(criticalPathLinks.includes(edge.id)) strokeColor = "#00f";
+  if(criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
   return new joint.shapes.standard.Link({
       id:"l"+edge.id,
       source: { id: edge.source },
       target: { id: edge.target },
+      connector: { name: 'rounded' },
+      router: { name: 'manhattan' },
       attrs: {
         type:'link',
         line: {stroke:strokeColor}
@@ -23,11 +25,20 @@ function makeLink(edge, criticalPathLinks) {
 }
 
 function makeElement(node, criticalPathNodes) {
-  var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
+  // var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
   
-  var letterSize = 12;
-  var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-  var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
+  // var letterSize = 12;
+  // var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+  // var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
+
+  var letterSize = 16;
+  var width = 100
+  var height = 80
+
+  var wraptext = joint.util.breakText(node.name, {
+    width: width-20,
+    height: height
+});
 
   var statusColor = '#fff'
   if(node.progress === "Incomplete"){
@@ -94,7 +105,7 @@ function makeElement(node, criticalPathNodes) {
               stroke: borderColor
             },
             text: { 
-              text: node.name, 
+              text: wraptext, 
               'font-size': letterSize, 
               'font-family': 'monospace',
             },
@@ -257,7 +268,7 @@ class Graph extends React.Component {
 
     var dragStartPosition;
     paper.on("blank:pointerdown", function (event, x, y) {
-      dragStartPosition = { x: x, y: y };
+      dragStartPosition = { x: x*graphScale, y: y*graphScale };
     });
 
     paper.on("cell:pointerup blank:pointerup", function (cellView, x, y) {
