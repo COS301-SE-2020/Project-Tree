@@ -86,7 +86,7 @@ class GraphPage extends React.Component{
     })
     .fail(err => {
       throw Error(err);
-    })    
+    });
   }
 
   toggleSidebar(newTaskID, newDependencyID) {
@@ -100,6 +100,13 @@ class GraphPage extends React.Component{
           newTask = this.state.nodes[x];
         }
       }
+
+      $.post( "/people/projectUsers", {id: this.state.project.id} , response => {
+        this.setState({projUsers:response.projectUsers});
+      })
+      .fail(err => {
+        throw Error(err);
+      });
 
       this.setState({ task: newTask, dependency: newDependency });
     } else if (newDependencyID != null) {
@@ -312,8 +319,8 @@ class TaskSidebar extends React.Component {
                 toggleSidebar={this.props.toggleSidebar}
               /></Col>
               <Col><SendTaskNotification 
-              task={this.props.task} p
-              roject={this.props.project} 
+              task={this.props.task}
+              project={this.props.project} 
               user={this.props.user} 
               taskPacMans={taskPacMans} 
               taskResPersons={taskResPersons} 
