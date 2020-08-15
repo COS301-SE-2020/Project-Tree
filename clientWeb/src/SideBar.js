@@ -120,9 +120,9 @@ class SideBar extends React.Component {
     if (this.props.ownedProjects === undefined || this.props.otherProjects === undefined) return null;
     
     return (
-      <Container className="py-1" style={{ maxHeight:'100%', overflowY: 'auto'}}>
-        <h4 className="text-white">Owned Projects</h4>
+      <Container className="py-1" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
         <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/>
+        <h4 className="text-white">Owned Projects</h4>
         {this.OwnedProjects()} 
         <hr style={{backgroundColor:"white"}}></hr>
         <h4 className="text-white" >Other Projects</h4>
