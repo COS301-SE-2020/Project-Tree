@@ -144,6 +144,7 @@ class NotificationList extends Component{
 
         return(
             <React.Fragment>
+                    <Row><Col className="text-center" style={{color: "#EEBB4D"}}><h3>Notice Board <hr/></h3></Col></Row>
                     {messageComponents}
             </React.Fragment>            
         )

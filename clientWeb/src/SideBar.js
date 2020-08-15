@@ -121,8 +121,8 @@ class SideBar extends React.Component {
     
     return (
       <Container className="py-1" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
-        <h4 className="text-white">Owned Projects</h4>
         <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/>
+        <h4 className="text-white">Owned Projects</h4>
         {this.OwnedProjects()} 
         <hr style={{backgroundColor:"white"}}></hr>
         <h4 className="text-white" >Other Projects</h4>
