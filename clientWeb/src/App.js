@@ -31,12 +31,19 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      projects: null,
+      ownedProjects: null,
+      otherProjects: null,
       project: null, 
       showSideBar: false,
       loggedInStatus: false,
-      user: {},
-      isLogginActive: true
+      user: null,
+      isLogginActive: true,
+      userPermission: {
+        create: false,
+        update: false,
+        delete: false,
+        project: false
+      }
     };
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
@@ -49,35 +56,66 @@ class App extends Component {
   componentDidMount(){
     let token = localStorage.getItem('sessionToken')
     if(token != null){
-      $.post("/project/get", {creatorID: token}, (response) => {
-        this.setState({projects: response.projects });
+      $.post("/project/get", {token}, (response) => {
+        this.setState({ownedProjects: response.ownedProjects, otherProjects: response.otherProjects });
       })
       .fail((response) => {
           throw Error(response.message);
       });
+
+      $.post("/user/get", {token}, (response) => {
+        this.setState({user: response.user});
+      })
+      .fail((response) => {
+          throw Error(response.message);
+      });
+
       this.setState({loggedInStatus: true });
     }else{
       if(this.rightSide) this.rightSide.classList.add("right");
       //<Redirect to="/"/>
     }
-   }
-  
+  }
   
   setProject(proj){
     if(proj.delete != null){
-      let projects = [];
-      for (let i = 0; i < this.state.projects.length; i++) {
-        if(this.state.projects[i].id !== proj.delete) projects.push(this.state.projects[i]);
+      let ownedProjects = [];
+      for (let i = 0; i < this.state.ownedProjects.length; i++) {
+        if(this.state.ownedProjects[i].id !== proj.delete) ownedProjects.push(this.state.ownedProjects[i]);
       }
-      this.setState({projects: projects})
-      this.setState({project: null});
+      this.setState({ownedProjects: ownedProjects})
+      this.setState({
+        project: null, 
+        userPermission: {
+          create: false,
+          update: false,
+          delete: false,
+          project: false
+        }
+      });
     }else{
-      if(!this.state.projects.includes(proj)){
-        let projects = this.state.projects;
-        projects.push(proj);
-        this.setState({projects: projects, redirect: "project"});
+      if(!this.state.ownedProjects.includes(proj) && !this.state.otherProjects.includes(proj)){
+        let ownedProjects = this.state.ownedProjects;
+        ownedProjects.push(proj);
+        this.setState({ownedProjects: ownedProjects});
       }
-      this.setState({project: proj})
+      this.setState({project: proj });
+      let data = {};
+      data.token = localStorage.getItem('sessionToken');
+      data.project = proj;
+      $.post("/user/checkpermission", {data:JSON.stringify(data)}, response => {
+        console.log(response);
+        this.setState({
+          userPermission: {
+            create: response.create,
+            update: response.update,
+            delete: response.delete,
+            project: response.project
+          }})
+      })
+      .fail((response) => {
+          console.log(response.error);
+      });
     }
   }
 
@@ -90,7 +128,7 @@ class App extends Component {
     {
       return;
     }
-    if(this.state.projects != null) this.setState({showSideBar: !this.state.showSideBar});
+    if(this.state.ownedProjects != null && this.state.otherProjects != null) this.setState({showSideBar: !this.state.showSideBar});
     else this.setState({showSideBar: this.state.showSideBar});
   }
 
@@ -146,7 +184,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C"}}>
+          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C", maxHeight: "10%"}}>
             <Nav className="form-inline ">
               {this.state.loggedInStatus === true ?
                 this.state.showSideBar === false ?
@@ -167,7 +205,7 @@ class App extends Component {
             </Nav>
             <Nav className="m-auto form-inline">
               <Nav.Link href="/">
-                <img src={logo} alt="Logo" style={{width:"80px"}}/>
+                <img src={logo} alt="Logo" style={{width:"110px"}}/>
               </Nav.Link>
             </Nav>
             <Nav className="form-inline">
@@ -183,20 +221,27 @@ class App extends Component {
               {this.state.showSideBar !== false ? 
               (
                 <Col  xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto", backgroundColor: "#303030" }}>
-                  <SideBar closeSideBar={() => this.closeSideBar()} projects={this.state.projects} setProject={project => this.setProject(project)}/>
+                  <SideBar closeSideBar={() => this.closeSideBar()} ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects} setProject={project => this.setProject(project)}/>
                 </Col>
               ) : null}
               <Col>  
                 <Switch>
                   <Route path="/project" component={ProjectPage}>
                     {this.state.project != null ? (
-                      <ProjectPage project={this.state.project} setProject={project => this.setProject(project)}/>
+                      <ProjectPage 
+                        project={this.state.project} 
+                        setProject={project => this.setProject(project)}
+                        userPermission={this.state.userPermission}
+                        user={this.state.user}
+                      />
                     ) : <Redirect to="/"/>}
                   </Route>
                   <Route path="/graph" >
                     {this.state.project != null ? 
                       <GraphPage
                         project={this.state.project}
+                        userPermission={this.state.userPermission}
+                        user={this.state.user}
                       />
                      : <Redirect to="/"/>}
                   </Route>
@@ -205,7 +250,7 @@ class App extends Component {
                   </Route>
                   <Route path="/home">
                     {this.state.loggedInStatus? 
-                    <Home projects={this.state.projects} setProject={project => this.setProject(project)}/>
+                    <Home ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects} setProject={project => this.setProject(project)}/>
                      : <Redirect to="/"/>}
                   </Route>
                   <Route path="/">

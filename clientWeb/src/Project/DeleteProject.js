@@ -50,7 +50,7 @@ class DeleteProject extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button className="btn-danger" onClick={() => {this.showModal()}}>
+        <Button className="btn-danger" size="lg" onClick={() => {this.showModal()}}>
           <i className="fa fa-trash"></i>
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>

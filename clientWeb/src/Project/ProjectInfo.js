@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
 import DeleteProject from "./DeleteProject";
 
@@ -11,20 +11,25 @@ class ProjectInfo extends React.Component{
       <React.Fragment>
         <Container className="block-example border rounded border-secondary">
           <Row className="align-items-center bg-secondary py-2">
-            <Col className="text-left"> 
-              <DeleteProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
+            <Col className="text-left">
+              {
+              this.props.userPermission['project'] === true?
+                <DeleteProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
+              :
+                null
+              }
             </Col>
-            <Col className="text-white">
+            <Col xs={6} className="text-white text-center" style={{fontSize: "22px"}}>
               {this.props.project.name}
             </Col>
             <Col className="text-right" >
               <Link to="/graph">
-                <Button variant="warning" size="md">View Graph</Button>
+                <Button variant="warning" size="md" style={{fontSize: "18px"}}>View Graph</Button>
               </Link>
             </Col>
           </Row> 
           <Row className="align-items-center py-2">
-            <Col className="align-items-center text-center">
+            <Col className="align-items-center text-center" style={{fontSize: "20px"}}>
               {this.props.project.description}
             </Col>
           </Row> 
@@ -37,9 +42,9 @@ class ProjectInfo extends React.Component{
                   </tr>
                   <tr>
                     <td></td>
-                    <td>Create </td>
-                    <td>Delete </td>
-                    <td>Update </td>
+                    <td>Create</td>
+                    <td>Delete</td>
+                    <td>Update</td>
                   </tr>
                   <tr>
                     <td>Package Manager</td>
@@ -63,12 +68,16 @@ class ProjectInfo extends React.Component{
               </Table>
             </Col>
           </Row>
-          <Row className="align-items-center py-2">
-            <Col></Col>
+          <Row className="align-items-center py-1">
             <Col xs={6} className="text-center">
-              <UpdateProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
+              {
+              this.props.userPermission['project'] === true?
+                <UpdateProject project={this.props.project} setProject={project => {this.props.setProject(project)}}/>
+              :
+                null
+              }
             </Col>
-            <Col></Col>
+            <Col> <SendProjectNotification project={this.props.project} user={this.props.user}/> </Col>
           </Row>
         </Container>
       </React.Fragment>

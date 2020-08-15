@@ -220,20 +220,21 @@ function getProgress(req, res) {
 }
 
 async function getProjects(req, res) {
-  let creator = await uq.verify(req.body.creatorID);
-  if(creator != null)  {
+  let userId = await uq.verify(req.body.token);
+  if(userId != null)  {
+    let ownedProjects = [];
+    let otherProjects = [];
     await db.getSession()
     .run(
       `
         MATCH (user)-[:MANAGES]->(project) 
-        WHERE ID(user) = ${creator}
+        WHERE ID(user) = ${userId}
         return project
       `
     )
     .then(result => {
-      let taskArr = [];
       result.records.forEach((record) => {
-        taskArr.push({
+        ownedProjects.push({
           id: record._fields[0].identity.low,
           name: record._fields[0].properties.name,
           description: record._fields[0].properties.description,
@@ -250,16 +251,49 @@ async function getProjects(req, res) {
           ],
         });
       });
-      res.status(200);
-      res.send({ projects: taskArr });
     })
     .catch((err) => {
       console.log(err);
       res.status(400);
       res.send(err);
     });
+    await db.getSession()
+    .run(
+      `
+        MATCH (user:User)-[r]->(m:Task)-[:PART_OF]->(j) 
+        WHERE ID(user) = ${userId}
+        return DISTINCT j
+      `
+    )
+    .then(result => {
+      result.records.forEach((record) => {
+        otherProjects.push({
+          id: record._fields[0].identity.low,
+          name: record._fields[0].properties.name,
+          description: record._fields[0].properties.description,
+          permissions: [
+            record._fields[0].properties.packManCT,
+            record._fields[0].properties.packManDT,
+            record._fields[0].properties.packManUT,
+            record._fields[0].properties.resPerCT,
+            record._fields[0].properties.resPerDT,
+            record._fields[0].properties.resPerUT,
+            record._fields[0].properties.resourceCT,
+            record._fields[0].properties.resourceDT,
+            record._fields[0].properties.resourceUT,
+          ],
+        });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+    res.status(200);
+    res.send({ ownedProjects ,otherProjects });
   }
-  else if(typeof creator == 'undefined')
+  else if(typeof userId == 'undefined')
   {
     res.send(
       {
