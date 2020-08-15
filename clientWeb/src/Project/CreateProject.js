@@ -58,9 +58,7 @@ class CreateProject extends React.Component {
               <Modal.Title>Create Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <Form.Group>
-                <Form.Control name="token" type="hidden" value= {this.state.token} />
-              </Form.Group>
+              <Form.Control name="token" type="hidden" value= {this.state.token} />
               <Form.Group>
                 <Form.Label>Name of project</Form.Label>
                 <Form.Control type="text" name="cp_Name" required />

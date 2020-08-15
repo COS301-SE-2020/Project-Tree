@@ -127,82 +127,88 @@ async function deleteProject(req, res) {
   }
 }
 
-function updateProject(req, res) {
-  req.body.up_pm_Create != undefined
-    ? (up_pm_Create = true)
-    : (up_pm_Create = false);
-  req.body.up_pm_Delete != undefined
-    ? (up_pm_Delete = true)
-    : (up_pm_Delete = false);
-  req.body.up_pm_Update != undefined
-    ? (up_pm_Update = true)
-    : (up_pm_Update = false);
-  req.body.up_rp_Create != undefined
-    ? (up_rp_Create = true)
-    : (up_rp_Create = false);
-  req.body.up_rp_Delete != undefined
-    ? (up_rp_Delete = true)
-    : (up_rp_Delete = false);
-  req.body.up_rp_Update != undefined
-    ? (up_rp_Update = true)
-    : (up_rp_Update = false);
-  req.body.up_r_Create != undefined
-    ? (up_r_Create = true)
-    : (up_r_Create = false);
-  req.body.up_r_Delete != undefined
-    ? (up_r_Delete = true)
-    : (up_r_Delete = false);
-  req.body.up_r_Update != undefined
-    ? (up_r_Update = true)
-    : (up_r_Update = false);
-  db.getSession()
-    .run(
-      `
-        MATCH (a) 
-        WHERE ID(a) = ${req.body.up_id}
-        SET a += {
-            name:"${req.body.up_name}",
-            description:"${req.body.up_description}",
-            projManCT:true, 
-            projManDT:true, 
-            projManUT:true, 
-            packManCT:${up_pm_Create}, 
-            packManDT:${up_pm_Delete}, 
-            packManUT:${up_pm_Update}, 
-            resPerCT:${up_rp_Create}, 
-            resPerDT:${up_rp_Delete}, 
-            resPerUT:${up_rp_Update}, 
-            resourceCT:${up_r_Create}, 
-            resourceDT:${up_r_Delete}, 
-            resourceUT:${up_r_Update}
-        } 
-        RETURN a
-      `
-    )
-    .then((result) => {
-      res.status(200);
-      res.send({
-        id: result.records[0]._fields[0].identity.low,
-        name: result.records[0]._fields[0].properties.name,
-        description: result.records[0]._fields[0].properties.description,
-        permissions: [
-          result.records[0]._fields[0].properties.packManCT,
-          result.records[0]._fields[0].properties.packManDT,
-          result.records[0]._fields[0].properties.packManUT,
-          result.records[0]._fields[0].properties.resPerCT,
-          result.records[0]._fields[0].properties.resPerDT,
-          result.records[0]._fields[0].properties.resPerUT,
-          result.records[0]._fields[0].properties.resourceCT,
-          result.records[0]._fields[0].properties.resourceDT,
-          result.records[0]._fields[0].properties.resourceUT,
-        ],
+async function updateProject(req, res) {
+  let userId = await uq.verify(req.body.token);
+  if(userId!=null){
+    req.body.up_pm_Create != undefined
+      ? (up_pm_Create = true)
+      : (up_pm_Create = false);
+    req.body.up_pm_Delete != undefined
+      ? (up_pm_Delete = true)
+      : (up_pm_Delete = false);
+    req.body.up_pm_Update != undefined
+      ? (up_pm_Update = true)
+      : (up_pm_Update = false);
+    req.body.up_rp_Create != undefined
+      ? (up_rp_Create = true)
+      : (up_rp_Create = false);
+    req.body.up_rp_Delete != undefined
+      ? (up_rp_Delete = true)
+      : (up_rp_Delete = false);
+    req.body.up_rp_Update != undefined
+      ? (up_rp_Update = true)
+      : (up_rp_Update = false);
+    req.body.up_r_Create != undefined
+      ? (up_r_Create = true)
+      : (up_r_Create = false);
+    req.body.up_r_Delete != undefined
+      ? (up_r_Delete = true)
+      : (up_r_Delete = false);
+    req.body.up_r_Update != undefined
+      ? (up_r_Update = true)
+      : (up_r_Update = false);
+    db.getSession()
+      .run(
+        `
+          MATCH (a) 
+          WHERE ID(a) = ${req.body.up_id}
+          SET a += {
+              name:"${req.body.up_name}",
+              description:"${req.body.up_description}",
+              projManCT:true, 
+              projManDT:true, 
+              projManUT:true, 
+              packManCT:${up_pm_Create}, 
+              packManDT:${up_pm_Delete}, 
+              packManUT:${up_pm_Update}, 
+              resPerCT:${up_rp_Create}, 
+              resPerDT:${up_rp_Delete}, 
+              resPerUT:${up_rp_Update}, 
+              resourceCT:${up_r_Create}, 
+              resourceDT:${up_r_Delete}, 
+              resourceUT:${up_r_Update}
+          } 
+          RETURN a
+        `
+      )
+      .then((result) => {
+        res.status(200);
+        res.send({
+          id: result.records[0]._fields[0].identity.low,
+          name: result.records[0]._fields[0].properties.name,
+          description: result.records[0]._fields[0].properties.description,
+          permissions: [
+            result.records[0]._fields[0].properties.packManCT,
+            result.records[0]._fields[0].properties.packManDT,
+            result.records[0]._fields[0].properties.packManUT,
+            result.records[0]._fields[0].properties.resPerCT,
+            result.records[0]._fields[0].properties.resPerDT,
+            result.records[0]._fields[0].properties.resPerUT,
+            result.records[0]._fields[0].properties.resourceCT,
+            result.records[0]._fields[0].properties.resourceDT,
+            result.records[0]._fields[0].properties.resourceUT,
+          ],
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send(err);
-    });
+  }else{
+    res.status(400)
+    res.send({user:null})
+  }
 }
 
 function getProgress(req, res) {

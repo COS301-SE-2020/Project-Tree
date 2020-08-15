@@ -13,7 +13,7 @@ function stringifyFormData(fd) {
 class UpdateProject extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, project: this.props.project };
+    this.state = { show: false, project: this.props.project, token: localStorage.getItem('sessionToken')};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,9 +57,14 @@ class UpdateProject extends React.Component {
               <Modal.Title>Edit Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <input
-                hidden
-                type="number"
+              <Form.Control 
+                name="token" 
+                type="hidden" 
+                value= {this.state.token}
+                onChange={() => {}}
+              />
+              <Form.Control
+                type="hidden"
                 name="up_id"
                 value={this.state.project.id}
                 onChange={() => {}}
