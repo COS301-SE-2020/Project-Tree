@@ -15,6 +15,10 @@ async function sendNotification(req, res){
         data.recipients = await getProjectMembers(data.projID);
     }
 
+    if(data.type === 'task'){
+        data.recipients = JSON.parse(data.recipients);
+    }
+
     if(data.mode === 0){
         let emails = getEmails(data.recipients);
         emailHandler.sendEmailNotification(data.fromName, data.taskName, data.projName, emails, data.message);

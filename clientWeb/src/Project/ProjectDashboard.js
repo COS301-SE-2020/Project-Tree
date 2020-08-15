@@ -52,7 +52,7 @@ class ProjectDashboard extends React.Component {
       <React.Fragment>
         <Container className="block  bg-light">
           <Row className="align-items-center bg-white py-2">
-            <Col>
+            <Col style={{fontSize: "20px"}}>
               Total Progress: {this.getProjectProgress()}
               Critical Path Progress: {this.getCPProgress()}
             </Col>

@@ -7,12 +7,21 @@ import UpdateTask from "./Task/UpdateTask";
 import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
+import SendTaskNotification from "../Notifications/SendTaskNotification";
 import $ from "jquery";
 
 class GraphPage extends React.Component{
   constructor(props) {
     super(props);
-    this.state = { project: this.props.project, task:null, dependency:null, nodes:null, links:null, allUsers:null, projUsers:null };
+    this.state = { 
+      project: this.props.project, 
+      task:null, 
+      dependency:null, 
+      nodes:null, 
+      links:null,
+      allUsers:null, 
+      projUsers:null
+    };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
     this.getProjectInfo = this.getProjectInfo.bind(this);
@@ -85,7 +94,7 @@ class GraphPage extends React.Component{
     })
     .fail(err => {
       throw Error(err);
-    })    
+    });
   }
 
   toggleSidebar(newTaskID, newDependencyID) {
@@ -99,6 +108,13 @@ class GraphPage extends React.Component{
           newTask = this.state.nodes[x];
         }
       }
+
+      $.post( "/people/projectUsers", {id: this.state.project.id} , response => {
+        this.setState({projUsers:response.projectUsers});
+      })
+      .fail(err => {
+        throw Error(err);
+      });
 
       this.setState({ task: newTask, dependency: newDependency });
     } else if (newDependencyID != null) {
@@ -142,10 +158,13 @@ class GraphPage extends React.Component{
               {this.state.task !== null ? (
                 <TaskSidebar
                   task={this.state.task}
+                  userPermission={this.props.userPermission}
                   toggleSidebar={this.toggleSidebar}
                   setTaskInfo={this.setTaskInfo}
                   getProjectInfo={this.getProjectInfo}
                   projUsers={this.state.projUsers}
+                  user={this.props.user}
+                  project={this.state.project}
                 />
               ) : null}
               {this.state.dependency !== null ? (
@@ -153,6 +172,7 @@ class GraphPage extends React.Component{
                   project={this.props.project}
                   dependency={this.state.dependency}
                   nodes={this.state.nodes}
+                  userPermission={this.props.userPermission}
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
                   getProjectInfo={this.getProjectInfo}
@@ -175,6 +195,7 @@ class GraphPage extends React.Component{
                   project={this.state.project}
                   nodes={this.state.nodes}
                   links={this.state.links}
+                  userPermission={this.props.userPermission}
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
                   getProjectInfo={this.getProjectInfo}
@@ -259,16 +280,21 @@ class TaskSidebar extends React.Component {
 
     return (
       <React.Fragment>
-        <Container className="text-dark text-center bg-light py-2">
+        <Container className="text-dark text-center bg-light py-2" style={{fontSize: "19px"}}>
           <Row className="text-center">
             <Col>
-              {" "}
-              <DeleteTask
-                task={this.props.task}
-                setTaskInfo={this.props.setTaskInfo}
-                getProjectInfo={this.props.getProjectInfo}
-                toggleSidebar={this.props.toggleSidebar}
-              />
+              {
+                this.props.userPermission["delete"] === true
+              ? 
+                <DeleteTask
+                  task={this.props.task}
+                  setTaskInfo={this.props.setTaskInfo}
+                  getProjectInfo={this.props.getProjectInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                />
+              : 
+                null
+              }
             </Col>
             <Col xs={6}>
               <h3>{this.props.task.name}</h3>
@@ -283,40 +309,50 @@ class TaskSidebar extends React.Component {
             </Col>
           </Row>
           <Row className="text-center align-items-center p-1">
-            <Col></Col>
-            <Col xs={8}>{this.props.task.description}</Col> 
-            <Col></Col>
+            <Col className="text-center">{this.props.task.description}</Col> 
               
           </Row>
           <Row className="text-center p-1" >
-            <Col></Col>
-            <Col xs={8}>Start Date: {startDate}</Col> 
-            <Col></Col>
+            <Col className="text-center">Start Date: {startDate}</Col> 
           </Row>
           <Row className="text-center p-1">
-            <Col></Col>
-            <Col xs={8}>End Date: {endDate}</Col> 
-            <Col></Col>
+            <Col className="text-center">End Date: {endDate}</Col> 
           </Row>
           <Row className="text-center p-1">
-            <Col></Col>
-            <Col xs={8}>Duration: {this.props.task.duration}</Col> 
-            <Col></Col>
+            <Col className="text-center" >Duration: {this.props.task.duration}</Col> 
               
           </Row>
-          <Row>
-              <UpdateTask
-                task={this.props.task}
-                setTaskInfo={this.props.setTaskInfo}
-                getProjectInfo={this.props.getProjectInfo}
-                toggleSidebar={this.props.toggleSidebar}
-              />
-              <UpdateProgress
-                task={this.props.task}
-                setTaskInfo={this.props.setTaskInfo}
-                toggleSidebar={this.props.toggleSidebar}
-              />
-          </Row>
+            {
+            this.props.userPermission["update"] === true
+            ? 
+              <Row>
+                <Col>
+                  <UpdateTask
+                    task={this.props.task}
+                    setTaskInfo={this.props.setTaskInfo}
+                    getProjectInfo={this.props.getProjectInfo}
+                    toggleSidebar={this.props.toggleSidebar}
+                  />
+                  <UpdateProgress
+                    task={this.props.task}
+                    setTaskInfo={this.props.setTaskInfo}
+                    toggleSidebar={this.props.toggleSidebar}
+                  />
+                </Col>
+                <Col>
+                  <SendTaskNotification 
+                    task={this.props.task} 
+                    project={this.props.project} 
+                    user={this.props.user} 
+                    taskPacMans={taskPacMans} 
+                    taskResPersons={taskResPersons} 
+                    taskResources={taskResources}
+                  />
+                </Col>
+              </Row>
+            : 
+              null
+            }
           <hr/>
           <b>Package managers:</b><br /><br />
           {this.printUsers(taskPacMans)}
@@ -324,7 +360,6 @@ class TaskSidebar extends React.Component {
           {this.printUsers(taskResPersons)}
           <b>Resources:</b><br /><br />
           {this.printUsers(taskResources)}
-          
         </Container>
       </React.Fragment>
     );
@@ -349,12 +384,18 @@ class DependencySidebar extends React.Component {
         <Container className="text-black text-center py-2">
           <Row>
             <Col>
-              <DeleteDependency
-                dependency={this.props.dependency}
-                getProjectInfo={this.props.getProjectInfo}
-                setTaskInfo={this.props.setTaskInfo}
-                toggleSidebar={this.props.toggleSidebar}
-              />
+              {
+              this.props.userPermission["delete"] === true
+              ? 
+                <DeleteDependency
+                  dependency={this.props.dependency}
+                  getProjectInfo={this.props.getProjectInfo}
+                  setTaskInfo={this.props.setTaskInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                />
+              : 
+                null
+              }
             </Col>
             <Col xs={8}>
               <h4>{start + "→" + end}</h4>
@@ -386,13 +427,19 @@ class DependencySidebar extends React.Component {
           </Row>
           <Row>
             <Col>
-              <UpdateDependency
-                project={this.props.project}
-                dependency={this.props.dependency}
-                getProjectInfo={this.props.getProjectInfo}
-                setTaskInfo={this.props.setTaskInfo}
-                toggleSidebar={this.props.toggleSidebar}
-              />
+              {
+              this.props.userPermission["update"] === true
+              ? 
+                <UpdateDependency
+                  project={this.props.project}
+                  dependency={this.props.dependency}
+                  getProjectInfo={this.props.getProjectInfo}
+                  setTaskInfo={this.props.setTaskInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                />
+              : 
+                null
+              }
             </Col>
           </Row>
           <hr/>
@@ -406,7 +453,7 @@ class LegendSidebar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container className="text-black text-center py-2">
+        <Container className="text-black text-center py-2" style={{fontSize: "20px"}}>
           <Row><Col className="text-center"><h4>Task progress key</h4></Col></Row>
           <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "white", color:"black", width: "120px"}}>Incomplete</Col><Col></Col></Row>
           <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "#77dd77",  color:"black", width: "120px"}}>Complete</Col><Col></Col></Row>

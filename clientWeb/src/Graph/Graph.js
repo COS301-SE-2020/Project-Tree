@@ -10,24 +10,35 @@ import CreateTask from "./Task/CreateTask";
 
 function makeLink(edge, criticalPathLinks) {
   var strokeColor = '#000';
-  if(criticalPathLinks.includes(edge.id)) strokeColor = "#00f";
+  if(criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
   return new joint.shapes.standard.Link({
       id:"l"+edge.id,
       source: { id: edge.source },
       target: { id: edge.target },
+      connector: { name: 'rounded' },
+      router: { name: 'manhattan' },
       attrs: {
-          type:'link',
-          line: {stroke:strokeColor}
+        type:'link',
+        line: {stroke:strokeColor}
       }
   })
 }
 
 function makeElement(node, criticalPathNodes) {
-  var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
+  // var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
   
-  var letterSize = 12;
-  var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-  var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
+  // var letterSize = 12;
+  // var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+  // var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
+
+  var letterSize = 16;
+  var width = 100
+  var height = 80
+
+  var wraptext = joint.util.breakText(node.name, {
+    width: width-20,
+    height: height
+});
 
   var statusColor = '#fff'
   if(node.progress === "Incomplete"){
@@ -35,7 +46,7 @@ function makeElement(node, criticalPathNodes) {
     if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
       if(parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)){
         if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
-          if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))          {
+          if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low)){
             if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
               statusColor = '#ff6961'
             }
@@ -59,42 +70,42 @@ function makeElement(node, criticalPathNodes) {
     if(node.progress === "Incomplete"){
       let today = new Date();
       if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
-          if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
-              if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
-              {
-                  if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
-                      statusColor = '#ff6961'
-                  }
-              }
-          }
-          else{
+        if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
+          if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
+          {
+            if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
               statusColor = '#ff6961'
+            }
           }
+        }
+        else{
+          statusColor = '#ff6961'
+        }
       }
       else{
-          statusColor = '#ff6961'
+        statusColor = '#ff6961'
       }
   }
   else if(node.progress === "Complete"){
-      statusColor = '#77dd77'
+    statusColor = '#77dd77'
   }
   else if(node.progress === "Issue"){
-      statusColor = '#ffae42'
+    statusColor = '#ffae42'
   }
     var borderColor = '#000';
     if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
 
     return new joint.shapes.standard.Rectangle({
-        id: 'n'+node.id,
+        id: `${node.id}`,
         size: { width: width, height: height },
         attrs: {
             type:'node',
             body: {
-                fill: statusColor,
-                stroke: borderColor
+              fill: statusColor,
+              stroke: borderColor
             },
             text: { 
-              text: node.name, 
+              text: wraptext, 
               'font-size': letterSize, 
               'font-family': 'monospace',
             },
@@ -114,11 +125,12 @@ function buildGraph(nodes,rels, criticalPath) {
   let criticalPathLinks = [];
   let criticalPathNodes = [];
   if(criticalPath !== null && criticalPath.path !== null)
-      criticalPath.path.segments.forEach(element => {
-          criticalPathNodes.push(element.start.identity.low);
-          criticalPathLinks.push(element.relationship.identity.low);
-          criticalPathNodes.push(element.end.identity.low);
-      });
+    criticalPath.path.segments.forEach(element => {
+      criticalPathNodes.push(element.start.identity.low);
+      criticalPathLinks.push(element.relationship.identity.low);
+      criticalPathNodes.push(element.end.identity.low);
+    });
+
   _.each(nodes, function(node) {
     elements.push(makeElement(node, criticalPathNodes));
   })
@@ -171,10 +183,15 @@ class Graph extends React.Component {
   }
 
   toggleCreateDependency(clickedNode) {
-    var new_source_targetID = clickedNode.model.id;
+    if(this.props.userPermission['create'] !== true){
+      alert('you do not have the permission to create a dependency');
+      return;
+    }
+
+    var new_source_targetID = parseInt(clickedNode.model.id);
     this.setState({ alert: null });
 
-    if (new_source_targetID == null) {
+    if (new_source_targetID === null) {
       this.setState({ source: null, target: null });
       return;
     }
@@ -207,15 +224,17 @@ class Graph extends React.Component {
   }
 
   handleClick(clickedNode) {
+    console.log(clickedNode.model.id)
     if (clickedNode.model.attributes.attrs.type === "node") {
-      this.props.toggleSidebar(parseInt(clickedNode.model.id.substr(1)), null);
+      this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
     } else if (clickedNode.model.attributes.attrs.type === "link") {
       this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)));
     }
   }
 
   addTask() {
-    this.setState({ createTask: true });
+    if(this.props.userPermission['create'] === true) this.setState({ createTask: true });
+    else alert('you do not have the permission to create a task');
   }
 
   paperScale(sx, sy) {
@@ -255,7 +274,7 @@ class Graph extends React.Component {
 
     var dragStartPosition;
     paper.on("blank:pointerdown", function (event, x, y) {
-      dragStartPosition = { x: x, y: y };
+      dragStartPosition = { x: x*graphScale, y: y*graphScale };
     });
 
     paper.on("cell:pointerup blank:pointerup", function (cellView, x, y) {
@@ -278,9 +297,9 @@ class Graph extends React.Component {
   async drawGraph(criticalPath) {
         
     if(this.state.graph === null || this.state.graph === undefined){
-        return;
+      return;
     }
-    
+
     var cells = buildGraph(this.props.nodes,this.props.links, criticalPath);
     this.state.graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(this.state.graph, {
@@ -308,10 +327,10 @@ class Graph extends React.Component {
   render() {
     if(this.state.displayCriticalPath){
       $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
-          this.drawGraph(response);
+        this.drawGraph(response);
       })
       .fail(() => {
-          alert( "Unable to get Critical Path" );
+        alert( "Unable to get Critical Path" );
       })
     }else this.drawGraph(null);
 
@@ -323,15 +342,6 @@ class Graph extends React.Component {
     } else if (this.state.source != null) {
       dependency = this.state.source.name + "→";
     }
-
-    if(this.state.displayCriticalPath){
-      $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
-          this.drawGraph(response);
-      })
-      .fail(() => {
-          alert( "Unable to get Critical Path" );
-      })
-    }else this.drawGraph(null);
   
     return (
       <React.Fragment>

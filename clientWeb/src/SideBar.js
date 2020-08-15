@@ -10,7 +10,7 @@ class SideBar extends React.Component {
 
   OwnedProjects(){
     const OwnedProjects = [];
-    this.props.projects.forEach(project => {
+    this.props.ownedProjects.forEach(project => {
       OwnedProjects.push(
         <Row 
           noGutters
@@ -18,7 +18,7 @@ class SideBar extends React.Component {
           style={{width: "100%"}}
           key={project.id}>
           <Col>
-            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47"}}>
+            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47", fontSize: "20px"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
                   {project.name}
@@ -27,7 +27,7 @@ class SideBar extends React.Component {
               <Row className="align-items-center py-2">
                 <Col>
                   <Link to="/project">
-                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black",  fontSize: "15px"}}
                       onClick={
                         ()=>{
                             this.props.setProject(project);
@@ -41,7 +41,7 @@ class SideBar extends React.Component {
                 </Col>
                 <Col>
                   <Link to="/graph">
-                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black",  fontSize: "15px"}}
                       onClick={
                         ()=>{
                             this.props.setProject(project);
@@ -64,7 +64,7 @@ class SideBar extends React.Component {
 
   OtherProjects(){
     const OtherProjects = [];
-    this.props.projects.forEach(project => {
+    this.props.otherProjects.forEach(project => {
       OtherProjects.push(
         <Row 
           noGutters
@@ -72,7 +72,7 @@ class SideBar extends React.Component {
           style={{width: "100%"}}
           key={project.id}>
           <Col>
-            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47"}}>
+            <Container fluid className="block-example rounded border border-dark" style={{color: "white", backgroundColor: "#184D47", fontSize: "20px"}}>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
                   {project.name}
@@ -81,7 +81,7 @@ class SideBar extends React.Component {
               <Row className="align-items-center py-2">
                 <Col>
                   <Link to="/project">
-                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black",  fontSize: "15px"}}
                       onClick={
                         ()=>{
                             this.props.setProject(project);
@@ -95,7 +95,7 @@ class SideBar extends React.Component {
                 </Col>
                 <Col>
                   <Link to="/graph">
-                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black"}}
+                    <Button size="sm" style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D", color: "black",  fontSize: "15px"}}
                       onClick={
                         ()=>{
                             this.props.setProject(project);
@@ -117,9 +117,8 @@ class SideBar extends React.Component {
   }
 
   render() {
-    if (this.props.projects === undefined) return null;
+    if (this.props.ownedProjects === undefined || this.props.otherProjects === undefined) return null;
     
-
     return (
       <Container className="py-1" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
         <h4 className="text-white">Owned Projects</h4>
