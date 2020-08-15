@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import "./App.scss";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Home/Home";
-import User from "./User/User";
+//import User from "./User/User";
 import ProjectPage from "./Project/ProjectPage";
 import GraphPage from "./Graph/GraphPage";
-import { Container, Row, Col, Navbar, Nav } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Nav, Spinner } from "react-bootstrap";
 import SideBar from "./SideBar";
 import $ from "jquery";
 import logo from './Images/Logo.png';
@@ -57,10 +57,25 @@ class App extends Component {
     let token = localStorage.getItem('sessionToken')
     if(token != null){
       $.post("/project/get", {token}, (response) => {
-        this.setState({ownedProjects: response.ownedProjects, otherProjects: response.otherProjects });
+        if(response.ownedProjects.length !== 0){
+          this.setState({
+            ownedProjects: response.ownedProjects, 
+            otherProjects: response.otherProjects,
+            project: response.ownedProjects[0]
+          });
+        }else if(response.otherProjects.length !== 0){
+          this.setState({
+            ownedProjects: response.ownedProjects, 
+            otherProjects: response.otherProjects,
+            project: response.otherProjects[0]
+          });
+        }else{
+          this.setState({ownedProjects: response.ownedProjects, otherProjects: response.otherProjects });
+        }
       })
       .fail((response) => {
-          throw Error(response.message);
+        localStorage.removeItem('sessionToken');
+        alert(response);
       });
 
       $.post("/user/get", {token}, (response) => {
@@ -73,7 +88,6 @@ class App extends Component {
       this.setState({loggedInStatus: true });
     }else{
       if(this.rightSide) this.rightSide.classList.add("right");
-      //<Redirect to="/"/>
     }
   }
   
@@ -124,10 +138,6 @@ class App extends Component {
   }
 
   toggleSideBar(){
-    if(!this.state.loggedInStatus)
-    {
-      return;
-    }
     if(this.state.ownedProjects != null && this.state.otherProjects != null) this.setState({showSideBar: !this.state.showSideBar});
     else this.setState({showSideBar: this.state.showSideBar});
   }
@@ -184,7 +194,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <BrowserRouter>
-          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C", maxHeight: "10%"}}>
+          <Navbar sticky="top" bg="#96BB7C" style={{fontFamily:"Courier New", backgroundColor: "#96BB7C"}}>
             <Nav className="form-inline ">
               {this.state.loggedInStatus === true ?
                 this.state.showSideBar === false ?
@@ -221,12 +231,27 @@ class App extends Component {
               {this.state.showSideBar !== false ? 
               (
                 <Col sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{height:"100%", backgroundColor: "#303030", position:"relative", zIndex:"9" }}>
-                  <SideBar closeSideBar={() => this.closeSideBar()} ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects} setProject={project => this.setProject(project)}/>
+                  <SideBar 
+                    closeSideBar={() => this.closeSideBar()} 
+                    ownedProjects={this.state.ownedProjects} 
+                    otherProjects={this.state.otherProjects} 
+                    setProject={project => this.setProject(project)}
+                  />
                 </Col>
               ) : null}
               <Col style={{position:"absolute"}}>
-                <Switch>
-                  <Route path="/project" component={ProjectPage}>
+                <Switch> 
+                  <Route path="/home">
+                    {this.state.loggedInStatus? 
+                      <Home 
+                      closeSideBar={() => this.closeSideBar()} 
+                      ownedProjects={this.state.ownedProjects} 
+                      otherProjects={this.state.otherProjects} 
+                      setProject={project => this.setProject(project)}
+                    />
+                    : <Redirect to="/"/>}
+                  </Route>
+                  <Route path="/project">
                     {this.state.project != null ? (
                       <ProjectPage 
                         project={this.state.project} 
@@ -245,37 +270,44 @@ class App extends Component {
                       />
                      : <Redirect to="/"/>}
                   </Route>
-                  <Route path="/user">
-                    <User />
-                  </Route>
-                  <Route path="/home">
-                    {this.state.loggedInStatus? 
-                    <Home ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects} setProject={project => this.setProject(project)}/>
-                     : <Redirect to="/"/>}
-                  </Route>
                   <Route path="/">
-                    {this.state.loggedInStatus? (<Redirect to="/home"/>) : ((<Redirect to="/" handleLogin={data => this.handleLogin(data)}/>))}
-                    <div className="row">
-                      <div className="column" style={{backgroundColor: "white"}}>
-                        <div className="login">
-                          <div className="container" ref={ref => (this.container = ref)}>
-                            {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
-                            {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
+                    {this.state.loggedInStatus? 
+                      this.state.ownedProjects === null && this.state.otherProjects === null? 
+                        <Row>
+                          <Col></Col>
+                          <Col className="d-flex justify-content-center">
+                            <Spinner className="my-3" animation="border" variant="success"></Spinner>
+                          </Col>
+                          <Col></Col>
+                        </Row>
+                      :
+                        this.state.project !== null? 
+                          <Redirect to="/project"/>
+                        :
+                          <Redirect to="/home"/>
+                    :
+                      <div className="row">
+                        <div className="column" style={{backgroundColor: "white"}}>
+                          <div className="login">
+                            <div className="container" ref={ref => (this.container = ref)}>
+                              {isLogginActive && (<Login containerRef={ref => (this.current = ref)}  handleLogin={data => this.handleLogin(data)}/>)}
+                              {!isLogginActive && (<Register containerRef={ref => (this.current = ref)} handleReg={data => this.handleReg(data)}/>)}
+                            </div>
+                              <RightSide
+                                current={current}
+                                currentActive={currentActive}
+                                containerRef={ref => (this.rightSide = ref)}
+                                onClick={this.changeState.bind(this)}
+                              />
                           </div>
-                            <RightSide
-                              current={current}
-                              currentActive={currentActive}
-                              containerRef={ref => (this.rightSide = ref)}
-                              onClick={this.changeState.bind(this)}
-                            />
+                        </div>
+                        <div className="column">
+                          <div className="carosal">
+                            <About/>
+                          </div>
                         </div>
                       </div>
-                      <div className="column">
-                        <div className="carosal">
-                          <About/>
-                        </div>
-                      </div>
-                    </div>
+                    }
                   </Route>
                 </Switch>
               </Col>

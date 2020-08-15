@@ -1,5 +1,6 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
+import CreateProject from "../Project/CreateProject";
 
 class Home extends React.Component {
   render() {
@@ -12,7 +13,7 @@ class Home extends React.Component {
       }
     }
     return (
-      <h4>Home</h4>
+      <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/>
     );
   }
 }

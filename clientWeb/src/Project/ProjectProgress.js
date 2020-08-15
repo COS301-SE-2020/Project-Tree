@@ -1,5 +1,5 @@
 import React from "react";
-import { ProgressBar, Container, Row, Col } from "react-bootstrap";
+import { ProgressBar, Row, Col } from "react-bootstrap";
 
 class ProjectProgress extends React.Component {
   
