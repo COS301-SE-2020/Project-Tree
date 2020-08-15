@@ -59,7 +59,7 @@ class CreateProject extends React.Component {
             </Modal.Header>
             <Modal.Body>
             <Form.Group>
-                <Form.Control id="creatorID" name="creatorID" type="hidden" value= {this.state.token} />
+                <Form.Control name="token" type="hidden" value= {this.state.token} />
               </Form.Group>
               <Form.Group>
                 <Form.Label>Name of project</Form.Label>

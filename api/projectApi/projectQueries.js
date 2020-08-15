@@ -8,88 +8,89 @@ const { data } = require("jquery");
 
 
  async function createProject(req, res) {
+  let userId = await uq.verify(req.body.token);
+  if(userId!=null){
+    req.body.cp_pm_Create != undefined
+      ? (cp_pm_Create = true)
+      : (cp_pm_Create = false);
+    req.body.cp_pm_Delete != undefined
+      ? (cp_pm_Delete = true)
+      : (cp_pm_Delete = false);
+    req.body.cp_pm_Update != undefined
+      ? (cp_pm_Update = true)
+      : (cp_pm_Update = false);
+    req.body.cp_rp_Create != undefined
+      ? (cp_rp_Create = true)
+      : (cp_rp_Create = false);
+    req.body.cp_rp_Delete != undefined
+      ? (cp_rp_Delete = true)
+      : (cp_rp_Delete = false);
+    req.body.cp_rp_Update != undefined
+      ? (cp_rp_Update = true)
+      : (cp_rp_Update = false);
+    req.body.cp_r_Create != undefined
+      ? (cp_r_Create = true)
+      : (cp_r_Create = false);
+    req.body.cp_r_Delete != undefined
+      ? (cp_r_Delete = true)
+      : (cp_r_Delete = false);
+    req.body.cp_r_Update != undefined
+      ? (cp_r_Update = true)
+      : (cp_r_Update = false);
 
-  //(async () => console.log(await uq.verify(req.body.creatorID)))()
-  let creator = await uq.verify(req.body.creatorID);
-  console.log(creator)
-  req.body.cp_pm_Create != undefined
-    ? (cp_pm_Create = true)
-    : (cp_pm_Create = false);
-  req.body.cp_pm_Delete != undefined
-    ? (cp_pm_Delete = true)
-    : (cp_pm_Delete = false);
-  req.body.cp_pm_Update != undefined
-    ? (cp_pm_Update = true)
-    : (cp_pm_Update = false);
-  req.body.cp_rp_Create != undefined
-    ? (cp_rp_Create = true)
-    : (cp_rp_Create = false);
-  req.body.cp_rp_Delete != undefined
-    ? (cp_rp_Delete = true)
-    : (cp_rp_Delete = false);
-  req.body.cp_rp_Update != undefined
-    ? (cp_rp_Update = true)
-    : (cp_rp_Update = false);
-  req.body.cp_r_Create != undefined
-    ? (cp_r_Create = true)
-    : (cp_r_Create = false);
-  req.body.cp_r_Delete != undefined
-    ? (cp_r_Delete = true)
-    : (cp_r_Delete = false);
-  req.body.cp_r_Update != undefined
-    ? (cp_r_Update = true)
-    : (cp_r_Update = false);
-
-  db.getSession()
-    .run(
-      `
-        MATCH (b)
-        WHERE ID(b) = ${creator}
-        CREATE(n:Project {
-            name:"${req.body.cp_Name}", 
-            description:"${req.body.cp_Description}", 
-            projManCT:true, 
-            projManDT:true, 
-            projManUT:true, 
-            packManCT:${cp_pm_Create}, 
-            packManDT:${cp_pm_Delete}, 
-            packManUT:${cp_pm_Update}, 
-            resPerCT:${cp_rp_Create}, 
-            resPerDT:${cp_rp_Delete}, 
-            resPerUT:${cp_rp_Update}, 
-            resourceCT:${cp_r_Create}, 
-            resourceDT:${cp_r_Delete}, 
-            resourceUT:${cp_r_Update}
-        }),
-        (b)-[x:MANAGES]->(n)
-        RETURN n
-      `
-    )
-    .then((result) => {
-      res.status(200);
-      res.send({
-        id: result.records[0]._fields[0].identity.low,
-        name: result.records[0]._fields[0].properties.name,
-        description: result.records[0]._fields[0].properties.description,
-        permissions: [
-          result.records[0]._fields[0].properties.packManCT,
-          result.records[0]._fields[0].properties.packManDT,
-          result.records[0]._fields[0].properties.packManUT,
-          result.records[0]._fields[0].properties.resPerCT,
-          result.records[0]._fields[0].properties.resPerDT,
-          result.records[0]._fields[0].properties.resPerUT,
-          result.records[0]._fields[0].properties.resourceCT,
-          result.records[0]._fields[0].properties.resourceDT,
-          result.records[0]._fields[0].properties.resourceUT,
-        ],
+    db.getSession()
+      .run(
+        `
+          MATCH (b)
+          WHERE ID(b) = ${userId}
+          CREATE(n:Project {
+              name:"${req.body.cp_Name}", 
+              description:"${req.body.cp_Description}", 
+              projManCT:true, 
+              projManDT:true, 
+              projManUT:true, 
+              packManCT:${cp_pm_Create}, 
+              packManDT:${cp_pm_Delete}, 
+              packManUT:${cp_pm_Update}, 
+              resPerCT:${cp_rp_Create}, 
+              resPerDT:${cp_rp_Delete}, 
+              resPerUT:${cp_rp_Update}, 
+              resourceCT:${cp_r_Create}, 
+              resourceDT:${cp_r_Delete}, 
+              resourceUT:${cp_r_Update}
+          }),
+          (b)-[x:MANAGES]->(n)
+          RETURN n
+        `
+      )
+      .then((result) => {
+        res.status(200);
+        res.send({
+          id: result.records[0]._fields[0].identity.low,
+          name: result.records[0]._fields[0].properties.name,
+          description: result.records[0]._fields[0].properties.description,
+          permissions: [
+            result.records[0]._fields[0].properties.packManCT,
+            result.records[0]._fields[0].properties.packManDT,
+            result.records[0]._fields[0].properties.packManUT,
+            result.records[0]._fields[0].properties.resPerCT,
+            result.records[0]._fields[0].properties.resPerDT,
+            result.records[0]._fields[0].properties.resPerUT,
+            result.records[0]._fields[0].properties.resourceCT,
+            result.records[0]._fields[0].properties.resourceDT,
+            result.records[0]._fields[0].properties.resourceUT,
+          ],
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send(err);
-    });
-  //)
+  }else{
+    res.status(400)
+    res.send({user:null})
+  }
 }
 
 async function deleteProject(req, res) {
