@@ -109,14 +109,7 @@ function deleteTask(req, res) {
 async function updateTask(req, res) {
   //update a task with a certain ID with specified fields
   var taskArr = [];
-  let upDep = false;
-  if (
-    result.records[0]._fields[0].properties.startDate !=
-      req.body.changedInfo.ut_startDate ||
-    result.records[0]._fields[0].properties.duration !=
-      req.body.changedInfo.ut_duration
-  )
-    upDep = true;
+  
   result = await db
     .getSession()
     .run(
@@ -147,6 +140,15 @@ async function updateTask(req, res) {
           req.body.nodes[x] = changedTask;
         }
       }
+
+      let upDep = false;
+      if (
+        result.records[0]._fields[0].properties.startDate !=
+          req.body.changedInfo.ut_startDate ||
+        result.records[0]._fields[0].properties.duration !=
+          req.body.changedInfo.ut_duration
+      )
+        upDep = true;
 
       let queriesArray = [];
       if (upDep == true) {

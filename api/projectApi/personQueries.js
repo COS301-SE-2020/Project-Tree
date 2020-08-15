@@ -2,10 +2,13 @@ const db = require("../DB");
 const { isEmpty } = require("lodash");
 
 function assignPeople(req,res){
-  let taskId = req.body[0];
-  let packageManagers = req.body[1];
-  let responsiblePersons = req.body[2];
-  let resources = req.body[3];
+  let taskId = req.body.ct_taskId;
+  let packageManagers = req.body.ct_pacMans;
+  let responsiblePersons = req.body.ct_resPersons;
+  let resources = req.body.ct_resources;
+
+  console.log(taskId)
+  console.log(packageManagers)
 
   if(isEmpty(packageManagers) !== true){
     let pacManAddStatus = addPackageManager(taskId,packageManagers);
@@ -73,6 +76,90 @@ async function addResources(taskId, persons) {
     query += `OR ID(a) = ${persons[x].id} `
   }
   query += `MATCH (b:Task) WHERE ID(b) = ${taskId} CREATE(a)-[n:RESOURCE]->(b)`
+
+  await session
+    .run(query)
+    .then((result) => {
+      return 200;
+    })
+    .catch((err) => {
+      console.log(err);
+      return 400;
+    });
+}
+
+function updateAssignedPeople(req,res){
+  let taskId = req.body.ut_taskId;
+  let packageManagers = req.body.ut_pacMans;
+  let responsiblePersons = req.body.ut_resPersons;
+  let resources = req.body.ut_resources;
+
+  if(isEmpty(packageManagers) !== true){
+    let pacManAddStatus = updatePackageManager(taskId,packageManagers);
+    if(pacManAddStatus === 400) res.sendStatus(400);
+  }
+  if(isEmpty(responsiblePersons) !== true){
+    let resPersonAddStatus = updateResponsiblePerson(taskId,responsiblePersons);
+    if(resPersonAddStatus === 400) res.sendStatus(400);
+  }
+  if(isEmpty(resources) !== true){
+    let resourcesAddStatus = updateResources(taskId,resources);
+    if(resourcesAddStatus === 400) res.sendStatus(400);
+  }
+  res.sendStatus(200)
+}
+
+async function updatePackageManager(taskId, persons) {
+  var session = db.getSession();
+
+  let query=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+  for(let x = 1; x < persons.length; x++)
+  {
+    query += `OR ID(a) = ${persons[x].id} `
+  }
+  query += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:PACKAGE_MANAGER]->(b)`
+  
+  await session
+    .run(query)
+    .then((result) => {
+      return 200;
+    })
+    .catch((err) => {
+      console.log(err);
+      return 400;
+    });
+}
+
+async function updateResponsiblePerson(taskId, persons) {
+  var session = db.getSession();
+
+  let query=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+  for(let x = 1; x < persons.length; x++)
+  {
+    query += `OR ID(a) = ${persons[x].id} `
+  }
+  query += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:RESPONSIBLE_PERSON]->(b)`
+
+  await session
+    .run(query)
+    .then((result) => {
+      return 200;
+    })
+    .catch((err) => {
+      console.log(err);
+      return 400;
+    });
+}
+
+async function updateResources(taskId, persons) {
+  var session = db.getSession();
+
+  let query=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+  for(let x = 1; x < persons.length; x++)
+  {
+    query += `OR ID(a) = ${persons[x].id} `
+  }
+  query += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:RESOURCE]->(b)`
 
   await session
     .run(query)
@@ -155,6 +242,7 @@ async function getProjectUsers(req,res){
 
 module.exports = {
   assignPeople,
+  updateAssignedPeople,
   getAllUsers,
   getProjectUsers
 };

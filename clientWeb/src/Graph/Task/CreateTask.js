@@ -84,18 +84,48 @@ class CreateTask extends React.Component {
   addPacMan(person){
     let tempPacManList = this.state.pacManList;
     tempPacManList.push(person);
+
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for(let x = 0; x < this.state.people.length; x++){
+      if(this.state.people[x].id === person.id){
+        if(x === 0) this.state.people.shift();
+        else if(x === this.state.people.length-1) this.state.people.pop()
+        else this.state.people.splice(x,1)
+      }
+    }
+
     this.setState({pacManList:tempPacManList,pacManSearchTerm:''});
   }
 
   addResPerson(person){
     let tempResPersonList = this.state.resPersonList;
     tempResPersonList.push(person);
+    
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for(let x = 0; x < this.state.people.length; x++){
+      if(this.state.people[x].id === person.id){
+        if(x === 0) this.state.people.shift();
+        else if(x === this.state.people.length-1) this.state.people.pop()
+        else this.state.people.splice(x,1)
+      }
+    }
+
     this.setState({resPersonList:tempResPersonList,resPersonSearchTerm:''});
   }
 
   addResource(person){
     let tempResourceList = this.state.resourcesList;
     tempResourceList.push(person);
+    
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for(let x = 0; x < this.state.people.length; x++){
+      if(this.state.people[x].id === person.id){
+        if(x === 0) this.state.people.shift();
+        else if(x === this.state.people.length-1) this.state.people.pop()
+        else this.state.people.splice(x,1)
+      }
+    }
+
     this.setState({resourceList:tempResourceList,resourcesSearchTerm:''});
   }
 
@@ -124,12 +154,12 @@ class CreateTask extends React.Component {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body:JSON.stringify([
-        newTask,
-        this.state.pacManList,
-        this.state.resPersonList,
-        this.state.resourcesList,
-      ])
+      body:JSON.stringify({
+        ct_taskId:newTask,
+        ct_pacMans:this.state.pacManList,
+        ct_resPersons:this.state.resPersonList,
+        ct_resources:this.state.resourcesList,
+      })
     });
 
     await this.props.setTaskInfo(
@@ -143,24 +173,29 @@ class CreateTask extends React.Component {
   }
 
   render() {
-    let filteredPacMan = this.state.people.filter(
-      (person) => {
-        return person.name.toLowerCase().indexOf(
-          this.state.pacManSearchTerm.toLowerCase()) !== -1;
-      }
-    );
-    let filteredResPerson = this.state.people.filter(
-      (person) => {
-        return person.name.toLowerCase().indexOf(
-          this.state.resPersonSearchTerm.toLowerCase()) !== -1;
-      }
-    );
-    let filteredResources = this.state.people.filter(
-      (person) => {
-        return person.name.toLowerCase().indexOf(
-          this.state.resourcesSearchTerm.toLowerCase()) !== -1;
-      }
-    );
+    /*
+    * Filters the list of people to only show people matching the search term
+    */
+    let filteredPacMan = null;
+    let filteredResPerson = null;
+    let filteredResources = null;
+    if(this.state.people !== null){
+        filteredPacMan = this.state.people.filter(
+          (person) => {
+            return person.name.toLowerCase().indexOf(this.state.pacManSearchTerm.toLowerCase()) !== -1;
+          }
+        );
+        filteredResPerson = this.state.people.filter(
+          (person) => {
+            return person.name.toLowerCase().indexOf(this.state.resPersonSearchTerm.toLowerCase()) !== -1;
+          }
+        );
+        filteredResources = this.state.people.filter(
+          (person) => {
+            return person.name.toLowerCase().indexOf(this.state.resourcesSearchTerm.toLowerCase()) !== -1;
+          }
+        );
+    }
 
     return (
       <React.Fragment>

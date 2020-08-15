@@ -163,6 +163,7 @@ class GraphPage extends React.Component{
                   setTaskInfo={this.setTaskInfo}
                   getProjectInfo={this.getProjectInfo}
                   projUsers={this.state.projUsers}
+                  allUsers={this.state.allUsers}
                   user={this.props.user}
                   project={this.state.project}
                 />
@@ -273,7 +274,7 @@ class TaskSidebar extends React.Component {
       "-" +
       this.props.task.endDate.day.low;
 
-    let taskUsers = this.classifyExistingUsers();
+    let taskUsers = this.classifyExistingUsers()
     let taskPacMans = taskUsers[0];
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
@@ -332,6 +333,10 @@ class TaskSidebar extends React.Component {
                     setTaskInfo={this.props.setTaskInfo}
                     getProjectInfo={this.props.getProjectInfo}
                     toggleSidebar={this.props.toggleSidebar}
+                    pacMans={taskPacMans}
+                    resPersons={taskResPersons}
+                    resources={taskResources}
+                    allUsers={this.props.allUsers}
                   />
                   <UpdateProgress
                     task={this.props.task}

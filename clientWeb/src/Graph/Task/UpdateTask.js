@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 
 function stringifyFormData(fd) {
   const data = {};
@@ -30,12 +30,63 @@ class UpdateTask extends React.Component {
       duration: this.props.task.duration,
       endDate: `${eyear}-${emonth}-${eday}`,
       description: this.props.task.description,
+      people:this.props.allUsers,
+      pacManSearchTerm:'',
+      resourcesSearchTerm:'',
+      resPersonSearchTerm:'',
+      pacManList:this.props.pacMans,
+      resourcesList:this.props.resources,
+      resPersonList:this.props.resPersons,
     };
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.refreshState = this.refreshState.bind(this);
     this.setDuration = this.setDuration.bind(this);
+    this.updateSearch = this.updateSearch.bind(this);
+    this.addPacMan = this.addPacMan.bind(this);
+    this.addResPerson = this.addResPerson.bind(this);
+    this.addResource = this.addResource.bind(this);
+    this.removeAssignedPeople = this.removeAssignedPeople.bind(this);
+  }
+
+  componentDidMount(){
+    this.removeAssignedPeople();
+  }
+
+  /*
+  * Removes people from the people list if they are already assigned to a role so that they can't be selected again
+  */
+  removeAssignedPeople(){
+    for(let x = 0; x < this.state.people.length; x++){
+      for(let y = 0; y < this.state.pacManList.length; y++){
+        if(this.state.pacManList[y].id === this.state.people[x].id){
+          if(x === 0) this.state.people.shift();
+          else if(x === this.state.people.length-1) this.state.people.pop()
+          else this.state.people.splice(x,1)
+        }
+      }
+    }
+
+    for(let x = 0; x < this.state.people.length; x++){
+      for(let y = 0; y < this.state.resPersonList.length; y++){
+        if(this.state.resPersonList[y].id === this.state.people[x].id){
+          if(x === 0) this.state.people.shift();
+          else if(x === this.state.people.length-1) this.state.people.pop()
+          else this.state.people.splice(x,1)
+        }
+      }
+    }
+
+    for(let x = 0; x < this.state.people.length; x++){
+      for(let y = 0; y < this.state.resourcesList.length; y++){
+        if(this.state.resourcesList[y].id === this.state.people[x].id){
+          if(x === 0) this.state.people.shift();
+          else if(x === this.state.people.length-1) this.state.people.pop()
+          else this.state.people.splice(x,1)
+        }
+      }
+    }
   }
 
   refreshState() {
@@ -120,6 +171,21 @@ class UpdateTask extends React.Component {
     });
 
     const body = await response.json();
+
+    await fetch("/people/updateAssignedPeople", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body:JSON.stringify({
+        ut_taskId:this.state.id,
+        ut_pacMans:this.state.pacManList,
+        ut_resPersons:this.state.resPersonList,
+        ut_resources:this.state.resourcesList,
+      })
+    });
+
     await this.props.setTaskInfo(
       body.nodes,
       body.rels,
@@ -129,8 +195,84 @@ class UpdateTask extends React.Component {
     this.setState({ Show: false });
   }
 
+  updateSearch(event, mode){
+    if(mode===0) this.setState({pacManSearchTerm:event.target.value});
+    if(mode==1) this.setState({resPersonSearchTerm:event.target.value});
+    if(mode==2) this.setState({resourcesSearchTerm:event.target.value});
+  }
+
+  addPacMan(person){
+    let tempPacManList = this.state.pacManList;
+    tempPacManList.push(person);
+
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for(let x = 0; x < this.state.people.length; x++){
+      if(this.state.people[x].id === person.id){
+        if(x === 0) this.state.people.shift();
+        else if(x === this.state.people.length-1) this.state.people.pop()
+        else this.state.people.splice(x,1)
+      }
+    }
+
+    this.setState({pacManList:tempPacManList,pacManSearchTerm:''});
+  }
+
+  addResPerson(person){
+    let tempResPersonList = this.state.resPersonList;
+    tempResPersonList.push(person);
+    
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for(let x = 0; x < this.state.people.length; x++){
+      if(this.state.people[x].id === person.id){
+        if(x === 0) this.state.people.shift();
+        else if(x === this.state.people.length-1) this.state.people.pop()
+        else this.state.people.splice(x,1)
+      }
+    }
+
+    this.setState({resPersonList:tempResPersonList,resPersonSearchTerm:''});
+  }
+
+  addResource(person){
+    let tempResourceList = this.state.resourcesList;
+    tempResourceList.push(person);
+    
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for(let x = 0; x < this.state.people.length; x++){
+      if(this.state.people[x].id === person.id){
+        if(x === 0) this.state.people.shift();
+        else if(x === this.state.people.length-1) this.state.people.pop()
+        else this.state.people.splice(x,1)
+      }
+    }
+
+    this.setState({resourceList:tempResourceList,resourcesSearchTerm:''});
+  }
+
   render() {
     if (this.state.id !== this.props.task.id) this.refreshState();
+
+    /*
+    * Filters the list of people to only show people matching the search term
+    */
+    let filteredPacMan = this.state.people.filter(
+      (person) => {
+        return person.name.toLowerCase().indexOf(
+          this.state.pacManSearchTerm.toLowerCase()) !== -1;
+      }
+    );
+    let filteredResPerson = this.state.people.filter(
+      (person) => {
+        return person.name.toLowerCase().indexOf(
+          this.state.resPersonSearchTerm.toLowerCase()) !== -1;
+      }
+    );
+    let filteredResources = this.state.people.filter(
+      (person) => {
+        return person.name.toLowerCase().indexOf(
+          this.state.resourcesSearchTerm.toLowerCase()) !== -1;
+      }
+    );
 
     return (
       <React.Fragment>
@@ -163,6 +305,20 @@ class UpdateTask extends React.Component {
                   onChange={(e) => {
                     this.setState({ name: e.target.value });
                     this.value = this.state.name;
+                  }}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Description of task</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  id="ut_description"
+                  name="ut_description"
+                  rows="3"
+                  value={this.state.description}
+                  onChange={(e) => {
+                    this.setState({ description: e.target.value });
+                    this.value = this.state.description;
                   }}
                 />
               </Form.Group>
@@ -209,18 +365,73 @@ class UpdateTask extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Description of task</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  id="ut_description"
-                  name="ut_description"
-                  rows="3"
-                  value={this.state.description}
-                  onChange={(e) => {
-                    this.setState({ description: e.target.value });
-                    this.value = this.state.description;
-                  }}
-                />
+                <Form.Label>Package Manager</Form.Label>
+                <Row>
+                  <Col>
+                    <input type='text'
+                      value={this.state.pacManSearchTerm}
+                      onChange={(e)=>this.updateSearch(e,0)}
+                      placeholder='Search for a name'/>
+                    {this.state.pacManSearchTerm.length >=2 ? <ul>
+                      {filteredPacMan.map((person) => {
+                        return <li key={person.id}>
+                            <button type='button' onClick={()=>this.addPacMan(person)}>{person.name}&nbsp;{person.surname}</button>
+                          </li>
+                      })}
+                    </ul>:null}
+                  </Col>
+                  <Col>
+                    {this.state.pacManList.map((person) => {
+                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                    })}
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Responsible Person(s)</Form.Label>
+                <Row>
+                  <Col>
+                    <input type='text'
+                      value={this.state.resPersonSearchTerm}
+                      onChange={(e)=>this.updateSearch(e,1)}
+                      placeholder='Search for a name'/>
+                    {this.state.resPersonSearchTerm.length >=2 ? <ul>
+                      {filteredResPerson.map((person) => {
+                        return <li key={person.id}>
+                            <button type='button' onClick={()=>this.addResPerson(person)}>{person.name}&nbsp;{person.surname}</button>
+                          </li>
+                      })}
+                    </ul>:null}
+                  </Col>
+                  <Col>
+                    {this.state.resPersonList.map((person) => {
+                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                    })}
+                  </Col>
+                </Row>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Resource(s)</Form.Label>
+                <Row>
+                  <Col>
+                    <input type='text'
+                      value={this.state.resourcesSearchTerm}
+                      onChange={(e)=>this.updateSearch(e,2)}
+                      placeholder='Search for a name'/>
+                    {this.state.resourcesSearchTerm.length >=2 ? <ul>
+                      {filteredResources.map((person) => {
+                        return <li key={person.id}>
+                            <button type='button' onClick={()=>this.addResource(person)}>{person.name}&nbsp;{person.surname}</button>
+                          </li>
+                      })}
+                    </ul>:null}
+                  </Col>
+                  <Col>
+                    {this.state.resourcesList.map((person) => {
+                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                    })}
+                  </Col>
+                </Row>
               </Form.Group>
               <br />
             </Modal.Body>

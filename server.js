@@ -51,11 +51,12 @@ app.post("/mobile", async (req, res) => {
 		graphDirection: direction
 	})
 });
-app.post("/people/getAllUsers",personQueries.getAllUsers);
-app.post("/people/assignPeople",personQueries.assignPeople);
-app.post("/people/projectUsers",personQueries.getProjectUsers)
-app.post('/sendNotification', nh.sendNotification)
-app.post('/retrieveNotifications', nh.retrieveNotifications)
+app.post('/people/getAllUsers',personQueries.getAllUsers);
+app.post('/people/assignPeople',personQueries.assignPeople);
+app.post('/people/updateAssignedPeople',personQueries.updateAssignedPeople);
+app.post('/people/projectUsers',personQueries.getProjectUsers);
+app.post('/sendNotification', nh.sendNotification);
+app.post('/retrieveNotifications', nh.retrieveNotifications);
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files
