@@ -169,12 +169,12 @@ render(){
                     <TouchableOpacity
                         onPress={() => {this.props.switchScreen("Register")}}
                         style={[styles.signIn, {
-                            borderColor: '#DC143C',
+                            borderColor: '#96BB7C',
                             borderWidth: 2,
                             marginTop: 65
                         }]}>
                         <Text style={[styles.textSign, {
-                            color: '#DC143C'
+                            color: '#96BB7C'
                         }]}>Don't have an account? Sign up now</Text>
                     </TouchableOpacity>
                 </View>
@@ -183,12 +183,12 @@ render(){
                     <TouchableOpacity
                         onPress={() => {this.loginHandle( this.state.Email, this.state.password )}}
                         style={[styles.signIn, {
-                            borderColor: '#DC143C',
+                            borderColor: '#96BB7C',
                             borderWidth: 2,
                             marginTop: 8
                         }]}>
                         <Text style={[styles.textSign, {
-                            color: '#DC143C'
+                            color: '#96BB7C'
                         }]}>Sign In</Text>
                     </TouchableOpacity>
                 </View>                
@@ -202,7 +202,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
     container: {
       flex: 1, 
-      backgroundColor: '#DC143C'
+      backgroundColor: '#96BB7C'
     },
     header: {
         alignItems: 'center',

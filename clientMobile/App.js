@@ -60,17 +60,6 @@ const AntDesignTabBarIcon = (props) => {
 	)
 }
 
-// class SplashScreen extends Component{
-// 	render(){
-// 		return(
-// 			<Screen>
-// 				<SplashScreen/>
-// 			</Screen>
-// 		)
-// 	}
-// }
-
-
 class Register extends Component{
 	render(){
 		return(
@@ -131,7 +120,14 @@ export default class App extends Component{
 		this.setSelectedProject = this.setSelectedProject.bind(this);
 	}
 
-	setSelectedProject(project){
+	async setSelectedProject(project){
+		try{
+			await AsyncStorage.setItem('selectedProject', JSON.stringify(project));
+		} 
+
+		catch(e){
+			console.log("Could not set key");
+		}
 		this.setState({selectedProject:project});
 	}
 
@@ -147,7 +143,6 @@ export default class App extends Component{
 
 	switchScreen(flag)
 	{
-		//console.log(flag)
 		if(flag == "Register")
 		{
 			this.setState
@@ -193,6 +188,12 @@ export default class App extends Component{
 		.then((value) => {
 			if(value)
 				this.setState({loggedInStatus: true});
+		});
+
+		AsyncStorage.getItem('selectedProject')
+		.then((value) => {
+			if(value)
+				this.setState({selectedProject:JSON.parse(value)})
 		});
 	}	
 

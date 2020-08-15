@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, View, ScrollView, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Spinner } from 'native-base';
 import DeleteProject from '../Home/DeleteProject'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
@@ -24,6 +24,41 @@ function GoToTree() {
     );
 }
 
+class SelectProject extends Component{
+    render(){
+        return(
+            <View style={{
+            justifyContent:"center", 
+            alignItems:"center",
+            flex:1}}
+            >
+                <TouchableHighlight 
+                onPress={() => {this.props.setDrawerVisible(true)}} 
+                style={{backgroundColor:'#184D47',
+                    alignItems:'center',
+                    justifyContent:'center',
+                    height:45,
+                    borderColor:'#EEBB4D',
+                    borderWidth:2,
+                    borderRadius:5,
+                    shadowColor:'#000',
+                    shadowOffset:{
+                        width:0,
+                        height:1
+                    },
+                    shadowOpacity:0.8,
+                    shadowRadius:2,  
+                    elevation:3}}
+                >
+                    <Text style={{color:'white'}}>
+                    Please select a project
+                    </Text>
+                </TouchableHighlight>
+            </View>
+        )
+    }
+}
+
 const Screen = styled.View
 `
 	flex: 1;
@@ -33,8 +68,7 @@ const Screen = styled.View
 class Home extends Component{
 	constructor(props) {
 		super(props);
-		let drawerState = this.props.project === null ? true : false;
-		this.state = {drawerVisible:drawerState, token: null, projects:null};
+		this.state = {drawerVisible:false, token: null, projects:null};
         this.setDrawerVisible = this.setDrawerVisible.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
 	}
@@ -57,10 +91,6 @@ class Home extends Component{
 
             this.setState({projects:body.projects, token:token});
         }); 
-
-        // let userToken = {creatorID: token};
-        // console.log(userToken)
-         
     }
 
     setProjectInfo(project){
@@ -192,12 +222,8 @@ class HomeScreen extends Component {
     render() {
         if(this.props.project === null) 
             return(
-                <View>
-                    <Text>
-                        Please select a project
-                    </Text>
-                </View>
-        );
+                    <SelectProject setDrawerVisible={this.props.setDrawerVisible}/>
+            );
 
         return (
             <ScrollView style={styles.cardView}>

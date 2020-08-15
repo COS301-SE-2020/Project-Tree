@@ -88,7 +88,6 @@ class Graph extends Component{
 					main: { opacity:(2-ratio)/2 }
 				})}
 				>
-					{this.props.project !== null ?
 					<React.Fragment>
 						<GraphScreen 
 						project={this.props.project}
@@ -96,11 +95,6 @@ class Graph extends Component{
 						setDrawerVisible={this.setDrawerVisible}
 						/>
 					</React.Fragment>
-					: 
-					<TouchableOpacity style={{height:60}} onPress={()=>{this.setDrawerVisible(true)}}>
-						<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-					</TouchableOpacity>
-					}
 				</Drawer>
 			</Screen>
 		)
