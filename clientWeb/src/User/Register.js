@@ -39,7 +39,7 @@ export class Register extends React.Component
       let p = d.password;
        (/[A-Z]/.test(p)) === false ?arr.push("Must contain at least one Capital Letter \n"):str+="";
        (/[0-9]/.test(p))=== false? arr.push("Must contain at least one number \n"):str+="";
-      (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(p)) === false? arr.push("Must contain at least one special character eg. #!@$ \n"):str+="";
+      (/[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(p)) === false? arr.push("Must contain at least one special character eg. #!@$ \n"):str+="";
        (/^.{8,22}$/.test(p))=== false ? arr.push("Must be between 8 and 22 characters  "): str+="";
       return arr;
       // return /[A-Z]/.test(p) && /[0-9]/.test(p) && /[?=.*[!@#$&*]]/.test(p) && /^.{8}$/.test(p);
