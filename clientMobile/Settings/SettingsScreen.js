@@ -11,9 +11,6 @@ import {
     Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';import DeleteProject from '../Home/DeleteProject'
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
 export default class SettingsScreen extends Component {
     constructor(props){
@@ -30,32 +27,34 @@ export default class SettingsScreen extends Component {
    
         render() {
         return (
-            <View style={styles.container}>
-                    <StatusBar backgroundColor='#184D47' barStyle="light-content"/>
-                <View style={styles.header}>
-                    <Text style={styles.text_header}>User Details</Text>
+            <React.Fragment>
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        <Text style={styles.text_header}>User Details</Text>
+                    </View>
+                    <Animatable.View 
+                        animation="fadeInUp"
+                        style={[styles.footer, {
+                            backgroundColor: "white"
+                        }]} >
+                            <View style={styles.button}>
+                                
+                                <TouchableOpacity
+                                    onPress={() => {this.props.handleLogout()}}
+                                    style={[styles.signIn, {
+                                        borderColor: '#DC143C',
+                                        borderWidth: 2,
+                                        marginTop: 65
+                                    }]}>
+                                    <Text style={[styles.textSign, {
+                                        color: '#DC143C'
+                                    }]}>Logout</Text>
+                                </TouchableOpacity>
+                            </View>           
+                    </Animatable.View>
                 </View>
-                <Animatable.View 
-                    animation="fadeInUp"
-                    style={[styles.footer, {
-                        backgroundColor: "white"
-                    }]} >
-                        <View style={styles.button}>
-                            
-                            <TouchableOpacity
-                                onPress={() => {this.props.handleLogout()}}
-                                style={[styles.signIn, {
-                                    borderColor: '#DC143C',
-                                    borderWidth: 2,
-                                    marginTop: 65
-                                }]}>
-                                <Text style={[styles.textSign, {
-                                    color: '#DC143C'
-                                }]}>Logout</Text>
-                            </TouchableOpacity>
-                        </View>           
-                </Animatable.View>
-            </View>
+            </React.Fragment>
+            
             );
     }
 

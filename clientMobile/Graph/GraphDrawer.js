@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, Switch } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 function GoToHome() {
@@ -34,6 +34,7 @@ export default class GraphDrawer extends Component {
 	}
 
 	render(){
+		let isEnabled = this.props.direction === "TB" ? true : false
 		return(
 			<React.Fragment>
 				<View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>
@@ -42,6 +43,16 @@ export default class GraphDrawer extends Component {
                         <Text style={styles.modalText}>{this.props.project.description}</Text>
 						<GoToHome />
                     </View>
+					<View>
+						<Switch
+							trackColor={{ false: "#767577", true: "#81b0ff" }}
+							thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={this.props.toggleDirection}
+							value={isEnabled}
+						/>
+					</View>
+					
                 </View>
 			</React.Fragment>
 		)

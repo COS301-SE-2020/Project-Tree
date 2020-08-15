@@ -13,6 +13,7 @@ import ProjectList from './ProjectList';
 import { useNavigation } from '@react-navigation/native';
 import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
 import ProgressDashboard from './ProgressDashboard';
+import TopBar from '../TopBar'
 
 function GoToTree() {
     const navigation = useNavigation();
@@ -146,9 +147,7 @@ class Home extends Component{
 						}
 					})}
         		>
-					<TouchableOpacity style={{height:45}} onPress={()=>{this.setDrawerVisible(true)}}>
-						<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-					</TouchableOpacity>
+                    <TopBar useMenu={true} setDrawerVisible={this.setDrawerVisible}/>
 					<HomeScreen 
                         project={this.props.project}
                         user={this.props.user} 
@@ -233,7 +232,7 @@ class HomeScreen extends Component {
                         <Card>
                             <CardItem>
                                 <Body style={{alignItems:'center', justifyContent:'center'}}>
-                                    <Text>{this.props.project.name}</Text>
+                                    <Text style={{fontSize:40}}>{this.props.project.name}</Text>
                                 </Body>
                             </CardItem>
                             <CardItem>
