@@ -220,11 +220,11 @@ class App extends Component {
             <Row style={{height: "100%"}}>
               {this.state.showSideBar !== false ? 
               (
-                <Col  xs={12} sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{flex: "1 1 auto", backgroundColor: "#303030" }}>
+                <Col sm={12} md={6} lg={4} xl={3} className="border-right border-dark" style={{height:"100%", backgroundColor: "#303030", position:"relative", zIndex:"9" }}>
                   <SideBar closeSideBar={() => this.closeSideBar()} ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects} setProject={project => this.setProject(project)}/>
                 </Col>
               ) : null}
-              <Col>  
+              <Col style={{position:"absolute"}}>
                 <Switch>
                   <Route path="/project" component={ProjectPage}>
                     {this.state.project != null ? (
