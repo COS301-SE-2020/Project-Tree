@@ -319,7 +319,7 @@ class TaskSidebar extends React.Component {
             <Col className="text-center">End Date: {endDate}</Col> 
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center" >Duration: {this.props.task.duration}</Col> 
+            <Col className="text-center" >Duration: {this.props.task.duration} days</Col> 
               
           </Row>
             {
@@ -381,7 +381,7 @@ class DependencySidebar extends React.Component {
 
     return (
       <React.Fragment>
-        <Container className="text-black text-center py-2">
+        <Container className="text-black text-center py-2" style={{fontSize: "19px"}}>
           <Row>
             <Col>
               {
@@ -421,7 +421,7 @@ class DependencySidebar extends React.Component {
           <Row>
             <Col></Col>
             <Col xs={8}>
-              Duration: {this.props.dependency.duration}
+              Duration: {this.props.dependency.duration} days
             </Col>
             <Col></Col>
           </Row>
