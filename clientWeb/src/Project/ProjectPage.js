@@ -3,17 +3,16 @@ import { Container, Row, Col } from "react-bootstrap";
 import ProjectInfo from "./ProjectInfo";
 import TaskInfo from "./TaskInfo";
 import $ from "jquery";
-import ProjectDashboard from "./ProjectDashboard";
+import ProjectProgress from "./ProjectProgress";
 import NoticeBoard from "../Notifications/NoticeBoard";
 
 
 class ProjectPage extends React.Component {
   constructor(props) {
     super(props); 
-    this.state = { 
-      project: this.props.project, 
+    this.state = {
       tasks: [], 
-      criticalPath: null 
+      criticalPath: null
     };
     
   }
@@ -36,7 +35,6 @@ class ProjectPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.project !== prevProps.project) {
-      this.setState({ project: this.props.project });
       $.post( "/project/projecttasks", {projId: this.props.project.id} , response => {
         this.setState({tasks: response.tasks})
       })
@@ -56,8 +54,13 @@ class ProjectPage extends React.Component {
   render() {
     return (
       <Container fluid>
-        <Row className="m-2">
-          <Col>
+        <Row className="my-1">
+          <Col> 
+            <ProjectProgress project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
+          </Col>
+        </Row>
+        <Row className="my-1">
+          <Col sm={12} md={12} lg={6} xl={6}>
             <ProjectInfo 
               project={this.props.project} 
               setProject={project => this.props.setProject(project)}
@@ -65,15 +68,14 @@ class ProjectPage extends React.Component {
               user={this.props.user}
             />
           </Col>
-          <Col style={{border: "black solid 1px", overflowY: "scroll", height: "366px"}} className="border rounded"> 
+          <Col sm={12} md={12} lg={6} xl={6} style={{ overflowY: "auto"}}> 
             {this.props.project != null && this.props.user != null ? <NoticeBoard project={this.props.project} user={this.props.user}/> : null}
           </Col>
-          <Col style={{border: "black solid 1px"}} className="border rounded"> 
-            <ProjectDashboard project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
-          </Col>
         </Row>
-        <Row  className="m-1" >
-          <Col><TaskInfo project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/></Col>
+        <Row className="my-1">
+          <Col>
+            <TaskInfo project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
+          </Col>
         </Row>
       </Container>
     );

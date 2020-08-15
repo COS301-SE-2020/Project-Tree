@@ -107,7 +107,6 @@ function deleteTask(req, res) {
 }
 
 async function updateTask(req, res) {
-  console.log(req.body);
   //update a task with a certain ID with specified fields
   result = await db
     .getSession()

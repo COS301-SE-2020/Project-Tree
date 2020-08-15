@@ -125,7 +125,7 @@ class TaskInfo extends React.Component{
                 <Col 
                   key={i}
                   style={{fontFamily:"Courier New", fontSize: "18px",backgroundColor: `${color}`, maxWidth: "300px", minWidth:"250px", fontWeight: "bold"}}
-                  className="rounded border border-dark m-1 align-items-center"
+                  className="rounded border border-dark mr-2 align-items-center"
                 >
                   <Row><Col className="text-center">{el.name} <hr/></Col></Row>
                   <Row><Col className="text-center">{el.description} <hr/></Col></Row>
@@ -165,7 +165,7 @@ class TaskInfo extends React.Component{
                       <option value="Late">Late Tasks</option>
                     </Form.Control>
                 </Row>
-                <Row className="d-flex flex-nowrap flex-row" style={{overflowX: 'auto'}}>
+                <Row className="d-flex flex-nowrap flex-row my-1" style={{overflowX: 'auto'}}>
                   {this.createTaskList()}
                 </Row>
               </Container>

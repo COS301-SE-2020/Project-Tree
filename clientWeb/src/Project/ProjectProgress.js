@@ -1,7 +1,7 @@
 import React from "react";
 import { ProgressBar, Container, Row, Col } from "react-bootstrap";
 
-class ProjectDashboard extends React.Component {
+class ProjectProgress extends React.Component {
   
   getProjectProgress(){
     let totalDur = 0, completeDur = 0, percentage = 0, color = "success";
@@ -50,17 +50,17 @@ class ProjectDashboard extends React.Component {
 
     return (
       <React.Fragment>
-        <Container className="block  bg-light">
-          <Row className="align-items-center bg-white py-2">
-            <Col style={{fontSize: "20px"}}>
-              Total Progress: {this.getProjectProgress()}
-              Critical Path Progress: {this.getCPProgress()}
-            </Col>
-          </Row>
-        </Container>
+        <Row className="align-items-center bg-white">
+          <Col md={12} lg={6} style={{fontSize: "20px"}}>
+            Total Progress: {this.getProjectProgress()}
+          </Col>
+          <Col md={12} lg={6} style={{fontSize: "20px"}}>
+            Critical Path Progress: {this.getCPProgress()}
+          </Col>
+        </Row>
       </React.Fragment>
     );
   }
 }
 
-export default ProjectDashboard;
+export default ProjectProgress;
