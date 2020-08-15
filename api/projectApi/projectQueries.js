@@ -2,6 +2,8 @@ const uq = require("../userManagementApi/userQueries");
 const { JWT } = require('jose');
 
 const db = require("../DB");
+const { checkPermissionInternal, verify } = require("../userManagementApi/userQueries");
+const { data } = require("jquery");
 
 
 
@@ -90,26 +92,38 @@ const db = require("../DB");
   //)
 }
 
-function deleteProject(req, res) {
-  db.getSession()
-    .run(
-      `
-        MATCH (n)
-        WHERE n.projId=${req.body.dp_id}
-        OR ID(n)=${req.body.dp_id}
-        DETACH DELETE n
-        RETURN n
-      `
-    )
-    .then((result) => {
-      res.status(200);
-      res.send({ delete: result.records[0]._fields[0].identity.low });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send(err);
-    });
+async function deleteProject(req, res) {
+  body = JSON.parse(req.body.data);
+  let userId = await verify(body.token);
+  if(userId!=null)
+  {
+    let permissions = await checkPermissionInternal(body.token, body.project)
+    if(permissions.project != false){
+      db.getSession()
+      .run(
+        `
+          MATCH (n)
+          WHERE ID(n)=${body.project.id} OR n.projId = ${body.project.id} OR n.projID = ${body.project.id}
+          DETACH DELETE n
+        `
+      )
+      .then(result => {
+        res.status(200);
+        res.send({ delete: body.project.id });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({error: err});
+      });
+    }else{
+      res.status(400)
+      res.send({error : "incorrect permission to delete project"})
+    }
+  }else{
+    res.status(400)
+    res.send({user:null})
+  }
 }
 
 function updateProject(req, res) {

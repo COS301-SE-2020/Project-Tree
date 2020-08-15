@@ -14,18 +14,11 @@ class DeleteProject extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false,
-      project: this.props.project
+      show: false
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.project !== prevProps.project) {
-      this.setState({ project: this.props.project });
-    }
   }
 
   showModal() {
@@ -38,8 +31,10 @@ class DeleteProject extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    let data = stringifyFormData(new FormData(event.target));
-    $.post("/project/delete", JSON.parse(data), (response) => {
+    let data = {};
+    data.project = this.props.project;
+    data.token = localStorage.getItem('sessionToken');
+    $.post("/project/delete", {data : JSON.stringify(data)}, (response) => {
       this.props.setProject(response);
     })
     .fail(() => {
@@ -60,13 +55,13 @@ class DeleteProject extends React.Component {
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
-                <input
+                {/* <input
                   hidden
                   type="number"
                   name="dp_id"
                   value={this.state.project.id}
                   onChange={() => {}}
-                />
+                /> */}
                 <p>Are you sure you want to delete this project</p>
               </Form.Group>
             </Modal.Body>

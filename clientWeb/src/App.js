@@ -99,13 +99,13 @@ class App extends Component {
         ownedProjects.push(proj);
         this.setState({ownedProjects: ownedProjects});
       }
-      this.setState({project: proj });
       let data = {};
       data.token = localStorage.getItem('sessionToken');
       data.project = proj;
       $.post("/user/checkpermission", {data:JSON.stringify(data)}, response => {
         console.log(response);
         this.setState({
+          project: proj,
           userPermission: {
             create: response.create,
             update: response.update,
