@@ -241,6 +241,8 @@ class App extends Component {
                   <Route path="/home">
                     {this.state.loggedInStatus? 
                       <Home 
+                      showSideBar={this.state.showSideBar}
+                      toggleSideBar={() => this.toggleSideBar()}
                       closeSideBar={() => this.closeSideBar()} 
                       ownedProjects={this.state.ownedProjects} 
                       otherProjects={this.state.otherProjects} 
