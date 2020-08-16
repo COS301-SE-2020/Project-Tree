@@ -12,9 +12,16 @@ class ProjectPage extends React.Component {
     super(props); 
     this.state = {
       tasks: [], 
-      criticalPath: null
+      criticalPath: null,
+      noticeBoardRefreshKey:0
     };
+
+    this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(this);
     
+  }
+
+  updateNoticeBoardRefreshKey(){
+    this.setState({noticeBoardRefreshKey:this.state.noticeBoardRefreshKey+1})
   }
 
   componentDidMount(){
@@ -66,10 +73,11 @@ class ProjectPage extends React.Component {
               setProject={project => this.props.setProject(project)}
               userPermission={this.props.userPermission}
               user={this.props.user}
+              updateNoticeBoardRefreshKey={this.updateNoticeBoardRefreshKey}
             />
           </Col>
           <Col sm={12} md={12} lg={6} xl={6} style={{ overflowY: "auto"}}> 
-            {this.props.project != null && this.props.user != null ? <NoticeBoard project={this.props.project} user={this.props.user}/> : null}
+            {this.props.project != null && this.props.user != null ? <NoticeBoard project={this.props.project} user={this.props.user} refreshKey={this.state.noticeBoardRefreshKey}/> : null}
           </Col>
         </Row>
         <Row className="my-1">

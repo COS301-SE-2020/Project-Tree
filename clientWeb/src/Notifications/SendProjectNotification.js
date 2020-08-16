@@ -45,8 +45,6 @@ class SendProjectNotification extends React.Component {
       projID: this.props.project.id,
       mode: this.state.mode
     }
-
-    console.log(data);
   
     $.post("/sendNotification",  data, (response) => {
       this.setState({ show: false });
@@ -54,6 +52,8 @@ class SendProjectNotification extends React.Component {
     .fail(() => {
       alert("Unable to send notification");
     })
+
+    this.props.updateNoticeBoardRefreshKey();
   }
 
   render() {

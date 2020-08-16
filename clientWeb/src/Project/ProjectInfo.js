@@ -77,7 +77,7 @@ class ProjectInfo extends React.Component{
                 null
               }
             </Col>
-            <Col> <SendProjectNotification project={this.props.project} user={this.props.user}/> </Col>
+            <Col> <SendProjectNotification project={this.props.project} user={this.props.user} updateNoticeBoardRefreshKey={this.props.updateNoticeBoardRefreshKey}/> </Col>
           </Row>
         </Container>
       </React.Fragment>
