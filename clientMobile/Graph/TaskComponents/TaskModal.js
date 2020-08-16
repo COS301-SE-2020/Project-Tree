@@ -57,13 +57,23 @@ class TaskModal extends Component {
                             <Text style={styles.modalText}>
                                 Duration: {this.props.selectedTask.duration} days
                             </Text>
-                            <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleVisibility(false, true)}>
-                                <Icon type="AntDesign" name="edit" style={{color:'white'}}><Text>&nbsp;Edit</Text></Icon>
-                            </TouchableOpacity>
-                            <DeleteTask task={this.props.selectedTask} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
-                            <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleProgressModal(false, true)}>
-                            <Icon type="Entypo" name="progress-one" style={{color:'white'}}><Text>&nbsp;Update Progress</Text></Icon>
-                            </TouchableOpacity>
+                            <View style={{flex:1}}>
+                                <View style={{flex:1}}>
+                                    <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleVisibility(false, true)}>
+                                        <Icon type="AntDesign" name="edit" style={{color:'white'}}><Text>&nbsp;Edit</Text></Icon>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={{flex:1}}>
+                                    <DeleteTask task={this.props.selectedTask} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
+                                </View>
+
+                                <View style={{flex:1}}>
+                                    <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleProgressModal(false, true)}>
+                                        <Icon type="Entypo" name="progress-one" style={{color:'white', paddingBottom:10}}><Text>&nbsp;Update Progress</Text></Icon>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </Modal>
@@ -95,7 +105,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 500,
+        height: 470,
         width: 350
 	},
 	textStyle: {

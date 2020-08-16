@@ -40,11 +40,11 @@ class SendNotificationModal extends Component{
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
-                        <View style={{alignItems:'center', marginTop:20, marginBottom:20}}>
+                        <View style={{alignItems:'center', marginTop:10, marginBottom:20}}>
                             <Text style={{fontSize:25, color:'#184D47'}}>
                                 Project Wide Notification
                             </Text>
-                            <View style={{backgroundColor: '#EEBB4D', height: 1, width: "80%", marginBottom:10}}></View>
+                            <View style={{backgroundColor: '#EEBB4D', height: 1, width: "90%", marginBottom:10}}></View>
                         </View>
                         <SendNotificationForm setModalVisible={this.props.setModalVisible} project={this.props.project} user={this.props.user} type={this.props.type}/>
                     </View>
@@ -84,28 +84,38 @@ class SendNotificationForm extends Component{
 
         return(
             <React.Fragment>
-                <Form>
-                    <Item>
-                        <Textarea 
-                        rowSpan={3} 
-                        placeholder="Notification" 
-                        style={{width:'100%'}} 
-                        onChangeText={val => this.setState({ message: val })}
+                <View style={{flex:1}}>
+                    <View style={{flex:1}}>
+                        <Form>
+                            <Item>
+                                <Textarea 
+                                rowSpan={3} 
+                                placeholder="Notification" 
+                                bordered = {true}
+                                style={{width:'100%'}} 
+                                onChangeText={val => this.setState({ message: val })}
+                                />
+                            </Item>
+                        </Form>
+                    </View>
+                    
+                    <View style={{flex:1}}>
+                        <ButtonGroup
+                            onPress={this.updateIndex}
+                            selectedIndex={this.state.mode}
+                            buttons={buttons}
+                            containerStyle={{height: 50}}
+                            selectedButtonStyle={{backgroundColor:'#EEBB4D'}}
                         />
-                    </Item>
-                </Form>
-                <ButtonGroup
-                    onPress={this.updateIndex}
-                    selectedIndex={this.state.mode}
-                    buttons={buttons}
-                    containerStyle={{height: 50}} 
-                />
-                <View styles={{padding:10}}>
-                    <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
-                        <Text style={{color:'white'}}>
-                            Send
-                        </Text>
-                    </TouchableOpacity>
+                    </View>
+                    
+                    <View styles={{flex:1}}>
+                        <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
+                            <Text style={{color:'white'}}>
+                                Send
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </React.Fragment>
         );
@@ -135,7 +145,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 350,
+        height: 400,
         width: 350
     },
     textStyle: {

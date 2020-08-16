@@ -34,8 +34,8 @@ class DependencyModal extends Component {
                             <TouchableOpacity style={styles.hideButton} onPress={()=>this.props.displayTaskDependency(null, null)}>
                                 <Icon type="FontAwesome" name="close" />
                             </TouchableOpacity>
-                            <View style={{alignItems:'center'}}>
-                                <Text style={{fontSize:25, color:'#184D47'}}>
+                            <View style={{alignItems:'center', justifyContent:'center'}}>
+                                <Text style={{fontSize:30, color:'#184D47'}}>
                                     {name}
                                 </Text>
                                 <View style={{backgroundColor: '#EEBB4D', height: 1, width: "80%", marginBottom:10}}></View>
@@ -44,12 +44,18 @@ class DependencyModal extends Component {
                                 {this.props.selectedDependency.relationshipType === "fs" ? "Finish→Start" : "Start→Start"}
                             </Text>
                             <Text style={styles.modalText}>
-                                {"Duration: "+this.props.selectedDependency.duration}
+                                {"Duration: "+this.props.selectedDependency.duration+" days"}
                             </Text>
-                            <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleVisibility(false, true)}>
-                                <Icon type="AntDesign" name="edit" style={{color:'white'}}><Text>&nbsp;Edit</Text></Icon>
-                            </TouchableOpacity>
-                            <DeleteDependency dependency={this.props.selectedDependency} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} name={name}/>
+                            <View style={{flex:1}}>
+                                <View style={{flex:1}}>
+                                    <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleVisibility(false, true)}>
+                                        <Icon type="AntDesign" name="edit" style={{color:'white'}}><Text>&nbsp;Edit</Text></Icon>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{flex:1}}>
+                                    <DeleteDependency dependency={this.props.selectedDependency} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} name={name}/>
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </Modal>
@@ -81,7 +87,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 300,
+        height: 340,
         width: 350
     },
     hideButton:{

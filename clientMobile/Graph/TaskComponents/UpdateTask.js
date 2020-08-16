@@ -16,6 +16,12 @@ class UpdateTask extends Component {
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.toggleVisibility(true,false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
+                        <View style={{alignItems:'center', marginTop:25}}>
+                            <Text style={{fontSize:25, color:'#184D47'}}>
+                                Edit Task
+                            </Text>
+                            <View style={{backgroundColor: '#EEBB4D', height: 1, width: "60%", marginBottom:10}}></View>
+                        </View>
                         <UpdateTaskForm task={this.props.task} toggleVisibility={this.props.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency}/>
                     </View>
                 </View>
@@ -174,7 +180,7 @@ class UpdateTaskForm extends Component{
                 )}
                 <View styles={{padding:10}}>
                     <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
-                        <Text>
+                        <Text style={{color:'white'}}>
                             Submit
                         </Text>
                     </TouchableOpacity>
@@ -207,7 +213,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 450,
+        height: 500,
         width: 350
     },
     hideButton:{
@@ -218,12 +224,10 @@ const styles = StyleSheet.create({
         marginTop:10
     },
     submitButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{
