@@ -36,6 +36,16 @@ class CreateTask extends React.Component {
   }
 
   async hideModal() {
+    for(let x = 0; x < this.state.pacManList.length; x++){
+      this.state.people.push(this.state.pacManList[x])
+    }
+    for(let x = 0; x < this.state.resPersonList.length; x++){
+      this.state.people.push(this.state.resPersonList[x])
+    }
+    for(let x = 0; x < this.state.resourcesList.length; x++){
+      this.state.people.push(this.state.resourcesList[x])
+    }
+
     this.setState({ Show: false });
     this.props.hideModal();
   }
@@ -127,6 +137,41 @@ class CreateTask extends React.Component {
     }
 
     this.setState({resourceList:tempResourceList,resourcesSearchTerm:''});
+  }
+
+  removeAssignedPerson(person,mode){
+    let peopleList = this.state.people;
+    if(mode === 0){
+      for(let x = 0; x < this.state.pacManList.length; x++){
+        if(person.id === this.state.pacManList[x].id){
+          if(x === 0) this.state.pacManList.shift();
+          else if(x === this.state.pacManList.length-1) this.state.pacManList.pop();
+          else this.state.pacManList.splice(x,1);
+        }
+      }
+    }
+
+    if(mode === 1){
+      for(let x = 0; x < this.state.resPersonList.length; x++){
+        if(person.id === this.state.resPersonList[x].id){
+          if(x === 0) this.state.resPersonList.shift();
+          else if(x === this.state.resPersonList.length-1) this.state.resPersonList.pop();
+          else this.state.resPersonList.splice(x,1);
+        }
+      }
+    }
+
+    if(mode === 2){
+      for(let x = 0; x < this.state.resourcesList.length; x++){
+        if(person.id === this.state.resourcesList[x].id){
+          if(x === 0) this.state.resourcesList.shift();
+          else if(x === this.state.resourcesList.length-1) this.state.resourcesList.pop();
+          else this.state.resourcesList.splice(x,1);
+        }
+      }
+    }
+    peopleList.push(person);
+    this.setState({usablePeople:peopleList})
   }
 
   async handleSubmit(event) {
@@ -284,7 +329,9 @@ class CreateTask extends React.Component {
                   </Col>
                   <Col>
                     {this.state.pacManList.map((person) => {
-                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                      return <li key={person.id}>
+                          <button type='button' onClick={()=>this.removeAssignedPerson(person,0)}>{person.name}&nbsp;{person.surname}</button>
+                        </li>
                     })}
                   </Col>
                 </Row>
@@ -307,7 +354,9 @@ class CreateTask extends React.Component {
                   </Col>
                   <Col>
                     {this.state.resPersonList.map((person) => {
-                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                      return <li key={person.id}>
+                          <button type='button' onClick={()=>this.removeAssignedPerson(person,1)}>{person.name}&nbsp;{person.surname}</button>
+                        </li>
                     })}
                   </Col>
                 </Row>
@@ -330,7 +379,9 @@ class CreateTask extends React.Component {
                   </Col>
                   <Col>
                     {this.state.resourcesList.map((person) => {
-                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                      return <li key={person.id}>
+                          <button type='button' onClick={()=>this.removeAssignedPerson(person,2)}>{person.name}&nbsp;{person.surname}</button>
+                        </li>
                     })}
                   </Col>
                 </Row>

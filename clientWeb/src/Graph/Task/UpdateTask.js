@@ -50,14 +50,43 @@ class UpdateTask extends React.Component {
     this.removeAssignedPeople = this.removeAssignedPeople.bind(this);
   }
 
-  componentDidMount(){
-    this.removeAssignedPeople();
+  // componentDidMount(){
+  //   this.removeAssignedPeople();
+  // }
+
+  refreshState() {
+    var syear = `${this.props.task.startDate.year.low}`;
+    var smonth = this.props.task.startDate.month.low;
+    smonth = smonth < 10 ? `0${smonth}` : `${smonth}`;
+    var sday = this.props.task.startDate.day.low;
+    sday = sday < 10 ? `0${sday}` : `${sday}`;
+    var eyear = `${this.props.task.startDate.year.low}`;
+    var emonth = this.props.task.startDate.month.low;
+    emonth = emonth < 10 ? `0${emonth}` : `${emonth}`;
+    var eday = this.props.task.startDate.day.low;
+    eday = eday < 10 ? `0${eday}` : `${eday}`;
+    this.setState({
+      id: this.props.task.id,
+      name: this.props.task.name,
+      startDate: `${syear}-${smonth}-${sday}`,
+      duration: this.props.task.duration,
+      endDate: `${eyear}-${emonth}-${eday}`,
+      description: this.props.task.description,
+      people:this.props.allUsers,
+      pacManSearchTerm:'',
+      resourcesSearchTerm:'',
+      resPersonSearchTerm:'',
+      pacManList:this.props.pacMans,
+      resourcesList:this.props.resources,
+      resPersonList:this.props.resPersons,
+    });
   }
 
   /*
   * Removes people from the people list if they are already assigned to a role so that they can't be selected again
   */
   removeAssignedPeople(){
+    //console.log(this.state.people)
     for(let x = 0; x < this.state.people.length; x++){
       for(let y = 0; y < this.state.pacManList.length; y++){
         if(this.state.pacManList[y].id === this.state.people[x].id){
@@ -89,32 +118,22 @@ class UpdateTask extends React.Component {
     }
   }
 
-  refreshState() {
-    var syear = `${this.props.task.startDate.year.low}`;
-    var smonth = this.props.task.startDate.month.low;
-    smonth = smonth < 10 ? `0${smonth}` : `${smonth}`;
-    var sday = this.props.task.startDate.day.low;
-    sday = sday < 10 ? `0${sday}` : `${sday}`;
-    var eyear = `${this.props.task.startDate.year.low}`;
-    var emonth = this.props.task.startDate.month.low;
-    emonth = emonth < 10 ? `0${emonth}` : `${emonth}`;
-    var eday = this.props.task.startDate.day.low;
-    eday = eday < 10 ? `0${eday}` : `${eday}`;
-    this.setState({
-      id: this.props.task.id,
-      name: this.props.task.name,
-      startDate: `${syear}-${smonth}-${sday}`,
-      duration: this.props.task.duration,
-      endDate: `${eyear}-${emonth}-${eday}`,
-      description: this.props.task.description,
-    });
-  }
-
   ShowModal() {
-    this.setState({ Show: true });
+    this.setState({ Show: true, people:this.props.allUsers });
+    this.removeAssignedPeople();
   }
 
   HideModal() {
+    for(let x = 0; x < this.state.pacManList.length; x++){
+      this.state.people.push(this.state.pacManList[x])
+    }
+    for(let x = 0; x < this.state.resPersonList.length; x++){
+      this.state.people.push(this.state.resPersonList[x])
+    }
+    for(let x = 0; x < this.state.resourcesList.length; x++){
+      this.state.people.push(this.state.resourcesList[x])
+    }
+    
     this.setState({ Show: false });
   }
 
@@ -183,6 +202,9 @@ class UpdateTask extends React.Component {
         ut_pacMans:this.state.pacManList,
         ut_resPersons:this.state.resPersonList,
         ut_resources:this.state.resourcesList,
+        ut_originalPacMans:this.props.pacMans,
+        ut_originalResPersons:this.props.resPersons,
+        ut_originalResources:this.props.resources
       })
     });
 
@@ -249,9 +271,46 @@ class UpdateTask extends React.Component {
     this.setState({resourceList:tempResourceList,resourcesSearchTerm:''});
   }
 
+  removeAssignedPerson(person,mode){
+    let peopleList = this.state.people;
+    if(mode === 0){
+      for(let x = 0; x < this.state.pacManList.length; x++){
+        if(person.id === this.state.pacManList[x].id){
+          if(x === 0) this.state.pacManList.shift();
+          else if(x === this.state.pacManList.length-1) this.state.pacManList.pop();
+          else this.state.pacManList.splice(x,1);
+        }
+      }
+    }
+
+    if(mode === 1){
+      for(let x = 0; x < this.state.resPersonList.length; x++){
+        if(person.id === this.state.resPersonList[x].id){
+          if(x === 0) this.state.resPersonList.shift();
+          else if(x === this.state.resPersonList.length-1) this.state.resPersonList.pop();
+          else this.state.resPersonList.splice(x,1);
+        }
+      }
+    }
+
+    if(mode === 2){
+      for(let x = 0; x < this.state.resourcesList.length; x++){
+        if(person.id === this.state.resourcesList[x].id){
+          if(x === 0) this.state.resourcesList.shift();
+          else if(x === this.state.resourcesList.length-1) this.state.resourcesList.pop();
+          else this.state.resourcesList.splice(x,1);
+        }
+      }
+    }
+    peopleList.push(person);
+    this.setState({people:peopleList})
+  }
+
   render() {
     if (this.state.id !== this.props.task.id) this.refreshState();
 
+    console.log(this.props.pacMans)
+    console.log("LIST:"+this.state.pacManList)
     /*
     * Filters the list of people to only show people matching the search term
     */
@@ -382,7 +441,9 @@ class UpdateTask extends React.Component {
                   </Col>
                   <Col>
                     {this.state.pacManList.map((person) => {
-                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                      return <li key={person.id}>
+                          <button type='button' onClick={()=>this.removeAssignedPerson(person,0)}>{person.name}&nbsp;{person.surname}</button>
+                        </li>
                     })}
                   </Col>
                 </Row>
@@ -405,7 +466,9 @@ class UpdateTask extends React.Component {
                   </Col>
                   <Col>
                     {this.state.resPersonList.map((person) => {
-                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                      return <li key={person.id}>
+                          <button type='button' onClick={()=>this.removeAssignedPerson(person,1)}>{person.name}&nbsp;{person.surname}</button>
+                        </li>
                     })}
                   </Col>
                 </Row>
@@ -428,7 +491,9 @@ class UpdateTask extends React.Component {
                   </Col>
                   <Col>
                     {this.state.resourcesList.map((person) => {
-                      return <li key={person.id}>{person.name}&nbsp;{person.surname}</li>
+                      return <li key={person.id}>
+                          <button type='button' onClick={()=>this.removeAssignedPerson(person,2)}>{person.name}&nbsp;{person.surname}</button>
+                        </li>
                     })}
                   </Col>
                 </Row>
