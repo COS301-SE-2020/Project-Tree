@@ -1,5 +1,6 @@
 const db = require("../DB");
 const { isEmpty } = require("lodash");
+const sendProjectNotification = require('../notificationApi/notificationHandler');
 
 function assignPeople(req,res){
   let taskId = req.body.ct_taskId;
@@ -7,8 +8,7 @@ function assignPeople(req,res){
   let responsiblePersons = req.body.ct_resPersons;
   let resources = req.body.ct_resources;
 
-  console.log(taskId)
-  console.log(packageManagers)
+  
 
   if(isEmpty(packageManagers) !== true){
     let pacManAddStatus = addPackageManager(taskId,packageManagers);
@@ -22,6 +22,12 @@ function assignPeople(req,res){
     let resourcesAddStatus = addResources(taskId,resources);
     if(resourcesAddStatus === 400) res.sendStatus(400);
   }
+
+  let data = sendProjectNotification.formatAutoAssignData(packageManagers, responsiblePersons, resources, req.body.auto_notification);
+  sendProjectNotification.sendNotification({body:data.packMan});
+  sendProjectNotification.sendNotification({body:data.resPer});
+  sendProjectNotification.sendNotification({body:data.res});
+
   res.sendStatus(200)
 }
 

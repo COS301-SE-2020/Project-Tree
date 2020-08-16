@@ -81,6 +81,13 @@ class SendTaskNotification extends React.Component {
       }
       userNotifications.push(user)
     }
+
+    let addMyself = true;
+    for(let x=0; x<userNotifications.length; x++){
+      if(userNotifications[x].id === this.props.user.id) addMyself=false
+    }
+    if(addMyself===true)userNotifications.push({id:this.props.user.id, email:this.props.user.email});
+
     this.setState({notificationRec: userNotifications})
   }
 

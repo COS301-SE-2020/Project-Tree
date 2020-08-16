@@ -119,6 +119,7 @@ class NotificationList extends Component{
                         {" - "}
                         {message.type === 'task' ? message.taskName : null}
                         {message.type === 'project' ? "Project Wide" : null}
+                        {message.type === 'auto' ? "Auto" : null}
                         {" "}
                     </Col>
                     <Col className="text-right">

@@ -87,8 +87,8 @@ class CreateTask extends React.Component {
 
   updateSearch(event, mode){
     if(mode===0) this.setState({pacManSearchTerm:event.target.value});
-    if(mode==1) this.setState({resPersonSearchTerm:event.target.value});
-    if(mode==2) this.setState({resourcesSearchTerm:event.target.value});
+    if(mode===1) this.setState({resPersonSearchTerm:event.target.value});
+    if(mode===2) this.setState({resourcesSearchTerm:event.target.value});
   }
 
   addPacMan(person){
@@ -204,6 +204,14 @@ class CreateTask extends React.Component {
         ct_pacMans:this.state.pacManList,
         ct_resPersons:this.state.resPersonList,
         ct_resources:this.state.resourcesList,
+        auto_notification: {
+          timestamp: (new Date().toISOString()),
+          projName: this.props.project.name,
+          projID: this.props.project.id,
+          taskName: data.ct_Name,
+          type: 'auto',
+          mode: 2
+        }
       })
     });
 
