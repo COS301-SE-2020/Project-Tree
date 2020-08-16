@@ -49,6 +49,12 @@ class CreateProjectModal extends Component{
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
+                        <View style={{alignItems:'center'}}>
+                            <Text style={{fontSize:25, color:'#184D47'}}>
+                                Create Project
+                            </Text>
+                            <View style={{backgroundColor: '#EEBB4D', height: 1, width: "60%", marginBottom:10}}></View>
+                        </View>
                         <CreateProjectForm 
                             token={this.props.token}
                             setProjectInfo={this.props.setProjectInfo} 
@@ -143,7 +149,7 @@ class CreateProjectForm extends Component{
                 <PermissionsTable tableFormData={this.state.tableFormData} setElementClicked={this.setElementClicked}/>
                 <View styles={{padding:10}}>
                     <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
-                        <Text>
+                        <Text style={{color:'white'}}>
                             Submit
                         </Text>
                     </TouchableOpacity>
@@ -206,7 +212,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 440,
+        height: 500,
         width: 350
     },
     textStyle: {
@@ -274,12 +280,10 @@ const styles = StyleSheet.create({
         marginTop:10
     },
     submitButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{

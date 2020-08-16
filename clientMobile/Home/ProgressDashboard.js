@@ -100,12 +100,12 @@ class ProgressDashboard extends Component{
         else ppColor='green'
 
         return(
-            <View style={{flexDirection:'row'}}>
-                <View style={{paddingRight:10}}>
+            <View style={{flexDirection:'row', width:'100%', justifyContent:'space-evenly'}}>
+                <View style={{alignItems:'center'}}>
                     <Progress.Circle progress={pp/100} size={100} showsText={true} formatText={progress=>{return `${pp}%`}} color={ppColor}/>
                     <Text>Project Progress</Text>
                 </View>
-                <View style={{paddingLeft:10}}>
+                <View style={{alignItems:'center'}}>
                     <Progress.Circle progress={cp/100} size={100} showsText={true} formatText={progress=>{return `${cp}%`}} color={cpColor}/>
                     <Text>Critical Path Progress</Text>
                 </View>

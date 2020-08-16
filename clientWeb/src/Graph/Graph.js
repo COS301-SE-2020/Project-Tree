@@ -100,7 +100,6 @@ function makeElement(node, criticalPathNodes) {
             },
             rect: {
                 rx: 10, ry: 10,
-                //magnet: true
                 transform: 'translate(1, 1)'
             }
         }

@@ -59,13 +59,30 @@ class Graph extends Component{
 	constructor(props) 
 	{
 		super(props);
-		this.state = {drawerVisible:false};
-		this.setDrawerVisible = this.setDrawerVisible.bind(this);
-	}
+		this.state = {drawerVisible:false, direction:"TB", key:0};
+        this.setDrawerVisible = this.setDrawerVisible.bind(this);
+        this.toggleDirection = this.toggleDirection.bind(this);
+        this.reload = this.reload.bind(this);
+    }
+    
+    reload(){
+        this.setState({key: this.state.key+1, drawerVisible:false})
+    }
   
 	setDrawerVisible(mode){
 		this.setState({drawerVisible:mode});
-	}
+    }
+    
+    toggleDirection(){
+        if(this.state.direction=="TB"){
+            this.setState({direction:"LR"})
+        }
+        else{
+            this.setState({direction:"TB"})
+        }
+
+        this.setState({key: this.state.key+1})
+    }
   
 	render(){
 		if(this.props.project === null){
@@ -79,7 +96,13 @@ class Graph extends Component{
 				<Drawer
 				type="overlay"
 				open={this.state.drawerVisible}
-				content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={this.props.project} navigation={this.props.navigation}/>}
+                content={<GraphDrawer 
+                    setDrawerVisible={this.setDrawerVisible} 
+                    project={this.props.project} 
+                    navigation={this.props.navigation}
+                    direction={this.state.direction}
+                    toggleDirection={this.toggleDirection}
+                    />}
 				tapToClose={true}
 				openDrawerOffset={0.2} 
 				panCloseMask={0.2}
@@ -92,7 +115,10 @@ class Graph extends Component{
 						<GraphScreen 
 						project={this.props.project}
 						navigation={this.props.navigation}
-						setDrawerVisible={this.setDrawerVisible}
+                        setDrawerVisible={this.setDrawerVisible}
+                        direction={this.state.direction}
+                        reloadKey = {this.state.key}
+                        reload = {this.reload}
 						/>
 					</React.Fragment>
 				</Drawer>
@@ -110,14 +136,11 @@ class GraphScreen extends Component{
         this.getProjectInfo = this.getProjectInfo.bind(this);
         this.displayTaskDependency = this.displayTaskDependency.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
-        this.reload = this.reload.bind(this);
         this.getName = this.getName.bind(this);
         this.setCreateDependency = this.setCreateDependency.bind(this);
     }
     
-    reload(){
-        this.setState({key: this.state.key+1})
-    }
+    
 
     async componentDidMount(){
         this._isMounted = true;
@@ -163,7 +186,7 @@ class GraphScreen extends Component{
 
     setProjectInfo(nodes, rels){
         this.setState({nodes:nodes, links:rels});
-        this.reload();
+        this.props.reload();
     }
     
     setCreateDependency(id){
@@ -218,7 +241,13 @@ class GraphScreen extends Component{
         return this.state.nodes ? (
             <View style={styles.container}>
                 <View style={{flex:8}}>
-                    <WebViewWrapper nodes={this.state.nodes} links={this.state.links} webKey={this.state.key} displayTaskDependency={this.displayTaskDependency} setCreateDependency={this.setCreateDependency}/>
+                    <WebViewWrapper 
+                        nodes={this.state.nodes} 
+                        links={this.state.links} 
+                        direction={this.props.direction}
+                        webKey={this.props.reloadKey} 
+                        displayTaskDependency={this.displayTaskDependency} 
+                        setCreateDependency={this.setCreateDependency}/>
                 </View>
                 
                 <TaskModal project={this.props.project} selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
@@ -267,24 +296,20 @@ class WebViewWrapper extends Component{
     }
 
     render(){
-        let dir = "TB"
         return(
             <WebView
                 key={this.props.webKey}
                 ref={(ref) => this.myWebView = ref}
                 renderLoading={this.ActivityIndicatorLoadingView}
                 startInLoadingState={true}
-                source={{uri:'http://projecttree.herokuapp.com/mobile',
+                source={{uri:'http://10.0.2.2:5000/mobile',
                         method: 'POST',
-                        body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+'&graphDir='+JSON.stringify(dir)+''}}
+                        body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+'&graphDir='+JSON.stringify(this.props.direction)+''}}
                 onMessage={event => this.handleOnMessage(event)}
             />
         );
     }
 }
-      
-let deviceWidth = Math.round(Dimensions.get('window').width);
-let deviceHeight = Math.round(Dimensions.get('window').height)-30;
 
 const styles = StyleSheet.create({
     container: {

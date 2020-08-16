@@ -3,6 +3,7 @@ import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions, Touc
 import { isEmpty } from 'lodash';
 import {Spinner} from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import TopBar from '../TopBar'
 
 function GoToHome() {
     const navigation = useNavigation();
@@ -43,12 +44,18 @@ class NoticeBoard extends Component{
 	render(){
 		if(this.props.project === null){
 			return(
-				<GoToHome />
+                <React.Fragment>
+                    <TopBar useMenu={false}/>
+				    <GoToHome />
+                </React.Fragment>
 			)
 		}
 
 		return(
-			<NoticeBoardScreen project={this.props.project} user={this.props.user}/>
+            <React.Fragment>
+                <TopBar useMenu={false}/>
+			    <NoticeBoardScreen project={this.props.project} user={this.props.user}/>
+            </React.Fragment>
 		)
 	}
 }

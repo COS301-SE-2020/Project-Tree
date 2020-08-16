@@ -18,33 +18,10 @@ export default class SendProjectWideNotificationWrapper extends Component{
     render(){
         return(
             <React.Fragment>
-                <View style={{
-				justifyContent:"center", 
-				alignItems:"center",
-				flex:1}}
-				>
-					<TouchableHighlight onPress={()=>{this.setModalVisible(true)}} style={{backgroundColor:'#184D47',
-						alignItems:'center',
-						justifyContent:'center',
-						height:45,
-						borderColor:'#EEBB4D',
-						borderWidth:2,
-						borderRadius:5,
-						shadowColor:'#000',
-						shadowOffset:{
-							width:0,
-							height:1
-						},
-						shadowOpacity:0.8,
-						shadowRadius:2,  
-						elevation:3}}
-					>
-						<Text style={{color:'white'}}>
-                            Send Project Wide notification
-						</Text>
-					</TouchableHighlight>
-                    <SendNotificationModal project={this.props.project} user={this.props.user} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} type={'project'}/>
-			    </View>
+                <TouchableHighlight onPress={()=>{this.setModalVisible(true)}} style={styles.editButton}>
+                    <Icon type="AntDesign" name="notification" style={{color:'white'}}></Icon>
+                </TouchableHighlight>
+                <SendNotificationModal project={this.props.project} user={this.props.user} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} type={'project'}/>
             </React.Fragment>
         )
     }
@@ -63,6 +40,12 @@ class SendNotificationModal extends Component{
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
+                        <View style={{alignItems:'center', marginTop:10, marginBottom:20}}>
+                            <Text style={{fontSize:25, color:'#184D47'}}>
+                                Project Wide Notification
+                            </Text>
+                            <View style={{backgroundColor: '#EEBB4D', height: 1, width: "90%", marginBottom:10}}></View>
+                        </View>
                         <SendNotificationForm setModalVisible={this.props.setModalVisible} project={this.props.project} user={this.props.user} type={this.props.type}/>
                     </View>
                 </View>
@@ -101,28 +84,38 @@ class SendNotificationForm extends Component{
 
         return(
             <React.Fragment>
-                <Form>
-                    <Item>
-                        <Textarea 
-                        rowSpan={5} 
-                        placeholder="Notification" 
-                        style={{width:'100%'}} 
-                        onChangeText={val => this.setState({ message: val })}
+                <View style={{flex:1}}>
+                    <View style={{flex:1}}>
+                        <Form>
+                            <Item>
+                                <Textarea 
+                                rowSpan={3} 
+                                placeholder="Notification" 
+                                bordered = {true}
+                                style={{width:'100%'}} 
+                                onChangeText={val => this.setState({ message: val })}
+                                />
+                            </Item>
+                        </Form>
+                    </View>
+                    
+                    <View style={{flex:1}}>
+                        <ButtonGroup
+                            onPress={this.updateIndex}
+                            selectedIndex={this.state.mode}
+                            buttons={buttons}
+                            containerStyle={{height: 50}}
+                            selectedButtonStyle={{backgroundColor:'#EEBB4D'}}
                         />
-                    </Item>
-                </Form>
-                <ButtonGroup
-                    onPress={this.updateIndex}
-                    selectedIndex={this.state.mode}
-                    buttons={buttons}
-                    containerStyle={{height: 50}} 
-                />
-                <View styles={{padding:10}}>
-                    <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
-                        <Text>
-                            Send
-                        </Text>
-                    </TouchableOpacity>
+                    </View>
+                    
+                    <View styles={{flex:1}}>
+                        <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
+                            <Text style={{color:'white'}}>
+                                Send
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </React.Fragment>
         );
@@ -152,7 +145,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 440,
+        height: 400,
         width: 350
     },
     textStyle: {
@@ -193,8 +186,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{
@@ -220,12 +211,10 @@ const styles = StyleSheet.create({
         marginTop:10
     },
     submitButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{
@@ -236,5 +225,21 @@ const styles = StyleSheet.create({
         shadowRadius:2,  
         elevation:1,
         margin:3,
+    },
+    editButton:{
+        backgroundColor:'#184D47',
+        alignItems:'center',
+        justifyContent:'center',
+        height:45,
+        width:'25%',
+        borderRadius:5,
+        shadowColor:'#000',
+        shadowOffset:{
+            width:0,
+            height:0.1
+        },
+        shadowOpacity:0.8,
+        shadowRadius:2,  
+        elevation:1
     }
 });
