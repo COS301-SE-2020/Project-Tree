@@ -134,7 +134,7 @@ class GraphPage extends React.Component{
       <React.Fragment>
         <Container fluid style={{height:"100%", width: "100%"}}>
           <Row className="h-100">
-            <Col className="text-center block-example border-right border-secondary bg-light">
+            <Col className="text-center block-example border-right border-secondary bg-light" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
               <Container>
                 <Row>
                   <Col>
@@ -178,10 +178,7 @@ class GraphPage extends React.Component{
                   getProjectInfo={this.getProjectInfo}
                 />
               ) : null}
-              {this.state.task == null && this.state.dependency ==null ?  (
-                <LegendSidebar
-                />
-              ) : null}
+              <LegendSidebar/>
             </Col>
             <Col
               xs={9}
@@ -453,15 +450,88 @@ class LegendSidebar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container className="text-black text-center py-2" style={{fontSize: "20px"}}>
-          <Row><Col className="text-center"><h4>Task progress key</h4></Col></Row>
-          <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "white", color:"black", width: "120px"}}>Incomplete</Col><Col></Col></Row>
-          <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "#77dd77",  color:"black", width: "120px"}}>Complete</Col><Col></Col></Row>
-          <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "#ff6961", color:"black", width: "120px"}}>Overdue</Col><Col></Col></Row>
-          <Row><Col></Col><Col className="text-center border rounded border-dark m-1 p-1" xs={6} style={{backgroundColor: "#ffae42",  color:"black", width: "120px"}}>Issue</Col><Col></Col></Row>
-          <Row><Col></Col><Col className="text-center border rounded border-primary m-1 p-1" xs={6} style={{backgroundColor: "white", color:"black", width: "120px"}}>Critical Path</Col><Col></Col></Row>
-        <hr/>
-        </Container>
+        <Container className="text-black text-center" style={{fontSize: "20px"}}>
+                  <Row>
+                    <Col className="text-center">
+                      <h4>Task progress key</h4>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col></Col>
+                    <Col 
+                      className="text-center border rounded border-dark m-1 p-1" 
+                      xs={6} 
+                      style={{
+                        backgroundColor: "white", 
+                        color:"black", 
+                        width: "120px"
+                        }}
+                      >
+                      Incomplete
+                    </Col>
+                    <Col></Col>
+                  </Row>
+                  <Row>
+                    <Col></Col>
+                    <Col 
+                      className="text-center border rounded border-dark m-1 p-1" 
+                      xs={6} 
+                      style={{
+                        backgroundColor: "#77dd77",  
+                        color:"black", 
+                        width: "120px"
+                      }}
+                    >
+                      Complete
+                    </Col>
+                    <Col></Col>
+                  </Row>
+                  <Row>
+                    <Col></Col>
+                    <Col 
+                      className="text-center border rounded border-dark m-1 p-1" 
+                      xs={6} 
+                      style={{
+                        backgroundColor: "#ff6961",  
+                        color:"black", 
+                        width: "120px"
+                      }}
+                    >
+                      Overdue
+                    </Col>
+                    <Col></Col>
+                  </Row>
+                  <Row>
+                    <Col></Col>
+                    <Col 
+                      className="text-center border rounded border-dark m-1 p-1" 
+                      xs={6} 
+                      style={{
+                        backgroundColor: "#ffae42",  
+                        color:"black", 
+                        width: "120px"
+                      }}
+                    >
+                      Issue
+                    </Col>
+                    <Col></Col>
+                  </Row>
+                  <Row>
+                    <Col></Col>
+                    <Col 
+                      className="text-center border rounded border-primary m-1 p-1" 
+                      xs={6} 
+                      style={{
+                        backgroundColor: "white", 
+                        color:"black", 
+                        width: "120px"
+                      }}
+                    >
+                      Critical Path
+                    </Col>
+                    <Col></Col>
+                  </Row>
+                </Container> 
       </React.Fragment>
     );
   }

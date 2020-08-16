@@ -236,7 +236,7 @@ class App extends Component {
                   />
                 </Col>
               ) : null}
-              <Col style={{position:"absolute"}}>
+              <Col style={{position:"absolute", height: "100%"}}>
                 <Switch> 
                   <Route path="/home">
                     {this.state.loggedInStatus? 
@@ -265,7 +265,7 @@ class App extends Component {
                         userPermission={this.state.userPermission}
                         user={this.state.user}
                       />
-                     : <Redirect to="/"/>}
+                    : <Redirect to="/"/>}
                   </Route>
                   <Route path="/">
                     {this.state.loggedInStatus? 
