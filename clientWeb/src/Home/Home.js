@@ -1,6 +1,8 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import CreateProject from "../Project/CreateProject";
+import image from "../Images/BigTree.png";
+import { Container, Row, Col } from "react-bootstrap";
 
 class Home extends React.Component {
   render() {
@@ -13,7 +15,44 @@ class Home extends React.Component {
       }
     }
     return (
-      <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/>
+      <React.Fragment>
+        <Container fluid style={{height:"100%", width: "100%"}}>
+          <Row>
+            <Col md={1} lg={2} xl={3}></Col>
+            <Col md={10} lg={8} xl={6} className="text-center">
+              <img src={image} style={{width: "90%"}} alt="Logo"/>
+            </Col>
+            <Col md={1} lg={2} xl={3}></Col>
+          </Row>
+          <Row>
+            <Col md={1} lg={2} xl={3}></Col>
+            <Col md={10} lg={8} xl={6} className="text-center">
+              <h1>Project Tree</h1>
+            </Col>
+            <Col md={1} lg={2} xl={3}></Col>
+          </Row>
+          <Row>
+            <Col md={1} lg={2} xl={3}></Col>
+            <Col md={10} lg={8} xl={6} className="text-center">
+              {
+              this.props.ownedProjects.length !== 0 && this.props.otherProjects.length !== 0 ?
+                <h5>Create Another Project</h5>
+              :
+                <h5>Start Your Project planning journey</h5>
+              }
+              <CreateProject setProject={project => {this.props.setProject(project)}} closeSideBar={() => {this.props.closeSideBar()}}/>
+            </Col>
+            <Col md={1} lg={2} xl={3}></Col>
+          </Row>
+          <Row>
+            <Col sm={4}></Col>
+            <Col sm={4} className="text-center">
+            </Col>
+            <Col sm={4}></Col>
+          </Row>
+        </Container>
+        
+      </React.Fragment>
     );
   }
 }
