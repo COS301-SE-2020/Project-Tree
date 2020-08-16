@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, ScrollView, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { ImageBackground, View, ScrollView, StyleSheet, TouchableOpacity, TouchableHighlight} from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Spinner } from 'native-base';
 import DeleteProject from '../Home/DeleteProject'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
@@ -28,34 +28,33 @@ function GoToTree() {
 class SelectProject extends Component{
     render(){
         return(
-            <View style={{
-            justifyContent:"center", 
-            alignItems:"center",
-            flex:1}}
+            <ImageBackground
+                source={require('../Images/home.png')}
+                style={{flex:1}}
             >
-                <TouchableHighlight 
-                onPress={() => {this.props.setDrawerVisible(true)}} 
-                style={{backgroundColor:'#184D47',
-                    alignItems:'center',
-                    justifyContent:'center',
-                    height:45,
-                    borderColor:'#EEBB4D',
-                    borderWidth:2,
-                    borderRadius:5,
-                    shadowColor:'#000',
-                    shadowOffset:{
-                        width:0,
-                        height:1
-                    },
-                    shadowOpacity:0.8,
-                    shadowRadius:2,  
-                    elevation:3}}
-                >
-                    <Text style={{color:'white'}}>
-                    Please select a project
-                    </Text>
-                </TouchableHighlight>
-            </View>
+                <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                    <TouchableHighlight 
+                        onPress={() => {this.props.setDrawerVisible(true)}} 
+                        style={{backgroundColor:'#184D47',
+                        alignItems:'center',
+                        justifyContent:'center',
+                        height:45,
+                        borderRadius:5,
+                        shadowColor:'#000',
+                        shadowOffset:{
+                            width:0,
+                            height:1
+                        },
+                        shadowOpacity:0.8,
+                        shadowRadius:2,  
+                        elevation:3}}
+                    >
+                        <Text style={{color:'white', padding:5}}>
+                        Select a project
+                        </Text>
+                    </TouchableHighlight>
+                </View>
+            </ImageBackground>
         )
     }
 }

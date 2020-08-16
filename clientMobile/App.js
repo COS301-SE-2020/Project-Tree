@@ -253,7 +253,7 @@ export default class App extends Component{
 		let tokenVal = null
 		try{
 		await AsyncStorage.getItem('sessionToken')
-		.then(async (value) => {
+		.then((value) => {
 			if(value){
 				tokenVal = JSON.parse(value);
 			}
@@ -264,7 +264,9 @@ export default class App extends Component{
 			console.log("Error")
 		}
 
-		let userToken = {token: tokenVal};
+		console.log("Token Val: "+tokenVal)
+
+		let userToken = {creatorID: tokenVal};
 
 		const response = await fetch('http://10.0.2.2:5000/user/get',{
 			method: 'POST',

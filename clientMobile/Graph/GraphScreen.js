@@ -12,6 +12,7 @@ import Drawer from 'react-native-drawer'
 import styled from 'styled-components/native'
 import GraphDrawer from './GraphDrawer';
 import { useNavigation } from '@react-navigation/native';
+import {Spinner} from 'native-base';
 
 function GoToHome() {
     const navigation = useNavigation();
@@ -59,10 +60,11 @@ class Graph extends Component{
 	constructor(props) 
 	{
 		super(props);
-		this.state = {drawerVisible:false, direction:"TB", key:0};
+		this.state = {drawerVisible:false, direction:"TB", key:0, displayCriticalPath:false};
         this.setDrawerVisible = this.setDrawerVisible.bind(this);
         this.toggleDirection = this.toggleDirection.bind(this);
         this.reload = this.reload.bind(this);
+        this.toggleCriticalPath = this.toggleCriticalPath.bind(this);
     }
     
     reload(){
@@ -83,6 +85,10 @@ class Graph extends Component{
 
         this.setState({key: this.state.key+1})
     }
+
+    toggleCriticalPath(){
+        this.setState({displayCriticalPath:!this.state.displayCriticalPath})
+    }
   
 	render(){
 		if(this.props.project === null){
@@ -102,6 +108,8 @@ class Graph extends Component{
                     navigation={this.props.navigation}
                     direction={this.state.direction}
                     toggleDirection={this.toggleDirection}
+                    displayCriticalPath={this.state.displayCriticalPath}
+                    toggleCriticalPath={this.toggleCriticalPath}
                     />}
 				tapToClose={true}
 				openDrawerOffset={0.2} 
@@ -119,6 +127,7 @@ class Graph extends Component{
                         direction={this.state.direction}
                         reloadKey = {this.state.key}
                         reload = {this.reload}
+                        displayCriticalPath = {this.state.displayCriticalPath}
 						/>
 					</React.Fragment>
 				</Drawer>
@@ -246,8 +255,11 @@ class GraphScreen extends Component{
                         links={this.state.links} 
                         direction={this.props.direction}
                         webKey={this.props.reloadKey} 
+                        projID={this.props.project.id}
                         displayTaskDependency={this.displayTaskDependency} 
-                        setCreateDependency={this.setCreateDependency}/>
+                        setCreateDependency={this.setCreateDependency}
+                        displayCriticalPath={this.props.displayCriticalPath}
+                    />
                 </View>
                 
                 <TaskModal project={this.props.project} selectedTask={this.state.selectedTask} displayTaskDependency={this.displayTaskDependency} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
@@ -269,7 +281,7 @@ class GraphScreen extends Component{
                     <CreateTask projectID={this.props.project.id} getProjectInfo={this.getProjectInfo} setProjectInfo={this.setProjectInfo} />
                 </View>
             </View>
-        ) : null;
+        ) : <Spinner />;
     }
 }
 
@@ -277,6 +289,25 @@ class WebViewWrapper extends Component{
     constructor(props){
         super(props);
         this.handleOnMessage = this.handleOnMessage.bind(this);
+    }
+
+    async getCriticalPath(){
+        let proj = {
+            projId : this.props.projID
+        }
+        
+        const response = await fetch('http://10.0.2.2:5000/project/criticalpath',{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(proj)
+        });
+
+        const body = await response.json();
+        console.log(body)
+        if (response.status !== 200) throw Error(body.message);
     }
 
     handleOnMessage(event){
@@ -296,6 +327,10 @@ class WebViewWrapper extends Component{
     }
 
     render(){
+        if(this.props.displayCriticalPath === true){
+            this.getCriticalPath()
+        }
+
         return(
             <WebView
                 key={this.props.webKey}

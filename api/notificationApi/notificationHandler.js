@@ -7,6 +7,7 @@ async function sendNotification(req, res){
     // mode 1: notice board
     // mode 2: notice board and email
     // type, fromName, recipients, timestamp, notification, taskName, projName, projID, mode
+    
     let data = req.body;
     data.projID = parseInt(data.projID);
     data.mode = parseInt(data.mode);
