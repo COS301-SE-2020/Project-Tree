@@ -76,8 +76,11 @@ class ProjectPage extends React.Component {
               updateNoticeBoardRefreshKey={this.updateNoticeBoardRefreshKey}
             />
           </Col>
-          <Col sm={12} md={12} lg={6} xl={6} style={{ overflowY: "auto"}}> 
-            {this.props.project != null && this.props.user != null ? <NoticeBoard project={this.props.project} user={this.props.user} refreshKey={this.state.noticeBoardRefreshKey}/> : null}
+          <Col sm={12} md={12} lg={6} xl={6} style={{maxHeight:"400px", overflowY: "auto"}}> 
+            {
+            this.props.project != null && this.props.user != null ? 
+              <NoticeBoard project={this.props.project} user={this.props.user} refreshKey={this.state.noticeBoardRefreshKey}/> 
+            : null}
           </Col>
         </Row>
         <Row className="my-1">
