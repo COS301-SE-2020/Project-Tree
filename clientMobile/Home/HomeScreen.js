@@ -31,6 +31,7 @@ class SelectProject extends Component{
             <ImageBackground
                 source={require('../Images/home.png')}
                 style={{flex:1}}
+                resizeMode='cover'
             >
                 <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                     <TouchableHighlight 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, BackHandler, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Dimensions } from 'react-native'
+import { View, BackHandler, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Dimensions, ImageBackground } from 'react-native'
 import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
 import { WebView } from 'react-native-webview';
 import ProjectModal from './GraphDrawer';
@@ -18,34 +18,35 @@ function GoToHome() {
     const navigation = useNavigation();
   
     return (
-        <View style={{
-        justifyContent:"center", 
-        alignItems:"center",
-        flex:1}}
-        >
-            <TouchableHighlight 
-            onPress={() => {navigation.navigate('Home');}} 
-            style={{backgroundColor:'#184D47',
-                alignItems:'center',
-                justifyContent:'center',
-                height:45,
-                borderColor:'#EEBB4D',
-                borderWidth:2,
-                borderRadius:5,
-                shadowColor:'#000',
-                shadowOffset:{
-                    width:0,
-                    height:1
-                },
-                shadowOpacity:0.8,
-                shadowRadius:2,  
-                elevation:3}}
+        <ImageBackground
+                source={require('../Images/graph.png')}
+                style={{flex:1}}
+                resizeMode="contain"
             >
-                <Text style={{color:'white'}}>
-                Please select a project
-                </Text>
-            </TouchableHighlight>
-        </View>
+            <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                <TouchableHighlight 
+                    onPress={() => {navigation.navigate('Home');}} 
+                    style={{backgroundColor:'#184D47',
+                    alignItems:'center',
+                    justifyContent:'center',
+                    height:45,
+                    borderRadius:5,
+                    shadowColor:'#000',
+                    shadowOffset:{
+                        width:0,
+                        height:1
+                    },
+                    shadowOpacity:0.8,
+                    shadowRadius:2,  
+                    elevation:3,
+                    marginTop:50}}
+                >
+                    <Text style={{color:'white', padding:5}}>
+                    Select a project
+                    </Text>
+                </TouchableHighlight>
+            </View>
+        </ImageBackground>
     );
 }
 
@@ -53,7 +54,7 @@ function GoToHome() {
 const Screen = styled.View
 `
 	flex: 1;
-  background-color: #f2f2f2;
+  background-color: #FFF;
 `
 
 class Graph extends Component{
