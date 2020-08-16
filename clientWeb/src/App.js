@@ -57,21 +57,10 @@ class App extends Component {
     let token = localStorage.getItem('sessionToken')
     if(token != null){
       $.post("/project/get", {token}, (response) => {
-        if(response.ownedProjects.length !== 0){
-          this.setState({
-            ownedProjects: response.ownedProjects, 
-            otherProjects: response.otherProjects,
-            project: response.ownedProjects[0]
-          });
-        }else if(response.otherProjects.length !== 0){
-          this.setState({
-            ownedProjects: response.ownedProjects, 
-            otherProjects: response.otherProjects,
-            project: response.otherProjects[0]
-          });
-        }else{
-          this.setState({ownedProjects: response.ownedProjects, otherProjects: response.otherProjects });
-        }
+        this.setState({
+          ownedProjects: response.ownedProjects,
+          otherProjects: response.otherProjects
+        });
       })
       .fail((response) => {
         localStorage.removeItem('sessionToken');
@@ -92,13 +81,21 @@ class App extends Component {
   }
   
   setProject(proj){
+    this.setState({
+      userPermission: {
+        create: false,
+        update: false,
+        delete: false,
+        project: false
+      }
+    });
     if(proj.delete != null){
       let ownedProjects = [];
       for (let i = 0; i < this.state.ownedProjects.length; i++) {
         if(this.state.ownedProjects[i].id !== proj.delete) ownedProjects.push(this.state.ownedProjects[i]);
       }
-      this.setState({ownedProjects: ownedProjects})
       this.setState({
+        ownedProjects: ownedProjects,
         project: null, 
         userPermission: {
           create: false,
@@ -113,19 +110,19 @@ class App extends Component {
         ownedProjects.push(proj);
         this.setState({ownedProjects: ownedProjects});
       }
+      this.setState({project: proj});
       let data = {};
       data.token = localStorage.getItem('sessionToken');
       data.project = proj;
       $.post("/user/checkpermission", {data:JSON.stringify(data)}, response => {
         console.log(response);
         this.setState({
-          project: proj,
           userPermission: {
             create: response.create,
             update: response.update,
             delete: response.delete,
             project: response.project
-          }})
+          }});
       })
       .fail((response) => {
           console.log(response.error);
@@ -281,10 +278,7 @@ class App extends Component {
                           <Col></Col>
                         </Row>
                       :
-                        this.state.project !== null? 
-                          <Redirect to="/project"/>
-                        :
-                          <Redirect to="/home"/>
+                        <Redirect to="/home"/>
                     :
                       <div className="row">
                         <div className="column" style={{backgroundColor: "white"}}>
