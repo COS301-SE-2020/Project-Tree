@@ -6,25 +6,28 @@ function GoToHome() {
     const navigation = useNavigation();
   
     return (
-        <TouchableHighlight onPress={()=>{navigation.navigate("Home")}} style={{
-			backgroundColor:'#96BB7C',
-			alignItems:'center',
-			justifyContent:'center',
-			height:45,
-			borderRadius:5,
-			shadowColor:'#000',
-			shadowOffset:{
-				width:0,
-				height:1
-			},
-			shadowOpacity:0.8,
-			shadowRadius:2,  
-			elevation:3}}
-		>
-			<Text style={{color:'black', fontSize:15}}>
-				View Project
-			</Text>
-		</TouchableHighlight>
+		<View style={{paddingTop:20}}>
+			<TouchableHighlight onPress={()=>{navigation.navigate("Home")}} style={{
+				backgroundColor:'#184D47',
+				alignItems:'center',
+				justifyContent:'center',
+				height:45,
+				width:120,
+				borderRadius:5,
+				shadowColor:'#000',
+				shadowOffset:{
+					width:0,
+					height:1
+				},
+				shadowOpacity:0.8,
+				shadowRadius:2,  
+				elevation:3}}
+			>
+				<Text style={{color:'white', fontSize:17, padding:7}}>
+					Project Info
+				</Text>
+			</TouchableHighlight>
+		</View>
     );
 }
 
@@ -37,16 +40,26 @@ export default class GraphDrawer extends Component {
 		let isEnabled = this.props.direction === "TB" ? true : false
 		return(
 			<React.Fragment>
-				<View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>{this.props.project.name}</Text>
-                        <Text style={styles.modalText}>{this.props.project.description}</Text>
+				<View style={{flex:1, backgroundColor:"#303030", paddingBottom:60, alignItems:'center'}}>
+					<View>
+						<Text style={{color:"white", fontSize:35}}>
+							Project Options
+						</Text>
+					</View>
+					<View style={{backgroundColor: '#EEBB4D', height: 2, width: "70%", marginBottom:30}}></View>
+                    <View style={{alignItems:'center'}}>
+                        <Text style={{color:'white', fontSize:28}}>{this.props.project.name}</Text>
+                        <Text style={{color:'white', fontSize:17}}>{this.props.project.description}</Text>
 						<GoToHome />
                     </View>
-					<View>
+					<View style={{backgroundColor: 'white', height: 1, width: "50%", marginBottom:30, marginTop:30}}></View>
+					<View style={{flexDirection:'row', alignItems:'center'}}>
+						<Text style={{color:"white", fontSize:15, paddingRight:10}}>
+							Switch Graph Direction
+						</Text>
 						<Switch
-							trackColor={{ false: "#767577", true: "#81b0ff" }}
-							thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+							trackColor={{ false: "#184D47", true: "#EEBB4D" }}
+							thumbColor={isEnabled ? "#184D47" : "#EEBB4D"}
 							ios_backgroundColor="#3e3e3e"
 							onValueChange={this.props.toggleDirection}
 							value={isEnabled}

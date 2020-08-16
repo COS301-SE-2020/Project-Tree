@@ -81,7 +81,7 @@ class Graph extends Component{
             this.setState({direction:"TB"})
         }
 
-        this.reload();
+        this.setState({key: this.state.key+1})
     }
   
 	render(){
@@ -296,7 +296,6 @@ class WebViewWrapper extends Component{
     }
 
     render(){
-        console.log(this.props.direction)
         return(
             <WebView
                 key={this.props.webKey}

@@ -50,13 +50,10 @@ export default class DeleteProject extends Component{
 
 const styles = StyleSheet.create({
     deleteButton:{
-        backgroundColor:'#184D47',
+        backgroundColor:'red',
         alignItems:'center',
         justifyContent:'center',
-        height:45,
-        width:'33%',
-        borderColor:'#EEBB4D',
-        borderWidth:2,
+        height: 40,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{

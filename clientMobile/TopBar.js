@@ -8,7 +8,7 @@ export default class TopBar extends Component{
             <View elevation={10} style={{
                 backgroundColor:"#96BB7C", 
                 width:'100%', 
-                height:'11%',
+                height:'8%',
                 flexDirection: 'row',
                 alignItems: 'center'
                 }}
@@ -16,8 +16,9 @@ export default class TopBar extends Component{
                 <StatusBar backgroundColor='#303030' barStyle="light-content"/>
 
                 
-                <View style={{width:50}}>
-                {this.props.useMenu === true ? <TouchableOpacity onPress={()=>{this.props.setDrawerVisible(true)}}>
+                <View style={{width:"15%", height:"80%", justifyContent:'center'}}>
+                    {this.props.useMenu === true ? 
+                    <TouchableOpacity onPress={()=>{this.props.setDrawerVisible(true)}}>
                         <IconEntypo
                             name={"menu"}
                             color="#184D47"
@@ -26,14 +27,14 @@ export default class TopBar extends Component{
                     </TouchableOpacity> : null}
                 </View>
                 
-                <View style={{flex:1, alignItems:"center"}}>
-                    <Image
-                        style={{width:'50%', height:'100%'}}
-                        source={require('./Images/Logo.png')}
+                <View style={{alignItems:"center", width:"70%", height:"80%"}}>
+                    <Image 
+                        style={{resizeMode:'contain', height:'100%', width:'100%'}}
+                        source={require('./Images/Logo2.png')}
                     />
                 </View>
                 
-                <View style={{width:50}}>
+                <View style={{width:"15%", height:"80%"}}>
                     
                 </View>
             </View>

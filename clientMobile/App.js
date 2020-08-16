@@ -4,6 +4,7 @@ import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import IconFeather from 'react-native-vector-icons/Feather'
 import IconEntypo from 'react-native-vector-icons/Entypo'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
+import IconMaterial from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import Drawer from 'react-native-drawer'
@@ -26,7 +27,7 @@ const Tabs = AnimatedTabBarNavigator()
 
 const Screen = styled.View
 `
-	flex: 1;
+  flex: 1;
   background-color: #f2f2f2;
 `
 
@@ -53,6 +54,16 @@ const EntypoTabBarIcon = (props) => {
 const AntDesignTabBarIcon = (props) => {
 	return (
 		<IconAntDesign
+			name={props.name}
+			size={props.size ? props.size : 24}
+			color={props.tintColor}
+		/>
+	)
+}
+
+const MaterialTabBarIcon = (props) => {
+	return (
+		<IconMaterial
 			name={props.name}
 			size={props.size ? props.size : 24}
 			color={props.tintColor}
@@ -134,11 +145,12 @@ export default class App extends Component{
 	async setLogout(mode)
 	{
 		this.setState(
-			{
-				loggedInStatus: mode,
-				user: {},
-				sessionToken: null
-			});
+		{
+			loggedInStatus: mode,
+			user: {},
+			sessionToken: null,
+			selectedProject: null
+		});
 	}
 
 	switchScreen(flag)
@@ -284,10 +296,10 @@ export default class App extends Component{
 						children={()=><NoticeBoard project={this.state.selectedProject} user={this.state.userInfo}/>}
 						options={{
 							tabBarIcon: ({ focused, color }) => (
-								<AntDesignTabBarIcon
+								<MaterialTabBarIcon
 									focused={focused}
 									tintColor={color}
-									name="notification"
+									name="notifications"
 								/>
 							),
 						}}

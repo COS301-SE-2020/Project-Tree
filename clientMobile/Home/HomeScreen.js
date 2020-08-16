@@ -19,7 +19,7 @@ function GoToTree() {
     const navigation = useNavigation();
   
     return (
-        <TouchableOpacity style={styles.viewButton} onPress={() => {navigation.navigate('Project Tree');}} >
+        <TouchableOpacity style={styles.editButton} onPress={() => {navigation.navigate('Project Tree');}} >
             <Icon type="FontAwesome" name="eye" style={{color:'white'}}></Icon>
         </TouchableOpacity>
     );
@@ -230,13 +230,21 @@ class HomeScreen extends Component {
                     <Content>
                         {this.props.project !== null && this.state.modalVisible === true ? <UpdateProject project={this.props.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.props.setProjectInfo} setEditing={this.setEditing} /> : null}
                         <Card>
-                            <CardItem>
-                                <Body style={{alignItems:'center', justifyContent:'center'}}>
-                                    <Text style={{fontSize:40}}>{this.props.project.name}</Text>
+                            <CardItem style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
+                                <Body>
+                                    <View style={{flexDirection:'row', width:'100%', justifyContent:'center'}}>
+                                        <View style={{width:'15%'}}></View>
+                                        <View style={{width:'80%', alignItems:'center'}}>
+                                            <Text style={{fontSize:30, color:'#184D47'}}>{this.props.project.name}</Text>
+                                        </View>
+                                        <View style={{width:40, height:40, justifyContent:'center'}}>
+                                            <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo}/>
+                                        </View>
+                                    </View>
                                 </Body>
                             </CardItem>
                             <CardItem>
-                                <Body>
+                                <Body style={{alignItems:'center', justifyContent:'center'}}>
                                     <Text>
                                         {this.props.project.description}
                                     </Text>
@@ -244,13 +252,10 @@ class HomeScreen extends Component {
                             </CardItem>
                             <CardItem style={{flexDirection:'row', justifyContent:'space-between'}}>
                                 <GoToTree />
-                                <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo}/>
+                                <SendProjectNotification project={this.props.project} user={this.props.user}/>
                                 <TouchableOpacity style={styles.editButton} onPress={() => this.setModalVisible(!this.state.modalVisible)}>
                                     <Icon type="FontAwesome" name="edit" style={{color:'white'}}></Icon>
                                 </TouchableOpacity>
-                            </CardItem>
-                            <CardItem>
-                                <SendProjectNotification project={this.props.project} user={this.props.user}/>
                             </CardItem>
                             <CardItem>
                                 <View style={{width:'100%', alignItems:"center"}}>
@@ -303,33 +308,12 @@ const styles = StyleSheet.create({
         margin:6, 
         textAlign:'center'
     },
-    viewButton:{
-        backgroundColor:'#184D47',
-        alignItems:'center',
-        justifyContent:'center',
-        height:45,
-        width:'33%',
-        borderColor:'#EEBB4D',
-        borderWidth:2,
-        borderRadius:5,
-        shadowColor:'#000',
-        shadowOffset:{
-            width:0,
-            height:0.1
-        },
-        shadowOpacity:0.8,
-        shadowRadius:2,  
-        elevation:1,
-        //margin:3,
-    },
     editButton:{
         backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        width:'33%',
-        borderColor:'#EEBB4D',
-        borderWidth:2,
+        width:'25%',
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{
