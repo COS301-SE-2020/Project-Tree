@@ -186,7 +186,7 @@ async function updateResponsiblePerson(taskId, persons,originalResponsiblePerson
   {
     deletingQuery += `OR ID(a) = ${peopleToRemove[x].id} `
   }
-  deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:PACKAGE_MANAGER]->(b) DELETE r`
+  deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:RESPONSIBLE_PERSON]->(b) DELETE r`
   
   await session
     .run(addingQuery)
@@ -211,16 +211,43 @@ async function updateResponsiblePerson(taskId, persons,originalResponsiblePerson
 async function updateResources(taskId, persons, originalResources) {
   var session = db.getSession();
 
-  let query=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+  let peopleToRemove = originalResources;
+  for(let x = 0; x < peopleToRemove.length; x++){
+    for(let y = 0; y < persons.length; y++){
+      if(peopleToRemove[x].id === persons[y].id){
+        if(x === 0) peopleToRemove.shift();
+        else if(x === peopleToRemove.length-1) peopleToRemove.pop()
+        else peopleToRemove.splice(x,1)
+      }
+    }
+  }
+
+  let addingQuery=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
   for(let x = 1; x < persons.length; x++)
   {
-    query += `OR ID(a) = ${persons[x].id} `
+    addingQuery += `OR ID(a) = ${persons[x].id} `
   }
-  query += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:RESOURCE]->(b)`
+  addingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:RESOURCE]->(b)`
 
+  let deletingQuery=`MATCH (a:User) WHERE ID(a) = ${peopleToRemove[0].id} `
+  for(let x = 1; x < peopleToRemove.length; x++)
+  {
+    deletingQuery += `OR ID(a) = ${peopleToRemove[x].id} `
+  }
+  deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:RESOURCE]->(b) DELETE r`
+  
   await session
-    .run(query)
-    .then((result) => {
+    .run(addingQuery)
+    .then(async result => {
+      await db.getSession()
+        .run(deletingQuery)
+        .then(result => {
+          return 200
+        })
+        .catch((err) => {
+          console.log(err);
+          return 400;
+        });
       return 200;
     })
     .catch((err) => {
