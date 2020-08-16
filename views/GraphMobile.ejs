@@ -157,8 +157,8 @@
         function makeLink(edge) {
             return new joint.shapes.standard.Link({
                 id:edge.id,
-                source:{id:edge.source},
-                target:{id:edge.target},
+                source:{id:`${edge.source}`},
+                target:{id:`${edge.target}`},
                 connector:{name:'rounded'},
                 router:{name:'manhattan'},
                 attrs: {

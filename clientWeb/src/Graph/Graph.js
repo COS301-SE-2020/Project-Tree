@@ -13,10 +13,10 @@ function makeLink(edge, criticalPathLinks) {
   if(criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
   return new joint.shapes.standard.Link({
       id:"l"+edge.id,
-      source: { id: edge.source },
-      target: { id: edge.target },
-      connector: { name: 'rounded' },
-      router: { name: 'manhattan' },
+      source: { id: `${edge.source}` },
+      target: { id: `${edge.target}` },
+      connector: { name: 'smooth' },
+      //router: { name: 'manhattan' },
       attrs: {
         type:'link',
         line: {stroke:strokeColor}
@@ -25,12 +25,6 @@ function makeLink(edge, criticalPathLinks) {
 }
 
 function makeElement(node, criticalPathNodes) {
-  // var maxLineLength = _.max(node.name.split('\n'), function(l) { return l.length; }).length;
-  
-  // var letterSize = 12;
-  // var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
-  // var height = 2 * ((node.name.split('\n').length + 1) * letterSize);
-
   var letterSize = 16;
   var width = 100
   var height = 80
@@ -38,7 +32,7 @@ function makeElement(node, criticalPathNodes) {
   var wraptext = joint.util.breakText(node.name, {
     width: width-20,
     height: height
-});
+  });
 
   var statusColor = '#fff'
   if(node.progress === "Incomplete"){

@@ -124,6 +124,7 @@ class UpdateTask extends React.Component {
   }
 
   HideModal() {
+    // Resets the people list
     for(let x = 0; x < this.state.pacManList.length; x++){
       this.state.people.push(this.state.pacManList[x])
     }
@@ -214,6 +215,18 @@ class UpdateTask extends React.Component {
       body.displayNode,
       body.displayRel
     );
+
+    // Resets the people list
+    for(let x = 0; x < this.state.pacManList.length; x++){
+      this.state.people.push(this.state.pacManList[x])
+    }
+    for(let x = 0; x < this.state.resPersonList.length; x++){
+      this.state.people.push(this.state.resPersonList[x])
+    }
+    for(let x = 0; x < this.state.resourcesList.length; x++){
+      this.state.people.push(this.state.resourcesList[x])
+    }
+
     this.setState({ Show: false });
   }
 
@@ -309,8 +322,6 @@ class UpdateTask extends React.Component {
   render() {
     if (this.state.id !== this.props.task.id) this.refreshState();
 
-    console.log(this.props.pacMans)
-    console.log("LIST:"+this.state.pacManList)
     /*
     * Filters the list of people to only show people matching the search term
     */
