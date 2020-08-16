@@ -79,7 +79,7 @@ class Home extends Component{
 		await AsyncStorage.getItem('sessionToken')
 		.then(async (value) => {
             token = JSON.parse(value);
-            const response = await fetch('http://10.0.2.2:5000/project/get',{
+            const response = await fetch('http://projecttree.herokuapp.com/project/get',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

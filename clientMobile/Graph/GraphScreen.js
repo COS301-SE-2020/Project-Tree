@@ -88,6 +88,7 @@ class Graph extends Component{
 
     toggleCriticalPath(){
         this.setState({displayCriticalPath:!this.state.displayCriticalPath})
+        this.reload();
     }
   
 	render(){
@@ -291,25 +292,6 @@ class WebViewWrapper extends Component{
         this.handleOnMessage = this.handleOnMessage.bind(this);
     }
 
-    async getCriticalPath(){
-        let proj = {
-            projId : this.props.projID
-        }
-        
-        const response = await fetch('http://10.0.2.2:5000/project/criticalpath',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(proj)
-        });
-
-        const body = await response.json();
-        console.log(body)
-        if (response.status !== 200) throw Error(body.message);
-    }
-
     handleOnMessage(event){
         let message = event.nativeEvent.data;
         
@@ -327,19 +309,15 @@ class WebViewWrapper extends Component{
     }
 
     render(){
-        if(this.props.displayCriticalPath === true){
-            this.getCriticalPath()
-        }
-
         return(
             <WebView
                 key={this.props.webKey}
                 ref={(ref) => this.myWebView = ref}
                 renderLoading={this.ActivityIndicatorLoadingView}
                 startInLoadingState={true}
-                source={{uri:'http://10.0.2.2:5000/mobile',
+                source={{uri:'http://projecttree.herokuapp.com/mobile',
                         method: 'POST',
-                        body:'nodes='+JSON.stringify(this.props.nodes)+'&links='+JSON.stringify(this.props.links)+'&graphDir='+JSON.stringify(this.props.direction)+''}}
+                        body:`nodes=${JSON.stringify(this.props.nodes)}&links=${JSON.stringify(this.props.links)}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${this.props.displayCriticalPath}&projId=${this.props.projID}`}}
                 onMessage={event => this.handleOnMessage(event)}
             />
         );

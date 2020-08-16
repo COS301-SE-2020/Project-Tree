@@ -268,7 +268,7 @@ export default class App extends Component{
 
 		let userToken = {creatorID: tokenVal};
 
-		const response = await fetch('http://10.0.2.2:5000/user/get',{
+		const response = await fetch('http://projecttree.herokuapp.com/user/get',{
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

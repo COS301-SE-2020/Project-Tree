@@ -277,7 +277,7 @@ class Graph extends React.Component {
   async drawGraph(criticalPath) {
         
     if(this.state.graph === null || this.state.graph === undefined){
-        return;
+      return;
     }
     
     var cells = buildGraph(this.props.nodes,this.props.links, criticalPath);
@@ -322,15 +322,6 @@ class Graph extends React.Component {
     } else if (this.state.source != null) {
       dependency = this.state.source.name + "→";
     }
-
-    if(this.state.displayCriticalPath){
-      $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
-          this.drawGraph(response);
-      })
-      .fail(() => {
-          alert( "Unable to get Critical Path" );
-      })
-    }else this.drawGraph(null);
   
     return (
       <React.Fragment>
