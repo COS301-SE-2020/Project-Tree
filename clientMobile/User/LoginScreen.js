@@ -202,7 +202,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
     container: {
       flex: 1, 
-      backgroundColor: '#96BB7C'
+      backgroundColor: '#5b3f88'
     },
     header: {
         alignItems: 'center',

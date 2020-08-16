@@ -93,8 +93,10 @@ async function register(req,res){ //email, password, name, surname
 }
 
 async function editUser(req, res) {
+    console.log("req.body   ",req.body)
     let userId = await verify(req.body.token);
-    if(userId!=null)
+    console.log("userId   ",userId)
+    if(userId != null)
     {
         db.getSession()
         .run(
@@ -137,7 +139,8 @@ async function editUser(req, res) {
 
 async function getUser(req,res)
 {
-    let userId = await verify(req.body.token);
+    console.log(req.body.creatorID)
+    let userId = await verify(req.body.creatorID);
     if ( userId != null ) {
         db.getSession()
         .run(

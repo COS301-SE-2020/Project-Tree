@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Container, Header, Picker ,Textarea, Tab, Tabs, TabHeading, Label, Form, Item, Input, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, StyleProvider } from 'native-base';
 import { 
     View, 
     Text, 
@@ -7,20 +6,19 @@ import {
     TextInput,
     Platform,
     StyleSheet ,
+    ScrollView,
     StatusBar,
     Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';import DeleteProject from '../Home/DeleteProject'
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+// import FontAwesome from 'react-native-vector-icons/FontAwesome';
+// import Feather from 'react-native-vector-icons/Feather';
+// import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 
 export default class SettingsScreen extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            loggedIn:null
-        }
+      
     }
 
     async componentDidMount(){
@@ -31,26 +29,39 @@ export default class SettingsScreen extends Component {
         render() {
         return (
             <View style={styles.container}>
-                    <StatusBar backgroundColor='#184D47' barStyle="light-content"/>
+                    <StatusBar backgroundColor='#008656' barStyle="light-content"/>
                 <View style={styles.header}>
                     <Text style={styles.text_header}>User Details</Text>
                 </View>
                 <Animatable.View 
-                    animation="fadeInUp"
+                    animation="zoomIn"
                     style={[styles.footer, {
                         backgroundColor: "white"
                     }]} >
+                        <View style={styles.button}>  
+                            <TouchableOpacity
+                                onPress={() => {this.props.switchScreen(true)}}
+                                style={[styles.signIn, {
+                                    borderColor: '#184D47',
+                                    borderWidth: 2,
+                                    marginTop: 185
+                                }]}>
+                                <Text style={[styles.textSign, {
+                                    color: '#008656'
+                                }]}>Edit User Settings</Text>
+                            </TouchableOpacity>
+                        </View> 
                         <View style={styles.button}>
                             
                             <TouchableOpacity
                                 onPress={() => {this.props.handleLogout()}}
                                 style={[styles.signIn, {
-                                    borderColor: '#DC143C',
+                                    borderColor: '#184D47',
                                     borderWidth: 2,
-                                    marginTop: 65
+                                    marginTop: 20
                                 }]}>
                                 <Text style={[styles.textSign, {
-                                    color: '#DC143C'
+                                    color: '#008656'
                                 }]}>Logout</Text>
                             </TouchableOpacity>
                         </View>           
@@ -64,13 +75,13 @@ export default class SettingsScreen extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1, 
-      backgroundColor: '#184D47'
+      backgroundColor: '#008656'
     },
     header: {
         alignItems: 'center',
         flex: 1,
         justifyContent: 'flex-end',
-        paddingBottom: 10,
+        paddingBottom: 50,
     },
     footer: {
         flex: 3,

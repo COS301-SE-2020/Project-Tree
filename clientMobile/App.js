@@ -10,6 +10,7 @@ import Drawer from 'react-native-drawer'
 import Home from './Home/HomeScreen';
 import Graph from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
+import UserSettings from './Settings/UserSettings';
 import NoticeBoard from './NoticeBoard/NoticeBoardScreen'
 console.disableYellowBox = true; 
 import { createAppContainer } from 'react-navigation';
@@ -74,8 +75,32 @@ class Settings extends Component{
 	
 	constructor(props) 
 	{
-		super(props);		
+		super(props);
+		this.state =
+		{ 
+		  switch: true,
+		  accept: false
+		};		
 		this.handleLogout = this.handleLogout.bind(this);
+		this.switchScreen = this.switchScreen.bind(this);
+	}
+
+	async switchScreen(flag)
+	{
+		console.log(flag)
+		if(flag == true)
+		{
+			this.setState
+			({
+				switch: false
+			});
+		}
+		else{
+			this.setState
+			({
+				switch: true
+			});
+		}
 	}
 
 	async handleLogout() 
@@ -91,11 +116,23 @@ class Settings extends Component{
 	}
 	
 	render(){
-		return(
-			<Screen>
-				<SettingsScreen handleLogout={this.handleLogout}/>
-			</Screen>
-		)
+		console.log(this.state.switch)
+		if(this.state.switch == true)
+		{
+			return(
+				<Screen>
+					<SettingsScreen switchScreen = {this.switchScreen} handleLogout={this.handleLogout}/>
+				</Screen>
+			)
+		}
+		else
+		{
+			return(
+				<Screen>
+					<UserSettings switchScreen = {this.switchScreen}/>
+				</Screen>
+			)
+		}
 	}
 }
 
@@ -143,6 +180,7 @@ export default class App extends Component{
 
 	switchScreen(flag)
 	{
+		console.log(flag)
 		if(flag == "Register")
 		{
 			this.setState
@@ -201,12 +239,18 @@ export default class App extends Component{
 		if(this.state.userInfo != null) return;
 
 		let tokenVal = null
+		try{
 		await AsyncStorage.getItem('sessionToken')
 		.then(async (value) => {
 			if(value){
 				tokenVal = JSON.parse(value);
 			}
 		});
+		}
+		catch
+		{
+			console.log("Error")
+		}
 
 		let userToken = {token: tokenVal};
 
