@@ -48,11 +48,8 @@ class UpdateTask extends React.Component {
     this.addResPerson = this.addResPerson.bind(this);
     this.addResource = this.addResource.bind(this);
     this.removeAssignedPeople = this.removeAssignedPeople.bind(this);
+    this.removeAssignedPerson = this.removeAssignedPerson.bind(this);
   }
-
-  // componentDidMount(){
-  //   this.removeAssignedPeople();
-  // }
 
   refreshState() {
     var syear = `${this.props.task.startDate.year.low}`;
@@ -86,33 +83,38 @@ class UpdateTask extends React.Component {
   * Removes people from the people list if they are already assigned to a role so that they can't be selected again
   */
   removeAssignedPeople(){
-    //console.log(this.state.people)
     for(let x = 0; x < this.state.people.length; x++){
       for(let y = 0; y < this.state.pacManList.length; y++){
-        if(this.state.pacManList[y].id === this.state.people[x].id){
-          if(x === 0) this.state.people.shift();
-          else if(x === this.state.people.length-1) this.state.people.pop()
-          else this.state.people.splice(x,1)
+        if(this.state.pacManList[y] !== undefined && this.state.people[x] !== undefined){
+          if(this.state.pacManList[y].id === this.state.people[x].id){
+            if(x === 0) this.state.people.shift();
+            else if(x === this.state.people.length-1) this.state.people.pop()
+            else this.state.people.splice(x,1)
+          }
         }
       }
     }
 
     for(let x = 0; x < this.state.people.length; x++){
       for(let y = 0; y < this.state.resPersonList.length; y++){
-        if(this.state.resPersonList[y].id === this.state.people[x].id){
-          if(x === 0) this.state.people.shift();
-          else if(x === this.state.people.length-1) this.state.people.pop()
-          else this.state.people.splice(x,1)
+        if(this.state.resPersonList[y] !== undefined && this.state.people[x] !== undefined){
+          if(this.state.resPersonList[y].id === this.state.people[x].id){
+            if(x === 0) this.state.people.shift();
+            else if(x === this.state.people.length-1) this.state.people.pop()
+            else this.state.people.splice(x,1)
+          }
         }
       }
     }
 
     for(let x = 0; x < this.state.people.length; x++){
       for(let y = 0; y < this.state.resourcesList.length; y++){
-        if(this.state.resourcesList[y].id === this.state.people[x].id){
-          if(x === 0) this.state.people.shift();
-          else if(x === this.state.people.length-1) this.state.people.pop()
-          else this.state.people.splice(x,1)
+        if(this.state.resourcesList[y] !== undefined && this.state.people[x] !== undefined){
+          if(this.state.resourcesList[y].id === this.state.people[x].id){
+            if(x === 0) this.state.people.shift();
+            else if(x === this.state.people.length-1) this.state.people.pop()
+            else this.state.people.splice(x,1)
+          }
         }
       }
     }

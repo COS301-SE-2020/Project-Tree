@@ -96,7 +96,7 @@ class Settings extends React.Component {
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
           <Form onSubmit={this.handleSubmit} type="multipart/form-data">
-             <Modal.Header>
+            <Modal.Header closeButton>
               <Modal.Title >
                  <img src="storage/default.png" alt="Profile" height="80" width="80"/>
                 {this.state.toggleEdit === false ?
@@ -240,7 +240,7 @@ class Settings extends React.Component {
                 <Row>
                   <Col>
                     <Button block  variant="dark" className="m-2" onClick={() => this.handleLogout()}>Logout</Button>
-                  </Col>                 
+                  </Col>
                 </Row>
               </Container>
               </Form> 

@@ -162,6 +162,7 @@ class App extends Component {
       loggedInStatus: data.status,
       user: data.id
     });
+    window.location.reload(false);
    }
   
   handleLogin(data){
