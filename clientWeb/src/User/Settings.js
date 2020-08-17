@@ -98,7 +98,7 @@ class Settings extends React.Component {
           <Form onSubmit={this.handleSubmit} type="multipart/form-data">
              <Modal.Header>
               <Modal.Title >
-                 <img src="storage/default.jpg" alt="Profile" height="80" width="80"/>
+                 <img src="storage/default.png" alt="Profile" height="80" width="80"/>
                 {this.state.toggleEdit === false ?
                   "   " +this.state.user.name + " " + this.state.user.sname
                   :
