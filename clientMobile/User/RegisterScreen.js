@@ -154,24 +154,25 @@ class RegisterScreen extends Component{
     }
 
     async handleRegister(userName, password, email, sname){
+ 
         if(userName.trim().length <1){
             alert("Please enter a username");
-           // return;
+            return;
         }
 
         if(sname.trim().length <1){
             alert("Please enter a Surname");
-           // return;
+            return;
         }
         
         if(sname.trim().length <1){
             alert("Please enter a password of at least 8 characters");
-            //return;
+            return;
         }
 
         if(email == null){
             alert("Please enter a valid email address");
-            //return;
+            return;
         }
 
         if( this.state.isValidUser &&

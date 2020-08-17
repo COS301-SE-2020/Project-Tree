@@ -324,7 +324,7 @@ class TaskSidebar extends React.Component {
           this.props.userPermission["update"] === true
           ? 
             <Row className="my-2">
-              <Col>
+              <Col xs={12} className="text-center">
                 <UpdateProgress
                   task={this.props.task}
                   setTaskInfo={this.props.setTaskInfo}
@@ -335,11 +335,11 @@ class TaskSidebar extends React.Component {
           : 
             null
           }
-          <Row>
-            {
+          {
             this.props.userPermission["update"] === true
             ? 
-              <Col>
+            <Row className="my-2">
+              <Col xs={12} className="text-center">
                 <UpdateTask
                   task={this.props.task}
                   setTaskInfo={this.props.setTaskInfo}
@@ -351,10 +351,12 @@ class TaskSidebar extends React.Component {
                   allUsers={this.props.allUsers}
                 />
               </Col>
-            : 
-              null
-            }
-            <Col>
+            </Row>
+          : 
+            null
+          }
+          <Row className="my-2">
+            <Col xs={12} className="text-center">
               <SendTaskNotification 
                 task={this.props.task} 
                 project={this.props.project} 

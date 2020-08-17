@@ -68,6 +68,9 @@ class LoginScreen extends Component {
             return;
         }
 
+        console.log(Email)
+        console.log(Email.trim())
+
         if(password == ""){
             alert("Please enter your Password");
             return;
@@ -76,7 +79,7 @@ class LoginScreen extends Component {
         if (this.state.isValidUser && this.state.isValidPassword)
         {
             let data = {
-                email: Email,
+                email: Email.trim(),
                 password: password
             }        
             data = JSON.stringify(data);

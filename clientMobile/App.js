@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, Text, TouchableOpacity, TouchableHighlight, ActivityIndicator} from 'react-native'
+import {View, Text, TouchableOpacity, TouchableHighlight, ActivityIndicator, Alert } from 'react-native'
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import IconFeather from 'react-native-vector-icons/Feather'
 import IconEntypo from 'react-native-vector-icons/Entypo'
@@ -221,8 +221,20 @@ export default class App extends Component{
 			} 
 			catch(e) 
 			{
-				console.log("Could not set key");
-			}  
+				Alert.alert(
+					"Error",
+					"User details not found. Please ensure details are correct",
+					[{
+						text: "Cancel",
+						onPress: () => console.log("Cancel Pressed"),
+						style: "cancel"
+					},
+					{ 
+						text: "OK", onPress: () => console.log("OK Pressed") 
+					}],
+					{ cancelable: false }
+				  );			
+				}  
 			this.setState(
 			{
 				loggedInStatus: data.status,
