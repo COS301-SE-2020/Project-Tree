@@ -146,7 +146,7 @@ class TaskInfo extends React.Component{
     render(){
       return(
           <React.Fragment>
-              <Container fluid  style={{fontSize:"20px",}}>
+              <Container fluid  style={{fontSize:"20px",  wordWrap: "break-word"}}>
                 <Row >
                     <Form.Control
                       as="select"
