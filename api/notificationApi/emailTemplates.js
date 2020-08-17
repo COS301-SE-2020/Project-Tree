@@ -11,7 +11,7 @@ function createHtmlEmail(from_name, taskName, projectName, _to, message, type){
 
     if(type === 'auto'){
 
-        body=`<h2>`+ message+` for project: `+projectName+`<br/> <a href="https://projecttree.herokuapp.com/">Explore</a></p></h2>`
+        body=`<h2>`+ message+` for project: `+projectName+`<br/> <a href="https://projecttree.herokuapp.com/">Check it out!</a></p></h2>`
     }
 
     var mailOptions = {
