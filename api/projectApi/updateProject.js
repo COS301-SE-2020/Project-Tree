@@ -166,5 +166,5 @@ module.exports = {
   deleteDependency,
   getSuccessors,
   addDays,
-  compareDates,
+  compareDates
 };

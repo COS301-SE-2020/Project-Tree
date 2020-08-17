@@ -1,10 +1,8 @@
 const db = require("../DB");
 const { JWT } = require("jose");
 const bcrypt = require("bcrypt");
-const path = require("path");
 
 function login(req, res) {
-  //email, password,
   db.getSession()
     .run(
       `
@@ -130,7 +128,7 @@ async function checkPermissionInternal(token, project) {
         };
     }
   } else {
-    return { error: "can not verify user" };
+    return { error: "Cannot verify user" };
   }
 }
 
