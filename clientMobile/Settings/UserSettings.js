@@ -165,7 +165,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({creatorID: token}),
+                    body: JSON.stringify({token: token}),
                 });
                 const body = await response.json();
                 console.log(body)
