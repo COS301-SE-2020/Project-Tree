@@ -12,8 +12,8 @@ function sendEmailNotification(
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "thebteam.project@gmail.com",
-      pass: "TheBTe@m1",
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASSWORD
     },
   });
 
@@ -26,7 +26,7 @@ function sendEmailNotification(
     type
   );
 
-  transporter.sendMail(mailOptions, function (error, info) {
+  transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
     } else {

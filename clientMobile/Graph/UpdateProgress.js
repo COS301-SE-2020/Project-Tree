@@ -126,7 +126,7 @@ class UpdateProgressModal extends Component {
       }
     }
 
-    this.props.setProjectInfo(nodes, projInfo.links);
+    this.props.setProjectInfo(nodes, projInfo.rels);
     this.props.toggleProgressModal(true, false);
   }
 

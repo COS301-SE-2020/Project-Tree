@@ -24,7 +24,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import UserAvatar from 'react-native-user-avatar';
 // class User extends Component
 // {
 

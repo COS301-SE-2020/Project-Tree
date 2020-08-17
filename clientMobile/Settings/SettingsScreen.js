@@ -11,16 +11,15 @@ import {
   Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-// import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-community/async-storage';
 // import Feather from 'react-native-vector-icons/Feather';
 // import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import UserAvatar from 'react-native-user-avatar';
 
 export default class SettingsScreen extends Component {
   constructor(props) {
     super(props);
   }
-
-  async componentDidMount() {}
 
   render() {
     return (
