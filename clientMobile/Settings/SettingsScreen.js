@@ -11,18 +11,39 @@ import {
     Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-// import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-community/async-storage';
 // import Feather from 'react-native-vector-icons/Feather';
 // import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import UserAvatar from 'react-native-user-avatar';
 
 export default class SettingsScreen extends Component {
     constructor(props){
         super(props);
-      
+        this.state = {profile: ''};
+
     }
 
-    async componentDidMount(){
-      
+    async componentDidMount()
+    {
+        let token = null
+            await AsyncStorage.getItem('sessionToken')
+            .then(async (value) => {
+                token = JSON.parse(value);
+                this.setState({token: token})
+                const response = await fetch('http://10.0.2.2:5000/user/get',{
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({token: token}),
+                });
+                const body = await response.json();
+                console.log(body)     
+                this.setState ({
+                   profile: body.user.name + " " + body.user.sname})
+                console.log("X  ",    this.state.profile) 
+            });
     }
 
    
@@ -31,6 +52,7 @@ export default class SettingsScreen extends Component {
             <View style={styles.container}>
                     <StatusBar backgroundColor='#008656' barStyle="light-content"/>
                 <View style={styles.header}>
+                    {/* <UserAvatar size={80} name={this.state.profile} bgColors={['#ccc', '#fafafa', '#ccaabb']}/> */}
                     <Text style={styles.text_header}>User Details</Text>
                 </View>
                 <Animatable.View 
