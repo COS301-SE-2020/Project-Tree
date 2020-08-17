@@ -278,7 +278,7 @@ class TaskSidebar extends React.Component {
 
     return (
       <React.Fragment>
-        <Container className="text-dark text-center bg-light py-2" style={{fontSize: "19px"}}>
+        <Container className="text-dark text-center bg-light py-2" style={{fontSize: "19px",  wordWrap: "break-word"}}>
           <Row className="text-center">
             <Col>
               {

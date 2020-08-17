@@ -29,7 +29,7 @@ class ProjectInfo extends React.Component{
             </Col>
           </Row> 
           <Row className="align-items-center py-2">
-            <Col className="align-items-center text-center" style={{fontSize: "20px"}}>
+            <Col className="align-items-center text-center" style={{fontSize: "20px", wordWrap: "break-word"}}>
               {this.props.project.description}
             </Col>
           </Row> 
