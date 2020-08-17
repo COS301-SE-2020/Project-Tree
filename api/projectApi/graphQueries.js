@@ -26,9 +26,9 @@ function getProjectTasks(req, res) {
       db.getSession()
         .run(
           `
-            MATCH (n:Task)-[r:PART_OF {
+            MATCH (n:Task)-[r:DEPENDENCY {
               projId: ${req.body.id}
-            }]->(m:Project) 
+            }]->(m:Task) 
             RETURN r
           `
         )
