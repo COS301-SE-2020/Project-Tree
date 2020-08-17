@@ -14,6 +14,12 @@ import Settings from "./User/Settings"
 import About from "./About"
 
 function RightSide(props){
+  window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+  }
   return (
     <div
       className="right-side"
@@ -24,6 +30,7 @@ function RightSide(props){
         <div className="text">{props.current}</div>
       </div>
     </div>
+   // window.location.reload(false)
   );
 };
 
@@ -144,17 +151,18 @@ class App extends Component {
     this.setState({showSideBar: false});
   }
 
-  changeState() {
-  const { isLogginActive } = this.state;
+  changeState() 
+  {
+    const { isLogginActive } = this.state;
 
-  if (isLogginActive) {
-    this.rightSide.classList.remove("right");
-    this.rightSide.classList.add("left");
-  } else {
-    this.rightSide.classList.remove("left");
-    this.rightSide.classList.add("right");
-  }
-  this.setState(prevState => ({ isLogginActive: !prevState.isLogginActive }));
+    if (isLogginActive) {
+      this.rightSide.classList.remove("right");
+      this.rightSide.classList.add("left");
+    } else {
+      this.rightSide.classList.remove("left");
+      this.rightSide.classList.add("right");
+    }
+    this.setState(prevState => ({ isLogginActive: !prevState.isLogginActive }));
   }
 
   handleReg(data){
@@ -176,20 +184,24 @@ class App extends Component {
   handleLogout() {
     localStorage.clear();   
     this._isMounted = false;
-    localStorage.clear();
+    console.log(this.rightSide)
     this.setState({
       loggedInStatus: false,
       user: {}
     });
-    if(!this.rightSide)
+    if(this.rightSide)
+    {
         this.rightSide.classList.add("right");
+    }
     window.location.reload(false);
+    console.log(this.rightSide)
   }
 
   render() {
     const { isLogginActive } = this.state;
-    const current = isLogginActive ? "  Register" : "Login";
-    const currentActive = isLogginActive ? "Login" : "  Register";
+    console.log(isLogginActive)
+    const current = isLogginActive ? "Register" : "Login";
+    const currentActive = isLogginActive ? "Login" : "Register";
     return (
       <React.Fragment>
         <BrowserRouter>
