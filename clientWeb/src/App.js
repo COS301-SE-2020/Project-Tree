@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import "./App.scss";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import Home from "./Home/Home";
-//import User from "./User/User";
 import ProjectPage from "./Project/ProjectPage";
 import GraphPage from "./Graph/GraphPage";
 import { Container, Row, Col, Navbar, Nav, Spinner } from "react-bootstrap";
@@ -31,7 +30,6 @@ function RightSide(props) {
         <div className="text">{props.current}</div>
       </div>
     </div>
-    // window.location.reload(false)
   );
 }
 
@@ -70,15 +68,14 @@ class App extends Component {
         });
       }).fail((response) => {
         localStorage.removeItem("sessionToken");
-        alert(response);
+        alert(response.message);
       });
 
       $.post("/user/get", { token }, (response) => {
         this.setState({ user: response.user });
       }).fail((response) => {
         localStorage.removeItem("sessionToken");
-        alert(response);
-        //throw Error(response.message);
+        alert(response.message);
       });
 
       this.setState({ loggedInStatus: true });
@@ -139,7 +136,7 @@ class App extends Component {
           });
         }
       ).fail((response) => {
-        console.log(response.error);
+        console.log(response.message);
       });
     }
   }
@@ -192,19 +189,16 @@ class App extends Component {
   handleLogout() {
     localStorage.clear();
     this._isMounted = false;
-    console.log(this.rightSide);
     this.setState({
       loggedInStatus: false,
       user: {},
     });
     if (this.rightSide) this.rightSide.classList.add("right");
     window.location.reload(false);
-    console.log(this.rightSide);
   }
 
   render() {
     const { isLogginActive } = this.state;
-    console.log(isLogginActive);
     const current = isLogginActive ? "Register" : "Login";
     const currentActive = isLogginActive ? "Login" : "Register";
     return (
