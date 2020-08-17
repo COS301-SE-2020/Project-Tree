@@ -408,47 +408,6 @@ async function updateResources(taskId, persons, originalResources) {
   //     }
   //   }
   // }
-
-  // let addingQuery=``
-  // if(isEmpty(persons) !== true){
-  //   addingQuery=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
-  //   for(let x = 1; x < persons.length; x++)
-  //   {
-  //     addingQuery += `OR ID(a) = ${persons[x].id} `
-  //   }
-  //   addingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:RESOURCE]->(b)`
-  // }
-
-  // let deletingQuery=``
-  // if(isEmpty(peopleToRemove) !== true){
-  //   deletingQuery=`MATCH (a:User) WHERE ID(a) = ${peopleToRemove[0].id} `
-  //   for(let x = 1; x < peopleToRemove.length; x++)
-  //   {
-  //     deletingQuery += `OR ID(a) = ${peopleToRemove[x].id} `
-  //   }
-  //   deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:RESOURCE]->(b) DELETE r`
-  // }
-
-  // await session
-  //   .run(addingQuery)
-  //   .then(async result => {
-  //     if(isEmpty(deletingQuery)!==true){
-  //       await db.getSession()
-  //         .run(deletingQuery)
-  //         .then(result => {
-  //           return 200
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //           return 400;
-  //         });
-  //       }
-  //     return 200;
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //     return 400;
-  //   });
 }
 
 async function getAllUsers(req, res) {

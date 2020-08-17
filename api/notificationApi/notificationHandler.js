@@ -1,7 +1,6 @@
 const emailHandler = require("./emailNotifications");
 const noticeBoardHandler = require("./noticeBoard");
 const db = require("../DB");
-const { response } = require("express");
 
 async function sendNotification(req, res) {
   // mode 0: email
@@ -12,8 +11,6 @@ async function sendNotification(req, res) {
   let data = req.body;
   data.projID = parseInt(data.projID);
   data.mode = parseInt(data.mode);
-
-  console.log(data.type);
 
   if (data.type === "project") {
     data.recipients = await getProjectMembers(data.projID);

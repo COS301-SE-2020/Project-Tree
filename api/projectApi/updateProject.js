@@ -35,7 +35,7 @@ async function propagateDependencies(currentNode, nodes, rels, queriesArray) {
     var tempLatestDate = [2000, 1, 1];
 
     for (var x = 0; x < predecessors.length; x++) {
-      var relType = predecessors[x].rel.relationshipType; //dependencies[x].properties.relationshipType;
+      var relType = predecessors[x].rel.relationshipType; 
       var relDuration = predecessors[x].rel.duration;
       var relativeDate;
 
@@ -166,5 +166,5 @@ module.exports = {
   deleteDependency,
   getSuccessors,
   addDays,
-  compareDates,
+  compareDates
 };
