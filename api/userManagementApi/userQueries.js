@@ -197,7 +197,8 @@ async function register(req,res){ //email, password, name, surname
 
 async function editUser(req, res) {
     let userId = await verify(req.body.token);
-    if(userId!=null)
+    console.log("userId   ",userId)
+    if(userId != null)
     {
         db.getSession()
         .run(
@@ -239,7 +240,8 @@ async function editUser(req, res) {
 
 async function getUser(req,res)
 {
-    let userId = await verify(req.body.token);
+    console.log(req.body.creatorID)
+    let userId = await verify(req.body.creatorID);
     if ( userId != null ) {
         db.getSession()
         .run(
@@ -282,8 +284,10 @@ async function verify(token)
          var user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, { maxAge: 1440 });
          var milliseconds = +new Date;        
          var seconds = milliseconds / 1000;
-         if(seconds - user.iat > 86400)
-             return (null)
+         if(seconds - user.iat > 86400){
+            return (null)
+         }
+            
          await db.getSession()
          .run(`
                  Match (n:User { email: "${user.email}" })
@@ -298,18 +302,18 @@ async function verify(token)
          .catch(err => 
          {
             return (null)
-
          });
      } 
      catch (err) 
      {
+         console.log(err)
         return (null)
-
      }
     if(bool)
         return answer;
-    else
+    else{
         return null
+    }
  }
 
 module.exports =

@@ -66,18 +66,30 @@ class CreateDependencyModal extends Component {
 			<Modal animationType="slide" transparent={true} visible={this.props.createDependencyVisibility} onRequestClose={()=>this.props.setCreateDependencyVisibility(false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <TouchableOpacity style={styles.hideButton} onPress={()=>this.props.setCreateDependencyVisibility(false)}>
-                            <Icon type="FontAwesome" name="close" />
-                        </TouchableOpacity>
-                        <CreateDependencyForm 
-                            setCreateDependencyVisibility={this.props.setCreateDependencyVisibility}
-                            getProjectInfo={this.props.getProjectInfo} 
-                            setProjectInfo={this.props.setProjectInfo} 
-                            name={this.props.name}
-                            source={this.props.source}
-                            target={this.props.target}
-                            projID={this.props.projID}
-                        />
+                        <View style={{flex:1}}>
+                            <TouchableOpacity style={styles.hideButton} onPress={()=>this.props.setCreateDependencyVisibility(false)}>
+                                <Icon type="FontAwesome" name="close" />
+                            </TouchableOpacity>
+                        </View>
+                        
+                        <View style={{alignItems:'center', flex:1}}>
+                            <Text style={{fontSize:25, color:'#184D47'}}>
+                                Create Dependency
+                            </Text>
+                            <View style={{backgroundColor: '#EEBB4D', height: 1, width: "80%", marginBottom:10}}></View>
+                        </View>
+
+                        <View style={{flex:5}}>
+                            <CreateDependencyForm 
+                                setCreateDependencyVisibility={this.props.setCreateDependencyVisibility}
+                                getProjectInfo={this.props.getProjectInfo} 
+                                setProjectInfo={this.props.setProjectInfo} 
+                                name={this.props.name}
+                                source={this.props.source}
+                                target={this.props.target}
+                                projID={this.props.projID}
+                            />
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -151,30 +163,35 @@ class CreateDependencyForm extends Component{
         const buttons = [{ element: component1 }, { element: component2 }]
 
         return(
-            <View>
-                <View>
+            <View style={{flex:1}}>
+                <View style={{flex:1}}>
                     <Text style={styles.modalText}>
                         {this.props.name}
                     </Text>
                 </View>
-                <ButtonGroup
-                    onPress={this.updateIndex}
-                    selectedIndex={this.state.selectedIndex}
-                    buttons={buttons}
-                    containerStyle={{height: 100}} 
-                />
-                <Form>
-                    <Item floatingLabel>
-                        <Label>Duration (Days)</Label>
-                        <Input 
-                            value = {this.state.dependencyDuration.toString()}
-                            onChangeText={val => this.setState({ dependencyDuration: val })}
-                        />
-                    </Item>
-                </Form>
-                <View styles={{padding:10}}>
+                <View style={{flex:1}}>
+                    <ButtonGroup
+                        onPress={this.updateIndex}
+                        selectedIndex={this.state.selectedIndex}
+                        buttons={buttons}
+                        containerStyle={{height: 40}} 
+                        selectedButtonStyle={{backgroundColor:'#EEBB4D'}}
+                    />
+                </View>
+                <View style={{flex:1}}>
+                    <Form>
+                        <Item floatingLabel>
+                            <Label>Duration (Days)</Label>
+                            <Input 
+                                value = {this.state.dependencyDuration.toString()}
+                                onChangeText={val => this.setState({ dependencyDuration: val })}
+                            />
+                        </Item>
+                    </Form>
+                </View>
+                <View styles={{flex:1}}>
                     <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
-                        <Text>
+                        <Text style={{color:'white'}}>
                             Submit
                         </Text>
                     </TouchableOpacity>
@@ -207,7 +224,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 450,
+        height: 380,
         width: 350
     },
     hideButton:{
@@ -219,12 +236,10 @@ const styles = StyleSheet.create({
         bottom:0
     },
     submitButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{
@@ -238,7 +253,8 @@ const styles = StyleSheet.create({
     },
 	modalText: {
 		marginBottom: 15,
-		textAlign: "center"
+        textAlign: "center",
+        fontSize:20
 	},
     CreateDependencyBtn:{
         height: 50,

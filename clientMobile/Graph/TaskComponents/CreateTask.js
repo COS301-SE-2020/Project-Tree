@@ -35,6 +35,12 @@ class CreateTaskModal extends Component{
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.setModalVisible(false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
+                        <View style={{alignItems:'center'}}>
+                            <Text style={{fontSize:25, color:'#184D47'}}>
+                                Create Task
+                            </Text>
+                            <View style={{backgroundColor: '#EEBB4D', height: 1, width: "60%", marginBottom:10}}></View>
+                        </View>
                         <CreateTaskForm projectID={this.props.projectID} setModalVisible={this.props.setModalVisible} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo}/>
                     </View>
                 </View>
@@ -169,7 +175,7 @@ class CreateTaskForm extends Component{
                 )}
                 <View styles={{padding:10}}>
                     <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
-                        <Text>
+                        <Text style={{color:'white'}}>
                             Submit
                         </Text>
                     </TouchableOpacity>
@@ -202,7 +208,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 450,
+        height: 500,
         width: 350
 	},
 	openButton:{
@@ -240,12 +246,10 @@ const styles = StyleSheet.create({
         bottom:0
     },
     submitButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{

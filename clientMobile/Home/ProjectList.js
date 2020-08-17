@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Content} from 'native-base';
 import {Text, View, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
-import CreateProject from './Home/CreateProject'
+import CreateProject from './CreateProject'
 
 class ProjectListDrawer extends Component {
     _isMounted = false;
@@ -11,24 +11,7 @@ class ProjectListDrawer extends Component {
         this.state = {projects:null, project:null, modalVisible:false, tableData: null, editing:false };
         this.toggleActionSheet = this.toggleActionSheet.bind(this);
         this.setModalVisible = this.setModalVisible.bind(this);
-        this.setProjectInfo = this.setProjectInfo.bind(this);
         this.setEditing = this.setEditing.bind(this)
-    }
-
-    setProjectInfo(project){
-        let projects = this.state.projects;
-        if(project.delete === undefined){
-            projects = projects.map((proj) => {
-                if(proj.id === project.id) proj = project;
-                return proj;
-            });
-            if(JSON.stringify(projects) === JSON.stringify(this.state.projects)) projects.push(project)
-            this.setState({projects: projects, project: project})
-        }
-        else{
-            projects = projects.filter(proj => proj.id !== project.delete);
-            this.setState({projects: projects});
-        } 
     }
 
     setEditing(val){
@@ -50,32 +33,36 @@ class ProjectListDrawer extends Component {
             
     }
 
-    async componentDidUpdate(){
-        this._isMounted = true
-        const response = await fetch('http://10.0.2.2/project/get',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body:null,
-        });
-        const body = await response.json();
-
-        if(this._isMounted === true) this.setState({projects:body.projects});
-    }
-
-    componentWillUnmount(){
-        this._isMounted = false;
-    }
-
     render() {
+        if(this.props.projects === null) return null;
+
         return (
             <View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>
-                <View style={{flex:9}}>
+                <View style={{flex:5}}>
+                    <View style={{alignItems:'center'}}>
+                        <Text style={{fontSize:25, color:'#FFF'}}>
+                            Owned Projects
+                        </Text>
+                        <View style={{backgroundColor: '#FFF', height: 1, width: "60%", marginBottom:10}}></View>
+                    </View>
                     <ScrollView>
                         <ProjectList 
-                            projects={this.state.projects} 
+                            projects={this.props.projects} 
+                            setCurrentProject={this.props.setCurrentProject}
+                            setDrawerVisible={this.props.setDrawerVisible}
+                        />
+                    </ScrollView>
+                </View>
+                <View style={{flex:5, marginTop:30}}>
+                    <View style={{alignItems:'center'}}>
+                        <Text style={{fontSize:25, color:'#FFF'}}>
+                            Other Projects
+                        </Text>
+                        <View style={{backgroundColor: '#FFF', height: 1, width: "60%", marginBottom:10}}></View>
+                    </View>
+                    <ScrollView>
+                        <ProjectList 
+                            projects={this.props.projects} 
                             setCurrentProject={this.props.setCurrentProject}
                             setDrawerVisible={this.props.setDrawerVisible}
                         />
@@ -83,11 +70,13 @@ class ProjectListDrawer extends Component {
                 </View>
                 <View style={{flex:1}}>
                     <CreateProject 
-                        setProjectInfo={this.setProjectInfo} 
+                        token={this.props.token}
+                        setProjectInfo={this.props.setProjectInfo} 
                         setDrawerVisible={this.props.setDrawerVisible}
                         setCurrentProject={this.props.setCurrentProject}
                     />
                 </View>
+                <View style={{height:20}}></View>
             </View>
         );
     }
@@ -95,7 +84,11 @@ class ProjectListDrawer extends Component {
   
 class ProjectList extends React.Component{
     render(){
-        if(this.props.projects === null) return null;
+        
+        if(this.props.projects === null){
+            return null;
+        }
+
         const projects = this.props.projects;
         const listItems = projects.map((project, i) =>
             <View key={i} style={{ padding: 5 }}>

@@ -1,8 +1,64 @@
 import React, { Component } from 'react';
-import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions, TouchableHighlight, ScrollView, Image } from 'react-native'
+import { View,ImageBackground, TouchableOpacity, StyleSheet, Text, Dimensions, TouchableHighlight, ScrollView, Image } from 'react-native'
 import { isEmpty } from 'lodash';
-import SendProjectNotification from './ProjectWideNotification';
-import {Spinner} from 'native-base'
+import {Spinner} from 'native-base';
+import { useNavigation } from '@react-navigation/native';
+import TopBar from '../TopBar'
+
+function GoToHome() {
+    const navigation = useNavigation();
+  
+    return (
+        <ImageBackground
+                source={require('../Images/notice.png')}
+                style={{flex:1}}
+                resizeMode='cover'
+            >
+                <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                    <TouchableHighlight 
+                        onPress={() => {navigation.navigate('Home');}}
+                        style={{backgroundColor:'#184D47',
+                        alignItems:'center',
+                        justifyContent:'center',
+                        height:45,
+                        borderRadius:5,
+                        shadowColor:'#000',
+                        shadowOffset:{
+                            width:0,
+                            height:1
+                        },
+                        shadowOpacity:0.8,
+                        shadowRadius:2,  
+                        elevation:3}}
+                    >
+                        <Text style={{color:'white', padding:5}}>
+                        Select a project
+                        </Text>
+                    </TouchableHighlight>
+                </View>
+            </ImageBackground>
+    );
+}
+
+class NoticeBoard extends Component{
+	render(){
+		if(this.props.project === null){
+			return(
+                <React.Fragment>
+                    <TopBar useMenu={false}/>
+				    <GoToHome />
+                </React.Fragment>
+			)
+		}
+
+		return(
+            <React.Fragment>
+                <TopBar useMenu={false}/>
+			    <NoticeBoardScreen project={this.props.project} user={this.props.user}/>
+            </React.Fragment>
+		)
+	}
+}
 
 class NoticeBoardScreen extends Component{
     _isMounted = false;
@@ -16,13 +72,13 @@ class NoticeBoardScreen extends Component{
         this._isMounted = true;
 
         data = {
-            projID : 212,
-            userID : 211
+            projID : this.props.project.id,
+            userID : this.props.user.id
         }
 
         data = JSON.stringify(data);
 
-        const response = await fetch('http://10.0.2.2:5000/retrieveNotifications',{
+        const response = await fetch('http://projecttree.herokuapp.com/retrieveNotifications',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -48,7 +104,6 @@ class NoticeBoardScreen extends Component{
 
         return(
             <React.Fragment>
-                <SendProjectNotification />
                 <NotificationList messages={this.state.messages}/>
             </React.Fragment>
         )
@@ -124,6 +179,7 @@ class NotificationList extends Component{
                             {message.fromName}
                             {message.type === "project" ? " - " + "Project Wide" : null}
                             {message.type === "task" ? " - " + message.taskName : null}
+                            {message.type === 'auto' ? " - Auto" : null}
                             {" "}
                         </Text>
                         <Text style={{color:'grey'}}>
@@ -159,4 +215,4 @@ class NotificationList extends Component{
     }
 }
 
-export default NoticeBoardScreen;
+export default NoticeBoard;
