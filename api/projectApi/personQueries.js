@@ -1,11 +1,14 @@
 const db = require("../DB");
 const { isEmpty } = require("lodash");
+const sendProjectNotification = require('../notificationApi/notificationHandler');
 
 function assignPeople(req,res){
-  let taskId = req.body[0];
-  let packageManagers = req.body[1];
-  let responsiblePersons = req.body[2];
-  let resources = req.body[3];
+  let taskId = req.body.ct_taskId;
+  let packageManagers = req.body.ct_pacMans;
+  let responsiblePersons = req.body.ct_resPersons;
+  let resources = req.body.ct_resources;
+
+  
 
   if(isEmpty(packageManagers) !== true){
     let pacManAddStatus = addPackageManager(taskId,packageManagers);
@@ -19,6 +22,13 @@ function assignPeople(req,res){
     let resourcesAddStatus = addResources(taskId,resources);
     if(resourcesAddStatus === 400) res.sendStatus(400);
   }
+
+  let data = sendProjectNotification.formatAutoAssignData(packageManagers, responsiblePersons, resources, req.body.auto_notification);
+  
+  if(data.packMan.recipients.length !== 0 ) sendProjectNotification.sendNotification({body:data.packMan});
+  if(data.resPer.recipients.length !== 0 ) sendProjectNotification.sendNotification({body:data.resPer});
+  if(data.res.recipients.length !== 0 ) sendProjectNotification.sendNotification({body:data.res});
+
   res.sendStatus(200)
 }
 
@@ -77,6 +87,195 @@ async function addResources(taskId, persons) {
   await session
     .run(query)
     .then((result) => {
+      return 200;
+    })
+    .catch((err) => {
+      console.log(err);
+      return 400;
+    });
+}
+
+function updateAssignedPeople(req,res){
+  let taskId = req.body.ut_taskId;
+  let packageManagers = req.body.ut_pacMans;
+  let originalPackageManagers = req.body.ut_originalPacMans;
+  let originalResponsiblePersons = req.body.ut_originalResPersons;
+  let originalResources = req.body.ut_originalResources;
+  let responsiblePersons = req.body.ut_resPersons;
+  let resources = req.body.ut_resources;
+
+  let pacManAddStatus = updatePackageManager(taskId,packageManagers,originalPackageManagers);
+  if(pacManAddStatus === 400) res.sendStatus(400);
+
+  let resPersonAddStatus = updateResponsiblePerson(taskId,responsiblePersons,originalResponsiblePersons);
+  if(resPersonAddStatus === 400) res.sendStatus(400);
+
+  let resourcesAddStatus = updateResources(taskId,resources,originalResources);
+  if(resourcesAddStatus === 400) res.sendStatus(400);
+
+  res.sendStatus(200)
+}
+
+async function updatePackageManager(taskId, persons, originalPackageManagers) {
+  var session = db.getSession();
+
+  let peopleToRemove = originalPackageManagers;
+  for(let x = 0; x < peopleToRemove.length; x++){
+    for(let y = 0; y < persons.length; y++){
+      if(peopleToRemove[x].id === persons[y].id){
+        if(x === 0) peopleToRemove.shift();
+        else if(x === peopleToRemove.length-1) peopleToRemove.pop()
+        else peopleToRemove.splice(x,1)
+      }
+    }
+  }
+
+  let addingQuery=``
+  if(isEmpty(persons) !== true){
+    addingQuery=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+    for(let x = 1; x < persons.length; x++)
+    {
+      addingQuery += `OR ID(a) = ${persons[x].id} `
+    }
+    addingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:PACKAGE_MANAGER]->(b)`
+  }
+
+  let deletingQuery=``
+  if(isEmpty(peopleToRemove) !== true){
+    deletingQuery=`MATCH (a:User) WHERE ID(a) = ${peopleToRemove[0].id} `
+    for(let x = 1; x < peopleToRemove.length; x++)
+    {
+      deletingQuery += `OR ID(a) = ${peopleToRemove[x].id} `
+    }
+    deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:PACKAGE_MANAGER]->(b) DELETE r`
+  }
+
+  await session
+    .run(addingQuery)
+    .then(async result => {
+      if(isEmpty(deletingQuery)!==true){
+        await db.getSession()
+          .run(deletingQuery)
+          .then(result => {
+            return 200
+          })
+          .catch((err) => {
+            console.log(err);
+            return 400;
+          });
+        }
+      return 200;
+    })
+    .catch((err) => {
+      console.log(err);
+      return 400;
+    });
+}
+
+async function updateResponsiblePerson(taskId, persons,originalResponsiblePersons) {
+  var session = db.getSession();
+
+  let peopleToRemove = originalResponsiblePersons;
+  for(let x = 0; x < peopleToRemove.length; x++){
+    for(let y = 0; y < persons.length; y++){
+      if(peopleToRemove[x].id === persons[y].id){
+        if(x === 0) peopleToRemove.shift();
+        else if(x === peopleToRemove.length-1) peopleToRemove.pop()
+        else peopleToRemove.splice(x,1)
+      }
+    }
+  }
+
+  let addingQuery=``
+  if(isEmpty(persons) !== true){
+    addingQuery=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+    for(let x = 1; x < persons.length; x++)
+    {
+      addingQuery += `OR ID(a) = ${persons[x].id} `
+    }
+    addingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:RESPONSIBLE_PERSON]->(b)`
+  }
+
+  let deletingQuery=``
+  if(isEmpty(peopleToRemove) !== true){
+    deletingQuery=`MATCH (a:User) WHERE ID(a) = ${peopleToRemove[0].id} `
+    for(let x = 1; x < peopleToRemove.length; x++)
+    {
+      deletingQuery += `OR ID(a) = ${peopleToRemove[x].id} `
+    }
+    deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:RESPONSIBLE_PERSON]->(b) DELETE r`
+  }
+
+  await session
+    .run(addingQuery)
+    .then(async result => {
+      if(isEmpty(deletingQuery)!==true){
+        await db.getSession()
+          .run(deletingQuery)
+          .then(result => {
+            return 200
+          })
+          .catch((err) => {
+            console.log(err);
+            return 400;
+          });
+        }
+      return 200;
+    })
+    .catch((err) => {
+      console.log(err);
+      return 400;
+    });
+}
+
+async function updateResources(taskId, persons, originalResources) {
+  var session = db.getSession();
+
+  let peopleToRemove = originalResources;
+  for(let x = 0; x < peopleToRemove.length; x++){
+    for(let y = 0; y < persons.length; y++){
+      if(peopleToRemove[x].id === persons[y].id){
+        if(x === 0) peopleToRemove.shift();
+        else if(x === peopleToRemove.length-1) peopleToRemove.pop()
+        else peopleToRemove.splice(x,1)
+      }
+    }
+  }
+
+  let addingQuery=``
+  if(isEmpty(persons) !== true){
+    addingQuery=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+    for(let x = 1; x < persons.length; x++)
+    {
+      addingQuery += `OR ID(a) = ${persons[x].id} `
+    }
+    addingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:RESOURCE]->(b)`
+  }
+
+  let deletingQuery=``
+  if(isEmpty(peopleToRemove) !== true){
+    deletingQuery=`MATCH (a:User) WHERE ID(a) = ${peopleToRemove[0].id} `
+    for(let x = 1; x < peopleToRemove.length; x++)
+    {
+      deletingQuery += `OR ID(a) = ${peopleToRemove[x].id} `
+    }
+    deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:RESOURCE]->(b) DELETE r`
+  }
+
+  await session
+    .run(addingQuery)
+    .then(async result => {
+      if(isEmpty(deletingQuery)!==true){
+        await db.getSession()
+          .run(deletingQuery)
+          .then(result => {
+            return 200
+          })
+          .catch((err) => {
+            console.log(err);
+            return 400;
+          });
+        }
       return 200;
     })
     .catch((err) => {
@@ -155,6 +354,7 @@ async function getProjectUsers(req,res){
 
 module.exports = {
   assignPeople,
+  updateAssignedPeople,
   getAllUsers,
   getProjectUsers
 };

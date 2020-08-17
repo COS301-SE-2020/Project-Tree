@@ -1,21 +1,30 @@
 const db = require("../DB");
 
-function sendNoticeBoardNotification(ids, fromName, taskName, projName, projID, timestamp, message, type){
+async function sendNoticeBoardNotification(ids, fromName, taskName, projName, projID, timestamp, message, type){
     let queriesArray = [];
+    let session = db.getSession();
+    await session.run(
+        `
+        CREATE (a:Notification {fromName:'${fromName}', projName:'${projName}', taskName:'${taskName}', projID:${projID}, 
+        message:'${message}', timestamp:datetime('${timestamp}'), type:'${type}'})
+        `
+    ).catch(function (err) {
+        console.log(err);
+    });
+
     for(var index=0; index<ids.length; index++){
-        queriesArray = addNewQuery(queriesArray, ids[index], fromName, taskName, projName, projID, timestamp, message, type)
+        console.log('hello')
+        queriesArray = addNewQuery(queriesArray, ids[index], timestamp, projID, message)
     }
 
     excecuteQueries(queriesArray);
 }
 
-function addNewQuery(queriesArray, id, fromName, taskName, projName, projID, timestamp, message, type) {
+function addNewQuery(queriesArray, id, timestamp, projID, message) {
     let query = `
-        MATCH (b:User)
-        WHERE ID(b) = ${id}
-        CREATE (a:Notification {fromName:'${fromName}', projName:'${projName}', taskName:'${taskName}', projID:${projID}, 
-        message:'${message}', timestamp:datetime('${timestamp}'), type:('${type}')})-[:SENT_TO]->(b)
-        RETURN a
+        Match (a:Notification {timestamp:datetime('${timestamp}'), projID:${projID}, message:'${message}'}), (b:User)
+        WHERE  id(b) = ${id}
+        CREATE (a)-[:SENT_TO]->(b)
       `;
     queriesArray.push(query);
     return queriesArray;
@@ -27,7 +36,7 @@ function excecuteQueries(queriesArray) {
     }
   }
   
-function executeQuery(query) {
+async function executeQuery(query) {
     let session = db.getSession();
     session.run(query).catch(function (err) {
         console.log(err);
