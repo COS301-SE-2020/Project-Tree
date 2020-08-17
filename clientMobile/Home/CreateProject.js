@@ -1,44 +1,23 @@
 import React, {Component} from 'react';
 import {
-  Alert,
   Modal,
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
 import {
-  Container,
-  Header,
-  Picker,
-  Textarea,
-  Tab,
-  Tabs,
-  TabHeading,
   Label,
   Form,
   Item,
   Input,
-  Title,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Left,
-  Right,
-  Body,
   Icon,
-  StyleProvider,
 } from 'native-base';
 import {
   Table,
   TableWrapper,
   Row,
   Rows,
-  Col,
-  Cols,
-  Cell,
 } from 'react-native-table-component';
 
 class CreateProject extends Component {

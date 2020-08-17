@@ -52,7 +52,6 @@ class UpdateProgress extends React.Component {
 
     this.props.toggleSidebar(null, null);
     this.props.setTaskInfo();
-    //this.setState({ Show:false })
   }
 
   render() {

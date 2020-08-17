@@ -1,12 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableHighlight,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
+import { Alert } from 'react-native';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconEntypo from 'react-native-vector-icons/Entypo';
@@ -14,21 +7,17 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
 import styled from 'styled-components/native';
 import {NavigationContainer} from '@react-navigation/native';
-import Drawer from 'react-native-drawer';
 import Home from './Home/HomeScreen';
 import Graph from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
 import UserSettings from './Settings/UserSettings';
 import NoticeBoard from './NoticeBoard/NoticeBoardScreen';
 console.disableYellowBox = true;
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from '@react-navigation/stack';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import SplashScreen from './User/SplashScreen';
 import LoginScreen from './User/LoginScreen';
 import RegisterScreen from './User/RegisterScreen';
-import {forEach} from 'lodash';
 
 const Tabs = AnimatedTabBarNavigator();
 
@@ -57,16 +46,6 @@ const EntypoTabBarIcon = (props) => {
   );
 };
 
-const AntDesignTabBarIcon = (props) => {
-  return (
-    <IconAntDesign
-      name={props.name}
-      size={props.size ? props.size : 24}
-      color={props.tintColor}
-    />
-  );
-};
-
 const MaterialTabBarIcon = (props) => {
   return (
     <IconMaterial
@@ -76,16 +55,6 @@ const MaterialTabBarIcon = (props) => {
     />
   );
 };
-
-class Register extends Component {
-  render() {
-    return (
-      <Screen>
-        <RegisterScreen />
-      </Screen>
-    );
-  }
-}
 
 class Settings extends Component {
   constructor(props) {
@@ -99,7 +68,6 @@ class Settings extends Component {
   }
 
   async userScreen(cnt) {
-    console.log(cnt);
     if (cnt == true) {
       this.setState({
         user: false,
@@ -122,7 +90,6 @@ class Settings extends Component {
   }
 
   render() {
-    console.log(this.state.user);
     if (this.state.user == true) {
       return (
         <Screen>
@@ -180,7 +147,6 @@ export default class App extends Component {
   }
 
   switchScreen(flag) {
-    console.log(flag);
     if (flag == 'Register') {
       this.setState({
         switch: false,

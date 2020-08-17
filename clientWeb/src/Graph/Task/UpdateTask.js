@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button, Row, Col } from "react-bootstrap";
+import {Form, Modal, Button, Row, Col } from "react-bootstrap";
 
 function stringifyFormData(fd) {
   const data = {};
@@ -79,9 +79,8 @@ class UpdateTask extends React.Component {
     });
   }
 
-  /*
-   * Removes people from the people list if they are already assigned to a role so that they can't be selected again
-   */
+  
+  //Removes people from the people list if they are already assigned to a role so that they can't be selected again
   removeAssignedPeople() {
     for (let x = 0; x < this.state.people.length; x++) {
       for (let y = 0; y < this.state.pacManList.length; y++) {
@@ -342,9 +341,8 @@ class UpdateTask extends React.Component {
   render() {
     if (this.state.id !== this.props.task.id) this.refreshState();
 
-    /*
-     * Filters the list of people to only show people matching the search term
-     */
+    
+    //Filters the list of people to only show people matching the search term
     let filteredPacMan = this.state.people.filter((person) => {
       return (
         person.name

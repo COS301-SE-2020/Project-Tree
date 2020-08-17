@@ -28,6 +28,7 @@ class LoginScreen extends Component {
     this.updateSecureTextEntry = this.updateSecureTextEntry.bind(this);
     this.loginHandle = this.loginHandle.bind(this);
   }
+
   textInputChange(val) {
     this.setState({
       Email: val,
@@ -48,7 +49,6 @@ class LoginScreen extends Component {
   }
 
   async loginHandle(Email, password) {
-
     if (Email == '') {
       alert('Please enter your Email');
       return;
@@ -204,15 +204,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'flex-end',
-    // paddingHorizontal: 50,
     paddingBottom: 80,
   },
   footer: {
     flex: 3,
     backgroundColor: '#fff',
     paddingTop: 50,
-    // borderTopLeftRadius: 30,
-    // borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
   },

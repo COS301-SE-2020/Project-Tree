@@ -112,7 +112,8 @@ async function retrieveNotifications(req, res) {
 
 async function getProjectMembers(id) {
   let recipientArr = [];
-  await db.getSession()
+  await db
+    .getSession()
     .run(
       `
             MATCH (a:Project), (b), (c)
@@ -135,7 +136,7 @@ async function getProjectMembers(id) {
     .catch((err) => {
       console.log(err);
     });
-    return recipientArr;
+  return recipientArr;
 }
 
 function formatAutoAssignData(

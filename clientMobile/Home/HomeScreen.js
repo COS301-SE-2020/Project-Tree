@@ -8,16 +8,11 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import {
-  Container,
-  Header,
   Content,
   Card,
   CardItem,
-  Thumbnail,
   Text,
-  Button,
   Icon,
-  Left,
   Body,
   Spinner,
 } from 'native-base';
@@ -27,16 +22,11 @@ import {
   TableWrapper,
   Row,
   Rows,
-  Col,
-  Cols,
-  Cell,
 } from 'react-native-table-component';
 import UpdateProject from './UpdateProject';
 import Drawer from 'react-native-drawer';
 import styled from 'styled-components/native';
-import IconEntypo from 'react-native-vector-icons/Entypo';
 import AsyncStorage from '@react-native-community/async-storage';
-import {withNavigation} from 'react-navigation';
 import ProjectList from './ProjectList';
 import {useNavigation} from '@react-navigation/native';
 import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';

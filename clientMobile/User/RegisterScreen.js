@@ -121,7 +121,8 @@ class RegisterScreen extends Component {
     }
   }
 
-  updateHiddenText() {
+  updateHiddenText() 
+  {
     this.setState({
       hiddenText: !this.state.hiddenText,
     });
@@ -169,7 +170,6 @@ class RegisterScreen extends Component {
           um_date: '  '
       };
       data = JSON.stringify(data);
-      console.log(data);
 
       const response = await fetch(
         'http://projecttree.herokuapp.com/register',
@@ -183,7 +183,6 @@ class RegisterScreen extends Component {
         },
       );
       const body = await response.json();
-      console.log(body);
       this.props.handleLogin(body);
     } 
     else 
@@ -381,6 +380,7 @@ styles = StyleSheet.create
     width: "100%",
     backgroundColor: 'white',
     flex: Platform.OS === 'ios' ? 3 : 5,
+    backgroundColor: '#fff',
     paddingHorizontal: 20,
     paddingVertical: 30,
   },

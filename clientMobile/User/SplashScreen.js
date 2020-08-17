@@ -23,7 +23,6 @@ class SplashScreen extends Component {
             duraton="1500"
             source={require('../Images/pic2.png')}
             style={styles.logo}
-            //resizeMode="stretch"
           />
         </View>
         <Animatable.View
