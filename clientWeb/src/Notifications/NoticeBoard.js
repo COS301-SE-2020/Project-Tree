@@ -11,78 +11,15 @@ class NoticeBoard extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { messages: null, refreshKey: this.props.refreshKey };
-  }
-
-  async componentDidMount() {
-    this._isMounted = true;
-
-    let data = {
-      projID: this.props.project.id,
-      userID: this.props.user.id,
-    };
-
-    data = JSON.stringify(data);
-
-    const response = await fetch("/retrieveNotifications", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: data,
-    });
-    const body = await response.json();
-
-    if (this._isMounted === true)
-      this.setState({ messages: body.notifications });
-  }
-
-  async refreshMessages() {
-    let data = {
-      projID: this.props.project.id,
-      userID: this.props.user.id,
-    };
-
-    data = JSON.stringify(data);
-
-    let count = 0;
-    var body;
-    var response;
-
-    while (count <= this.state.messages.length) {
-      response = await fetch("/retrieveNotifications", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: data,
-      });
-      body = await response.json();
-      count = body.notifications.length;
-    }
-
-    this.setState({
-      messages: body.notifications,
-      refreshKey: this.props.refreshKey,
-    });
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
+    this.state = { };
   }
 
   render() {
-    if (this.state.messages === null) {
+    if (this.props.messages === null || this.props.messages === undefined) {
       return null;
     }
 
-    if (this.props.refreshKey !== this.state.refreshKey) {
-      this.refreshMessages();
-    }
-
-    return <NotificationList messages={this.state.messages} />;
+    return <NotificationList messages={this.props.messages} />;
   }
 }
 

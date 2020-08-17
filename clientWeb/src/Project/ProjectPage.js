@@ -13,6 +13,7 @@ class ProjectPage extends React.Component {
       tasks: [],
       criticalPath: null,
       noticeBoardRefreshKey: 0,
+      messages: null,
     };
 
     this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(
@@ -45,6 +46,18 @@ class ProjectPage extends React.Component {
     ).fail(() => {
       alert("Unable to get Critical Path");
     });
+    let data = {
+      projID: this.props.project.id,
+      userID: this.props.user.id,
+    };
+
+    data = JSON.stringify(data);
+
+    $.post("/retrieveNotifications", JSON.parse(data), (response) => {
+      this.setState({ messages: response.notifications });
+    }).fail(() => {
+      alert("Unable to fetch notifications");
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -66,6 +79,18 @@ class ProjectPage extends React.Component {
         }
       ).fail(() => {
         alert("Unable to get Critical Path");
+      });
+      let data = {
+        projID: this.props.project.id,
+        userID: this.props.user.id,
+      };
+  
+      data = JSON.stringify(data);
+  
+      $.post("/retrieveNotifications", JSON.parse(data), (response) => {
+        this.setState({ messages: response.notifications });
+      }).fail(() => {
+        alert("Unable to fetch notifications");
       });
     }
   }
@@ -101,8 +126,7 @@ class ProjectPage extends React.Component {
           >
             {this.props.project != null && this.props.user != null ? (
               <NoticeBoard
-                project={this.props.project}
-                user={this.props.user}
+                messages={this.state.messages}
                 refreshKey={this.state.noticeBoardRefreshKey}
               />
             ) : null}
