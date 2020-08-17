@@ -95,7 +95,7 @@ class SendTaskNotification extends React.Component {
     return ( 
       <React.Fragment>
        <Button className="ml-3" variant="outline-dark" onClick={() => {this.showModal();this.notifyUsers()}}>
-          <i className="fa fa-bell-o"> </i> 
+          <i className="fa fa-bullhorn"> </i> 
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
           <Form onSubmit={event => {this.handleSubmit(event)}}>

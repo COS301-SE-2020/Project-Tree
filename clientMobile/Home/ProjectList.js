@@ -62,7 +62,7 @@ class ProjectListDrawer extends Component {
                     </View>
                     <ScrollView>
                         <ProjectList 
-                            projects={this.props.projects} 
+                            projects={this.props.otherProjects} 
                             setCurrentProject={this.props.setCurrentProject}
                             setDrawerVisible={this.props.setDrawerVisible}
                         />
