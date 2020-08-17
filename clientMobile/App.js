@@ -89,27 +89,27 @@ class Settings extends Component{
 		super(props);
 		this.state =
 		{ 
-		  switch: true,
+		  user: true,
 		  accept: false
 		};		
 		this.handleLogout = this.handleLogout.bind(this);
-		this.switchScreen = this.switchScreen.bind(this);
+		this.userScreen = this.userScreen.bind(this);
 	}
 
-	async switchScreen(flag)
+	async userScreen(cnt)
 	{
-		console.log(flag)
-		if(flag == true)
+		console.log(cnt)
+		if(cnt == true)
 		{
 			this.setState
 			({
-				switch: false
+				user: false
 			});
 		}
 		else{
 			this.setState
 			({
-				switch: true
+				user: true
 			});
 		}
 	}
@@ -127,12 +127,12 @@ class Settings extends Component{
 	}
 	
 	render(){
-		console.log(this.state.switch)
-		if(this.state.switch == true)
+		console.log(this.state.user)
+		if(this.state.user == true)
 		{
 			return(
 				<Screen>
-					<SettingsScreen switchScreen = {this.switchScreen} handleLogout={this.handleLogout}/>
+					<SettingsScreen userScreen = {this.userScreen} handleLogout={this.handleLogout}/>
 				</Screen>
 			)
 		}
@@ -140,7 +140,7 @@ class Settings extends Component{
 		{
 			return(
 				<Screen>
-					<UserSettings switchScreen = {this.switchScreen}/>
+					<UserSettings userScreen = {this.userScreen}/>
 				</Screen>
 			)
 		}
@@ -172,7 +172,6 @@ export default class App extends Component{
 		try{
 			await AsyncStorage.setItem('selectedProject', JSON.stringify(project));
 		} 
-
 		catch(e){
 			console.log("Could not set key");
 		}
@@ -252,19 +251,19 @@ export default class App extends Component{
 
 		let tokenVal = null
 		try{
-		await AsyncStorage.getItem('sessionToken')
-		.then(async (value) => {
-			if(value){
-				tokenVal = JSON.parse(value);
-			}
-		});
+			await AsyncStorage.getItem('sessionToken')
+			.then(async (value) => {
+				if(value){
+					tokenVal = JSON.parse(value);
+				}
+			});
 		}
 		catch
 		{
 			console.log("Error")
 		}
 
-		let userToken = {token: tokenVal};
+		let userToken = {creatorID: tokenVal};
 
 		const response = await fetch('http://10.0.2.2:5000/user/get',{
 			method: 'POST',

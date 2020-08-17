@@ -34,13 +34,13 @@ export default class SettingsScreen extends Component {
                     <Text style={styles.text_header}>User Details</Text>
                 </View>
                 <Animatable.View 
-                    animation="zoomIn"
+                    animation="rubberBand"
                     style={[styles.footer, {
                         backgroundColor: "white"
                     }]} >
                         <View style={styles.button}>  
                             <TouchableOpacity
-                                onPress={() => {this.props.switchScreen(true)}}
+                                onPress={() => {this.props.userScreen(true)}}
                                 style={[styles.signIn, {
                                     borderColor: '#184D47',
                                     borderWidth: 2,
@@ -51,8 +51,7 @@ export default class SettingsScreen extends Component {
                                 }]}>Edit User Settings</Text>
                             </TouchableOpacity>
                         </View> 
-                        <View style={styles.button}>
-                            
+                        <View style={styles.button}>                            
                             <TouchableOpacity
                                 onPress={() => {this.props.handleLogout()}}
                                 style={[styles.signIn, {
@@ -66,6 +65,7 @@ export default class SettingsScreen extends Component {
                             </TouchableOpacity>
                         </View>           
                 </Animatable.View>
+                
             </View>
             );
     }
