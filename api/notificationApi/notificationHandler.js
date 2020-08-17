@@ -75,10 +75,7 @@ async function sendNotification(req, res) {
 }
 
 async function retrieveNotifications(req, res) {
-  //body = JSON.parse(req.body.data);
   let data = req.body;
-  console.log(req.body);
-  console.log(data);
   await db
     .getSession()
     .run(
