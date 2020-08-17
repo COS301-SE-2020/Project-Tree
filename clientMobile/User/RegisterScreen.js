@@ -21,23 +21,20 @@ class RegisterScreen extends Component {
       sname: '',
       password: '',
       email: '',
-      isValidUser: true,
+      validUser: true,
       isValidSname: true,
       isValidPassword: true,
       isValidEmail: true,
-      isValidPasswordConfirm: true,
-      check_textInputChange: false,
+      check_inputChange: false,
       checkSname: false,
-      secureTextEntry: true,
-      confirm_secureTextEntry: true,
+      hiddenText: true,
+      confirm_hiddenText: true,
     };
-    this.textInputChange = this.textInputChange.bind(this);
+    this.inputChange = this.inputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.updateSecureTextEntry = this.updateSecureTextEntry.bind(this);
-    this.updateConfirmSecureTextEntry = this.updateConfirmSecureTextEntry.bind(
-      this,
-    );
+    this.updateHiddenText = this.updateHiddenText.bind(this);
+    this.updateConfirmHiddenText = this.updateConfirmHiddenText.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.handleValidUser = this.handleValidUser.bind(this);
     this.snameInputChange = this.snameInputChange.bind(this);
@@ -47,18 +44,18 @@ class RegisterScreen extends Component {
   handleValidUser(val) {
     if (val.trim().length >= 2) {
       this.setState({
-        isValidUser: true,
-        check_textInputChange: true,
+        validUser: true,
+        check_inputChange: true,
       });
     } else {
       this.setState({
-        isValidUser: false,
-        check_textInputChange: false,
+        validUser: false,
+        check_inputChange: false,
       });
     }
   }
 
-  textInputChange(val) {
+  inputChange(val) {
     if (val.length !== 0) {
       this.setState({
         userName: val,
@@ -124,33 +121,20 @@ class RegisterScreen extends Component {
     }
   }
 
-  //  handleConfirmPasswordChange(pass){
-  //     if( pass != this.state.password) {
-  //         this.setState({
-  //             //password: null,
-  //             isValidPasswordConfirm: false
-  //         });
-  //     } else {
-  //         this.setState({
-  //             password: pass,
-  //             isValidPasswordConfirm: true
-  //         });
-  //     }
-  // }
-
-  updateSecureTextEntry() {
+  updateHiddenText() {
     this.setState({
-      secureTextEntry: !this.state.secureTextEntry,
+      hiddenText: !this.state.hiddenText,
     });
   }
 
-  updateConfirmSecureTextEntry() {
+  updateConfirmHiddenText() {
     this.setState({
-      confirm_secureTextEntry: !this.state.confirm_secureTextEntry,
+      confirm_hiddenText: !this.state.confirm_hiddenText,
     });
   }
 
   async handleRegister(userName, password, email, sname) {
+   
     if (userName.trim().length < 1) {
       alert('Please enter a username');
       return;
@@ -172,17 +156,17 @@ class RegisterScreen extends Component {
     }
 
     if (
-      this.state.isValidUser &&
+      this.state.validUser &&
       this.state.isValidPassword &&
-      this.state.isValidEmail &&
-      this.state.isValidPasswordConfirm
-    ) {
-      let data = {
-        name: userName,
-        email: this.state.email,
-        password: this.state.password,
-        sname: this.state.sname,
-        um_date: '  ',
+      this.state.isValidEmail
+      ) 
+      {
+        let data = {
+          name: userName,
+          sname: this.state.sname,
+          email: this.state.email,
+          password: this.state.password,         
+          um_date: '  '
       };
       data = JSON.stringify(data);
       console.log(data);
@@ -201,7 +185,9 @@ class RegisterScreen extends Component {
       const body = await response.json();
       console.log(body);
       this.props.handleLogin(body);
-    } else {
+    } 
+    else 
+    {
       alert('Please ensure all entered information is valid');
     }
   }
@@ -216,24 +202,24 @@ class RegisterScreen extends Component {
         <Animatable.View animation="fadeInUp" style={styles.footer}>
           <ScrollView>
             <Text style={styles.text_footer}>Username</Text>
-            <View style={styles.action}>
+            <View style={styles.mover}>
               <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
                 placeholder="Username"
-                style={styles.textInput}
+                style={styles.inputT}
                 autoCapitalize="none"
-                onChangeText={(val) => this.textInputChange(val)}
+                onChangeText={(val) => this.inputChange(val)}
                 onEndEditing={(val) =>
                   this.handleValidUser(this.state.userName)
                 }
               />
-              {this.state.check_textInputChange ? (
+              {this.state.check_inputChange ? (
                 <Animatable.View animation="rubberBand">
                   <Feather name="check-circle" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
-            {this.state.isValidUser ? null : (
+            {this.state.validUser ? null : (
               <Animatable.View animation="rubberBand" duration={400}>
                 <Text style={styles.errorMsg}>
                   Username must be at least be longer than 1 character.
@@ -249,11 +235,11 @@ class RegisterScreen extends Component {
               ]}>
               Surname
             </Text>
-            <View style={styles.action}>
+            <View style={styles.mover}>
               <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
                 placeholder="Surname"
-                style={styles.textInput}
+                style={styles.inputT}
                 autoCapitalize="none"
                 onChangeText={(val) => this.snameInputChange(val)}
                 onEndEditing={(val) => this.handleValidSname(this.state.sname)}
@@ -280,17 +266,17 @@ class RegisterScreen extends Component {
               ]}>
               Password
             </Text>
-            <View style={styles.action}>
+            <View style={styles.mover}>
               <Feather name="lock" color="#05375a" size={20} />
               <TextInput
                 placeholder="Password"
-                secureTextEntry={this.state.secureTextEntry ? true : false}
-                style={styles.textInput}
+                secureTextEntry={this.state.hiddenText ? true : false}
+                style={styles.inputT}
                 autoCapitalize="none"
                 onChangeText={(val) => this.handlePasswordChange(val)}
               />
-              <TouchableOpacity onPress={this.updateSecureTextEntry}>
-                {this.state.secureTextEntry ? (
+              <TouchableOpacity onPress={this.updatehiddenText}>
+                {this.state.hiddenText ? (
                   <Feather name="eye-off" color="grey" size={20} />
                 ) : (
                   <Feather name="eye" color="grey" size={20} />
@@ -300,16 +286,16 @@ class RegisterScreen extends Component {
             {this.state.isValidPassword ? null : (
               <Animatable.View animation="fadeInLeft" duration={500}>
                 <Text style={styles.errorMsg}>
-                  Password must be 8 characters long.
+                  Password must be at least 8 characters long.
                 </Text>
               </Animatable.View>
             )}
             <Text style={[styles.text_footer, {marginTop: 35}]}>Email</Text>
-            <View style={styles.action}>
+            <View style={styles.mover}>
               <FontAwesome name="paper-plane" color="#05375a" size={20} />
               <TextInput
                 placeholder="Email"
-                style={styles.textInput}
+                style={styles.inputT}
                 autoCapitalize="none"
                 onChangeText={(val) => this.emailInputChange(val)}
               />
@@ -319,36 +305,22 @@ class RegisterScreen extends Component {
                 </Animatable.View>
               ) : null}
             </View>
-            <View style={styles.textPrivate}>
-              <Text style={styles.color_textPrivate}>Please read our</Text>
-              <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-                {' '}
-                Terms of service
-              </Text>
-              <Text style={styles.color_textPrivate}>
-                before clicking the Create Account button below
-              </Text>
-            </View>
             <View style={styles.button}>
               <TouchableOpacity
                 onPress={() => {
                   this.props.switchScreen('Login');
                 }}
-                style={[
-                  styles.signIn,
-                  {
-                    borderColor: '#296d98',
-                    borderWidth: 2,
-                    marginTop: 40,
-                  },
-                ]}>
+                style={[styles.signer,
+                {
+                  borderColor: '#296d98',
+                  borderWidth: 2,
+                  marginTop: 40,
+                }]}>
                 <Text
-                  style={[
-                    styles.textSign,
-                    {
-                      color: '#296d98',
-                    },
-                  ]}>
+                  style={[styles.textSign,
+                  {
+                    color: '#296d98',
+                  }]}>
                   Already have an account? Sign in now
                 </Text>
               </TouchableOpacity>
@@ -364,7 +336,7 @@ class RegisterScreen extends Component {
                   );
                 }}
                 style={[
-                  styles.signIn,
+                  styles.signer,
                   {
                     borderColor: '#296d98',
                     borderWidth: 2,
@@ -391,7 +363,8 @@ class RegisterScreen extends Component {
 
 export default RegisterScreen;
 
-styles = StyleSheet.create({
+styles = StyleSheet.create
+({
   container: {
     flex: 1,
     backgroundColor: '#EEBB4D',
@@ -405,57 +378,55 @@ styles = StyleSheet.create({
     paddingBottom: 80,
   },
   footer: {
+    width: "100%",
+    backgroundColor: 'white',
     flex: Platform.OS === 'ios' ? 3 : 5,
-    backgroundColor: '#fff',
-    // borderTopLeftRadius: 30,
-    // borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
   text_header: {
-    color: '#fff',
+    color: 'white',
     fontWeight: 'bold',
     fontSize: 40,
-    fontFamily: 'sans-serif-medium',
   },
   text_footer: {
     color: '#05375a',
     fontSize: 18,
   },
-  action: {
+  mover: {
     flexDirection: 'row',
     marginTop: 10,
+    paddingBottom: 4,
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
   },
-  textInput: {
+  inputT: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
     paddingLeft: 10,
-    color: '#05375a',
+    color: 'black',
+    marginTop: Platform.OS === 'ios' ? 0 : -12
   },
   button: {
     alignItems: 'center',
     marginTop: 20,
   },
-  signIn: {
-    width: '100%',
+  signer: { 
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    width: '100%',
+    borderRadius: 10
   },
   textSign: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-  textPrivate: {
+  terms: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 20,
   },
-  color_textPrivate: {
+  priv: {
     color: 'grey',
-  },
+  }
 });

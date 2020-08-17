@@ -4,17 +4,14 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  TouchableHighlight,
+  View
 } from 'react-native';
 import {
   Icon,
   Label,
   Form,
   Item,
-  Input,
-  StyleProvider,
-  Button,
+  Input
 } from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
 

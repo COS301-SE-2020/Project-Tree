@@ -4,17 +4,13 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  TouchableHighlight,
+  View
 } from 'react-native';
 import {
   Icon,
   Label,
   Form,
   Item,
-  Input,
-  StyleProvider,
-  Button,
 } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 

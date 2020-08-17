@@ -1,39 +1,13 @@
 import React, {Component} from 'react';
 import {
   View,
-  BackHandler,
   TouchableOpacity,
   TouchableHighlight,
   StyleSheet,
   Text,
-  Dimensions,
   ImageBackground,
 } from 'react-native';
-import {
-  Container,
-  Header,
-  Picker,
-  Textarea,
-  Tab,
-  Tabs,
-  TabHeading,
-  Label,
-  Form,
-  Item,
-  Input,
-  Title,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  StyleProvider,
-} from 'native-base';
 import {WebView} from 'react-native-webview';
-import ProjectModal from './GraphDrawer';
 import CreateTask from './TaskComponents/CreateTask';
 import TaskModal from './TaskComponents/TaskModal';
 import DependencyModal from './DependencyComponents/DependencyModal';
