@@ -43,7 +43,7 @@ class CreateDependency extends Component{
                     <React.Fragment>
                         <TouchableOpacity onPress={this.handleCreateDependency} style={styles.CreateDependencyBtn}>
                             <Text>
-                                {this.props.getName(this.props.sourceCreateDependency)+'→'+this.props.getName(this.props.targetCreateDependency)}
+                                {this.props.getName(this.props.sourceCreateDependency)+'→'+(this.props.getName(this.props.targetCreateDependency) === null? "" : this.props.getName(this.props.targetCreateDependency))}
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={()=>this.props.setCreateDependency(null)} style={styles.ClearDependencyBtn}>

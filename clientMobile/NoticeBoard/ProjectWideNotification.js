@@ -72,7 +72,10 @@ class SendNotificationForm extends Component{
             return;
         }
 
-        await sendNotification(this.props.type, this.props.user.name+" "+this.props.user.sname, [], new Date(), this.state.message, undefined, this.props.project.name, this.props.project.id, this.state.mode);
+
+        var timestamp = new Date();
+        timestamp.setHours(timestamp.getHours() + 2);
+        await sendNotification(this.props.type, this.props.user.name+" "+this.props.user.sname, [], timestamp, this.state.message, undefined, this.props.project.name, this.props.project.id, this.state.mode);
         this.props.setModalVisible(false);
     }
 

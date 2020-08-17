@@ -1,12 +1,13 @@
 var nodemailer = require('nodemailer');
 var templates = require('./emailTemplates');
+require("dotenv").config();
 
 function sendEmailNotification(fromName, taskName, projectName, to, message, type){
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'thebteam.project@gmail.com',
-          pass: 'TheBTe@m1'
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_PASSWORD
         }
     });
 
