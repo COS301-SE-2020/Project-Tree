@@ -13,6 +13,8 @@ async function sendNotification(req, res){
     data.projID = parseInt(data.projID);
     data.mode = parseInt(data.mode);
 
+    console.log(data.type);
+
     if(data.type === 'project'){
         data.recipients = await getProjectMembers(data.projID);
     }
@@ -22,8 +24,8 @@ async function sendNotification(req, res){
     }
 
     if(data.mode === 0){
-        // let emails = getEmails(data.recipients);
-        // emailHandler.sendEmailNotification(data.fromName, data.taskName, data.projName, emails, data.message);
+        let emails = getEmails(data.recipients);
+        emailHandler.sendEmailNotification(data.fromName, data.taskName, data.projName, emails, data.message, data.type);
     }
 
     else if(data.mode === 1){
@@ -32,7 +34,11 @@ async function sendNotification(req, res){
     }
 
     else{
-        console.log('other')
+        let emails = getEmails(data.recipients);
+        emailHandler.sendEmailNotification(data.fromName, data.taskName, data.projName, emails, data.message, data.type);
+
+        let ids = getIds(data.recipients);
+        noticeBoardHandler.sendNoticeBoardNotification(ids, data.fromName, data.taskName, data.projName, data.projID, data.timestamp, data.message, data.type);
     }
 
     if(data.type === 'auto'){
@@ -122,7 +128,7 @@ function formatAutoAssignData(packageManagers, responsiblePersons, resources, da
         taskName: undefined,
         projName: data.projName,
         projID: data.projID,
-        mode: 1
+        mode: 2
     }
 
     recipients = [];
@@ -140,7 +146,7 @@ function formatAutoAssignData(packageManagers, responsiblePersons, resources, da
         taskName: undefined,
         projName: data.projName,
         projID: data.projID,
-        mode: 1
+        mode: 2
     }
 
     recipients = [];
@@ -158,7 +164,7 @@ function formatAutoAssignData(packageManagers, responsiblePersons, resources, da
         taskName: undefined,
         projName: data.projName,
         projID: data.projID,
-        mode: 1
+        mode: 2
     }
 
     let returnData = {

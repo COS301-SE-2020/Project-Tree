@@ -1,4 +1,19 @@
-function createHtmlEmail(from_name, taskName, projectName, _to, message){
+function createHtmlEmail(from_name, taskName, projectName, _to, message, type){
+    let body;
+    console.log(type)
+    if(type === 'task'){
+        body=`<h2>New notification from `+ from_name +` for project `+ projectName+ ` regarding your task `+ taskName +`:<br/>`+ message +` <br/> <a href="https://projecttree.herokuapp.com/">Explore</a></p></h2>`
+    }
+
+    if(type === 'project'){
+        body=`<h2>New notification from `+ from_name +` for project `+ projectName+`.<br/>`+ message +` <br/> <a href="https://projecttree.herokuapp.com/">Explore</a></p></h2>`
+    }
+
+    if(type === 'auto'){
+
+        body=`<h2>`+message+` for `+projectName+` .<br/> <a href="https://projecttree.herokuapp.com/">Explore</a></p></h2>`
+    }
+
     var mailOptions = {
         from: 'thebteam.project@gmail.com',
         to: _to,
@@ -20,10 +35,7 @@ function createHtmlEmail(from_name, taskName, projectName, _to, message){
             
                 <body>
                     <img src="https://cdn.discordapp.com/attachments/713307810942681089/738461435297923142/Project_Tree.png" alt="Project-Tree">
-                    <h2>You have been joined to a new project, `+ projectName +`.<br/> <a href="https://projecttree.herokuapp.com/">Go check it out!</a></h2>
-                    <h2>You have been assigned to a new task, `+ taskName +`.<br/> <a href="https://projecttree.herokuapp.com/">Go check it out!</a></h2>
-                    <h2>New notification from `+ from_name +` for project `+ projectName+ ` regarding your task `+ taskName +`.<br/>`+ message +` <br/> <a href="https://projecttree.herokuapp.com/">Explore</a></p></h2>
-                    
+                    `+body+`
                 </body>
             </html>
                 `

@@ -24,9 +24,10 @@ function assignPeople(req,res){
   }
 
   let data = sendProjectNotification.formatAutoAssignData(packageManagers, responsiblePersons, resources, req.body.auto_notification);
-  sendProjectNotification.sendNotification({body:data.packMan});
-  sendProjectNotification.sendNotification({body:data.resPer});
-  sendProjectNotification.sendNotification({body:data.res});
+  
+  if(data.packMan.recipients.length !== 0 ) sendProjectNotification.sendNotification({body:data.packMan});
+  if(data.resPer.recipients.length !== 0 ) sendProjectNotification.sendNotification({body:data.resPer});
+  if(data.res.recipients.length !== 0 ) sendProjectNotification.sendNotification({body:data.res});
 
   res.sendStatus(200)
 }
