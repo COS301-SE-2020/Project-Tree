@@ -157,9 +157,8 @@ async function register(req, res) {
     .then((result) => {
       if (result.records.length != 0) {
         res.status(400);
-        res.send({message: "Already a user"});
-      }
-      else {
+        res.send({ message: "Already a user" });
+      } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           db.getSession()
             .run(

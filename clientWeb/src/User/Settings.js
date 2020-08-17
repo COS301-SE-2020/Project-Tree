@@ -60,7 +60,8 @@ class Settings extends React.Component {
       (response) => {
         this.setState({ toggleEdit: false, user: response.user });
       }
-    ).fail((response) => {
+    )
+    .fail((response) => {
       throw Error(response.message);
     });
   }

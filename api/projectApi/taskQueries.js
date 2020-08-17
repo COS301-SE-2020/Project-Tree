@@ -186,7 +186,7 @@ async function updateProgress(req, res) {
       `
     )
     .then((result) => {
-      res.status(200)
+      res.status(200);
       res.send({ ret: result });
     });
 }
