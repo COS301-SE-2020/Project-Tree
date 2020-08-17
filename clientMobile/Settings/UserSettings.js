@@ -24,98 +24,90 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import UserAvatar from 'react-native-user-avatar';
-// class User extends Component
-// {
 
-//     constructor(props){
-//         super(props);
-//         this.state = {confPassword:'', isValidPassword: true};
-//     }
+// class ConfirmPass extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {confPassword: '', isValidPassword: true};
+//   }
 
-class ConfirmPass extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {confPassword: '', isValidPassword: true};
-  }
+//   handlePasswordChange(val, flag) {
+//     this.setState({
+//       confPassword: val,
+//     });
+//     console.log(this.state.confPassword);
+//   }
 
-  handlePasswordChange(val, flag) {
-    this.setState({
-      confPassword: val,
-    });
-    console.log(this.state.confPassword);
-  }
-
-  render() {
-    return (
-      <Modal
-        animationType="slide"
-        visible={this.props.modalVisible}
-        onRequestClose={() => this.props.setModalVisible(false)}>
-        <View style={styleUser.container}>
-          <View style={styleUser.header}>
-            <Text style={styleUser.text_header}>Confirm details</Text>
-          </View>
-          <Animatable.View animation="fadeInUp" style={styleUser.footer}>
-            <ScrollView>
-              <Text
-                style={[
-                  styleUser.text_footer,
-                  {
-                    marginTop: 35,
-                  },
-                ]}>
-                Password
-              </Text>
-              <View style={styleUser.action}>
-                <Feather name="lock" color="#05375a" size={20} />
-                <TextInput
-                  placeholder="Password"
-                  secureTextEntry={this.props.secureTextEntry ? true : false}
-                  style={styleUser.textInput}
-                  // defaultValue={this.state.originalUser.user.name}
-                  autoCapitalize="none"
-                  onChangeText={(val) => this.handlePasswordChange(val, false)}
-                />
-                <TouchableOpacity onPress={this.updateSecureTextEntry}>
-                  {this.props.secureTextEntry ? (
-                    <Feather name="eye-off" color="grey" size={20} />
-                  ) : (
-                    <Feather name="eye" color="grey" size={20} />
-                  )}
-                </TouchableOpacity>
-              </View>
-              <View style={styleUser.button}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.handleEdit(this.state.confPassword);
-                  }}
-                  style={[
-                    styleUser.signIn,
-                    {
-                      borderColor: '#296d98',
-                      borderWidth: 2,
-                      marginTop: 8,
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      styleUser.textSign,
-                      {
-                        color: '#296d98',
-                      },
-                    ]}>
-                    Edit Details
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </Animatable.View>
-        </View>
-      </Modal>
-    );
-  }
-}
+//   render() {
+//     return (
+//       <Modal
+//         animationType="slide"
+//         visible={this.props.modalVisible}
+//         onRequestClose={() => this.props.setModalVisible(false)}>
+//         <View style={styleUser.container}>
+//           <View style={styleUser.header}>
+//             <Text style={styleUser.text_header}>Confirm details</Text>
+//           </View>
+//           <Animatable.View animation="fadeInUp" style={styleUser.footer}>
+//             <ScrollView>
+//               <Text
+//                 style={[
+//                   styleUser.text_footer,
+//                   {
+//                     marginTop: 35,
+//                   },
+//                 ]}>
+//                 Password
+//               </Text>
+//               <View style={styleUser.action}>
+//                 <Feather name="lock" color="#05375a" size={20} />
+//                 <TextInput
+//                   placeholder="Password"
+//                   secureTextEntry={this.props.secureTextEntry ? true : false}
+//                   style={styleUser.textInput}
+//                   // defaultValue={this.state.originalUser.user.name}
+//                   autoCapitalize="none"
+//                   onChangeText={(val) => this.handlePasswordChange(val, false)}
+//                 />
+//                 <TouchableOpacity onPress={this.updateSecureTextEntry}>
+//                   {this.props.secureTextEntry ? (
+//                     <Feather name="eye-off" color="grey" size={20} />
+//                   ) : (
+//                     <Feather name="eye" color="grey" size={20} />
+//                   )}
+//                 </TouchableOpacity>
+//               </View>
+//               <View style={styleUser.button}>
+//                 <TouchableOpacity
+//                   onPress={() => {
+//                     this.props.handleEdit(this.state.confPassword);
+//                   }}
+//                   style={[
+//                     styleUser.signIn,
+//                     {
+//                       borderColor: '#296d98',
+//                       borderWidth: 2,
+//                       marginTop: 8,
+//                     },
+//                   ]}>
+//                   <Text
+//                     style={[
+//                       styleUser.textSign,
+//                       {
+//                         color: '#296d98',
+//                       },
+//                     ]}>
+//                     Edit Details
+//                   </Text>
+//                 </TouchableOpacity>
+//               </View>
+//             </ScrollView>
+//           </Animatable.View>
+//         </View>
+//       </Modal>
+//     );
+//   }
+// }
 
 class UserSettings extends Component {
   constructor(props) {
