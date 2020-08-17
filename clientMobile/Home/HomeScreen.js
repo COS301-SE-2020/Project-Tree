@@ -69,7 +69,7 @@ const Screen = styled.View
 class Home extends Component{
 	constructor(props) {
         super(props);
-		this.state = {drawerVisible:false, token: null, projects:null};
+		this.state = {drawerVisible:false, token: null, projects:null, otherProjects:null};
         this.setDrawerVisible = this.setDrawerVisible.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
 	}
@@ -80,22 +80,22 @@ class Home extends Component{
 		await AsyncStorage.getItem('sessionToken')
 		.then(async (value) => {
             token = JSON.parse(value);
-            const response = await fetch('http://projecttree.herokuapp.com/project/get',{
+            const response = await fetch('http://10.0.2.2:5000/project/get',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({creatorID: token}),
+                body: JSON.stringify({token: token}),
             });
             const body = await response.json();
 
             if(this.props.project === null){
-                this.setState({projects:body.projects, token:token});
+                this.setState({projects:body.ownedProjects, otherProjects: body.otherProjects, token:token});
                 this.setState({drawerVisible:true});
             } 
 
-            else this.setState({projects:body.projects, token:token});
+            else this.setState({projects:body.ownedProjects, otherProjects: body.otherProjects , token:token});
         }); 
     }
 
@@ -140,6 +140,7 @@ class Home extends Component{
                         setDrawerVisible={this.setDrawerVisible} 
                         token={this.state.token}
                         projects={this.state.projects}
+                        otherProjects={this.state.otherProjects}
                         setProjectInfo={this.setProjectInfo}
                         /> : null}
 					tapToClose={true}

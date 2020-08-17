@@ -4,12 +4,18 @@ import * as Progress from 'react-native-progress';
 import {Spinner} from 'native-base';
 
 export default class ProgressDashboardWrapper extends Component {
+    _isMounted = false;
+
     constructor(props){
         super(props);
         this.state = {tasks:null, criticalPath:null}
     }
 
-    async componentDidMount(){
+    async componentDidUpdate(prevProps){
+        if(prevProps.project.id === this.props.project.id) return;
+
+        this._isMounted = true;
+
         var response = await fetch('http://projecttree.herokuapp.com/project/projecttasks',{
             method: 'POST',
             headers: {
@@ -22,7 +28,7 @@ export default class ProgressDashboardWrapper extends Component {
 		var body = await response.json();
         if (response.status !== 200) throw Error(body.message);
         else{
-            this.setState({tasks:body.tasks});
+            if(this._isMounted === true) this.setState({tasks:body.tasks});
         }
 
         response = await fetch('http://projecttree.herokuapp.com/project/criticalpath',{
@@ -37,8 +43,45 @@ export default class ProgressDashboardWrapper extends Component {
 		body = await response.json();
         if (response.status !== 200) throw Error(body.message);
         else{
-            this.setState({criticalPath:body});
+            if(this._isMounted === true) this.setState({criticalPath:body});
         }
+    }
+
+    async componentDidMount(){this._isMounted = true;
+
+        var response = await fetch('http://projecttree.herokuapp.com/project/projecttasks',{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({ projId:this.props.project.id })
+        });
+
+		var body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        else{
+            if(this._isMounted === true) this.setState({tasks:body.tasks});
+        }
+
+        response = await fetch('http://projecttree.herokuapp.com/project/criticalpath',{
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({ projId:this.props.project.id })
+        });
+
+		body = await response.json();
+        if (response.status !== 200) throw Error(body.message);
+        else{
+            if(this._isMounted === true) this.setState({criticalPath:body});
+        }
+    }
+
+    componentWillUnmount(){
+        this._isMounted = false;
     }
     
 
