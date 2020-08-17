@@ -34,8 +34,7 @@ class Home extends React.Component {
           <Row>
             <Col md={1} lg={2} xl={3}></Col>
             <Col md={10} lg={8} xl={6} className="text-center">
-              {
-              this.props.ownedProjects.length !== 0 || this.props.otherProjects.length !== 0 ? 
+              {this.props.ownedProjects.length !== 0 || this.props.otherProjects.length !== 0 ? 
                 <Container>
                   <Row>
                     <Col>

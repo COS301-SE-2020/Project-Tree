@@ -71,7 +71,9 @@ class App extends Component {
         this.setState({user: response.user});
       })
       .fail((response) => {
-          throw Error(response.message);
+        localStorage.removeItem('sessionToken');
+        alert(response);
+        //throw Error(response.message);
       });
 
       this.setState({loggedInStatus: true });
