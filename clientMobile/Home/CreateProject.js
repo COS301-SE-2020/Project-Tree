@@ -100,7 +100,7 @@ class CreateProjectForm extends Component{
         }
 
         let data = {
-            creatorID : this.props.token,
+            token : this.props.token,
             cp_Name : this.state.projName,
             cp_Description : this.state.projDescription,
             cp_pm_Create : permissions[0],

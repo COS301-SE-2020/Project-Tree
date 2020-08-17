@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { Alert, Modal, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity, TextInput } from "react-native";
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import { Container, Icon, Form, Item, Label, Input, Picker, StyleProvider, Button } from 'native-base';
-import buttonStyling from '../native-base-theme/variables/buttonStylingProjList';
-import getTheme from '../native-base-theme/components';
 
 class UpdateProject extends Component{
     constructor(props){
@@ -24,7 +22,7 @@ class UpdateProject extends Component{
                             </Text>
                             <View style={{backgroundColor: '#EEBB4D', height: 1, width: "60%", marginBottom:10}}></View>
                         </View>
-                        {this.props.project !== undefined ? <UpdateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible} project={this.props.project} /> : null}
+                        {this.props.project !== undefined ? <UpdateProjectForm setProjectInfo={this.props.setProjectInfo} setModalVisible={this.props.setModalVisible} project={this.props.project} token={this.props.token}/> : null}
                     </View>
                 </View>
             </Modal>
@@ -75,6 +73,7 @@ class UpdateProjectForm extends Component{
         }
 
         let data = {
+            token: this.props.token,
             up_id: this.props.project.id,
             up_name: this.state.projName,
             up_description: this.state.projDescription,

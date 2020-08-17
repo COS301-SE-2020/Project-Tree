@@ -21,9 +21,11 @@ export default class DeleteProject extends Component{
     }
 
     async handleSubmit(){
-
         let data = {
-            dp_id: this.props.project.id
+            data : JSON.stringify({
+                token: this.props.token,
+                project : this.props.project
+            })
         }
 
         const response = await fetch('http://projecttree.herokuapp.com/project/delete', {
