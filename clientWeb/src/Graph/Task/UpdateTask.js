@@ -232,8 +232,8 @@ class UpdateTask extends React.Component {
 
   updateSearch(event, mode){
     if(mode===0) this.setState({pacManSearchTerm:event.target.value});
-    if(mode==1) this.setState({resPersonSearchTerm:event.target.value});
-    if(mode==2) this.setState({resourcesSearchTerm:event.target.value});
+    if(mode===1) this.setState({resPersonSearchTerm:event.target.value});
+    if(mode===2) this.setState({resourcesSearchTerm:event.target.value});
   }
 
   addPacMan(person){

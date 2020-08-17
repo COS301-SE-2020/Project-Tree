@@ -316,6 +316,7 @@ async function getProjects(req, res) {
   }
   else if(typeof userId == 'undefined')
   {
+    res.status(400);
     res.send(
       {
         message: "Undefined"
@@ -323,6 +324,7 @@ async function getProjects(req, res) {
   }
   else
   {
+    res.status(400);
     res.send(
     {
       message: "Invalid User"

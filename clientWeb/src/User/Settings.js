@@ -14,7 +14,7 @@ function stringifyFormData(fd) {
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: {}};
+    this.state = { show: false, toggleEdit: false, user: this.props.user};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -24,14 +24,10 @@ class Settings extends React.Component {
 
   }
 
-  componentDidMount(){
-    $.post("/user/get", {token: localStorage.getItem('sessionToken')}, (response) => {
-      console.log(response)
-      this.setState({user: response.user});
-    })
-    .fail((response) => {
-        throw Error(response.message);
-    });
+  componentDidUpdate(prevProps){
+    if(this.props.user !== prevProps.user){
+      this.setState({user: this.props.user});
+    }
   }
 
   showModal() {
@@ -99,7 +95,7 @@ class Settings extends React.Component {
           <i className="fa fa-cogs text-dark" style={{fontSize:"30px"}}></i>
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
-          <Form onSubmit={this.handleSubmit} enctype="multipart/form-data">
+          <Form onSubmit={this.handleSubmit} type="multipart/form-data">
              <Modal.Header>
               <Modal.Title >
                  <img src="storage/default.jpg" alt="Profile" height="80" width="80"/>
@@ -192,13 +188,24 @@ class Settings extends React.Component {
                     }}
                       />
                     )}
-                </Row>                               
+                </Row>
+                <Form.Control
+                  type="hidden"
+                  id="ut_name"
+                  name="ut_name"
+                  value={this.state.name}
+                  onChange={(e) => {
+                    this.setState({ name: e.target.value });
+                    this.value = this.state.name;
+                  }}
+                />
                 <input
                   hidden
                   type="number"
                   id="userId"
                   name="userId"
                   value={this.state.user.id}
+                  onChange={() => {}}
                 />
               </Container>
             </Modal.Body>

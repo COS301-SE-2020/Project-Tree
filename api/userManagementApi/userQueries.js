@@ -240,8 +240,7 @@ async function editUser(req, res) {
 
 async function getUser(req,res)
 {
-    console.log(req.body.creatorID)
-    let userId = await verify(req.body.creatorID);
+    let userId = await verify(req.body.token);
     if ( userId != null ) {
         db.getSession()
         .run(

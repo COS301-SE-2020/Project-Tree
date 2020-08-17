@@ -36,7 +36,7 @@ class App extends Component {
       project: null, 
       showSideBar: false,
       loggedInStatus: false,
-      user: null,
+      user: {},
       isLogginActive: true,
       userPermission: {
         create: false,
