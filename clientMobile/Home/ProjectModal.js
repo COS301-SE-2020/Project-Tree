@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import {
-  Alert,
   Modal,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
   TouchableOpacity,
 } from 'react-native';
@@ -13,9 +11,6 @@ import {
   TableWrapper,
   Row,
   Rows,
-  Col,
-  Cols,
-  Cell,
 } from 'react-native-table-component';
 import {Icon} from 'native-base';
 import DeleteProject from './DeleteProject';

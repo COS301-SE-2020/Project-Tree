@@ -31,12 +31,9 @@ export class Login extends Component {
   }
 
   handleSubmit(event) {
-    //  const { email, password } = this.state;
     let data = stringifyFormData(new FormData(event.target));
-    //console.log(data)
     $.post("/login", JSON.parse(data), (response) => {
       if (response.status === true) {
-        //console.log(response)
         localStorage.setItem("sessionToken", response.sessionToken);
         this.props.handleLogin(response);
       } else alert("Unable to Log");
@@ -44,9 +41,6 @@ export class Login extends Component {
       .fail(() => {
         alert("Unable to login");
       })
-      .always(() => {
-        //alert( "finished" );
-      });
     event.preventDefault();
   }
 

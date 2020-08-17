@@ -12,7 +12,6 @@ function stringifyFormData(fd) {
 }
 
 export class Register extends React.Component {
-  //state = initialState;
   constructor() {
     super();
     this.state = {
@@ -46,7 +45,6 @@ export class Register extends React.Component {
       ? arr.push("Must be between 8 and 22 characters  ")
       : (str += "");
     return arr;
-    // return /[A-Z]/.test(p) && /[0-9]/.test(p) && /[?=.*[!@#$&*]]/.test(p) && /^.{8}$/.test(p);
   }
 
   handleChange(event) {
@@ -65,15 +63,9 @@ export class Register extends React.Component {
         localStorage.setItem("sessionToken", response.sessionToken);
         this.props.handleReg(response);
       })
-        .done(() => {
-          //this.setState(sessionToken.getItem({sessionToken}));
-        })
-        .fail(() => {
-          alert("Unable to create User");
-        })
-        .always(() => {
-          // alert( "finished" );
-        });
+      .fail(() => {
+        alert("Unable to create User");
+      })
     } else {
       this.setState({ passwordError: arr[0] });
       this.setState({ passwordError2: arr[1] });
@@ -92,7 +84,6 @@ export class Register extends React.Component {
       password,
       name,
       sname,
-      // error
     } = this.state;
     return (
       <div className="base-container" ref={this.props.containerRef}>

@@ -124,20 +124,6 @@ class RegisterScreen extends Component {
     }
   }
 
-  //  handleConfirmPasswordChange(pass){
-  //     if( pass != this.state.password) {
-  //         this.setState({
-  //             //password: null,
-  //             isValidPasswordConfirm: false
-  //         });
-  //     } else {
-  //         this.setState({
-  //             password: pass,
-  //             isValidPasswordConfirm: true
-  //         });
-  //     }
-  // }
-
   updateSecureTextEntry() {
     this.setState({
       secureTextEntry: !this.state.secureTextEntry,
@@ -185,7 +171,6 @@ class RegisterScreen extends Component {
         um_date: '  ',
       };
       data = JSON.stringify(data);
-      console.log(data);
 
       const response = await fetch(
         'http://projecttree.herokuapp.com/register',
@@ -199,7 +184,6 @@ class RegisterScreen extends Component {
         },
       );
       const body = await response.json();
-      console.log(body);
       this.props.handleLogin(body);
     } else {
       alert('Please ensure all entered information is valid');
@@ -407,8 +391,6 @@ styles = StyleSheet.create({
   footer: {
     flex: Platform.OS === 'ios' ? 3 : 5,
     backgroundColor: '#fff',
-    // borderTopLeftRadius: 30,
-    // borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
