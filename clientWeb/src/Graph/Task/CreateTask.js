@@ -236,9 +236,7 @@ class CreateTask extends React.Component {
   }
 
   render() {
-    /*
-     * Filters the list of people to only show people matching the search term
-     */
+     // Filters the list of people to only show people matching the search term
     let filteredPacMan = null;
     let filteredResPerson = null;
     let filteredResources = null;
