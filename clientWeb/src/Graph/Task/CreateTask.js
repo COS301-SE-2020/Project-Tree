@@ -193,6 +193,10 @@ class CreateTask extends React.Component {
     const body = await response.json();
 
     let newTask = body.displayNode;
+    let timestamp = new Date();
+    timestamp.setHours(timestamp.getHours() + 2);
+    timestamp = timestamp.toISOString();
+
     await fetch("/people/assignPeople", {
       method: "POST",
       headers: {
@@ -205,7 +209,7 @@ class CreateTask extends React.Component {
         ct_resPersons:this.state.resPersonList,
         ct_resources:this.state.resourcesList,
         auto_notification: {
-          timestamp: (new Date().toISOString()),
+          timestamp: timestamp,
           projName: this.props.project.name,
           projID: this.props.project.id,
           taskName: data.ct_Name,

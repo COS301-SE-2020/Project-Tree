@@ -32,7 +32,9 @@ class SendProjectNotification extends React.Component {
     event.preventDefault();
 
     let notification = returnFormData(new FormData(event.target));
-    let timestamp = (new Date().toISOString());
+    let timestamp = new Date();
+    timestamp.setHours(timestamp.getHours() + 2);
+    timestamp = timestamp.toISOString();
 
     let data = {
       type: 'project',     //personal, task, project, auto

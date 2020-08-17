@@ -32,8 +32,9 @@ class SendTaskNotification extends React.Component {
     event.preventDefault();
 
     let notification = returnFormData(new FormData(event.target));
-    let timestamp = (new Date().toISOString());
-    console.log(this.state.notificationRec)
+    let timestamp = new Date();
+    timestamp.setHours(timestamp.getHours() + 2);
+    timestamp = timestamp.toISOString();
 
     let data = {
       type: 'task',     //personal, task, project, auto
