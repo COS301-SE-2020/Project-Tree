@@ -65,7 +65,7 @@ class SendProjectNotification extends React.Component {
           onClick={() => {this.showModal()}}
 
         >
-            <i className="fa fa-bell-o">  </i> Send Notification {" "}
+            <i className="fa fa-bullhorn"></i>
         </Button>
         <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
           <Form onSubmit={event => {this.handleSubmit(event)}}>
