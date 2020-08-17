@@ -68,7 +68,7 @@ const Screen = styled.View
 
 class Home extends Component{
 	constructor(props) {
-		super(props);
+        super(props);
 		this.state = {drawerVisible:false, token: null, projects:null};
         this.setDrawerVisible = this.setDrawerVisible.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
@@ -90,7 +90,12 @@ class Home extends Component{
             });
             const body = await response.json();
 
-            this.setState({projects:body.projects, token:token});
+            if(this.props.project === null){
+                this.setState({projects:body.projects, token:token});
+                this.setState({drawerVisible:true});
+            } 
+
+            else this.setState({projects:body.projects, token:token});
         }); 
     }
 
@@ -221,7 +226,7 @@ class HomeScreen extends Component {
     render() {
         if(this.props.project === null) 
             return(
-                    <SelectProject setDrawerVisible={this.props.setDrawerVisible}/>
+                <SelectProject setDrawerVisible={this.props.setDrawerVisible}/>
             );
 
         return (

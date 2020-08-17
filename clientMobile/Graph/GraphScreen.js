@@ -18,35 +18,37 @@ function GoToHome() {
     const navigation = useNavigation();
   
     return (
-        <ImageBackground
+        <View style={{backgroundColor:'white', flex:1}}>
+            <ImageBackground
                 source={require('../Images/graph.png')}
                 style={{flex:1}}
                 resizeMode="contain"
             >
-            <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                <TouchableHighlight 
-                    onPress={() => {navigation.navigate('Home');}} 
-                    style={{backgroundColor:'#184D47',
-                    alignItems:'center',
-                    justifyContent:'center',
-                    height:45,
-                    borderRadius:5,
-                    shadowColor:'#000',
-                    shadowOffset:{
-                        width:0,
-                        height:1
-                    },
-                    shadowOpacity:0.8,
-                    shadowRadius:2,  
-                    elevation:3,
-                    marginTop:50}}
-                >
-                    <Text style={{color:'white', padding:5}}>
-                    Select a project
-                    </Text>
-                </TouchableHighlight>
-            </View>
-        </ImageBackground>
+                <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                    <TouchableHighlight 
+                        onPress={() => {navigation.navigate('Home');}} 
+                        style={{backgroundColor:'#184D47',
+                        alignItems:'center',
+                        justifyContent:'center',
+                        height:45,
+                        borderRadius:5,
+                        shadowColor:'#000',
+                        shadowOffset:{
+                            width:0,
+                            height:1
+                        },
+                        shadowOpacity:0.8,
+                        shadowRadius:2,  
+                        elevation:3,
+                        marginTop:50}}
+                    >
+                        <Text style={{color:'white', padding:5}}>
+                        Select a project
+                        </Text>
+                    </TouchableHighlight>
+                </View>
+            </ImageBackground>
+        </View>
     );
 }
 
