@@ -274,7 +274,7 @@ async function getProjects(req, res) {
       .catch((err) => {
         console.log(err);
         res.status(400);
-        res.send(err);
+        res.send({ message: err });
       });
     await db
       .getSession()
@@ -308,7 +308,7 @@ async function getProjects(req, res) {
       .catch((err) => {
         console.log(err);
         res.status(400);
-        res.send(err);
+        res.send({ message: err });
       });
     res.status(200);
     res.send({ ownedProjects, otherProjects });
@@ -354,21 +354,20 @@ function getProjectTasks(req, res) {
     .catch((err) => {
       console.log(err);
       res.status(400);
-      res.send(err);
+      res.send({ message: err });
     });
 }
 
 function getCriticalPath(req, res) {
-  console.log(req.body);
   db.getSession()
     .run(
       `
-    MATCH (a:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(b:Task {projId: ${req.body.projId}})
-    WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
-    MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
-    WHERE duration.inDays(c.startDate, d.endDate) = dur
-    RETURN p
-  `
+        MATCH (a:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(b:Task {projId: ${req.body.projId}})
+        WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
+        MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
+        WHERE duration.inDays(c.startDate, d.endDate) = dur
+        RETURN p
+      `
     )
     .then((result) => {
       res.status(200);
@@ -379,7 +378,7 @@ function getCriticalPath(req, res) {
     .catch((err) => {
       console.log(err);
       res.status(400);
-      res.send(err);
+      res.send({ message: err });
     });
 }
 

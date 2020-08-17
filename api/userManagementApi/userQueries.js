@@ -1,20 +1,20 @@
 const db = require("../DB");
 const { JWT } = require("jose");
 const bcrypt = require("bcrypt");
-const path = require("path");
+
 function login(req, res) {
   db.getSession()
     .run(
       `
-            Match (n:User { email: "${req.body.email}" })
-            RETURN n
-        `
+        Match (n:User { email: "${req.body.email}" })
+        RETURN n
+      `
     )
     .then((result) => {
       let id = result.records[0]._fields[0].identity.low;
       if (result.records.length != 0) {
         let hash = result.records[0]._fields[0].properties.password;
-        bcrypt.compare(req.body.password, hash, function (err, result) {
+        bcrypt.compare(req.body.password, hash, (err, result) => {
           if (result) {
             res.status(200);
             res.send({
@@ -26,20 +26,19 @@ function login(req, res) {
               id: id,
             });
           } else {
-            res.send({
-              status: false,
-              err: err,
-            });
+            res.status(400);
+            res.send({ status: false, message: "err" });
           }
         });
       } else {
-        res.send("err");
+        res.status(400);
+        res.send({ message: "err" });
       }
     })
     .catch((err) => {
       console.log(err);
       res.status(400);
-      res.send(err);
+      res.send({ message: err });
     });
 }
 
@@ -148,31 +147,33 @@ async function checkPermission(req, res) {
 async function register(req, res) {
   //email, password, name, surname
   let x = "storage/default.jpg";
-  console.log(path.dirname);
   db.getSession()
     .run(
       `
-                Match (n:User { email: "${req.body.email}" })
-                RETURN n
-            `
+        Match (n:User { email: "${req.body.email}" })
+        RETURN n
+      `
     )
     .then((result) => {
-      if (result.records.length != 0) res.send("Already a user");
+      if (result.records.length != 0) {
+        res.status(400);
+        res.send({message: "Already a user"});
+      }
       else {
-        bcrypt.hash(req.body.password, 10, function (err, hash) {
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
           db.getSession()
             .run(
               `
-                            CREATE(a:User {
-                                email:"${req.body.email}",
-                                password:"${hash}", 
-                                name:"${req.body.name}",
-                                sname:"${req.body.sname}",
-                                birthday: "${req.body.um_date}",
-                                profilepicture: "${x}"
-                            })
-                            RETURN a
-                        `
+                CREATE(a:User {
+                  email:"${req.body.email}",
+                  password:"${hash}", 
+                  name:"${req.body.name}",
+                  sname:"${req.body.sname}",
+                  birthday: "${req.body.um_date}",
+                  profilepicture: "${x}"
+                })
+                RETURN a
+              `
             )
             .then((result) => {
               let id = result.records[0]._fields[0].identity.low;
@@ -189,7 +190,7 @@ async function register(req, res) {
             .catch((err) => {
               console.log(err);
               res.status(400);
-              res.send(err);
+              res.send({ message: err });
             });
         });
       }
@@ -197,7 +198,7 @@ async function register(req, res) {
     .catch((err) => {
       console.log(err);
       res.status(400);
-      res.send(err);
+      res.send({ message: err });
     });
 }
 
@@ -207,16 +208,16 @@ async function editUser(req, res) {
     db.getSession()
       .run(
         `
-            MATCH (a) 
-            WHERE ID(a) = ${userId}
-            SET a += {
-                name:"${req.body.name}",
-                sname:"${req.body.sname}",
-                email:"${req.body.email}",
-                birthday:"${req.body.bday}"
-            } 
-            RETURN a
-          `
+          MATCH (a) 
+          WHERE ID(a) = ${userId}
+          SET a += {
+            name:"${req.body.name}",
+            sname:"${req.body.sname}",
+            email:"${req.body.email}",
+            birthday:"${req.body.bday}"
+          } 
+          RETURN a
+        `
       )
       .then((result) => {
         let user = {
@@ -232,11 +233,13 @@ async function editUser(req, res) {
       .catch((err) => {
         console.log(err);
         res.status(400);
-        res.send(err);
+        res.send({ message: err });
       });
   } else {
     res.status(400);
-    res.send({ user: null });
+    res.send({
+      message: "Invalid User",
+    });
   }
 }
 
@@ -267,11 +270,13 @@ async function getUser(req, res) {
       .catch((err) => {
         console.log(err);
         res.status(400);
-        res.send(err);
+        res.send({ message: err });
       });
   } else {
     res.status(400);
-    res.send({ user: null });
+    res.send({
+      message: "Invalid User",
+    });
   }
 }
 
@@ -292,9 +297,9 @@ async function verify(token) {
       .getSession()
       .run(
         `
-                 Match (n:User { email: "${user.email}" })
-                 RETURN n
-             `
+          Match (n:User { email: "${user.email}" })
+          RETURN n
+        `
       )
       .then((result) => {
         if (user.password == result.records[0]._fields[0].properties.hash) {
