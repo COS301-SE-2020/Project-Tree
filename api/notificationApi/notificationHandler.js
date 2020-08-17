@@ -114,7 +114,8 @@ async function retrieveNotifications(req, res) {
 }
 
 async function getProjectMembers(id) {
-  db.getSession()
+  let recipientArr = [];
+  await db.getSession()
     .run(
       `
             MATCH (a:Project), (b), (c)
@@ -127,20 +128,17 @@ async function getProjectMembers(id) {
         `
     )
     .then((result) => {
-      let recipientArr = [];
       result.records.forEach((record) => {
         recipientArr.push({
           id: record._fields[0].identity.low,
           email: record._fields[0].properties.email,
         });
       });
-
-      return recipientArr;
     })
     .catch((err) => {
       console.log(err);
-      return [];
     });
+    return recipientArr;
 }
 
 function formatAutoAssignData(
