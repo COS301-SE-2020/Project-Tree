@@ -8,6 +8,8 @@ var gq = require('./api/projectApi/graphQueries');
 var um = require('./api/userManagementApi/userQueries');
 var nh = require('./api/notificationApi/notificationHandler');
 
+const db = require("./api/DB");
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -39,14 +41,38 @@ app.post('/verify', um.verify);
 app.post('/user/get', um.getUser);
 app.post('/user/edit', um.editUser);
 app.post("/mobile", async (req, res) => {
-	taskArr = req.body.nodes
-	relArr = req.body.links
-	direction = req.body.graphDir
-	console.log(direction)
+	taskArr = req.body.nodes;
+	relArr = req.body.links;
+	direction = req.body.graphDir;
+
+	let criticalPath = null
+	if(req.body.criticalPath === "true"){
+		criticalPath = await db.getSession()
+		.run
+		(`
+			MATCH (a:Task {projId: ${parseInt(req.body.projId)}})-[:DEPENDENCY *..]->(b:Task {projId: ${parseInt(req.body.projId)}})
+			WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
+			MATCH p = (c:Task {projId: ${parseInt(req.body.projId)}})-[:DEPENDENCY *..]->(d:Task {projId: ${parseInt(req.body.projId)}})
+			WHERE duration.inDays(c.startDate, d.endDate) = dur
+			RETURN p
+		`)
+		.then(result => {
+			res.status(200);
+			if(result.records[0] != null) return {path: result.records[0]._fields[0]};
+			else return {path: null};
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(400);
+			res.send(err);
+		});
+	}
+	
 	res.render("GraphMobile", {
 		tasks: taskArr,
 		rels: relArr,
-		graphDirection: direction
+		graphDirection: direction,
+		criticalPath: JSON.stringify(criticalPath)
 	})
 });
 app.post('/sendNotification', nh.sendNotification)

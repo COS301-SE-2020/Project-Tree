@@ -251,21 +251,23 @@ export default class App extends Component{
 
 		let tokenVal = null
 		try{
-			await AsyncStorage.getItem('sessionToken')
-			.then(async (value) => {
-				if(value){
-					tokenVal = JSON.parse(value);
-				}
-			});
+		await AsyncStorage.getItem('sessionToken')
+		.then((value) => {
+			if(value){
+				tokenVal = JSON.parse(value);
+			}
+		});
 		}
 		catch
 		{
 			console.log("Error")
 		}
 
+		console.log("Token Val: "+tokenVal)
+
 		let userToken = {creatorID: tokenVal};
 
-		const response = await fetch('http://10.0.2.2:5000/user/get',{
+		const response = await fetch('http://projecttree.herokuapp.com/user/get',{
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

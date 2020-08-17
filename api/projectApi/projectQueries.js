@@ -309,6 +309,9 @@ function getProjectTasks(req, res) {
 }
 
 function getCriticalPath(req, res){
+  console.log('hello')
+  
+  console.log(req.body)
 	db.getSession()
   .run
   (`

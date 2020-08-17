@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, BackHandler, TouchableOpacity, StyleSheet, Text, Dimensions, TouchableHighlight, ScrollView, Image } from 'react-native'
+import { View,ImageBackground, TouchableOpacity, StyleSheet, Text, Dimensions, TouchableHighlight, ScrollView, Image } from 'react-native'
 import { isEmpty } from 'lodash';
 import {Spinner} from 'native-base';
 import { useNavigation } from '@react-navigation/native';
@@ -9,34 +9,34 @@ function GoToHome() {
     const navigation = useNavigation();
   
     return (
-        <View style={{
-        justifyContent:"center", 
-        alignItems:"center",
-        flex:1}}
-        >
-            <TouchableHighlight 
-            onPress={() => {navigation.navigate('Home');}} 
-            style={{backgroundColor:'#184D47',
-                alignItems:'center',
-                justifyContent:'center',
-                height:45,
-                borderColor:'#EEBB4D',
-                borderWidth:2,
-                borderRadius:5,
-                shadowColor:'#000',
-                shadowOffset:{
-                    width:0,
-                    height:1
-                },
-                shadowOpacity:0.8,
-                shadowRadius:2,  
-                elevation:3}}
+        <ImageBackground
+                source={require('../Images/notice.png')}
+                style={{flex:1}}
+                resizeMode='cover'
             >
-                <Text style={{color:'white'}}>
-                Please select a project
-                </Text>
-            </TouchableHighlight>
-        </View>
+                <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                    <TouchableHighlight 
+                        onPress={() => {navigation.navigate('Home');}}
+                        style={{backgroundColor:'#184D47',
+                        alignItems:'center',
+                        justifyContent:'center',
+                        height:45,
+                        borderRadius:5,
+                        shadowColor:'#000',
+                        shadowOffset:{
+                            width:0,
+                            height:1
+                        },
+                        shadowOpacity:0.8,
+                        shadowRadius:2,  
+                        elevation:3}}
+                    >
+                        <Text style={{color:'white', padding:5}}>
+                        Select a project
+                        </Text>
+                    </TouchableHighlight>
+                </View>
+            </ImageBackground>
     );
 }
 
@@ -78,7 +78,7 @@ class NoticeBoardScreen extends Component{
 
         data = JSON.stringify(data);
 
-        const response = await fetch('http://10.0.2.2:5000/retrieveNotifications',{
+        const response = await fetch('http://projecttree.herokuapp.com/retrieveNotifications',{
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -179,6 +179,7 @@ class NotificationList extends Component{
                             {message.fromName}
                             {message.type === "project" ? " - " + "Project Wide" : null}
                             {message.type === "task" ? " - " + message.taskName : null}
+                            {message.type === 'auto' ? " - Auto" : null}
                             {" "}
                         </Text>
                         <Text style={{color:'grey'}}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, ScrollView, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { ImageBackground, View, ScrollView, StyleSheet, TouchableOpacity, TouchableHighlight} from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Spinner } from 'native-base';
 import DeleteProject from '../Home/DeleteProject'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
@@ -28,34 +28,34 @@ function GoToTree() {
 class SelectProject extends Component{
     render(){
         return(
-            <View style={{
-            justifyContent:"center", 
-            alignItems:"center",
-            flex:1}}
+            <ImageBackground
+                source={require('../Images/home.png')}
+                style={{flex:1}}
+                resizeMode='cover'
             >
-                <TouchableHighlight 
-                onPress={() => {this.props.setDrawerVisible(true)}} 
-                style={{backgroundColor:'#184D47',
-                    alignItems:'center',
-                    justifyContent:'center',
-                    height:45,
-                    borderColor:'#EEBB4D',
-                    borderWidth:2,
-                    borderRadius:5,
-                    shadowColor:'#000',
-                    shadowOffset:{
-                        width:0,
-                        height:1
-                    },
-                    shadowOpacity:0.8,
-                    shadowRadius:2,  
-                    elevation:3}}
-                >
-                    <Text style={{color:'white'}}>
-                    Please select a project
-                    </Text>
-                </TouchableHighlight>
-            </View>
+                <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                    <TouchableHighlight 
+                        onPress={() => {this.props.setDrawerVisible(true)}} 
+                        style={{backgroundColor:'#184D47',
+                        alignItems:'center',
+                        justifyContent:'center',
+                        height:45,
+                        borderRadius:5,
+                        shadowColor:'#000',
+                        shadowOffset:{
+                            width:0,
+                            height:1
+                        },
+                        shadowOpacity:0.8,
+                        shadowRadius:2,  
+                        elevation:3}}
+                    >
+                        <Text style={{color:'white', padding:5}}>
+                        Select a project
+                        </Text>
+                    </TouchableHighlight>
+                </View>
+            </ImageBackground>
         )
     }
 }
@@ -68,7 +68,7 @@ const Screen = styled.View
 
 class Home extends Component{
 	constructor(props) {
-		super(props);
+        super(props);
 		this.state = {drawerVisible:false, token: null, projects:null};
         this.setDrawerVisible = this.setDrawerVisible.bind(this);
         this.setProjectInfo = this.setProjectInfo.bind(this);
@@ -80,7 +80,7 @@ class Home extends Component{
 		await AsyncStorage.getItem('sessionToken')
 		.then(async (value) => {
             token = JSON.parse(value);
-            const response = await fetch('http://10.0.2.2:5000/project/get',{
+            const response = await fetch('http://projecttree.herokuapp.com/project/get',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -90,7 +90,12 @@ class Home extends Component{
             });
             const body = await response.json();
 
-            this.setState({projects:body.projects, token:token});
+            if(this.props.project === null){
+                this.setState({projects:body.projects, token:token});
+                this.setState({drawerVisible:true});
+            } 
+
+            else this.setState({projects:body.projects, token:token});
         }); 
     }
 
@@ -221,7 +226,7 @@ class HomeScreen extends Component {
     render() {
         if(this.props.project === null) 
             return(
-                    <SelectProject setDrawerVisible={this.props.setDrawerVisible}/>
+                <SelectProject setDrawerVisible={this.props.setDrawerVisible}/>
             );
 
         return (

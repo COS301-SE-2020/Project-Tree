@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View, ScrollView, TouchableHighlight } from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View, ScrollView, TouchableHighlight, Switch } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 function GoToHome() {
@@ -39,16 +39,49 @@ export default class GraphDrawer extends Component {
 	render(){
 		let isEnabled = this.props.direction === "TB" ? true : false
 		return(
-			<React.Fragment>
-				<ScrollView>
-				<View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>{this.props.project.name}</Text>
-                        <Text style={styles.modalText}>{this.props.project.description}</Text>
+			<ScrollView>
+				<View style={{flex:1, backgroundColor:"#303030", paddingBottom:60, alignItems:'center'}}>
+					<View>
+						<Text style={{color:"white", fontSize:35}}>
+							Project Options
+						</Text>
+					</View>
+					<View style={{backgroundColor: '#EEBB4D', height: 2, width: "70%", marginBottom:30}}></View>
+					<View style={{alignItems:'center'}}>
+						<Text style={{color:'white', fontSize:28}}>{this.props.project.name}</Text>
+						<Text style={{color:'white', fontSize:17}}>{this.props.project.description}</Text>
 						<GoToHome />
-                    </View>
+					</View>
+					<View style={{backgroundColor: 'white', height: 1, width: "50%", marginBottom:30, marginTop:30}}></View>
+
+					<View style={{flexDirection:'row', alignItems:'center'}}>
+						<Text style={{color:"white", fontSize:15, width:200, paddingRight:10}}>
+							Switch Graph Direction
+						</Text>
+						<Switch
+							trackColor={{ false: "#184D47", true: "#EEBB4D" }}
+							thumbColor={isEnabled ? "#184D47" : "#EEBB4D"}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={this.props.toggleDirection}
+							value={isEnabled}
+						/>
+					</View>
+
+					<View style={{flexDirection:'row', alignItems:'center', marginTop:20}}>
+						<Text style={{color:"white", fontSize:15, width:200, paddingRight:10}}>
+							Toggle Critical Path
+						</Text>
+						<Switch
+							trackColor={{ false: "#767577", true: "#EEBB4D" }}
+							thumbColor={isEnabled ? "#184D47" : "#f4f3f4"}
+							ios_backgroundColor="#3e3e3e"
+							onValueChange={this.props.toggleCriticalPath}
+							value={this.props.displayCriticalPath}
+						/>
+					</View>
+
 					<View style={styles.keyView}>
-                        <Text style={[styles.modalText, {color: "#f0ffff", fontWeight: "bold"}]}> Task Progress Key </Text>
+						<Text style={[styles.modalText, {color: "#f0ffff", fontWeight: "bold"}]}> Task Progress Key </Text>
 						<View style={styles.button}>
 							<TouchableOpacity
 								style={[styles.signIn, {backgroundColor: "white"}]}>
@@ -75,40 +108,14 @@ export default class GraphDrawer extends Component {
 						</View>
 						<View style={styles.button}>
 							<TouchableOpacity
-								style={[styles.signIn, {backgroundColor: "blue"}]}>
-								<Text style={[styles.textSign, {color: "white"}]}>Overdue</Text>
+								style={[styles.signIn, {backgroundColor: "white", borderColor: "blue"}]}>
+								<Text style={[styles.textSign, {color: "black"}]}>Critical Path</Text>
 							</TouchableOpacity>
 						</View>
-                    </View>
-				{/* <View style={{flex:1, backgroundColor:"#303030", paddingBottom:60, alignItems:'center'}}>
-					<View>
-						<Text style={{color:"white", fontSize:35}}>
-							Project Options
-						</Text>
 					</View>
-					<View style={{backgroundColor: '#EEBB4D', height: 2, width: "70%", marginBottom:30}}></View>
-                    <View style={{alignItems:'center'}}>
-                        <Text style={{color:'white', fontSize:28}}>{this.props.project.name}</Text>
-                        <Text style={{color:'white', fontSize:17}}>{this.props.project.description}</Text>
-						<GoToHome />
-                    </View>
-					<View style={{backgroundColor: 'white', height: 1, width: "50%", marginBottom:30, marginTop:30}}></View>
-					<View style={{flexDirection:'row', alignItems:'center'}}>
-						<Text style={{color:"white", fontSize:15, paddingRight:10}}>
-							Switch Graph Direction
-						</Text>
-						<Switch
-							trackColor={{ false: "#184D47", true: "#EEBB4D" }}
-							thumbColor={isEnabled ? "#184D47" : "#EEBB4D"}
-							ios_backgroundColor="#3e3e3e"
-							onValueChange={this.props.toggleDirection}
-							value={isEnabled}
-						/>
-					</View> */}
-					
-                </View>
- 			</ScrollView>
-		</React.Fragment>
+
+				</View>
+			</ScrollView>
 		)
 	}
 }
@@ -124,20 +131,9 @@ const styles = StyleSheet.create({
 	},
 	keyView: {
 		margin: 20,
-		backgroundColor: "#660401",
-		borderColor:"#f0ffff",
-		borderWidth: 8,
 		borderRadius: 20,
 		padding: 35,
-		alignItems: "center",
-		shadowColor: "white",
-		shadowOffset: {
-		width: 0,
-		height: 2
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
-		elevation: 10
+		alignItems: "center"
 	},
 	textSign: {	
 		color: 'black',
@@ -181,7 +177,9 @@ const styles = StyleSheet.create({
 	button: {
         alignItems: 'center',
         marginTop: 4,
-        paddingBottom: 4
+		paddingBottom: 4,
+		height:50,
+		width:200
     },
 	textStyle: {
 		color: "white",
