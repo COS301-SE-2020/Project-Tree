@@ -90,6 +90,7 @@ class UpdateProgressModal extends Component{
         });
 
         let projInfo = this.props.getProjectInfo();
+        console.log(projInfo)
         let nodes = projInfo.nodes;
         for(let x = 0; x < nodes.length; x++){
             if(nodes[x].id === this.state.id){
@@ -97,7 +98,7 @@ class UpdateProgressModal extends Component{
             }
         }
         
-        this.props.setProjectInfo(nodes,projInfo.links)
+        this.props.setProjectInfo(nodes,projInfo.rels)
         this.props.toggleProgressModal(true, false)
     }
 

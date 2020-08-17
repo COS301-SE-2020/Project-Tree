@@ -23,7 +23,7 @@ class TaskModal extends Component {
     }
 
     toggleProgressModal(taskModal, progressModal){
-        this.setState({displayTaskModal: taskModal, displayProgressModal: progressModal})
+        this.setState({displayTaskModal: taskModal, displayProgressModal: progressModal});
     }
 
 	render(){      
