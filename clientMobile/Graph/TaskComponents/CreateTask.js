@@ -105,6 +105,11 @@ class CreateTaskForm extends Component {
   }
 
   handleStartDateSelect(event, selectedDate) {
+    if(event.type === 'dismissed') {
+      this.setState({startDatePickerVisible: false});
+      return;
+    }
+
     this.setState({startDate: selectedDate, startDatePickerVisible: false});
     this.setEndDate(selectedDate, undefined);
   }
