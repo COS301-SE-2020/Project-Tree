@@ -6,7 +6,7 @@ function stringifyFormData(fd) {
   for (let key of fd.keys()) {
     data[key] = fd.get(key);
   }
-  return data; //changed
+  return data; 
 }
 
 class CreateDependency extends React.Component {
@@ -55,7 +55,6 @@ class CreateDependency extends React.Component {
 
     return (
       <React.Fragment>
-        {/*<Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>*/}
         <Modal show={true} onHide={this.props.closeModal}>
           <Form onSubmit={this.handleSubmit}>
             <Modal.Header

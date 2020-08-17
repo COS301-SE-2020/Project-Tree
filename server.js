@@ -1,13 +1,13 @@
 const express = require("express");
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const path = require("path");
-var tq = require("./api/projectApi/taskQueries");
-var dq = require("./api/projectApi/dependencyQueries");
-var pq = require("./api/projectApi/projectQueries");
-var gq = require("./api/projectApi/graphQueries");
-var um = require("./api/userManagementApi/userQueries");
-var personQueries = require("./api/projectApi/personQueries");
-var nh = require("./api/notificationApi/notificationHandler");
+const tq = require("./api/projectApi/taskQueries");
+const dq = require("./api/projectApi/dependencyQueries");
+const pq = require("./api/projectApi/projectQueries");
+const gq = require("./api/projectApi/graphQueries");
+const um = require("./api/userManagementApi/userQueries");
+const personQueries = require("./api/projectApi/personQueries");
+const nh = require("./api/notificationApi/notificationHandler");
 
 const db = require("./api/DB");
 
@@ -53,16 +53,16 @@ app.post("/mobile", async (req, res) => {
       .getSession()
       .run(
         `
-			MATCH (a:Task {projId: ${parseInt(
+      MATCH (a:Task {projId: ${parseInt(
         req.body.projId
       )}})-[:DEPENDENCY *..]->(b:Task {projId: ${parseInt(req.body.projId)}})
-			WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
-			MATCH p = (c:Task {projId: ${parseInt(
+      WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
+      MATCH p = (c:Task {projId: ${parseInt(
         req.body.projId
       )}})-[:DEPENDENCY *..]->(d:Task {projId: ${parseInt(req.body.projId)}})
-			WHERE duration.inDays(c.startDate, d.endDate) = dur
-			RETURN p
-		`
+      WHERE duration.inDays(c.startDate, d.endDate) = dur
+      RETURN p
+    `
       )
       .then((result) => {
         res.status(200);

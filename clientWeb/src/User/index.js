@@ -1,4 +1,3 @@
-/* index.tsx */
 import "./style.scss";
 
 export { Login } from "./login";

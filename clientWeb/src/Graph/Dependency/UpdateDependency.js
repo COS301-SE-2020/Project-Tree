@@ -88,14 +88,6 @@ class UpdateDependency extends React.Component {
                 value={this.state.did}
                 onChange={() => {}}
               />
-              {/*<Form.Group>
-                            <Form.Label>Select First Task by ID:</Form.Label>
-                            <Form.Control required type='text' name="ud_Fid" value={this.state.Fid}/>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Select Second Task by ID:</Form.Label>
-                                <Form.Control required type='text' name="ud_Sid" value={this.state.Sid}/>
-                            </Form.Group>*/}
               <Form.Group>
                 <Form.Label>Relationship Type</Form.Label>
                 <Form.Control

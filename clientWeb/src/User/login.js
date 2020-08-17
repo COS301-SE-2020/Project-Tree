@@ -38,9 +38,9 @@ export class Login extends Component {
         this.props.handleLogin(response);
       } else alert("Unable to Log");
     })
-      .fail(() => {
-        alert("Unable to login");
-      })
+    .fail(() => {
+      alert("Unable to login");
+    })
     event.preventDefault();
   }
 
