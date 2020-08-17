@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   ImageBackground,
+  StatusBar,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import CreateTask from './TaskComponents/CreateTask';
@@ -24,6 +25,7 @@ function GoToHome() {
 
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
+      <StatusBar backgroundColor="#303030" barStyle="light-content" />
       <ImageBackground
         source={require('../Images/graph.png')}
         style={{flex: 1}}
@@ -107,6 +109,7 @@ class Graph extends Component {
 
     return (
       <Screen>
+        <StatusBar backgroundColor="#303030" barStyle="light-content" />
         <Drawer
           type="overlay"
           open={this.state.drawerVisible}
