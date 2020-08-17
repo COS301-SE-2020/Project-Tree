@@ -96,6 +96,7 @@ async function addResources(taskId, persons) {
 }
 
 function updateAssignedPeople(req,res){
+  console.log("GETTING TO THE RIGHT PLACE**")
   let taskId = req.body.ut_taskId;
   let packageManagers = req.body.ut_pacMans;
   let originalPackageManagers = req.body.ut_originalPacMans;
@@ -119,38 +120,71 @@ function updateAssignedPeople(req,res){
 async function updatePackageManager(taskId, persons, originalPackageManagers) {
   var session = db.getSession();
 
-  let peopleToRemove = originalPackageManagers;
-  for(let x = 0; x < peopleToRemove.length; x++){
-    for(let y = 0; y < persons.length; y++){
-      if(peopleToRemove[x].id === persons[y].id){
-        if(x === 0) peopleToRemove.shift();
-        else if(x === peopleToRemove.length-1) peopleToRemove.pop()
-        else peopleToRemove.splice(x,1)
-      }
+  if(isEmpty(persons) && !isEmpty(originalPackageManagers)){
+    let deletingQuery=`MATCH (a:User) WHERE ID(a) = ${originalPackageManagers[0].id} `
+    for(let x = 1; x < originalPackageManagers.length; x++)
+    {
+      deletingQuery += `OR ID(a) = ${originalPackageManagers[x].id} `
     }
-  }
+    deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:PACKAGE_MANAGER]->(b) DELETE r`
 
-  let addingQuery=``
-  if(isEmpty(persons) !== true){
-    addingQuery=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+    await session
+    .run(deletingQuery)
+    .then(result => {
+      return 200;
+    })
+    .catch((err) => {
+      console.log(err);
+      return 400;
+    });
+  }
+  else if(!isEmpty(persons) && isEmpty(originalPackageManagers)){
+    let addingQuery=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
     for(let x = 1; x < persons.length; x++)
     {
       addingQuery += `OR ID(a) = ${persons[x].id} `
     }
     addingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:PACKAGE_MANAGER]->(b)`
-  }
 
-  let deletingQuery=``
-  if(isEmpty(peopleToRemove) !== true){
-    deletingQuery=`MATCH (a:User) WHERE ID(a) = ${peopleToRemove[0].id} `
+    await session
+    .run(addingQuery)
+    .then(result => {
+      return 200;
+    })
+    .catch((err) => {
+      console.log(err);
+      return 400;
+    });
+  }
+  else{
+    let peopleToRemove = originalPackageManagers;
+    for(let x = 0; x < peopleToRemove.length; x++){
+      for(let y = 0; y < persons.length; y++){
+        if(peopleToRemove[x] !== undefined && persons[y] !== undefined){
+          if(peopleToRemove[x].id === persons[y].id){
+            if(x === 0) peopleToRemove.shift();
+            else if(x === peopleToRemove.length-1) peopleToRemove.pop()
+            else peopleToRemove.splice(x,1)
+          }
+        }
+      }
+    }
+
+    let addingQuery=`MATCH (a:User),(b:Task) WHERE ID(a) = ${persons[0].id} `
+    for(let x = 1; x < persons.length; x++)
+    {
+      addingQuery += `OR ID(a) = ${persons[x].id} `
+    }
+    addingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MERGE(a)-[n:PACKAGE_MANAGER]->(b)`
+
+    let deletingQuery=`MATCH (a:User) WHERE ID(a) = ${peopleToRemove[0].id} `
     for(let x = 1; x < peopleToRemove.length; x++)
     {
       deletingQuery += `OR ID(a) = ${peopleToRemove[x].id} `
     }
     deletingQuery += `MATCH (b:Task) WHERE ID(b) = ${taskId} MATCH (a)-[r:PACKAGE_MANAGER]->(b) DELETE r`
-  }
 
-  await session
+    await session
     .run(addingQuery)
     .then(async result => {
       if(isEmpty(deletingQuery)!==true){
@@ -170,6 +204,7 @@ async function updatePackageManager(taskId, persons, originalPackageManagers) {
       console.log(err);
       return 400;
     });
+  }
 }
 
 async function updateResponsiblePerson(taskId, persons,originalResponsiblePersons) {
