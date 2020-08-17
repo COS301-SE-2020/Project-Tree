@@ -62,6 +62,11 @@ class UserSettings extends Component {
   }
 
   onChange(event, selectedDate) {
+    if(event.type === 'dismissed') {
+      this.setState({startDatePickerVisible: false});
+      return;
+    }
+
     this.setState({startDate: selectedDate, startDatePickerVisible: false});
   }
 
@@ -74,7 +79,7 @@ class UserSettings extends Component {
     await AsyncStorage.getItem('sessionToken').then(async (value) => {
       token = JSON.parse(value);
       this.setState({token: token});
-      const response = await fetch('http://10.0.2.2:5000/user/get', {
+      const response = await fetch('http://projecttree.herokuapp.com/user/get', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -221,7 +226,7 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
 
-      const response = await fetch('http://10.0.2.2:5000/user/edit', {
+      const response = await fetch('http://projecttree.herokuapp.com/user/edit', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -320,7 +325,7 @@ class UserSettings extends Component {
             </View>
             <Form>
               <Item floatingLabel disabled>
-                <Label>Start Date</Label>
+                <Label>Birthday</Label>
                 <Input
                   value={this.state.startDate.toISOString().substr(0, 10)}
                 />
