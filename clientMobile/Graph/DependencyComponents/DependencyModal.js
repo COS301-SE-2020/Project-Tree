@@ -4,8 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  TouchableHighlight,
+  View
 } from 'react-native';
 import {
   Icon,

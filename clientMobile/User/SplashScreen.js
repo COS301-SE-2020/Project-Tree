@@ -5,8 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
-  StatusBar,
-  Image,
+  StatusBar
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
@@ -35,27 +34,23 @@ class SplashScreen extends Component {
           ]}
           animation="fadeInUpBig">
           <Text style={[styles.title, {}]}>Welcome to Project Tree</Text>
-          <Text style={styles.text}>Click to Login</Text>
+          <Text style={styles.underText}>Click to Login</Text>
           <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
                 this.props.switchScreen('Splash');
               }}
-              style={[
-                styles.signIn,
+              style={[styles.logger,
                 {
                   borderColor: '#05375a',
                   borderWidth: 1,
                   marginTop: 15,
-                },
-              ]}>
+                }]}>
               <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: 'black',
-                  },
-                ]}>
+                style={[styles.textSign,
+                {
+                  color: 'black',
+                }]}>
                 Sign In
               </Text>
             </TouchableOpacity>
@@ -83,45 +78,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 1,
-    backgroundColor: 'grey',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    backgroundColor: 'silver',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     paddingVertical: 50,
     paddingHorizontal: 30,
+    flex: 1
   },
   logo: {
     width: w_logo,
     height: height_logo,
   },
   title: {
-    color: '#05375a',
+    color: 'black',
     fontSize: 30,
     fontWeight: 'bold',
   },
-  text: {
+  underText: {
     color: '#05375a',
-    marginTop: 5,
-    fontSize: 15,
+    marginTop: 6.6,
+    fontSize: 16,
   },
   button: {
     alignItems: 'flex-end',
-    marginTop: 30,
+    marginTop: 40,
   },
-  signIn: {
+  logger: {
     width: 150,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 50,
+    height: 40,  
+    borderRadius: 46,
     flexDirection: 'row',
-  },
-  button2: {
-    width: '100%',
-    height: 50,
     justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
+    alignItems: 'center'
   },
   textSign: {
     color: 'white',

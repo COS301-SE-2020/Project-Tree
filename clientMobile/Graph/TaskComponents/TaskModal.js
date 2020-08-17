@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  TouchableHighlight,
 } from 'react-native';
 import {
   Icon

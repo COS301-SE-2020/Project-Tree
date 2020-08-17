@@ -4,14 +4,14 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import {
   Icon,
   Label,
   Form,
   Item,
-  Input
+  Input,
 } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
