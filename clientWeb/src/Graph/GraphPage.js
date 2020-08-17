@@ -320,41 +320,51 @@ class TaskSidebar extends React.Component {
             <Col className="text-center" >Duration: {this.props.task.duration} days</Col> 
               
           </Row>
+          {
+          this.props.userPermission["update"] === true
+          ? 
+            <Row className="my-2">
+              <Col>
+                <UpdateProgress
+                  task={this.props.task}
+                  setTaskInfo={this.props.setTaskInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                />
+              </Col>
+            </Row>
+          : 
+            null
+          }
+          <Row>
             {
             this.props.userPermission["update"] === true
             ? 
-              <Row>
-                <Col>
-                  <UpdateTask
-                    task={this.props.task}
-                    setTaskInfo={this.props.setTaskInfo}
-                    getProjectInfo={this.props.getProjectInfo}
-                    toggleSidebar={this.props.toggleSidebar}
-                    pacMans={taskPacMans}
-                    resPersons={taskResPersons}
-                    resources={taskResources}
-                    allUsers={this.props.allUsers}
-                  />
-                  <UpdateProgress
-                    task={this.props.task}
-                    setTaskInfo={this.props.setTaskInfo}
-                    toggleSidebar={this.props.toggleSidebar}
-                  />
-                </Col>
-                <Col>
-                  <SendTaskNotification 
-                    task={this.props.task} 
-                    project={this.props.project} 
-                    user={this.props.user} 
-                    taskPacMans={taskPacMans} 
-                    taskResPersons={taskResPersons} 
-                    taskResources={taskResources}
-                  />
-                </Col>
-              </Row>
+              <Col>
+                <UpdateTask
+                  task={this.props.task}
+                  setTaskInfo={this.props.setTaskInfo}
+                  getProjectInfo={this.props.getProjectInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                  pacMans={taskPacMans}
+                  resPersons={taskResPersons}
+                  resources={taskResources}
+                  allUsers={this.props.allUsers}
+                />
+              </Col>
             : 
               null
             }
+            <Col>
+              <SendTaskNotification 
+                task={this.props.task} 
+                project={this.props.project} 
+                user={this.props.user} 
+                taskPacMans={taskPacMans} 
+                taskResPersons={taskResPersons} 
+                taskResources={taskResources}
+              />
+            </Col>
+          </Row>
           <hr/>
           <b>Package managers:</b><br /><br />
           {this.printUsers(taskPacMans)}
