@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
 import {
   View,
-  BackHandler,
   TouchableOpacity,
   StyleSheet,
   Text,
-  Dimensions,
   TouchableHighlight,
   Modal,
 } from 'react-native';
-import {Icon, Form, Item, Label, Input, Textarea} from 'native-base';
+import {Icon, Form, Item, Textarea} from 'native-base';
 import sendNotification from './sendNotification';
 import {ButtonGroup} from 'react-native-elements';
 
@@ -108,7 +106,7 @@ class SendNotificationForm extends Component {
 
   async handleSubmit() {
     if (this.state.message === '' || this.state.message === null) {
-      alert('You have not entered a notification');
+      alert('You have not entered a notification message');
       return;
     }
 

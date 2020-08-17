@@ -1,7 +1,6 @@
 const emailHandler = require("./emailNotifications");
 const noticeBoardHandler = require("./noticeBoard");
 const db = require("../DB");
-const { response } = require("express");
 
 async function sendNotification(req, res) {
   // mode 0: email
@@ -12,8 +11,6 @@ async function sendNotification(req, res) {
   let data = req.body;
   data.projID = parseInt(data.projID);
   data.mode = parseInt(data.mode);
-
-  console.log(data.type);
 
   if (data.type === "project") {
     data.recipients = await getProjectMembers(data.projID);
@@ -115,7 +112,8 @@ async function retrieveNotifications(req, res) {
 
 async function getProjectMembers(id) {
   let recipientArr = [];
-  await db.getSession()
+  await db
+    .getSession()
     .run(
       `
             MATCH (a:Project), (b), (c)
@@ -138,7 +136,7 @@ async function getProjectMembers(id) {
     .catch((err) => {
       console.log(err);
     });
-    return recipientArr;
+  return recipientArr;
 }
 
 function formatAutoAssignData(

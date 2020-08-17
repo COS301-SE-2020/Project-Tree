@@ -3,12 +3,9 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
   Platform,
   StyleSheet,
-  ScrollView,
   StatusBar,
-  Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
@@ -101,8 +98,6 @@ const styles = StyleSheet.create({
     flex: 3,
     backgroundColor: '#fff',
     paddingTop: 50,
-    // borderTopLeftRadius: 30,
-    // borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
   },

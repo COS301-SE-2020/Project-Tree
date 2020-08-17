@@ -16,7 +16,6 @@ function makeLink(edge, criticalPathLinks) {
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
     connector: { name: "smooth" },
-    //router: { name: 'manhattan' },
     attrs: {
       type: "link",
       line: { stroke: strokeColor },
@@ -175,7 +174,7 @@ class Graph extends React.Component {
 
   toggleCreateDependency(clickedNode) {
     if (this.props.userPermission["create"] !== true) {
-      alert("you do not have the permission to create a dependency");
+      alert("You do not have the permission to create a dependency");
       return;
     }
 
@@ -226,7 +225,7 @@ class Graph extends React.Component {
   addTask() {
     if (this.props.userPermission["create"] === true)
       this.setState({ createTask: true });
-    else alert("you do not have the permission to create a task");
+    else alert("You do not have the permission to create a task");
   }
 
   paperScale(sx, sy) {
@@ -256,7 +255,6 @@ class Graph extends React.Component {
       height: $("#paper").height(),
       gridSize: 1,
       model: graph,
-      //restrictTranslate: true,
       linkPinning: false,
     });
 

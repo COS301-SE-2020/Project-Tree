@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  Modal,
   View,
   Text,
   TouchableOpacity,
@@ -16,98 +15,12 @@ import {
   Form,
   Item,
   Input,
-  StyleProvider,
-  Button,
 } from 'native-base';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-// class ConfirmPass extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {confPassword: '', isValidPassword: true};
-//   }
-
-//   handlePasswordChange(val, flag) {
-//     this.setState({
-//       confPassword: val,
-//     });
-//     console.log(this.state.confPassword);
-//   }
-
-//   render() {
-//     return (
-//       <Modal
-//         animationType="slide"
-//         visible={this.props.modalVisible}
-//         onRequestClose={() => this.props.setModalVisible(false)}>
-//         <View style={styleUser.container}>
-//           <View style={styleUser.header}>
-//             <Text style={styleUser.text_header}>Confirm details</Text>
-//           </View>
-//           <Animatable.View animation="fadeInUp" style={styleUser.footer}>
-//             <ScrollView>
-//               <Text
-//                 style={[
-//                   styleUser.text_footer,
-//                   {
-//                     marginTop: 35,
-//                   },
-//                 ]}>
-//                 Password
-//               </Text>
-//               <View style={styleUser.action}>
-//                 <Feather name="lock" color="#05375a" size={20} />
-//                 <TextInput
-//                   placeholder="Password"
-//                   secureTextEntry={this.props.secureTextEntry ? true : false}
-//                   style={styleUser.textInput}
-//                   // defaultValue={this.state.originalUser.user.name}
-//                   autoCapitalize="none"
-//                   onChangeText={(val) => this.handlePasswordChange(val, false)}
-//                 />
-//                 <TouchableOpacity onPress={this.updateSecureTextEntry}>
-//                   {this.props.secureTextEntry ? (
-//                     <Feather name="eye-off" color="grey" size={20} />
-//                   ) : (
-//                     <Feather name="eye" color="grey" size={20} />
-//                   )}
-//                 </TouchableOpacity>
-//               </View>
-//               <View style={styleUser.button}>
-//                 <TouchableOpacity
-//                   onPress={() => {
-//                     this.props.handleEdit(this.state.confPassword);
-//                   }}
-//                   style={[
-//                     styleUser.signIn,
-//                     {
-//                       borderColor: '#296d98',
-//                       borderWidth: 2,
-//                       marginTop: 8,
-//                     },
-//                   ]}>
-//                   <Text
-//                     style={[
-//                       styleUser.textSign,
-//                       {
-//                         color: '#296d98',
-//                       },
-//                     ]}>
-//                     Edit Details
-//                   </Text>
-//                 </TouchableOpacity>
-//               </View>
-//             </ScrollView>
-//           </Animatable.View>
-//         </View>
-//       </Modal>
-//     );
-//   }
-// }
 
 class UserSettings extends Component {
   constructor(props) {
@@ -150,12 +63,10 @@ class UserSettings extends Component {
 
   onChange(event, selectedDate) {
     this.setState({startDate: selectedDate, startDatePickerVisible: false});
-    console.log('LOOP', this.state.startDate);
   }
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
-    console.log(this.state.modalVisible);
   }
 
   async componentDidMount() {
@@ -172,7 +83,6 @@ class UserSettings extends Component {
         body: JSON.stringify({token: token}),
       });
       const body = await response.json();
-      console.log(body);
       this.setState({
         userName: body.user.name,
         sname: body.user.sname,
@@ -250,9 +160,7 @@ class UserSettings extends Component {
   }
 
   handlePasswordChange(val, flag) {
-    console.log(val);
     if (flag) {
-      console.log(val);
       if (val.trim().length >= 8) {
         this.setState({
           password: val,
@@ -271,20 +179,6 @@ class UserSettings extends Component {
     }
   }
 
-  //  handleConfirmPasswordChange(pass){
-  //     if( pass != this.state.password) {
-  //         this.setState({
-  //             //password: null,
-  //             isValidPasswordConfirm: false
-  //         });
-  //     } else {
-  //         this.setState({
-  //             password: pass,
-  //             isValidPasswordConfirm: true
-  //         });
-  //     }
-  // }
-
   updateSecureTextEntry() {
     this.setState({
       secureTextEntry: !this.state.secureTextEntry,
@@ -298,25 +192,16 @@ class UserSettings extends Component {
   }
 
   async handleEdit(pass) {
-    console.log(pass);
     if (this.state.userName.trim().length < 1) {
       alert('Please enter a username');
-      // return;
     }
 
     if (this.state.sname.trim().length < 1) {
       alert('Please enter a Surname');
-      // return;
     }
-
-    // if(this.state.password.trim().length <1){
-    //     alert("Please enter a password of at least 8 characters");
-    //     //return;
-    // }
 
     if (this.state.email == null) {
       alert('Please enter a valid email address');
-      //return;
     }
 
     if (
@@ -329,14 +214,12 @@ class UserSettings extends Component {
         token: this.state.token,
         name: this.state.userName,
         email: this.state.email,
-        // password: this.state.password,
         sname: this.state.sname,
         bday: this.state.startDate.toISOString().substr(0, 10),
         testEmail: this.state.initialEmail,
         testPass: pass,
       };
       data = JSON.stringify(data);
-      console.log(data);
 
       const response = await fetch('http://10.0.2.2:5000/user/edit', {
         method: 'POST',
@@ -346,10 +229,7 @@ class UserSettings extends Component {
         },
         body: data,
       });
-      console.log('body1');
       const body = await response.json();
-      console.log(body);
-      console.log('body2');
       this.props.userScreen(false);
     } else {
       alert('Please ensure all entered information is valid');
@@ -365,12 +245,6 @@ class UserSettings extends Component {
         </View>
         <Animatable.View animation="fadeInUp" style={styleUser.footer}>
           <ScrollView>
-            {/* <React.Fragment>
-                    <ConfirmPass handleEdit={this.handleEdit} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible}/>
-                        <TouchableOpacity onPress={()=>this.setModalVisible(true)} style={styles.floatinBtn}>
-                            <Icon type="AntDesign" name="plus" />
-                        </TouchableOpacity>
-                </React.Fragment> */}
             <Text style={styleUser.text_footer}>Username</Text>
             <View style={styleUser.action}>
               <FontAwesome name="user-o" color="#05375a" size={20} />
@@ -428,38 +302,6 @@ class UserSettings extends Component {
                 </Text>
               </Animatable.View>
             )}
-            {/* <Text style={[styleUser.text_footer, {
-                    marginTop: 35
-                }]}>Password</Text>
-                <View style={styleUser.action}>
-                    <Feather 
-                        name="lock"
-                        color="#05375a"
-                        size={20}
-                    />
-                    <TextInput 
-                        placeholder="Password"
-                        secureTextEntry={this.state.secureTextEntry ? true : false}
-                        style={styleUser.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => this.handlePasswordChange(val, true)}
-                    />
-                    <TouchableOpacity onPress={this.updateSecureTextEntry}>
-                        {this.state.secureTextEntry ? 
-                        <Feather 
-                            name="eye-off"
-                            color="grey"
-                            size={20}/>
-                        :<Feather 
-                            name="eye"
-                            color="grey"
-                            size={20}/>}
-                    </TouchableOpacity>
-                </View>
-                { this.state.isValidPassword ? null : 
-                <Animatable.View animation="fadeInLeft" duration={500}>
-                <Text style={styleUser.errorMsg}>Password must be 8 characters long.</Text>
-                </Animatable.View>} */}
             <Text style={[styleUser.text_footer, {marginTop: 35}]}>Email</Text>
             <View style={styleUser.action}>
               <FontAwesome name="paper-plane" color="#05375a" size={20} />
@@ -558,8 +400,6 @@ const styleUser = StyleSheet.create({
     flex: Platform.OS === 'ios' ? 3 : 5,
     backgroundColor: '#fff',
     width: '100%',
-    // borderTopLeftRadius: 30,
-    // borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
     paddingTop: 40,
