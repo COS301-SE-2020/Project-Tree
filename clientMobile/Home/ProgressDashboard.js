@@ -114,10 +114,15 @@ export default class ProgressDashboardWrapper extends Component {
 }
 
 class ProgressDashboard extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   getProjectProgress() {
     let totalDur = 0,
       completeDur = 0,
-      percentage = 0,
+      percentage = 0;
+
     this.props.tasks.forEach((task) => {
       if (task.progress === 'Complete')
         completeDur = completeDur + task.duration;
@@ -132,7 +137,8 @@ class ProgressDashboard extends Component {
   getCPProgress() {
     let totalDur = 0,
       completeDur = 0,
-      percentage = 0,
+      percentage = 0;
+      
     if (
       this.props.criticalPath !== null &&
       this.props.criticalPath.path !== null

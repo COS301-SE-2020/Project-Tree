@@ -9,15 +9,7 @@ import {
 } from 'react-native';
 import {
   Icon,
-  Label,
-  Form,
-  Item,
-  Input,
-  StyleProvider,
-  Button,
-  Container,
 } from 'native-base';
-import {ButtonGroup} from 'react-native-elements';
 import DeleteDependency from './DeleteDependency';
 import UpdateDependency from './UpdateDependency';
 

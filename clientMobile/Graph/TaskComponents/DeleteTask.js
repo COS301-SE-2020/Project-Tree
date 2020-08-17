@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 import {
   Alert,
-  Modal,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  View,
-  Button,
+  TouchableOpacity
 } from 'react-native';
 import {Icon} from 'native-base';
 

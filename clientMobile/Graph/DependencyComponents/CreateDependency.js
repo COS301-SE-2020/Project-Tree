@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  TouchableHighlight,
 } from 'react-native';
 import {
   Icon,
@@ -13,8 +12,6 @@ import {
   Form,
   Item,
   Input,
-  StyleProvider,
-  Button,
 } from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
 
