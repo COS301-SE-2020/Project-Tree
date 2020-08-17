@@ -80,7 +80,7 @@ class Home extends Component{
 		await AsyncStorage.getItem('sessionToken')
 		.then(async (value) => {
             token = JSON.parse(value);
-            const response = await fetch('http://10.0.2.2:5000/project/get',{
+            const response = await fetch('http://projecttree.herokuapp.com/project/get',{
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -161,6 +161,7 @@ class Home extends Component{
 						setDrawerVisible={this.setDrawerVisible}
                         navigation={this.props.navigation}
                         setProjectInfo={this.setProjectInfo}
+                        token={this.state.token}
 					/>
 			  	</Drawer>
 			</Screen>
@@ -234,7 +235,7 @@ class HomeScreen extends Component {
             <ScrollView style={styles.cardView}>
                 <View>
                     <Content>
-                        {this.props.project !== null && this.state.modalVisible === true ? <UpdateProject project={this.props.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.props.setProjectInfo} setEditing={this.setEditing} /> : null}
+                        {this.props.project !== null && this.state.modalVisible === true ? <UpdateProject token={this.props.token} project={this.props.project} modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} setProjectInfo={this.props.setProjectInfo} setEditing={this.setEditing} /> : null}
                         <Card>
                             <CardItem style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
                                 <Body>
@@ -244,7 +245,7 @@ class HomeScreen extends Component {
                                             <Text style={{fontSize:30, color:'#184D47'}}>{this.props.project.name}</Text>
                                         </View>
                                         <View style={{width:40, height:40, justifyContent:'center'}}>
-                                            <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo}/>
+                                            <DeleteProject project={this.props.project} setProjectInfo={this.props.setProjectInfo} token={this.props.token}/>
                                         </View>
                                     </View>
                                 </Body>
