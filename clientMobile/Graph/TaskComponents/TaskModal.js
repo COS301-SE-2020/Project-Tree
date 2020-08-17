@@ -39,12 +39,12 @@ class TaskModal extends Component {
                             <TouchableOpacity style={styles.hideButton} onPress={()=>this.props.displayTaskDependency(null, null)}>
                                 <Icon type="FontAwesome" name="close" />
                             </TouchableOpacity>
-                            <Text style={styles.modalText}>
+                            <View style={{alignItems:'center'}}>
+                                <Text style={{fontSize:30, color:'#184D47'}}>
                                 {this.props.selectedTask.name}
-                            </Text>
-                            <Text style={styles.modalText}>
-                                {this.props.selectedTask.id}
-                            </Text>
+                                </Text>
+                                <View style={{backgroundColor: '#EEBB4D', height: 1, width: "60%", marginBottom:10}}></View>
+                            </View>
                             <Text style={styles.modalText}>
                                 {this.props.selectedTask.description}
                             </Text>
@@ -55,15 +55,25 @@ class TaskModal extends Component {
                                 End Date: {this.props.selectedTask.endDate.year.low+"-"+this.props.selectedTask.endDate.month.low+"-"+this.props.selectedTask.endDate.day.low}
                             </Text>
                             <Text style={styles.modalText}>
-                                Duration: {this.props.selectedTask.duration}
+                                Duration: {this.props.selectedTask.duration} days
                             </Text>
-                            <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleVisibility(false, true)}>
-                                <Icon type="AntDesign" name="edit"><Text>&nbsp;Edit</Text></Icon>
-                            </TouchableOpacity>
-                            <DeleteTask task={this.props.selectedTask} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
-                            <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleProgressModal(false, true)}>
-                            <Icon type="Entypo" name="progress-one"><Text>&nbsp;Update Progress</Text></Icon>
-                            </TouchableOpacity>
+                            <View style={{flex:1}}>
+                                <View style={{flex:1}}>
+                                    <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleVisibility(false, true)}>
+                                        <Icon type="AntDesign" name="edit" style={{color:'white'}}><Text>&nbsp;Edit</Text></Icon>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={{flex:1}}>
+                                    <DeleteTask task={this.props.selectedTask} toggleVisibility={this.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} />
+                                </View>
+
+                                <View style={{flex:1}}>
+                                    <TouchableOpacity style={styles.editButton} onPress={()=>this.toggleProgressModal(false, true)}>
+                                        <Icon type="Entypo" name="progress-one" style={{color:'white', paddingBottom:10}}><Text>&nbsp;Update Progress</Text></Icon>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </Modal>
@@ -95,7 +105,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 650,
+        height: 470,
         width: 350
 	},
 	textStyle: {
@@ -105,7 +115,8 @@ const styles = StyleSheet.create({
 	},
 	modalText: {
 		marginBottom: 15,
-		textAlign: "center",
+        textAlign: "center",
+        fontSize:20
 	},
     hideButton:{
         flex:0.15,
@@ -115,12 +126,10 @@ const styles = StyleSheet.create({
         marginTop:10
     },
     editButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{

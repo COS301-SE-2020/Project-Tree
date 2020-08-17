@@ -44,7 +44,7 @@ class DeleteDependency extends Component{
     render(){
         return(
             <TouchableOpacity style={styles.deleteButton} onPress={() => this.deleteConfirmation()}>
-                <Icon type="FontAwesome" name="trash" ><Text>&nbsp;Delete</Text></Icon>
+                <Icon type="FontAwesome" name="trash" style={{color:'white'}}><Text>&nbsp;Delete</Text></Icon>
             </TouchableOpacity>
         );
     }
@@ -52,12 +52,10 @@ class DeleteDependency extends Component{
 
 const styles = StyleSheet.create({
     deleteButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{

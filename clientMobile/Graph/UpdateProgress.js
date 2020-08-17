@@ -18,10 +18,13 @@ class UpdateProgress extends Component {
                         <TouchableOpacity style={styles.hideButton} onPress={() => this.props.toggleProgressModal(true,false)}>
                             <Icon type="FontAwesome" name="close" />
                         </TouchableOpacity>
+                        <View style={{alignItems:'center', flex:1}}>
+                            <Text style={{fontSize:25, color:'#184D47'}}>
+                                Update Progress
+                            </Text>
+                            <View style={{backgroundColor: '#EEBB4D', height: 1, width: "60%"}}></View>
+                        </View>
                         <UpdateProgressModal task={this.props.task} toggleProgressModal={this.props.toggleProgressModal} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo}/>
-						{/* <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.toggleProgressModal(true, false)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight> */}
                     </View>
                 </View>
             </Modal>
@@ -105,15 +108,20 @@ class UpdateProgressModal extends Component{
         const { selectedIndex } = this.state
         const buttons = [{ element: component1 }, { element: component2 }, { element: component3 }]
         return(
-            <View>
-                <ButtonGroup
-                    onPress={this.updateIndex}
-                    selectedIndex={selectedIndex}
-                    buttons={buttons}
-                    containerStyle={{height: 100}} />
-                <View styles={{padding:10}}>
+            <View style={{flex:3}}>
+                <View style={{flex:1}}>
+                    <ButtonGroup
+                        onPress={this.updateIndex}
+                        selectedIndex={selectedIndex}
+                        buttons={buttons}
+                        containerStyle={{height: 40}} 
+                        selectedButtonStyle={{backgroundColor: '#EEBB4D'}}
+                    />
+                </View>
+                
+                <View styles={{flex:1}}>
                     <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
-                        <Text>
+                        <Text style={{color:'white'}}>
                             Submit
                         </Text>
                     </TouchableOpacity>
@@ -146,23 +154,20 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 300,
+        height: 250,
         width: 350
     },
     hideButton:{
         flex:0.5,
         backgroundColor:'#fff',
         alignItems:'flex-end',
-        marginRight:10,
-        marginTop:10
+        marginRight:10
     },
     submitButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{

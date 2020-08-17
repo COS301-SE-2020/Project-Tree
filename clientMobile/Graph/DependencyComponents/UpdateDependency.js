@@ -13,13 +13,24 @@ class UpdateDependency extends Component {
 			<Modal animationType="fade" transparent={true} visible={this.props.modalVisibility} onRequestClose={()=>this.props.toggleVisibility(true, false)}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <TouchableOpacity style={styles.hideButton} onPress={() => this.props.toggleVisibility(true,false)}>
-                            <Icon type="FontAwesome" name="close" />
-                        </TouchableOpacity>
-                        <UpdateDependencyForm dependency={this.props.dependency} toggleVisibility={this.props.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency} name={this.props.name}/>
-						{/* <TouchableHighlight style={{ ...styles.openButton, backgroundColor: "#2196F3" }} onPress={()=>this.props.toggleVisibility(true, false)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </TouchableHighlight> */}
+                        <View style={{flex:1}}>
+                            <TouchableOpacity style={styles.hideButton} onPress={() => this.props.toggleVisibility(true,false)}>
+                                <Icon type="FontAwesome" name="close" />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={{flex:1}}>
+                            <View style={{alignItems:'center'}}>
+                                <Text style={{fontSize:25, color:'#184D47'}}>
+                                    Edit Dependency
+                                </Text>
+                                <View style={{backgroundColor: '#EEBB4D', height: 1, width: "60%", marginBottom:10}}></View>
+                            </View>
+                        </View>
+
+                        <View style={{flex:6}}>
+                            <UpdateDependencyForm dependency={this.props.dependency} toggleVisibility={this.props.toggleVisibility} getProjectInfo={this.props.getProjectInfo} setProjectInfo={this.props.setProjectInfo} displayTaskDependency={this.props.displayTaskDependency} name={this.props.name}/>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -92,30 +103,35 @@ class UpdateDependencyForm extends Component{
         const buttons = [{ element: component1 }, { element: component2 }]
 
         return(
-            <View>
-                <View>
+            <View style={{flex:1, justifyContent:'space-evenly'}}>
+                <View style={{flex:1}}>
                     <Text style={styles.modalText}>
                         {this.props.name}
                     </Text>
                 </View>
-                <ButtonGroup
-                    onPress={this.updateIndex}
-                    selectedIndex={this.state.selectedIndex}
-                    buttons={buttons}
-                    containerStyle={{height: 100}} 
-                />
-                <Form>
-                    <Item floatingLabel>
-                        <Label>Duration (Days)</Label>
-                        <Input 
-                            value = {this.state.dependencyDuration.toString()}
-                            onChangeText={val => this.setState({ dependencyDuration: val })}
-                        />
-                    </Item>
-                </Form>
-                <View styles={{padding:10}}>
+                <View style={{flex:1}}>
+                    <ButtonGroup
+                        onPress={this.updateIndex}
+                        selectedIndex={this.state.selectedIndex}
+                        buttons={buttons}
+                        containerStyle={{height: 50}} 
+                        selectedButtonStyle={{backgroundColor:'#EEBB4D'}}
+                    />
+                </View>
+                <View style={{flex:1}}>
+                    <Form>
+                        <Item floatingLabel>
+                            <Label>Duration (Days)</Label>
+                            <Input 
+                                value = {this.state.dependencyDuration.toString()}
+                                onChangeText={val => this.setState({ dependencyDuration: val })}
+                            />
+                        </Item>
+                    </Form>
+                </View>
+                <View style={{flex:1}}>
                     <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmit}>
-                        <Text>
+                        <Text style={{color:'white'}}>
                             Submit
                         </Text>
                     </TouchableOpacity>
@@ -148,7 +164,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 450,
+        height: 400,
         width: 350
     },
     hideButton:{
@@ -159,12 +175,10 @@ const styles = StyleSheet.create({
         marginTop:10
     },
     submitButton:{
-        backgroundColor:'#96BB7C',
+        backgroundColor:'#184D47',
         alignItems:'center',
         justifyContent:'center',
         height:45,
-        borderColor:'#EEBB4D',
-        borderWidth:2,
         borderRadius:5,
         shadowColor:'#000',
         shadowOffset:{
@@ -182,8 +196,8 @@ const styles = StyleSheet.create({
 		textAlign: "center"
 	},
 	modalText: {
-		marginBottom: 15,
-		textAlign: "center"
+        textAlign: "center",
+        fontSize:18
 	},
 	container: { flex: 1, paddingTop: 30, backgroundColor: '#fff', width: "100%" },
     head: {  height: 40,  backgroundColor: '#f1f8ff', width: 200 },

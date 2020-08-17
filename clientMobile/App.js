@@ -1,56 +1,36 @@
 import React, { Component } from 'react'
-import {View, Text, TouchableOpacity, TouchableHighlight} from 'react-native'
+import {View, Text, TouchableOpacity, TouchableHighlight, ActivityIndicator} from 'react-native'
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import IconFeather from 'react-native-vector-icons/Feather'
 import IconEntypo from 'react-native-vector-icons/Entypo'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
+import IconMaterial from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import Drawer from 'react-native-drawer'
-import HomeScreen from './Home/HomeScreen';
-import GraphScreen from './Graph/GraphScreen';
+import Home from './Home/HomeScreen';
+import Graph from './Graph/GraphScreen';
 import SettingsScreen from './Settings/SettingsScreen';
-import NoticeBoardScreen from './NoticeBoard/NoticeBoardScreen'
-import ProjectList from './ProjectList';
-import GraphDrawer from './Graph/GraphDrawer';
+import UserSettings from './Settings/UserSettings';
+import NoticeBoard from './NoticeBoard/NoticeBoardScreen'
 console.disableYellowBox = true; 
-//import { createAppContainer } from 'react-navigation';
-//import { createStackNavigator} from '@react-navigation/stack';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator} from '@react-navigation/stack';
 
-// import Splash from './User/Splash';
-// import Login from './User/Login';
-// import Register from './User/Register';
-// import drawerNav from './User/DrawerNav';
+import AsyncStorage from '@react-native-community/async-storage';
+import SplashScreen from './User/SplashScreen'
+import LoginScreen from './User/LoginScreen'
+import RegisterScreen from './User/RegisterScreen'
+import { forEach } from 'lodash'
 
-// const Auth = createStackNavigator({
-// 	//Stack Navigator for Login and Sign up Screen
-// 	LoginScreen: {
-// 	  screen: LoginScreen,
-// 	  navigationOptions: {
-// 		headerShown: false,
-// 	  },
-// 	},
-// 	RegisterScreen: {
-// 	  screen: RegisterScreen,
-// 	  navigationOptions: {
-// 		title: 'Register',
-// 		headerStyle: {
-// 		  backgroundColor: '#307ecc',
-// 		},
-// 		headerTintColor: '#fff'r,
-// 	  },
-// 	},
-//   });
 
 const Tabs = AnimatedTabBarNavigator()
 
 const Screen = styled.View
 `
-	flex: 1;
+  flex: 1;
   background-color: #f2f2f2;
 `
-
-var globalSelectedProject = null
 
 const FeatherTabBarIcon = (props) => {
 	return (
@@ -82,191 +62,234 @@ const AntDesignTabBarIcon = (props) => {
 	)
 }
 
-class Home extends Component{
-	constructor(props) {
-		super(props);
-		let drawerState = globalSelectedProject === null ? true : false;
-		this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
-		this.setCurrentProject = this.setCurrentProject.bind(this);
-		this.setDrawerVisible = this.setDrawerVisible.bind(this);
-	}
-
-	setDrawerVisible(mode){
-		this.setState({drawerVisible:mode});
-	}
-
-	setCurrentProject(project){
-		this.setState({selectedProject:project});
-		globalSelectedProject = project;
-	}
-
-	render(){
-		return(
-			<Screen>
-				<Drawer
-					type="overlay"
-					open={this.state.drawerVisible}
-					content={<ProjectList setCurrentProject={this.setCurrentProject} setDrawerVisible={this.setDrawerVisible}/>}
-					tapToClose={true}
-					openDrawerOffset={0.2} 
-					panCloseMask={0.2}
-					closedDrawerOffset={-3}
-					tweenHandler={(ratio) => ({
-						main: {
-							opacity:(2-ratio)/2
-						}
-					})}
-        		>
-					<TouchableOpacity style={{height:45}} onPress={()=>{this.setState({drawerVisible:true})}}>
-						<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-					</TouchableOpacity>
-					<HomeScreen 
-						project={this.state.selectedProject} 
-						setCurrentProject={this.setCurrentProject} 
-						setDrawerVisible={this.setDrawerVisible}
-						navigation={this.props.navigation}
-					/>
-			  	</Drawer>
-			</Screen>
-		)
-	}
+const MaterialTabBarIcon = (props) => {
+	return (
+		<IconMaterial
+			name={props.name}
+			size={props.size ? props.size : 24}
+			color={props.tintColor}
+		/>
+	)
 }
 
-class Graph extends Component{
-  	constructor(props) {
-		super(props);
-		let drawerState = globalSelectedProject === null ? true : false;
-		this.state = {drawerVisible:drawerState, selectedProject:globalSelectedProject};
-		this.setDrawerVisible = this.setDrawerVisible.bind(this);
-	}
-  
-	setDrawerVisible(mode){
-		this.setState({drawerVisible:mode});
-	}
-  
+class Register extends Component{
 	render(){
-		if(globalSelectedProject === null){
-			return(
-				<View style={{
-				justifyContent:"center", 
-				alignItems:"center",
-				flex:1}}
-				>
-					<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
-						alignItems:'center',
-						justifyContent:'center',
-						height:45,
-						borderColor:'#EEBB4D',
-						borderWidth:2,
-						borderRadius:5,
-						shadowColor:'#000',
-						shadowOffset:{
-							width:0,
-							height:1
-						},
-						shadowOpacity:0.8,
-						shadowRadius:2,  
-						elevation:3}}
-					>
-						<Text style={{color:'white'}}>
-						Please select a project
-						</Text>
-					</TouchableHighlight>
-				</View>
-			)
-		}
-
 		return(
 			<Screen>
-				<Drawer
-				type="overlay"
-				open={this.state.drawerVisible}
-				content={<GraphDrawer setDrawerVisible={this.setDrawerVisible} project={globalSelectedProject} navigation={this.props.navigation}/>}
-				tapToClose={true}
-				openDrawerOffset={0.2} 
-				panCloseMask={0.2}
-				closedDrawerOffset={-3}
-				tweenHandler={(ratio) => ({
-					main: { opacity:(2-ratio)/2 }
-				})}
-				>
-					{this.state.selectedProject !== null ?
-					<React.Fragment>
-						<GraphScreen 
-						project={this.state.selectedProject}
-						navigation={this.props.navigation}
-						setDrawerVisible={this.setDrawerVisible}
-						/>
-					</React.Fragment>
-					: 
-					<TouchableOpacity style={{height:60}} onPress={()=>{this.setDrawerVisible(true)}}>
-						<IconEntypo name="menu" color="#184D47" size={50} style={{marginLeft:5, marginTop:5}}/>
-					</TouchableOpacity>
-					}
-				</Drawer>
+				<RegisterScreen/>
 			</Screen>
 		)
 	}
 }
 
 class Settings extends Component{
-	render(){
-		return(
-			<Screen>
-				<SettingsScreen/>
-			</Screen>
-		)
-	}
-}
-
-class NoticeBoard extends Component{
-	constructor(props) {
+	
+	constructor(props) 
+	{
 		super(props);
-		this.state = {selectedProject:globalSelectedProject};
+		this.state =
+		{ 
+		  user: true,
+		  accept: false
+		};		
+		this.handleLogout = this.handleLogout.bind(this);
+		this.userScreen = this.userScreen.bind(this);
 	}
-	render(){
-		// if(globalSelectedProject === null){
-		// 	return(
-		// 		<View style={{
-		// 		justifyContent:"center", 
-		// 		alignItems:"center",
-		// 		flex:1}}
-		// 		>
-		// 		<TouchableHighlight onPress={()=>{this.props.navigation.navigate("Home")}} style={{backgroundColor:'#184D47',
-		// 			alignItems:'center',
-		// 			justifyContent:'center',
-		// 			height:45,
-		// 			borderColor:'#EEBB4D',
-		// 			borderWidth:2,
-		// 			borderRadius:5,
-		// 			shadowColor:'#000',
-		// 			shadowOffset:{
-		// 				width:0,
-		// 				height:1
-		// 			},
-		// 			shadowOpacity:0.8,
-		// 			shadowRadius:2,  
-		// 			elevation:3}}
-		// 		>
-		// 			<Text style={{color:'white'}}>
-		// 			Please select a project
-		// 			</Text>
-		// 		</TouchableHighlight>
-		// 		</View>
-		// 	)
-		// }
 
-		return(
-			<NoticeBoardScreen project={this.state.selectedProject}/>
-		)
+	async userScreen(cnt)
+	{
+		console.log(cnt)
+		if(cnt == true)
+		{
+			this.setState
+			({
+				user: false
+			});
+		}
+		else{
+			this.setState
+			({
+				user: true
+			});
+		}
+	}
+
+	async handleLogout() 
+	{	
+		try {
+			const keys = await AsyncStorage.getAllKeys();
+			await AsyncStorage.multiRemove(keys);
+			this.props.setLogout(false);
+		}
+		catch(exception) {
+			return false;
+		}
+	}
+	
+	render(){
+		console.log(this.state.user)
+		if(this.state.user == true)
+		{
+			return(
+				<Screen>
+					<SettingsScreen userScreen = {this.userScreen} handleLogout={this.handleLogout}/>
+				</Screen>
+			)
+		}
+		else
+		{
+			return(
+				<Screen>
+					<UserSettings userScreen = {this.userScreen}/>
+				</Screen>
+			)
+		}
 	}
 }
 
 export default class App extends Component{
+	constructor(props) 
+	{
+		super(props);
+		this.state =
+		{ 
+		  loggedInStatus: false,
+		  user: {},
+		  sessionToken: null,
+		  switch: true,
+		  selectedProject: null,
+		  userInfo: null,
+		  switchToLog: false
+		};
+		
+		this.handleLogin = this.handleLogin.bind(this);
+		this.switchScreen = this.switchScreen.bind(this);
+		this.setLogout = this.setLogout.bind(this);			
+		this.setSelectedProject = this.setSelectedProject.bind(this);
+	}
+
+	async setSelectedProject(project){
+		try{
+			await AsyncStorage.setItem('selectedProject', JSON.stringify(project));
+		} 
+		catch(e){
+			console.log("Could not set key");
+		}
+		this.setState({selectedProject:project});
+	}
+
+	async setLogout(mode)
+	{
+		this.setState(
+		{
+			loggedInStatus: mode,
+			user: {},
+			sessionToken: null,
+			selectedProject: null
+		});
+	}
+
+	switchScreen(flag)
+	{
+		console.log(flag)
+		if(flag == "Register")
+		{
+			this.setState
+			({
+				switch: false
+			});
+		}
+		else if(flag == "Splash")
+		{
+			this.setState
+			({
+				switchToLog: true
+			});
+		}
+		else{
+			this.setState
+			({
+				switch: true
+			});
+		}
+	}
+	
+	async handleLogin(data)
+	{
+		try {
+			await AsyncStorage.setItem('sessionToken', JSON.stringify(data.sessionToken));
+			} 
+			catch(e) 
+			{
+				console.log("Could not set key");
+			}  
+			this.setState(
+			{
+				loggedInStatus: data.status,
+				user: data.id,
+				sessionToken: data.sessionToken
+			});
+	}
+
+	async componentDidMount()
+	{
+		AsyncStorage.getItem('sessionToken')
+		.then((value) => {
+			if(value)
+				this.setState({loggedInStatus: true});
+		});
+
+		AsyncStorage.getItem('selectedProject')
+		.then((value) => {
+			if(value)
+				this.setState({selectedProject:JSON.parse(value)})
+		});
+	}	
+
+	async setUserInfo(){
+		if(this.state.userInfo != null) return;
+
+		let tokenVal = null
+		try{
+		await AsyncStorage.getItem('sessionToken')
+		.then((value) => {
+			if(value){
+				tokenVal = JSON.parse(value);
+			}
+		});
+		}
+		catch
+		{
+			console.log("Error")
+		}
+
+		console.log("Token Val: "+tokenVal)
+
+		let userToken = {creatorID: tokenVal};
+
+		const response = await fetch('http://projecttree.herokuapp.com/user/get',{
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body:JSON.stringify(userToken)
+		});
+
+		const body = await response.json();
+		if (response.status !== 200) throw Error(body.message);
+
+		this.setState({userInfo:body.user});
+		
+	}
+
 	render(){
-		return(
-			<NavigationContainer>
-				<Tabs.Navigator
+		if(this.state.loggedInStatus === true)
+		{ 
+			this.setUserInfo()
+			return(
+				<NavigationContainer>
+					<Tabs.Navigator
 					tabBarOptions={{
 						activeTintColor: 'black',
 						inactiveTintColor: 'white',
@@ -285,11 +308,11 @@ export default class App extends Component{
 						shadow: true,
 						tabBarBackground: '#184D47'
 					}}
-					initialRouteName="Notice Board">
+					initialRouteName="Home">
 					
 					<Tabs.Screen
 						name="Home"
-						component={Home}
+						children={()=><Home user={this.state.userInfo} project={this.state.selectedProject} setSelectedProject={this.setSelectedProject} />}
 						options={{
 							tabBarIcon: ({ focused, color }) => (
 								<FeatherTabBarIcon
@@ -300,9 +323,9 @@ export default class App extends Component{
 							),
 						}}
 					/>
-         			<Tabs.Screen
+					<Tabs.Screen
 						name="Project Tree"
-						component={Graph}
+						children={()=><Graph project={this.state.selectedProject} />}
 						options={{
 							tabBarIcon: ({ focused, color }) => (
 								<EntypoTabBarIcon
@@ -312,23 +335,23 @@ export default class App extends Component{
 								/>
 							),
 						}}
-          			/>
+					/>
 					<Tabs.Screen
 						name="Notice Board"
-						component={NoticeBoard}
+						children={()=><NoticeBoard project={this.state.selectedProject} user={this.state.userInfo}/>}
 						options={{
 							tabBarIcon: ({ focused, color }) => (
-								<AntDesignTabBarIcon
+								<MaterialTabBarIcon
 									focused={focused}
 									tintColor={color}
-									name="notification"
+									name="notifications"
 								/>
 							),
 						}}
-          			/>
+					/>
 					<Tabs.Screen
 						name="Settings"
-						component={Settings}
+						children={()=><Settings setLogout={this.setLogout}/>}						
 						options={{
 							tabBarIcon: ({ focused, color }) => (
 								<FeatherTabBarIcon
@@ -337,10 +360,28 @@ export default class App extends Component{
 									name="settings"
 								/>
 							),
-						}}
+						
+						}
+					}															
 					/>
-				</Tabs.Navigator>
-			</NavigationContainer>
-		)
+				</Tabs.Navigator>				
+				</NavigationContainer>
+			)
+		}
+		else
+		{	
+			if(this.state.switchToLog)
+			{
+				if(this.state.switch)	
+					return(<LoginScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+				else{
+					return(<RegisterScreen handleLogin={this.handleLogin} switchScreen={this.switchScreen}/>)
+				}
+			}
+			else	
+				return(<SplashScreen switchScreen={this.switchScreen}/>)
+
+		}		
 	}
 }
+

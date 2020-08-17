@@ -13,8 +13,6 @@
                 width: 20%;
                 height: 3em;
                 border-radius: 5px;
-                border-color:#EEBB4D;
-                border-width:3px;
                 border-style: solid;
                 background-color: #184D47;
                 color: white;
@@ -35,7 +33,9 @@
             <textarea id="graphdirection">
                 <%= graphDirection %>
             </textarea>
-            <br/>
+            <textarea id="criticalpath">
+                <%= criticalPath %>
+            </textarea>
         </div>
         <div style="display:flex; justify-content:space-around;">
             <button class="btn" onclick="zoomIn()"><i class="fa fa-search-plus"></i></button>
@@ -140,34 +140,46 @@
         /*
         *   Build graph by creating nodes and links
         */
-        function buildGraph(data) {
+        function buildGraph(data,criticalPath) {
             var elements = [];
             var links = [];
+
+            let criticalPathLinks = [];
+            let criticalPathNodes = [];
+            if(criticalPath !== null && criticalPath.path !== null)
+                criticalPath.path.segments.forEach(element => {
+                    criticalPathNodes.push(element.start.identity.low);
+                    criticalPathLinks.push(element.relationship.identity.low);
+                    criticalPathNodes.push(element.end.identity.low);
+                });
             
             _.each(data.nodes, function(node) {
-            elements.push(makeElement(node));
+            elements.push(makeElement(node,criticalPathNodes));
             })
             
             _.each(data.rels, function(edge) {
-            links.push(makeLink(edge)); 
+            links.push(makeLink(edge,criticalPathLinks)); 
             })
             return elements.concat(links);
         }
         
-        function makeLink(edge) {
+        function makeLink(edge,criticalPathLinks) {
+            var strokeColor = '#000';
+            if(criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
             return new joint.shapes.standard.Link({
                 id:edge.id,
                 source:{id:`${edge.source}`},
                 target:{id:`${edge.target}`},
-                connector:{name:'rounded'},
-                router:{name:'manhattan'},
+                connector:{name:'smooth'},
+                // router:{name:'manhattan'},
                 attrs: {
-                    type:'link'
+                    type:'link',
+                    line: {stroke:strokeColor}
                 }
             })
         }
         
-        function makeElement(node) {
+        function makeElement(node,criticalPathNodes) {
             var letterSize = 16;
             var width = 100
             var height = 80
@@ -206,6 +218,9 @@
                 statusColor = '#ffae42'
             }
 
+            var borderColor = '#000';
+            if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
+
             return new joint.shapes.standard.Rectangle({
                 id: `${node.id}`,
                 size:{
@@ -215,7 +230,8 @@
                 attrs:{
                     type:'node',
                     body: {
-                        fill: statusColor
+                        fill: statusColor,
+                        stroke: borderColor
                     },
                     text:{ 
                         text: wraptext, 
@@ -224,7 +240,6 @@
                     },
                     rect:{
                         rx: 10, ry: 10,
-                        stroke: '#000',
                         //magnet: true
                         transform: 'translate(1, 1)'
                     }
@@ -237,17 +252,18 @@
         function layout() {      
             try {
                 var dataList = eval('dataList = ' + $('#adjacency-list').val());
-                var graphDirection = eval($('#graphdirection').val())
+                var graphDirection = eval($('#graphdirection').val());
+                var criticalPath = eval('criticalPath = ' + $('#criticalpath').val());
             } catch (e) { alert(e); }
 
-            var cells = buildGraph(dataList);
+            var cells = buildGraph(dataList,criticalPath);
             graph.resetCells(cells);
             joint.layout.DirectedGraph.layout(graph, {
                 dagre: dagre,
                 graphlib: graphlib,
                 setLinkVertices: false,
                 rankDir: graphDirection,
-                nodeSep: 10,
+                nodeSep: 25,
                 rankSep: 50
             });
         }
