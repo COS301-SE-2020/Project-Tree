@@ -1,158 +1,211 @@
-import React, { Component } from 'react';
-import { Image, View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, {Component} from 'react';
+import {
+  Image,
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import * as Progress from 'react-native-progress';
 import {Spinner} from 'native-base';
 
 export default class ProgressDashboardWrapper extends Component {
-    _isMounted = false;
+  _isMounted = false;
 
-    constructor(props){
-        super(props);
-        this.state = {tasks:null, criticalPath:null}
+  constructor(props) {
+    super(props);
+    this.state = {tasks: null, criticalPath: null};
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.project.id === this.props.project.id) return;
+
+    this._isMounted = true;
+
+    var response = await fetch(
+      'http://projecttree.herokuapp.com/project/projecttasks',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({projId: this.props.project.id}),
+      },
+    );
+
+    var body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    else {
+      if (this._isMounted === true) this.setState({tasks: body.tasks});
     }
 
-    async componentDidUpdate(prevProps){
-        if(prevProps.project.id === this.props.project.id) return;
+    response = await fetch(
+      'http://projecttree.herokuapp.com/project/criticalpath',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({projId: this.props.project.id}),
+      },
+    );
 
-        this._isMounted = true;
+    body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    else {
+      if (this._isMounted === true) this.setState({criticalPath: body});
+    }
+  }
 
-        var response = await fetch('http://projecttree.herokuapp.com/project/projecttasks',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ projId:this.props.project.id })
-        });
+  async componentDidMount() {
+    this._isMounted = true;
 
-		var body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        else{
-            if(this._isMounted === true) this.setState({tasks:body.tasks});
-        }
+    var response = await fetch(
+      'http://projecttree.herokuapp.com/project/projecttasks',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({projId: this.props.project.id}),
+      },
+    );
 
-        response = await fetch('http://projecttree.herokuapp.com/project/criticalpath',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ projId:this.props.project.id })
-        });
-
-		body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        else{
-            if(this._isMounted === true) this.setState({criticalPath:body});
-        }
+    var body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    else {
+      if (this._isMounted === true) this.setState({tasks: body.tasks});
     }
 
-    async componentDidMount(){this._isMounted = true;
+    response = await fetch(
+      'http://projecttree.herokuapp.com/project/criticalpath',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({projId: this.props.project.id}),
+      },
+    );
 
-        var response = await fetch('http://projecttree.herokuapp.com/project/projecttasks',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ projId:this.props.project.id })
-        });
-
-		var body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        else{
-            if(this._isMounted === true) this.setState({tasks:body.tasks});
-        }
-
-        response = await fetch('http://projecttree.herokuapp.com/project/criticalpath',{
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ projId:this.props.project.id })
-        });
-
-		body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-        else{
-            if(this._isMounted === true) this.setState({criticalPath:body});
-        }
+    body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    else {
+      if (this._isMounted === true) this.setState({criticalPath: body});
     }
+  }
 
-    componentWillUnmount(){
-        this._isMounted = false;
-    }
-    
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
-    render(){
-        if(this.state.tasks === null || this.state.criticalPath === null){
-            return(
-                <Spinner />
-            )
-        }
-        return(
-            <ProgressDashboard tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
-        )
+  render() {
+    if (this.state.tasks === null || this.state.criticalPath === null) {
+      return <Spinner />;
     }
+    return (
+      <ProgressDashboard
+        tasks={this.state.tasks}
+        criticalPath={this.state.criticalPath}
+      />
+    );
+  }
 }
 
-class ProgressDashboard extends Component{
-    getProjectProgress(){
-        let totalDur = 0, completeDur = 0, percentage = 0, color = "success";
-        this.props.tasks.forEach(task => {
-          if(task.progress === "Complete") completeDur = completeDur + task.duration;
-          totalDur += task.duration;
-        });
-        if(totalDur !== 0) percentage = completeDur / totalDur * 100;
-        else percentage = 0;
+class ProgressDashboard extends Component {
+  getProjectProgress() {
+    let totalDur = 0,
+      completeDur = 0,
+      percentage = 0,
+      color = 'success';
+    this.props.tasks.forEach((task) => {
+      if (task.progress === 'Complete')
+        completeDur = completeDur + task.duration;
+      totalDur += task.duration;
+    });
+    if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
+    else percentage = 0;
 
-        return Math.round(percentage);
-    }
-    
-    getCPProgress(){
-        let totalDur = 0, completeDur = 0, percentage = 0, color = "success";
-        if (this.props.criticalPath !== null && this.props.criticalPath.path !== null)
-          this.props.criticalPath.path.segments.forEach((el, i) => {
-            if(i === 0){
-              if(el.start.properties.progress === "Complete") completeDur = completeDur + el.start.properties.duration.low;
-              totalDur += el.start.properties.duration.low;
-            }
-            if(el.end.properties.progress === "Complete") completeDur = completeDur + el.end.properties.duration.low;
-            totalDur += el.end.properties.duration.low;
-          });
-        if(totalDur !== 0) percentage = completeDur / totalDur * 100;
-        else percentage = 0;
+    return Math.round(percentage);
+  }
 
-        return Math.round(percentage);
-    }
+  getCPProgress() {
+    let totalDur = 0,
+      completeDur = 0,
+      percentage = 0,
+      color = 'success';
+    if (
+      this.props.criticalPath !== null &&
+      this.props.criticalPath.path !== null
+    )
+      this.props.criticalPath.path.segments.forEach((el, i) => {
+        if (i === 0) {
+          if (el.start.properties.progress === 'Complete')
+            completeDur = completeDur + el.start.properties.duration.low;
+          totalDur += el.start.properties.duration.low;
+        }
+        if (el.end.properties.progress === 'Complete')
+          completeDur = completeDur + el.end.properties.duration.low;
+        totalDur += el.end.properties.duration.low;
+      });
+    if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
+    else percentage = 0;
 
-    render(){
-        let cp= this.getCPProgress();
-        let pp= this.getProjectProgress();
+    return Math.round(percentage);
+  }
 
-        let cpColor=null;
-        let ppColor=null;
+  render() {
+    let cp = this.getCPProgress();
+    let pp = this.getProjectProgress();
 
-        if(cp < 33) cpColor='red';
-        else if(cp < 66) cpColor='#EEBB4D'
-        else cpColor='green'
+    let cpColor = null;
+    let ppColor = null;
 
-        if(pp < 33) ppColor='red';
-        else if(pp < 66) ppColor='#EEBB4D'
-        else ppColor='green'
+    if (cp < 33) cpColor = 'red';
+    else if (cp < 66) cpColor = '#EEBB4D';
+    else cpColor = 'green';
 
-        return(
-            <View style={{flexDirection:'row', width:'100%', justifyContent:'space-evenly'}}>
-                <View style={{alignItems:'center'}}>
-                    <Progress.Circle progress={pp/100} size={100} showsText={true} formatText={progress=>{return `${pp}%`}} color={ppColor}/>
-                    <Text>Project Progress</Text>
-                </View>
-                <View style={{alignItems:'center'}}>
-                    <Progress.Circle progress={cp/100} size={100} showsText={true} formatText={progress=>{return `${cp}%`}} color={cpColor}/>
-                    <Text>Critical Path Progress</Text>
-                </View>
-            </View>
-        )
-    }
+    if (pp < 33) ppColor = 'red';
+    else if (pp < 66) ppColor = '#EEBB4D';
+    else ppColor = 'green';
+
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-evenly',
+        }}>
+        <View style={{alignItems: 'center'}}>
+          <Progress.Circle
+            progress={pp / 100}
+            size={100}
+            showsText={true}
+            formatText={(progress) => {
+              return `${pp}%`;
+            }}
+            color={ppColor}
+          />
+          <Text>Project Progress</Text>
+        </View>
+        <View style={{alignItems: 'center'}}>
+          <Progress.Circle
+            progress={cp / 100}
+            size={100}
+            showsText={true}
+            formatText={(progress) => {
+              return `${cp}%`;
+            }}
+            color={cpColor}
+          />
+          <Text>Critical Path Progress</Text>
+        </View>
+      </View>
+    );
+  }
 }

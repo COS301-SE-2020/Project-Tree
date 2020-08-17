@@ -146,7 +146,7 @@ async function updateTask(req, res) {
         result.records[0]._fields[0].properties.duration !=
           req.body.changedInfo.ut_duration
       )
-      upDep = true;
+        upDep = true;
 
       let queriesArray = [];
       if (upDep == true) {

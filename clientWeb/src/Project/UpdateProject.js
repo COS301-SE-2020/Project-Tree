@@ -13,12 +13,16 @@ function stringifyFormData(fd) {
 class UpdateProject extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, project: this.props.project, token: localStorage.getItem('sessionToken')};
+    this.state = {
+      show: false,
+      project: this.props.project,
+      token: localStorage.getItem("sessionToken"),
+    };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
+
   componentDidUpdate(prevProps) {
     if (this.props.project !== prevProps.project) {
       this.setState({ project: this.props.project });
@@ -39,28 +43,48 @@ class UpdateProject extends React.Component {
     $.post("/project/update", JSON.parse(data), (response) => {
       this.setState({ show: false });
       this.props.setProject(response);
-    })
-    .fail(() => {
+    }).fail(() => {
       alert("Unable to update project");
-    })
+    });
   }
 
   render() {
     return (
       <React.Fragment>
-        <Button style={{backgroundColor:"#184D47", color:"white", borderColor:"#184D47"}}onClick={() => {this.showModal()}}>
+        <Button
+          style={{
+            backgroundColor: "#184D47",
+            color: "white",
+            borderColor: "#184D47",
+          }}
+          onClick={() => {
+            this.showModal();
+          }}
+        >
           <i className="fa fa-edit"> </i> Edit{" "}
         </Button>
-        <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
-          <Form onSubmit={event => {this.handleSubmit(event)}}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+        <Modal
+          show={this.state.show}
+          onHide={() => {
+            this.hideModal();
+          }}
+        >
+          <Form
+            onSubmit={(event) => {
+              this.handleSubmit(event);
+            }}
+          >
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Edit Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form.Control 
-                name="token" 
-                type="hidden" 
-                value= {this.state.token}
+              <Form.Control
+                name="token"
+                type="hidden"
+                value={this.state.token}
                 onChange={() => {}}
               />
               <Form.Control
@@ -94,7 +118,7 @@ class UpdateProject extends React.Component {
                   value={this.state.project.description}
                   onChange={(e) => {
                     let proj = this.state.project;
-                    proj.description = e.target.value ;
+                    proj.description = e.target.value;
                     this.setState({ project: proj });
                     this.value = this.state.project.description;
                   }}
@@ -103,7 +127,11 @@ class UpdateProject extends React.Component {
               <Table bordered striped hover>
                 <thead>
                   <tr>
-                    <td className="text-center" colSpan="4" style={{backgroundColor:"#184D47", color:"white"}}>
+                    <td
+                      className="text-center"
+                      colSpan="4"
+                      style={{ backgroundColor: "#184D47", color: "white" }}
+                    >
                       Project Permisions
                     </td>
                   </tr>
@@ -245,7 +273,9 @@ class UpdateProject extends React.Component {
               </Table>
               <br />
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Footer
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>

@@ -60,7 +60,10 @@ class DeleteTask extends React.Component {
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Delete Task</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -75,7 +78,9 @@ class DeleteTask extends React.Component {
                 <p> Are you sure you want to delete this task?</p>
               </Form.Group>
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Footer
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>

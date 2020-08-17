@@ -1,15 +1,13 @@
 const uq = require("../userManagementApi/userQueries");
-const { JWT } = require('jose');
-
 const db = require("../DB");
-const { checkPermissionInternal, verify } = require("../userManagementApi/userQueries");
-const { data } = require("jquery");
+const {
+  checkPermissionInternal,
+  verify,
+} = require("../userManagementApi/userQueries");
 
-
-
- async function createProject(req, res) {
+async function createProject(req, res) {
   let userId = await uq.verify(req.body.token);
-  if(userId!=null){
+  if (userId != null) {
     req.body.cp_pm_Create != undefined
       ? (cp_pm_Create = true)
       : (cp_pm_Create = false);
@@ -85,51 +83,50 @@ const { data } = require("jquery");
       .catch((err) => {
         console.log(err);
         res.status(400);
-        res.send(err);
+        res.send({ message: err });
       });
-  }else{
-    res.status(400)
-    res.send({user:null})
+  } else {
+    res.status(400);
+    res.send({ message: "Invalid user" });
   }
 }
 
 async function deleteProject(req, res) {
   body = JSON.parse(req.body.data);
   let userId = await verify(body.token);
-  if(userId!=null)
-  {
-    let permissions = await checkPermissionInternal(body.token, body.project)
-    if(permissions.project != false){
+  if (userId != null) {
+    let permissions = await checkPermissionInternal(body.token, body.project);
+    if (permissions.project != false) {
       db.getSession()
-      .run(
-        `
-          MATCH (n)
-          WHERE ID(n)=${body.project.id} OR n.projId = ${body.project.id} OR n.projID = ${body.project.id}
-          DETACH DELETE n
-        `
-      )
-      .then(result => {
-        res.status(200);
-        res.send({ delete: body.project.id });
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(400);
-        res.send({error: err});
-      });
-    }else{
-      res.status(400)
-      res.send({error : "incorrect permission to delete project"})
+        .run(
+          `
+            MATCH (n)
+            WHERE ID(n)=${body.project.id} OR n.projId = ${body.project.id} OR n.projID = ${body.project.id}
+            DETACH DELETE n
+          `
+        )
+        .then((result) => {
+          res.status(200);
+          res.send({ delete: body.project.id });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(400);
+          res.send({ message: err });
+        });
+    } else {
+      res.status(400);
+      res.send({ message: "incorrect permission to delete project" });
     }
-  }else{
-    res.status(400)
-    res.send({user:null})
+  } else {
+    res.status(400);
+    res.send({ message: "Invalid user" });
   }
 }
 
 async function updateProject(req, res) {
   let userId = await uq.verify(req.body.token);
-  if(userId!=null){
+  if (userId != null) {
     req.body.up_pm_Create != undefined
       ? (up_pm_Create = true)
       : (up_pm_Create = false);
@@ -203,11 +200,11 @@ async function updateProject(req, res) {
       .catch((err) => {
         console.log(err);
         res.status(400);
-        res.send(err);
+        res.send({ message: err });
       });
-  }else{
-    res.status(400)
-    res.send({user:null})
+  } else {
+    res.status(400);
+    res.send({ message: "Invalid user" });
   }
 }
 
@@ -236,100 +233,95 @@ function getProgress(req, res) {
     .catch((err) => {
       console.log(err);
       res.status(400);
-      res.send(err);
+      res.send({ message: err });
     });
 }
 
 async function getProjects(req, res) {
   let userId = await uq.verify(req.body.token);
-  if(userId != null)  {
+  if (userId != null) {
     let ownedProjects = [];
     let otherProjects = [];
-    await db.getSession()
-    .run(
-      `
-        MATCH (user)-[:MANAGES]->(project) 
-        WHERE ID(user) = ${userId}
-        return project
-      `
-    )
-    .then(result => {
-      result.records.forEach((record) => {
-        ownedProjects.push({
-          id: record._fields[0].identity.low,
-          name: record._fields[0].properties.name,
-          description: record._fields[0].properties.description,
-          permissions: [
-            record._fields[0].properties.packManCT,
-            record._fields[0].properties.packManDT,
-            record._fields[0].properties.packManUT,
-            record._fields[0].properties.resPerCT,
-            record._fields[0].properties.resPerDT,
-            record._fields[0].properties.resPerUT,
-            record._fields[0].properties.resourceCT,
-            record._fields[0].properties.resourceDT,
-            record._fields[0].properties.resourceUT,
-          ],
+    await db
+      .getSession()
+      .run(
+        `
+          MATCH (user)-[:MANAGES]->(project) 
+          WHERE ID(user) = ${userId}
+          return project
+        `
+      )
+      .then((result) => {
+        result.records.forEach((record) => {
+          ownedProjects.push({
+            id: record._fields[0].identity.low,
+            name: record._fields[0].properties.name,
+            description: record._fields[0].properties.description,
+            permissions: [
+              record._fields[0].properties.packManCT,
+              record._fields[0].properties.packManDT,
+              record._fields[0].properties.packManUT,
+              record._fields[0].properties.resPerCT,
+              record._fields[0].properties.resPerDT,
+              record._fields[0].properties.resPerUT,
+              record._fields[0].properties.resourceCT,
+              record._fields[0].properties.resourceDT,
+              record._fields[0].properties.resourceUT,
+            ],
+          });
         });
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send(err);
-    });
-    await db.getSession()
-    .run(
-      `
-        MATCH (user:User)-[r]->(m:Task)-[:PART_OF]->(j) 
-        WHERE ID(user) = ${userId}
-        return DISTINCT j
-      `
-    )
-    .then(result => {
-      result.records.forEach((record) => {
-        otherProjects.push({
-          id: record._fields[0].identity.low,
-          name: record._fields[0].properties.name,
-          description: record._fields[0].properties.description,
-          permissions: [
-            record._fields[0].properties.packManCT,
-            record._fields[0].properties.packManDT,
-            record._fields[0].properties.packManUT,
-            record._fields[0].properties.resPerCT,
-            record._fields[0].properties.resPerDT,
-            record._fields[0].properties.resPerUT,
-            record._fields[0].properties.resourceCT,
-            record._fields[0].properties.resourceDT,
-            record._fields[0].properties.resourceUT,
-          ],
-        });
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send(err);
-    });
-    res.status(200);
-    res.send({ ownedProjects ,otherProjects });
-  }
-  else if(typeof userId == 'undefined')
-  {
-    res.status(400);
-    res.send(
-      {
-        message: "Undefined"
       })
-  }
-  else
-  {
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send(err);
+      });
+    await db
+      .getSession()
+      .run(
+        `
+          MATCH (user:User)-[r]->(m:Task)-[:PART_OF]->(j) 
+          WHERE ID(user) = ${userId}
+          return DISTINCT j
+        `
+      )
+      .then((result) => {
+        result.records.forEach((record) => {
+          otherProjects.push({
+            id: record._fields[0].identity.low,
+            name: record._fields[0].properties.name,
+            description: record._fields[0].properties.description,
+            permissions: [
+              record._fields[0].properties.packManCT,
+              record._fields[0].properties.packManDT,
+              record._fields[0].properties.packManUT,
+              record._fields[0].properties.resPerCT,
+              record._fields[0].properties.resPerDT,
+              record._fields[0].properties.resPerUT,
+              record._fields[0].properties.resourceCT,
+              record._fields[0].properties.resourceDT,
+              record._fields[0].properties.resourceUT,
+            ],
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send(err);
+      });
+    res.status(200);
+    res.send({ ownedProjects, otherProjects });
+  } else if (typeof userId == "undefined") {
     res.status(400);
-    res.send(
-    {
-      message: "Invalid User"
-    }
-   )
+    res.send({
+      message: "Undefined",
+    });
+  } else {
+    res.status(400);
+    res.send({
+      message: "Invalid User",
+    });
   }
 }
 
@@ -343,7 +335,7 @@ function getProjectTasks(req, res) {
         ORDER BY a.startDate
       `
     )
-    .then(result => {
+    .then((result) => {
       let response = [];
       result.records.forEach((record) => {
         response.push({
@@ -366,30 +358,32 @@ function getProjectTasks(req, res) {
     });
 }
 
-function getCriticalPath(req, res){
-  console.log('hello')
-  
-  console.log(req.body)
-	db.getSession()
-  .run
-  (`
+function getCriticalPath(req, res) {
+  console.log("hello");
+
+  console.log(req.body);
+  db.getSession()
+    .run(
+      `
     MATCH (a:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(b:Task {projId: ${req.body.projId}})
     WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
     MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
     WHERE duration.inDays(c.startDate, d.endDate) = dur
     RETURN p
-  `)
-  .then(result => {
+  `
+    )
+    .then((result) => {
       res.status(200);
-      if(result.records[0] != null) res.send({path: result.records[0]._fields[0]});
-      else res.send({path: null});
-  })
-  .catch(err => {
+      if (result.records[0] != null)
+        res.send({ path: result.records[0]._fields[0] });
+      else res.send({ path: null });
+    })
+    .catch((err) => {
       console.log(err);
       res.status(400);
       res.send(err);
-  });
-};
+    });
+}
 
 module.exports = {
   createProject,
@@ -398,5 +392,5 @@ module.exports = {
   getProjects,
   getProgress,
   getProjectTasks,
-  getCriticalPath
+  getCriticalPath,
 };

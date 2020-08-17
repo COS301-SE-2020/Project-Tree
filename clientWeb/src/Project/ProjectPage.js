@@ -6,54 +6,67 @@ import $ from "jquery";
 import ProjectProgress from "./ProjectProgress";
 import NoticeBoard from "../Notifications/NoticeBoard";
 
-
 class ProjectPage extends React.Component {
   constructor(props) {
-    super(props); 
+    super(props);
     this.state = {
-      tasks: [], 
+      tasks: [],
       criticalPath: null,
-      noticeBoardRefreshKey:0
+      noticeBoardRefreshKey: 0,
     };
 
-    this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(this);
-    
+    this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(
+      this
+    );
   }
 
-  updateNoticeBoardRefreshKey(){
-    this.setState({noticeBoardRefreshKey:this.state.noticeBoardRefreshKey+1})
+  updateNoticeBoardRefreshKey() {
+    this.setState({
+      noticeBoardRefreshKey: this.state.noticeBoardRefreshKey + 1,
+    });
   }
 
-  componentDidMount(){
-    $.post( "/project/projecttasks", {projId: this.props.project.id} , response => {
-      this.setState({tasks: response.tasks})
-    })
-    .fail(() => {
-        alert( "Unable to get tasks" );
-    })
-    $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
-      this.setState({criticalPath: response})
-    })
-    .fail(() => {
-        alert( "Unable to get Critical Path" );
-    })
-    
+  componentDidMount() {
+    $.post(
+      "/project/projecttasks",
+      { projId: this.props.project.id },
+      (response) => {
+        this.setState({ tasks: response.tasks });
+      }
+    ).fail(() => {
+      alert("Unable to get tasks");
+    });
+    $.post(
+      "/project/criticalpath",
+      { projId: this.props.project.id },
+      (response) => {
+        this.setState({ criticalPath: response });
+      }
+    ).fail(() => {
+      alert("Unable to get Critical Path");
+    });
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.project !== prevProps.project) {
-      $.post( "/project/projecttasks", {projId: this.props.project.id} , response => {
-        this.setState({tasks: response.tasks})
-      })
-      .fail(() => {
-          alert( "Unable to get tasks" );
-      })
-      $.post( "/project/criticalpath", {projId: this.props.project.id} , response => {
-        this.setState({criticalPath: response})
-      })
-      .fail(() => {
-          alert( "Unable to get Critical Path" );
-      })
+      $.post(
+        "/project/projecttasks",
+        { projId: this.props.project.id },
+        (response) => {
+          this.setState({ tasks: response.tasks });
+        }
+      ).fail(() => {
+        alert("Unable to get tasks");
+      });
+      $.post(
+        "/project/criticalpath",
+        { projId: this.props.project.id },
+        (response) => {
+          this.setState({ criticalPath: response });
+        }
+      ).fail(() => {
+        alert("Unable to get Critical Path");
+      });
     }
   }
 
@@ -61,30 +74,47 @@ class ProjectPage extends React.Component {
     return (
       <Container fluid>
         <Row className="my-1">
-          <Col> 
-            <ProjectProgress project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
+          <Col>
+            <ProjectProgress
+              project={this.props.project}
+              tasks={this.state.tasks}
+              criticalPath={this.state.criticalPath}
+            />
           </Col>
         </Row>
         <Row className="my-1">
           <Col sm={12} md={12} lg={6} xl={6}>
-            <ProjectInfo 
-              project={this.props.project} 
-              setProject={project => this.props.setProject(project)}
+            <ProjectInfo
+              project={this.props.project}
+              setProject={(project) => this.props.setProject(project)}
               userPermission={this.props.userPermission}
               user={this.props.user}
               updateNoticeBoardRefreshKey={this.updateNoticeBoardRefreshKey}
             />
           </Col>
-          <Col sm={12} md={12} lg={6} xl={6} style={{maxHeight:"400px", overflowY: "auto"}}> 
-            {
-            this.props.project != null && this.props.user != null ? 
-              <NoticeBoard project={this.props.project} user={this.props.user} refreshKey={this.state.noticeBoardRefreshKey}/> 
-            : null}
+          <Col
+            sm={12}
+            md={12}
+            lg={6}
+            xl={6}
+            style={{ maxHeight: "400px", overflowY: "auto" }}
+          >
+            {this.props.project != null && this.props.user != null ? (
+              <NoticeBoard
+                project={this.props.project}
+                user={this.props.user}
+                refreshKey={this.state.noticeBoardRefreshKey}
+              />
+            ) : null}
           </Col>
         </Row>
         <Row className="my-1">
           <Col>
-            <TaskInfo project={this.props.project} tasks={this.state.tasks} criticalPath={this.state.criticalPath}/>
+            <TaskInfo
+              project={this.props.project}
+              tasks={this.state.tasks}
+              criticalPath={this.state.criticalPath}
+            />
           </Col>
         </Row>
       </Container>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Container, Row, Col } from 'react-bootstrap'
+import React from "react";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
@@ -10,17 +10,17 @@ import DeleteDependency from "./Dependency/DeleteDependency";
 import SendTaskNotification from "../Notifications/SendTaskNotification";
 import $ from "jquery";
 
-class GraphPage extends React.Component{
+class GraphPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      project: this.props.project, 
-      task:null, 
-      dependency:null, 
-      nodes:null, 
-      links:null,
-      allUsers:null, 
-      projUsers:null
+    this.state = {
+      project: this.props.project,
+      task: null,
+      dependency: null,
+      nodes: null,
+      links: null,
+      allUsers: null,
+      projUsers: null,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
@@ -28,48 +28,58 @@ class GraphPage extends React.Component{
   }
 
   componentDidMount() {
-    $.post( "/getProject", {id: this.state.project.id} , response => {
+    $.post("/getProject", { id: this.state.project.id }, (response) => {
       this.setState({ nodes: response.tasks, links: response.rels });
-    })
-    .fail(err => {
+    }).fail((err) => {
       throw Error(err);
     });
 
-    $.post( "/people/getAllUsers", {id: this.state.project.id} , response => {
+    $.post("/people/getAllUsers", { id: this.state.project.id }, (response) => {
       this.setState({ allUsers: response.users });
-    })
-    .fail(err => {
+    }).fail((err) => {
       throw Error(err);
     });
 
-    $.post( "/people/projectUsers", {id: this.state.project.id} , response => {
-      this.setState({projUsers:response.projectUsers});
-    })
-    .fail(err => {
+    $.post(
+      "/people/projectUsers",
+      { id: this.state.project.id },
+      (response) => {
+        this.setState({ projUsers: response.projectUsers });
+      }
+    ).fail((err) => {
       throw Error(err);
     });
   }
 
-  componentDidUpdate(prevProps){
+  componentDidUpdate(prevProps) {
     if (this.props.project !== prevProps.project) {
-      $.post( "/getProject", {id: this.props.project.id} , response => {
-        this.setState({ project: this.props.project, nodes: response.tasks, links: response.rels });
-      })
-      .fail(err => {
+      $.post("/getProject", { id: this.props.project.id }, (response) => {
+        this.setState({
+          project: this.props.project,
+          nodes: response.tasks,
+          links: response.rels,
+        });
+      }).fail((err) => {
         throw Error(err);
       });
 
-      $.post( "/people/getAllUsers", {id: this.state.project.id} , response => {
-        this.setState({ allUsers: response.users });
-      })
-      .fail(err => {
+      $.post(
+        "/people/getAllUsers",
+        { id: this.state.project.id },
+        (response) => {
+          this.setState({ allUsers: response.users });
+        }
+      ).fail((err) => {
         throw Error(err);
       });
-  
-      $.post( "/people/projectUsers", {id: this.state.project.id} , response => {
-        this.setState({projUsers:response.projectUsers});
-      })
-      .fail(err => {
+
+      $.post(
+        "/people/projectUsers",
+        { id: this.state.project.id },
+        (response) => {
+          this.setState({ projUsers: response.projectUsers });
+        }
+      ).fail((err) => {
         throw Error(err);
       });
     }
@@ -89,10 +99,9 @@ class GraphPage extends React.Component{
 
       return;
     }
-    $.post( "/getProject", { id: this.state.project.id } , response => {
+    $.post("/getProject", { id: this.state.project.id }, (response) => {
       this.setState({ nodes: response.tasks, links: response.rels });
-    })
-    .fail(err => {
+    }).fail((err) => {
       throw Error(err);
     });
   }
@@ -109,10 +118,13 @@ class GraphPage extends React.Component{
         }
       }
 
-      $.post( "/people/projectUsers", {id: this.state.project.id} , response => {
-        this.setState({projUsers:response.projectUsers});
-      })
-      .fail(err => {
+      $.post(
+        "/people/projectUsers",
+        { id: this.state.project.id },
+        (response) => {
+          this.setState({ projUsers: response.projectUsers });
+        }
+      ).fail((err) => {
         throw Error(err);
       });
 
@@ -132,9 +144,12 @@ class GraphPage extends React.Component{
   render() {
     return (
       <React.Fragment>
-        <Container fluid style={{height:"100%", width: "100%"}}>
+        <Container fluid style={{ height: "100%", width: "100%" }}>
           <Row className="h-100">
-            <Col className="text-center block-example border-right border-secondary bg-light" style={{ maxHeight:'90vh', overflowY: 'auto'}}>
+            <Col
+              className="text-center block-example border-right border-secondary bg-light"
+              style={{ maxHeight: "90vh", overflowY: "auto" }}
+            >
               <Container>
                 <Row>
                   <Col>
@@ -179,7 +194,7 @@ class GraphPage extends React.Component{
                   getProjectInfo={this.getProjectInfo}
                 />
               ) : null}
-              <LegendSidebar/>
+              <LegendSidebar />
             </Col>
             <Col
               xs={9}
@@ -215,33 +230,33 @@ class TaskSidebar extends React.Component {
   }
 
   // Classifies users on the project according to role if they are part of this task
-  classifyExistingUsers(){
+  classifyExistingUsers() {
     let taskUsers = [];
     let taskPacMans = [];
     let taskResPersons = [];
     let taskResources = [];
 
     // Get the users that are part of the selected task
-    for(let x = 0; x < this.props.projUsers.length; x++){
-      if(this.props.projUsers[x][1].end === this.props.task.id){
-        taskUsers.push(this.props.projUsers[x])
+    for (let x = 0; x < this.props.projUsers.length; x++) {
+      if (this.props.projUsers[x][1].end === this.props.task.id) {
+        taskUsers.push(this.props.projUsers[x]);
       }
     }
 
     // Assign users to their respective roles by putting them in arrays
-    for(let x = 0; x < taskUsers.length; x++){
-      if(taskUsers[x][1].type === "PACKAGE_MANAGER"){
-        taskPacMans.push(taskUsers[x][0])
+    for (let x = 0; x < taskUsers.length; x++) {
+      if (taskUsers[x][1].type === "PACKAGE_MANAGER") {
+        taskPacMans.push(taskUsers[x][0]);
       }
-      if(taskUsers[x][1].type === "RESPONSIBLE_PERSON"){
-        taskResPersons.push(taskUsers[x][0])
+      if (taskUsers[x][1].type === "RESPONSIBLE_PERSON") {
+        taskResPersons.push(taskUsers[x][0]);
       }
-      if(taskUsers[x][1].type === "RESOURCE"){
-        taskResources.push(taskUsers[x][0])
+      if (taskUsers[x][1].type === "RESOURCE") {
+        taskResources.push(taskUsers[x][0]);
       }
     }
 
-    taskUsers=[]
+    taskUsers = [];
     taskUsers.push(taskPacMans);
     taskUsers.push(taskResPersons);
     taskUsers.push(taskResources);
@@ -249,12 +264,16 @@ class TaskSidebar extends React.Component {
     return taskUsers;
   }
 
-  printUsers(people){
+  printUsers(people) {
     let list = [];
-    for(let x = 0; x < people.length; x++){
-      list.push(<p key={people[x].id}>{people[x].name}&nbsp;{people[x].surname}</p>)
+    for (let x = 0; x < people.length; x++) {
+      list.push(
+        <p key={people[x].id}>
+          {people[x].name}&nbsp;{people[x].surname}
+        </p>
+      );
     }
-    return list
+    return list;
   }
 
   render() {
@@ -271,28 +290,27 @@ class TaskSidebar extends React.Component {
       "-" +
       this.props.task.endDate.day.low;
 
-    let taskUsers = this.classifyExistingUsers()
+    let taskUsers = this.classifyExistingUsers();
     let taskPacMans = taskUsers[0];
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
 
     return (
       <React.Fragment>
-        <Container className="text-dark text-center bg-light py-2" style={{fontSize: "19px",  wordWrap: "break-word"}}>
+        <Container
+          className="text-dark text-center bg-light py-2"
+          style={{ fontSize: "19px", wordWrap: "break-word" }}
+        >
           <Row className="text-center">
             <Col>
-              {
-                this.props.userPermission["delete"] === true
-              ? 
+              {this.props.userPermission["delete"] === true ? (
                 <DeleteTask
                   task={this.props.task}
                   setTaskInfo={this.props.setTaskInfo}
                   getProjectInfo={this.props.getProjectInfo}
                   toggleSidebar={this.props.toggleSidebar}
                 />
-              : 
-                null
-              }
+              ) : null}
             </Col>
             <Col xs={6}>
               <h3>{this.props.task.name}</h3>
@@ -307,22 +325,20 @@ class TaskSidebar extends React.Component {
             </Col>
           </Row>
           <Row className="text-center align-items-center p-1">
-            <Col className="text-center">{this.props.task.description}</Col> 
-              
-          </Row>
-          <Row className="text-center p-1" >
-            <Col className="text-center">Start Date: {startDate}</Col> 
+            <Col className="text-center">{this.props.task.description}</Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">End Date: {endDate}</Col> 
+            <Col className="text-center">Start Date: {startDate}</Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center" >Duration: {this.props.task.duration} days</Col> 
-              
+            <Col className="text-center">End Date: {endDate}</Col>
           </Row>
-          {
-          this.props.userPermission["update"] === true
-          ? 
+          <Row className="text-center p-1">
+            <Col className="text-center">
+              Duration: {this.props.task.duration} days
+            </Col>
+          </Row>
+          {this.props.userPermission["update"] === true ? (
             <Row className="my-2">
               <Col xs={12} className="text-center">
                 <UpdateProgress
@@ -332,12 +348,8 @@ class TaskSidebar extends React.Component {
                 />
               </Col>
             </Row>
-          : 
-            null
-          }
-          {
-            this.props.userPermission["update"] === true
-            ? 
+          ) : null}
+          {this.props.userPermission["update"] === true ? (
             <Row className="my-2">
               <Col xs={12} className="text-center">
                 <UpdateTask
@@ -352,27 +364,31 @@ class TaskSidebar extends React.Component {
                 />
               </Col>
             </Row>
-          : 
-            null
-          }
+          ) : null}
           <Row className="my-2">
             <Col xs={12} className="text-center">
-              <SendTaskNotification 
-                task={this.props.task} 
-                project={this.props.project} 
-                user={this.props.user} 
-                taskPacMans={taskPacMans} 
-                taskResPersons={taskResPersons} 
+              <SendTaskNotification
+                task={this.props.task}
+                project={this.props.project}
+                user={this.props.user}
+                taskPacMans={taskPacMans}
+                taskResPersons={taskResPersons}
                 taskResources={taskResources}
               />
             </Col>
           </Row>
-          <hr/>
-          <b>Package managers:</b><br /><br />
+          <hr />
+          <b>Package managers:</b>
+          <br />
+          <br />
           {this.printUsers(taskPacMans)}
-          <b>Responsible persons:</b><br /><br />
+          <b>Responsible persons:</b>
+          <br />
+          <br />
           {this.printUsers(taskResPersons)}
-          <b>Resources:</b><br /><br />
+          <b>Resources:</b>
+          <br />
+          <br />
           {this.printUsers(taskResources)}
         </Container>
       </React.Fragment>
@@ -395,21 +411,20 @@ class DependencySidebar extends React.Component {
 
     return (
       <React.Fragment>
-        <Container className="text-black text-center py-2" style={{fontSize: "19px"}}>
+        <Container
+          className="text-black text-center py-2"
+          style={{ fontSize: "19px" }}
+        >
           <Row>
             <Col>
-              {
-              this.props.userPermission["delete"] === true
-              ? 
+              {this.props.userPermission["delete"] === true ? (
                 <DeleteDependency
                   dependency={this.props.dependency}
                   getProjectInfo={this.props.getProjectInfo}
                   setTaskInfo={this.props.setTaskInfo}
                   toggleSidebar={this.props.toggleSidebar}
                 />
-              : 
-                null
-              }
+              ) : null}
             </Col>
             <Col xs={8}>
               <h4>{start + "→" + end}</h4>
@@ -426,24 +441,20 @@ class DependencySidebar extends React.Component {
           <Row>
             <Col></Col>
             <Col xs={8}>
-                {this.props.dependency.relationshipType === "fs"
-                  ? "Finish-Start"
-                  : "Start-Start"}
+              {this.props.dependency.relationshipType === "fs"
+                ? "Finish-Start"
+                : "Start-Start"}
             </Col>
             <Col></Col>
           </Row>
           <Row>
             <Col></Col>
-            <Col xs={8}>
-              Duration: {this.props.dependency.duration} days
-            </Col>
+            <Col xs={8}>Duration: {this.props.dependency.duration} days</Col>
             <Col></Col>
           </Row>
           <Row>
             <Col>
-              {
-              this.props.userPermission["update"] === true
-              ? 
+              {this.props.userPermission["update"] === true ? (
                 <UpdateDependency
                   project={this.props.project}
                   dependency={this.props.dependency}
@@ -451,12 +462,10 @@ class DependencySidebar extends React.Component {
                   setTaskInfo={this.props.setTaskInfo}
                   toggleSidebar={this.props.toggleSidebar}
                 />
-              : 
-                null
-              }
+              ) : null}
             </Col>
           </Row>
-          <hr/>
+          <hr />
         </Container>
       </React.Fragment>
     );
@@ -467,88 +476,91 @@ class LegendSidebar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container className="text-black text-center" style={{fontSize: "20px"}}>
-                  <Row>
-                    <Col className="text-center">
-                      <h4>Task progress key</h4>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col></Col>
-                    <Col 
-                      className="text-center border rounded border-dark m-1 p-1" 
-                      xs={6} 
-                      style={{
-                        backgroundColor: "white", 
-                        color:"black", 
-                        width: "120px"
-                        }}
-                      >
-                      Incomplete
-                    </Col>
-                    <Col></Col>
-                  </Row>
-                  <Row>
-                    <Col></Col>
-                    <Col 
-                      className="text-center border rounded border-dark m-1 p-1" 
-                      xs={6} 
-                      style={{
-                        backgroundColor: "#77dd77",  
-                        color:"black", 
-                        width: "120px"
-                      }}
-                    >
-                      Complete
-                    </Col>
-                    <Col></Col>
-                  </Row>
-                  <Row>
-                    <Col></Col>
-                    <Col 
-                      className="text-center border rounded border-dark m-1 p-1" 
-                      xs={6} 
-                      style={{
-                        backgroundColor: "#ff6961",  
-                        color:"black", 
-                        width: "120px"
-                      }}
-                    >
-                      Overdue
-                    </Col>
-                    <Col></Col>
-                  </Row>
-                  <Row>
-                    <Col></Col>
-                    <Col 
-                      className="text-center border rounded border-dark m-1 p-1" 
-                      xs={6} 
-                      style={{
-                        backgroundColor: "#ffae42",  
-                        color:"black", 
-                        width: "120px"
-                      }}
-                    >
-                      Issue
-                    </Col>
-                    <Col></Col>
-                  </Row>
-                  <Row>
-                    <Col></Col>
-                    <Col 
-                      className="text-center border rounded border-primary m-1 p-1" 
-                      xs={6} 
-                      style={{
-                        backgroundColor: "white", 
-                        color:"black", 
-                        width: "120px"
-                      }}
-                    >
-                      Critical Path
-                    </Col>
-                    <Col></Col>
-                  </Row>
-                </Container> 
+        <Container
+          className="text-black text-center"
+          style={{ fontSize: "20px" }}
+        >
+          <Row>
+            <Col className="text-center">
+              <h4>Task progress key</h4>
+            </Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Incomplete
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "#77dd77",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Complete
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "#ff6961",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Overdue
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "#ffae42",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Issue
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-primary m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Critical Path
+            </Col>
+            <Col></Col>
+          </Row>
+        </Container>
       </React.Fragment>
     );
   }

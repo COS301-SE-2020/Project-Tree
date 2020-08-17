@@ -2,7 +2,6 @@ import React from "react";
 import { Form, Table, Modal, Button } from "react-bootstrap";
 import $ from "jquery";
 
-
 function stringifyFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
@@ -14,7 +13,7 @@ function stringifyFormData(fd) {
 class CreateProject extends React.Component {
   constructor() {
     super();
-    this.state = { show: false, token: localStorage.getItem('sessionToken') };
+    this.state = { show: false, token: localStorage.getItem("sessionToken") };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,34 +30,54 @@ class CreateProject extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
-    $.post("/project/add",  JSON.parse(data), (response) => {
+    $.post("/project/add", JSON.parse(data), (response) => {
       this.setState({ show: false });
       this.props.setProject(response);
-    })
-    .fail(() => {
+    }).fail(() => {
       alert("Unable to create project");
-    })
+    });
   }
 
   render() {
-    return ( 
+    return (
       <React.Fragment>
         <Button
           className="my-2"
-          style={{borderColor:"#EEBB4D", backgroundColor:"#EEBB4D"}}
-          onClick={() => {this.showModal()}}
+          style={{ borderColor: "#EEBB4D", backgroundColor: "#EEBB4D" }}
+          onClick={() => {
+            this.showModal();
+          }}
           block
           size="sm"
         >
-          <i className="fa fa-plus" style={{fontSize:"30px", color:"#184D47"}}></i>
+          <i
+            className="fa fa-plus"
+            style={{ fontSize: "30px", color: "#184D47" }}
+          ></i>
         </Button>
-        <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
-          <Form onSubmit={event => {this.handleSubmit(event)}}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+        <Modal
+          show={this.state.show}
+          onHide={() => {
+            this.hideModal();
+          }}
+        >
+          <Form
+            onSubmit={(event) => {
+              this.handleSubmit(event);
+            }}
+          >
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Create Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form.Control name="token" type="hidden" value= {this.state.token} />
+              <Form.Control
+                name="token"
+                type="hidden"
+                value={this.state.token}
+              />
               <Form.Group>
                 <Form.Label>Name of project</Form.Label>
                 <Form.Control type="text" name="cp_Name" required />
@@ -74,9 +93,13 @@ class CreateProject extends React.Component {
                 />
               </Form.Group>
               <Table bordered striped hover>
-                <thead >
+                <thead>
                   <tr>
-                    <td className="text-center" colSpan="4" style={{backgroundColor:"#184D47", color:"white"}}>
+                    <td
+                      className="text-center"
+                      colSpan="4"
+                      style={{ backgroundColor: "#184D47", color: "white" }}
+                    >
                       Project Permisions
                     </td>
                   </tr>
@@ -127,14 +150,16 @@ class CreateProject extends React.Component {
                 </tbody>
               </Table>
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47"}}>
-              <Button variant="secondary" onClick={() => {this.hideModal()}}>
+            <Modal.Footer style={{ backgroundColor: "#184D47" }}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  this.hideModal();
+                }}
+              >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                variant="dark"
-              >
+              <Button type="submit" variant="dark">
                 Create Project
               </Button>
             </Modal.Footer>
