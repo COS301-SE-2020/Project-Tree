@@ -38,7 +38,28 @@ class ProjectListDrawer extends Component {
 
         return (
             <View style={{flex:1, backgroundColor:"#303030", paddingBottom:60}}>
-                <View style={{flex:9}}>
+                <View style={{flex:5}}>
+                    <View style={{alignItems:'center'}}>
+                        <Text style={{fontSize:25, color:'#FFF'}}>
+                            Owned Projects
+                        </Text>
+                        <View style={{backgroundColor: '#FFF', height: 1, width: "60%", marginBottom:10}}></View>
+                    </View>
+                    <ScrollView>
+                        <ProjectList 
+                            projects={this.props.projects} 
+                            setCurrentProject={this.props.setCurrentProject}
+                            setDrawerVisible={this.props.setDrawerVisible}
+                        />
+                    </ScrollView>
+                </View>
+                <View style={{flex:5, marginTop:30}}>
+                    <View style={{alignItems:'center'}}>
+                        <Text style={{fontSize:25, color:'#FFF'}}>
+                            Other Projects
+                        </Text>
+                        <View style={{backgroundColor: '#FFF', height: 1, width: "60%", marginBottom:10}}></View>
+                    </View>
                     <ScrollView>
                         <ProjectList 
                             projects={this.props.projects} 
@@ -55,6 +76,7 @@ class ProjectListDrawer extends Component {
                         setCurrentProject={this.props.setCurrentProject}
                     />
                 </View>
+                <View style={{height:20}}></View>
             </View>
         );
     }

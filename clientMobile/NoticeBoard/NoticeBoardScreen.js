@@ -179,6 +179,7 @@ class NotificationList extends Component{
                             {message.fromName}
                             {message.type === "project" ? " - " + "Project Wide" : null}
                             {message.type === "task" ? " - " + message.taskName : null}
+                            {message.type === 'auto' ? " - Auto" : null}
                             {" "}
                         </Text>
                         <Text style={{color:'grey'}}>
