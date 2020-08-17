@@ -263,9 +263,7 @@ export default class App extends Component{
 			console.log("Error")
 		}
 
-		console.log("Token Val: "+tokenVal)
-
-		let userToken = {creatorID: tokenVal};
+		let userToken = {token: tokenVal};
 
 		const response = await fetch('http://projecttree.herokuapp.com/user/get',{
 			method: 'POST',
