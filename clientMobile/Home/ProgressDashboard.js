@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import {
-  Image,
   View,
   Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
 import * as Progress from 'react-native-progress';
 import {Spinner} from 'native-base';
@@ -122,7 +118,6 @@ class ProgressDashboard extends Component {
     let totalDur = 0,
       completeDur = 0,
       percentage = 0,
-      color = 'success';
     this.props.tasks.forEach((task) => {
       if (task.progress === 'Complete')
         completeDur = completeDur + task.duration;
@@ -138,7 +133,6 @@ class ProgressDashboard extends Component {
     let totalDur = 0,
       completeDur = 0,
       percentage = 0,
-      color = 'success';
     if (
       this.props.criticalPath !== null &&
       this.props.criticalPath.path !== null

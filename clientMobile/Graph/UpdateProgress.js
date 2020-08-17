@@ -3,22 +3,12 @@ import {
   Modal,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  View,
-  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native';
 import {
-  Icon,
-  Label,
-  Form,
-  Item,
-  Input,
-  StyleProvider,
-  Button,
+  Icon
 } from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
-import buttonStyling from '../native-base-theme/variables/buttonStylingProjList';
-import getTheme from '../native-base-theme/components';
 
 class UpdateProgress extends Component {
   constructor(props) {

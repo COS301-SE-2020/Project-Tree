@@ -5,17 +5,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-  TouchableHighlight,
 } from 'react-native';
 import {
-  Icon,
-  Label,
-  Form,
-  Item,
-  Input,
-  StyleProvider,
-  Button,
-  Container,
+  Icon
 } from 'native-base';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';

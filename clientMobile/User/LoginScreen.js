@@ -6,8 +6,7 @@ import {
   TextInput,
   Platform,
   StyleSheet,
-  StatusBar,
-  Alert,
+  StatusBar
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -30,8 +29,6 @@ class LoginScreen extends Component {
     this.loginHandle = this.loginHandle.bind(this);
   }
 
-  //const { signIn } = React.useContext(AuthContext);
-
   textInputChange(val) {
     this.setState({
       Email: val,
@@ -52,29 +49,22 @@ class LoginScreen extends Component {
   }
 
   async loginHandle(Email, password) {
-    // console.log(Email)
-    // console.log(password)
-
     if (Email == '') {
       alert('Please enter your Email');
       return;
     }
 
-    console.log(Email);
-    console.log(Email.trim());
-
     if (password == '') {
       alert('Please enter your Password');
       return;
     }
-    //
+    
     if (this.state.isValidUser && this.state.isValidPassword) {
       let data = {
         email: Email.trim(),
         password: password,
       };
       data = JSON.stringify(data);
-      console.log(data);
 
       const response = await fetch('http://projecttree.herokuapp.com/login', {
         method: 'POST',
@@ -85,7 +75,6 @@ class LoginScreen extends Component {
         body: data,
       });
       const body = await response.json();
-      // console.log(body)
       this.props.handleLogin(body);
     } else {
       alert('Invalid Email or Password.');
@@ -135,8 +124,7 @@ class LoginScreen extends Component {
               style={[
                 styles.textInput,
                 {
-                  // color: colors.text
-                },
+                }
               ]}
               autoCapitalize="none"
               onChangeText={(val) => this.handlePasswordChange(val)}
@@ -146,9 +134,9 @@ class LoginScreen extends Component {
                 this.updateSecureTextEntry();
               }}>
               {this.state.secureTextEntry ? (
-                <Feather name="eye-off" color="grey" size={20} />
+                <Feather name="eye-off" color="#05375a" size={20} />
               ) : (
-                <Feather name="eye" color="grey" size={20} />
+                <Feather name="eye" color="#05375a" size={20} />
               )}
             </TouchableOpacity>
           </View>
@@ -167,7 +155,7 @@ class LoginScreen extends Component {
               ]}>
               <Text
                 style={[
-                  styles.textSign,
+                  styles.signInText,
                   {
                     color: '#3CB371',
                   },
@@ -191,7 +179,7 @@ class LoginScreen extends Component {
               ]}>
               <Text
                 style={[
-                  styles.textSign,
+                  styles.signInText,
                   {
                     color: '#3CB371',
                   },
@@ -216,15 +204,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'flex-end',
-    // paddingHorizontal: 50,
     paddingBottom: 80,
   },
   footer: {
     flex: 3,
     backgroundColor: '#fff',
     paddingTop: 50,
-    // borderTopLeftRadius: 30,
-    // borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
@@ -272,7 +257,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
   },
-  textSign: {
+  signInText: {
     fontSize: 18,
     fontWeight: 'bold',
   },

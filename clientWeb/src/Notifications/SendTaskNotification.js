@@ -48,7 +48,6 @@ class SendTaskNotification extends React.Component {
     };
 
     $.post("/sendNotification", data, (response) => {
-      console.log(response.response);
       this.setState({ show: false });
     }).fail(() => {
       alert("Unable to send notification");

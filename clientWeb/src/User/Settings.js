@@ -5,7 +5,6 @@ import $ from "jquery";
 function stringifyFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
-    console.log(key, fd.get(key));
     data[key] = fd.get(key);
   }
   return data;
@@ -79,7 +78,6 @@ class Settings extends React.Component {
     );
     data.append("token", localStorage.getItem("sessionToken"));
     data = await stringifyFormData(data);
-    console.log(data);
     $.post("/user/edit", data, (response) => {
       this.setState({ user: response.user, prevUser: response.user });
       this.closeEdit();
@@ -123,13 +121,10 @@ class Settings extends React.Component {
                     type="file"
                     id="myFile"
                     name="profilePic"
-                    /* value={this.state.user.profilepicture} */ onChange={(
-                      e
-                    ) => {
+                    onChange={(e) => {
                       let usr = this.state.user;
                       usr.profilepicture = e.target.files[0];
                       this.setState({ user: usr });
-                      //this.value = this.state.user.profilepicture;
                     }}
                   />
                 )}

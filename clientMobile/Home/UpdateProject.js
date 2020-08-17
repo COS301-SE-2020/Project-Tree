@@ -4,30 +4,20 @@ import {
   Modal,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
   TouchableOpacity,
-  TextInput,
 } from 'react-native';
 import {
   Table,
   TableWrapper,
   Row,
   Rows,
-  Col,
-  Cols,
-  Cell,
 } from 'react-native-table-component';
 import {
-  Container,
   Icon,
   Form,
   Item,
-  Label,
   Input,
-  Picker,
-  StyleProvider,
-  Button,
 } from 'native-base';
 
 class UpdateProject extends Component {
