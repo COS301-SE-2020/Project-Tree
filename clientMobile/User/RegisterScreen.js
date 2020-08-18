@@ -27,14 +27,14 @@ class RegisterScreen extends Component {
       isValidEmail: true,
       check_inputChange: false,
       checkSname: false,
-      hiddenText: true,
-      confirm_hiddenText: true,
+      secureTextEntry: true,
+      confirm_secureTextEntry: true,
     };
     this.inputChange = this.inputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.updateHiddenText = this.updateHiddenText.bind(this);
-    this.updateConfirmHiddenText = this.updateConfirmHiddenText.bind(this);
+    this.updatesecureTextEntry = this.updatesecureTextEntry.bind(this);
+    this.updateConfirmsecureTextEntry = this.updateConfirmsecureTextEntry.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
     this.handleValidUser = this.handleValidUser.bind(this);
     this.snameInputChange = this.snameInputChange.bind(this);
@@ -121,16 +121,16 @@ class RegisterScreen extends Component {
     }
   }
 
-  updateHiddenText() 
+  updatesecureTextEntry() 
   {
     this.setState({
-      hiddenText: !this.state.hiddenText,
+      secureTextEntry: !this.state.secureTextEntry,
     });
   }
 
-  updateConfirmHiddenText() {
+  updateConfirmsecureTextEntry() {
     this.setState({
-      confirm_hiddenText: !this.state.confirm_hiddenText,
+      confirm_secureTextEntry: !this.state.confirm_secureTextEntry,
     });
   }
 
@@ -269,13 +269,13 @@ class RegisterScreen extends Component {
               <Feather name="lock" color="#05375a" size={20} />
               <TextInput
                 placeholder="Password"
-                secureTextEntry={this.state.hiddenText ? true : false}
+                secureTextEntry={this.state.secureTextEntry ? true : false}
                 style={styles.inputT}
                 autoCapitalize="none"
                 onChangeText={(val) => this.handlePasswordChange(val)}
               />
-              <TouchableOpacity onPress={this.updatehiddenText}>
-                {this.state.hiddenText ? (
+              <TouchableOpacity onPress={this.updatesecureTextEntry}>
+                {this.state.secureTextEntry ? (
                   <Feather name="eye-off" color="grey" size={20} />
                 ) : (
                   <Feather name="eye" color="grey" size={20} />
