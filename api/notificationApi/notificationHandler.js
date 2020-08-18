@@ -242,4 +242,6 @@ module.exports = {
   sendNotification,
   retrieveNotifications,
   formatAutoAssignData,
+  getEmails,
+  getIds
 };
