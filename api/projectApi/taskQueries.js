@@ -27,6 +27,7 @@ function createTask(req, res) {
         startDate: result.records[0]._fields[0].properties.startDate,
         endDate: result.records[0]._fields[0].properties.endDate,
         duration: result.records[0]._fields[0].properties.duration.low,
+        progress: result.records[0]._fields[0].properties.progress,
       };
       req.body.nodes.push(task);
       res.status(200);
