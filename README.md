@@ -50,6 +50,13 @@ I am currently a Computer Science Student at The University of Pretoria
   - Implementation of react web app framework/routing
   
 </details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Caught up mobile app in terms of previous website functionality
+  - Implemented server side handling of notifications
+  - Implemented mobile client handling of notifications
+  
+</details>
 
 ### Damian Venter (u18076514)
 
@@ -77,6 +84,12 @@ Undergraduate student studying BIT at the University of Pretoria.
   - Implementation of task progress
   
 </details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Caught up mobile app in terms of previous website functionality
+  - Implemented functionality to assign people to tasks on the website
+  
+</details>
 
 ### Dayne Moonsamy (u16148721)
 
@@ -102,6 +115,14 @@ Final year undergraduate student studying Computer Science at The University of 
   - Implementation of Create Projects
   - Implementation of Modals/forms for tasks 
   - Implementation of graphing/view project
+  
+</details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Implemented user management (login/logout/register) for website
+  - Implemented user management (login/logout/register) for mobile app
+  - Implemented edit user preferences for website
+  - Implemented edit user preferences for mobile app
   
 </details>
 
@@ -132,6 +153,13 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
   - Project page server call optimization
   
 </details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Redesign of the website including extra functionality 
+  - Implementation of critical path feature
+  - Implemented permissions throughout website
+  
+</details>
 
 ### Amber Grill (u18164022)
 
@@ -156,5 +184,11 @@ Final year student studying BSc IT at the University of Pretoria.
   
   - Implementation of Delete Projects
   - Implementation and design of bootstrap UI for the web app
+  
+</details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Redesign of the website  
+  - Implemented web client handling of notifications
   
 </details>
