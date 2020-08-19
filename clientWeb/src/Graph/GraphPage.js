@@ -1,269 +1,569 @@
-import React from 'react';
-import { Table, Button, Container, Row, Col } from 'react-bootstrap'
+import React from "react";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Graph from './Graph';
-import DeleteTask from './Task/DeleteTask';
-import UpdateTask from './Task/UpdateTask';
-import UpdateProgress from './Task/UpdateProgress';
-import UpdateDependency from './Dependency/UpdateDependency'
-import DeleteDependency from './Dependency/DeleteDependency'
+import Graph from "./Graph";
+import DeleteTask from "./Task/DeleteTask";
+import UpdateTask from "./Task/UpdateTask";
+import UpdateProgress from "./Task/UpdateProgress";
+import UpdateDependency from "./Dependency/UpdateDependency";
+import DeleteDependency from "./Dependency/DeleteDependency";
+import SendTaskNotification from "../Notifications/SendTaskNotification";
+import $ from "jquery";
 
-class GraphPage extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {task:null, dependency:null, nodes:null, links:null};
-        this.toggleSidebar = this.toggleSidebar.bind(this);
-        this.setTaskInfo = this.setTaskInfo.bind(this);
-        this.getProjectInfo = this.getProjectInfo.bind(this);
-    }
+class GraphPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      project: this.props.project,
+      task: null,
+      dependency: null,
+      nodes: null,
+      links: null,
+      allUsers: null,
+      projUsers: null,
+    };
+    this.toggleSidebar = this.toggleSidebar.bind(this);
+    this.setTaskInfo = this.setTaskInfo.bind(this);
+    this.getProjectInfo = this.getProjectInfo.bind(this);
+  }
 
-    async componentDidMount(){
-        const response = await fetch('/getProject',{
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ id:this.props.project.id })
+  componentDidMount() {
+    $.post("/getProject", { id: this.state.project.id }, (response) => {
+      this.setState({ nodes: response.tasks, links: response.rels });
+    }).fail((err) => {
+      throw Error(err);
+    });
+
+    $.post("/people/getAllUsers", { id: this.state.project.id }, (response) => {
+      this.setState({ allUsers: response.users });
+    }).fail((err) => {
+      throw Error(err);
+    });
+
+    $.post(
+      "/people/projectUsers",
+      { id: this.state.project.id },
+      (response) => {
+        this.setState({ projUsers: response.projectUsers });
+      }
+    ).fail((err) => {
+      throw Error(err);
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.project !== prevProps.project) {
+      $.post("/getProject", { id: this.props.project.id }, (response) => {
+        this.setState({
+          project: this.props.project,
+          nodes: response.tasks,
+          links: response.rels,
         });
-		const body = await response.json();
-        if (response.status !== 200) throw Error(body.message)
-        this.setState({nodes:body.tasks, links:body.rels})
-    }
+      }).fail((err) => {
+        throw Error(err);
+      });
 
-    async getProjectInfo(){
-        return {nodes:this.state.nodes, rels:this.state.links}
-    }
-
-    async setTaskInfo(nodes, rels, displayNode, displayRel){
-        if(nodes !== undefined && rels !== undefined){
-            this.setState({nodes:nodes, links:rels}) 
-            if(displayNode !== undefined || displayRel !== undefined)
-            {
-                this.toggleSidebar(displayNode, displayRel)
-            }
-
-            return  
-        } 
-
-        const response = await fetch('/getProject',{
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ id:this.props.project.id })
-        });
-        const body = await response.json();
-        if (response.status !== 200) throw Error(body.message);
-
-        this.setState({nodes:body.tasks, links:body.rels})
-    }
-
-    toggleSidebar(newTaskID, newDependencyID){
-        var newTask = null;
-        var newDependency = null;
-        var x;
-
-        if(newTaskID != null)
-        {
-            for(x=0; x<this.state.nodes.length; x++)
-            {
-                if(this.state.nodes[x].id === newTaskID){
-                    newTask = this.state.nodes[x];
-                }
-            }
-            
-            this.setState({task:newTask, dependency:newDependency});
+      $.post(
+        "/people/getAllUsers",
+        { id: this.state.project.id },
+        (response) => {
+          this.setState({ allUsers: response.users });
         }
+      ).fail((err) => {
+        throw Error(err);
+      });
 
-        else if(newDependencyID != null)
-        {
-            for(x=0; x<this.state.links.length; x++)
-            {
-                if(this.state.links[x].id === newDependencyID){
-                    newDependency = this.state.links[x];  
-                }
-            }
-            this.setState({task:newTask, dependency:newDependency});
+      $.post(
+        "/people/projectUsers",
+        { id: this.state.project.id },
+        (response) => {
+          this.setState({ projUsers: response.projectUsers });
         }
+      ).fail((err) => {
+        throw Error(err);
+      });
+    }
+  }
 
-        else{
-            this.setState({task:null, dependency:null});
+  getProjectInfo() {
+    return { nodes: this.state.nodes, rels: this.state.links };
+  }
+
+  setTaskInfo(nodes, rels, displayNode, displayRel) {
+    if (nodes !== undefined && rels !== undefined) {
+      this.setState({ nodes: nodes, links: rels });
+
+      if (displayNode !== undefined || displayRel !== undefined) {
+        this.toggleSidebar(displayNode, displayRel);
+      }
+
+      return;
+    }
+    $.post("/getProject", { id: this.state.project.id }, (response) => {
+      this.setState({ nodes: response.tasks, links: response.rels });
+    }).fail((err) => {
+      throw Error(err);
+    });
+  }
+
+  toggleSidebar(newTaskID, newDependencyID) {
+    var newTask = null;
+    var newDependency = null;
+    var x;
+
+    if (newTaskID != null) {
+      for (x = 0; x < this.state.nodes.length; x++) {
+        if (this.state.nodes[x].id === newTaskID) {
+          newTask = this.state.nodes[x];
         }
-    }
+      }
 
-    render(){
-        return(
-            <React.Fragment>
-                <Container fluid className="h-100">
-                <Row className="h-100"> 
-                        <Col className="text-center block-example border border-secondary bg-light">
-                            <br/> 
-                            <ProjectDetails toggleGraphPage={this.props.toggleGraphPage} project={this.props.project}/> 
-                            {this.state.source != null ? <Button size="sm" variant="outline-secondary" onClick={()=>this.toggleCreateDependency(null)}>X</Button> : null}
-                            <Button size="sm" variant="secondary" block >Display Critical Path - Under Construction</Button>
-                            <br/> {this.state.task !== null ? <TaskSidebar task={this.state.task} toggleSidebar={this.toggleSidebar} setTaskInfo={this.setTaskInfo} getProjectInfo={this.getProjectInfo}/> : null}
-                            {this.state.dependency !== null ? <DependencySidebar project={this.props.project} dependency={this.state.dependency} nodes={this.state.nodes} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar} getProjectInfo={this.getProjectInfo}/> : null}
-                        </Col>
-                        <Col xs={9} md={9} lg={9} xl={9}  className="align-items-center text-center">
-                            {this.state.nodes!==null?<Graph project={this.props.project} nodes={this.state.nodes} links={this.state.links} setTaskInfo={this.setTaskInfo} toggleSidebar={this.toggleSidebar} getProjectInfo={this.getProjectInfo}/>:null}
-                        </Col>
-                    </Row>
-                </Container>
-            </React.Fragment>
-        )
-    }
+      $.post(
+        "/people/projectUsers",
+        { id: this.state.project.id },
+        (response) => {
+          this.setState({ projUsers: response.projectUsers });
+        }
+      ).fail((err) => {
+        throw Error(err);
+      });
 
+      this.setState({ task: newTask, dependency: newDependency });
+    } else if (newDependencyID != null) {
+      for (x = 0; x < this.state.links.length; x++) {
+        if (this.state.links[x].id === newDependencyID) {
+          newDependency = this.state.links[x];
+        }
+      }
+      this.setState({ task: newTask, dependency: newDependency });
+    } else {
+      this.setState({ task: null, dependency: null });
+    }
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <Container fluid style={{ height: "100%", width: "100%" }}>
+          <Row className="h-100">
+            <Col
+              className="text-center block-example border-right border-secondary bg-light"
+              style={{ maxHeight: "90vh", overflowY: "auto" }}
+            >
+              <Container>
+                <Row>
+                  <Col>
+                    <Link to="/project">
+                      <Button
+                        variant="light"
+                        size="sm"
+                        className="text-left align-items-top"
+                      >
+                        <i className="fa fa-arrow-left"></i>
+                      </Button>
+                    </Link>
+                  </Col>
+                  <Col xs={6} md={6} lg={6} xl={6} className="text-center">
+                    <h3>{this.props.project.name}</h3>
+                  </Col>
+                  <Col></Col>
+                </Row>
+              </Container>
+              <hr></hr>
+              {this.state.task !== null ? (
+                <TaskSidebar
+                  task={this.state.task}
+                  userPermission={this.props.userPermission}
+                  toggleSidebar={this.toggleSidebar}
+                  setTaskInfo={this.setTaskInfo}
+                  getProjectInfo={this.getProjectInfo}
+                  projUsers={this.state.projUsers}
+                  allUsers={this.state.allUsers}
+                  user={this.props.user}
+                  project={this.state.project}
+                />
+              ) : null}
+              {this.state.dependency !== null ? (
+                <DependencySidebar
+                  project={this.props.project}
+                  dependency={this.state.dependency}
+                  nodes={this.state.nodes}
+                  userPermission={this.props.userPermission}
+                  setTaskInfo={this.setTaskInfo}
+                  toggleSidebar={this.toggleSidebar}
+                  getProjectInfo={this.getProjectInfo}
+                />
+              ) : null}
+              <LegendSidebar />
+            </Col>
+            <Col
+              xs={9}
+              md={9}
+              lg={9}
+              xl={9}
+              className="align-items-center text-center"
+            >
+              {this.state.nodes !== null ? (
+                <Graph
+                  project={this.state.project}
+                  nodes={this.state.nodes}
+                  links={this.state.links}
+                  userPermission={this.props.userPermission}
+                  setTaskInfo={this.setTaskInfo}
+                  toggleSidebar={this.toggleSidebar}
+                  getProjectInfo={this.getProjectInfo}
+                  allUsers={this.state.allUsers}
+                />
+              ) : null}
+            </Col>
+          </Row>
+        </Container>
+      </React.Fragment>
+    );
+  }
 }
 
-class ProjectDetails extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {permissions:false};
-        this.togglePermissions = this.togglePermissions.bind(this);
-        this.permissionsTable = this.permissionsTable.bind(this);
+class TaskSidebar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.classifyExistingUsers = this.classifyExistingUsers.bind(this);
+  }
+
+  // Classifies users on the project according to role if they are part of this task
+  classifyExistingUsers() {
+    let taskUsers = [];
+    let taskPacMans = [];
+    let taskResPersons = [];
+    let taskResources = [];
+
+    // Get the users that are part of the selected task
+    for (let x = 0; x < this.props.projUsers.length; x++) {
+      if (this.props.projUsers[x][1].end === this.props.task.id) {
+        taskUsers.push(this.props.projUsers[x]);
+      }
     }
 
-    togglePermissions(){
-        this.setState({permissions:!this.state.permissions})
+    // Assign users to their respective roles by putting them in arrays
+    for (let x = 0; x < taskUsers.length; x++) {
+      if (taskUsers[x][1].type === "PACKAGE_MANAGER") {
+        taskPacMans.push(taskUsers[x][0]);
+      }
+      if (taskUsers[x][1].type === "RESPONSIBLE_PERSON") {
+        taskResPersons.push(taskUsers[x][0]);
+      }
+      if (taskUsers[x][1].type === "RESOURCE") {
+        taskResources.push(taskUsers[x][0]);
+      }
     }
 
-    permissionsTable(){
-        return(
-            <Table className="mt-2" striped bordered size="sm" variant="light">
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td>Create </td>
-                        <td>Delete </td>
-                        <td>Update </td>
-                    </tr>
-                    <tr>
-                        <td>Package Manager</td>
-                        <td>{this.props.project.permissions[0] === true ? "X" : null}</td>
-                        <td>{this.props.project.permissions[1] === true ? "X" : null}</td>
-                        <td>{this.props.project.permissions[2] === true ? "X" : null}</td>
-                    </tr>
-                    <tr>
-                        <td>Responsible Person</td>
-                        <td>{this.props.project.permissions[3] === true ? "X" : null}</td>
-                        <td>{this.props.project.permissions[4] === true ? "X" : null}</td>
-                        <td>{this.props.project.permissions[5] === true ? "X" : null}</td>
-                    </tr>
-                    <tr>
-                        <td>Resource</td>
-                        <td>{this.props.project.permissions[6] === true ? "X" : null}</td>
-                        <td>{this.props.project.permissions[7] === true ? "X" : null}</td>
-                        <td>{this.props.project.permissions[8] === true ? "X" : null}</td>
-                    </tr>
-                </tbody>
-            </Table>
-        );
-    }
+    taskUsers = [];
+    taskUsers.push(taskPacMans);
+    taskUsers.push(taskResPersons);
+    taskUsers.push(taskResources);
 
-    render(){
-        return(
-            <React.Fragment>
-                <Container>
-                    <Row>
-                        <Col>
-                            <br/> <Link to="/project"><Button variant="light" size="sm" className="text-left align-items-top"><i className="fa fa-arrow-left"></i></Button></Link> 
-                        </Col>
-                        <Col xs={6} md={6} lg={6} xl={6} className="text-center">
-                            <h3>{this.props.project.name}</h3>
-                            <p>{this.props.project.description}</p>
-                        </Col>
-                        <Col></Col>
-                    </Row>
-                </Container>
-                
-                <Button variant="dark" block size="sm" onClick={this.togglePermissions}>Permissions  {this.state.permissions ? "\u25B4":"\u25BE"}</Button>  
-                        {this.state.permissions? <this.permissionsTable /> : null} 
-                        <hr></hr>
-            </React.Fragment>
-        )
+    return taskUsers;
+  }
+
+  printUsers(people) {
+    let list = [];
+    for (let x = 0; x < people.length; x++) {
+      list.push(
+        <p key={people[x].id}>
+          {people[x].name}&nbsp;{people[x].surname}
+        </p>
+      );
     }
+    return list;
+  }
+
+  render() {
+    let startDate =
+      this.props.task.startDate.year.low +
+      "-" +
+      this.props.task.startDate.month.low +
+      "-" +
+      this.props.task.startDate.day.low;
+    let endDate =
+      this.props.task.endDate.year.low +
+      "-" +
+      this.props.task.endDate.month.low +
+      "-" +
+      this.props.task.endDate.day.low;
+
+    let taskUsers = this.classifyExistingUsers();
+    let taskPacMans = taskUsers[0];
+    let taskResPersons = taskUsers[1];
+    let taskResources = taskUsers[2];
+
+    return (
+      <React.Fragment>
+        <Container
+          className="text-dark text-center bg-light py-2"
+          style={{ fontSize: "19px", wordWrap: "break-word" }}
+        >
+          <Row className="text-center">
+            <Col>
+              {this.props.userPermission["delete"] === true ? (
+                <DeleteTask
+                  task={this.props.task}
+                  setTaskInfo={this.props.setTaskInfo}
+                  getProjectInfo={this.props.getProjectInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                />
+              ) : null}
+            </Col>
+            <Col xs={6}>
+              <h3>{this.props.task.name}</h3>
+            </Col>
+            <Col className="text-right">
+              <Button
+                className="btn-light border-dark"
+                onClick={() => this.props.toggleSidebar(null, null)}
+              >
+                <i className="fa fa-close"></i>
+              </Button>
+            </Col>
+          </Row>
+          <Row className="text-center align-items-center p-1">
+            <Col className="text-center">{this.props.task.description}</Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col className="text-center">Start Date: {startDate}</Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col className="text-center">End Date: {endDate}</Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col className="text-center">
+              Duration: {this.props.task.duration} days
+            </Col>
+          </Row>
+          {this.props.userPermission["update"] === true ? (
+            <Row className="my-2">
+              <Col xs={12} className="text-center">
+                <UpdateProgress
+                  task={this.props.task}
+                  setTaskInfo={this.props.setTaskInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                />
+              </Col>
+            </Row>
+          ) : null}
+          {this.props.userPermission["update"] === true ? (
+            <Row className="my-2">
+              <Col xs={12} className="text-center">
+                <UpdateTask
+                  task={this.props.task}
+                  setTaskInfo={this.props.setTaskInfo}
+                  getProjectInfo={this.props.getProjectInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                  pacMans={taskPacMans}
+                  resPersons={taskResPersons}
+                  resources={taskResources}
+                  allUsers={this.props.allUsers}
+                />
+              </Col>
+            </Row>
+          ) : null}
+          <Row className="my-2">
+            <Col xs={12} className="text-center">
+              <SendTaskNotification
+                task={this.props.task}
+                project={this.props.project}
+                user={this.props.user}
+                taskPacMans={taskPacMans}
+                taskResPersons={taskResPersons}
+                taskResources={taskResources}
+              />
+            </Col>
+          </Row>
+          <hr />
+          <b>Package managers:</b>
+          <br />
+          <br />
+          {this.printUsers(taskPacMans)}
+          <b>Responsible persons:</b>
+          <br />
+          <br />
+          {this.printUsers(taskResPersons)}
+          <b>Resources:</b>
+          <br />
+          <br />
+          {this.printUsers(taskResources)}
+        </Container>
+      </React.Fragment>
+    );
+  }
 }
 
-class TaskSidebar extends React.Component{
-    render(){
-        let startDate = this.props.task.startDate.year.low+"-"+this.props.task.startDate.month.low+"-"+this.props.task.startDate.day.low
-        let endDate = this.props.task.endDate.year.low+"-"+this.props.task.endDate.month.low+"-"+this.props.task.endDate.day.low
-    
-        return(
-            <React.Fragment>
-                <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
-                    <Row className="text-center">
-                        <Col> <DeleteTask task = {this.props.task} setTaskInfo={this.props.setTaskInfo} getProjectInfo={this.props.getProjectInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
-                        <Col xs={6}><h1>{this.props.task.name}</h1></Col>
-                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
-                    </Row>
-                    <Row className="text-center">
-                        <Col><p>{this.props.task.description}</p></Col>
-                    </Row>
-                    <Row>
-                        <Col><p>Start Date: {startDate}</p></Col>
-                    </Row>
-                    <Row>
-                        <Col><p>End Date: {endDate}</p></Col>
-                    </Row>
-                    <Row>
-                        <Col><p>Duration: {this.props.task.duration}</p></Col>
-                    </Row>
-                    <Row>
-                        <Col><UpdateTask task={this.props.task} setTaskInfo={this.props.setTaskInfo} getProjectInfo={this.props.getProjectInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
-                        <Col><UpdateProgress task={this.props.task} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/></Col>
-                    </Row>
-                </Container>
-            </React.Fragment>
-        )
+class DependencySidebar extends React.Component {
+  render() {
+    var start;
+    var end;
+
+    for (var x = 0; x < this.props.nodes.length; x++) {
+      if (this.props.nodes[x].id === this.props.dependency.source) {
+        start = this.props.nodes[x].name;
+      } else if (this.props.nodes[x].id === this.props.dependency.target) {
+        end = this.props.nodes[x].name;
+      }
     }
+
+    return (
+      <React.Fragment>
+        <Container
+          className="text-black text-center py-2"
+          style={{ fontSize: "19px" }}
+        >
+          <Row>
+            <Col>
+              {this.props.userPermission["delete"] === true ? (
+                <DeleteDependency
+                  dependency={this.props.dependency}
+                  getProjectInfo={this.props.getProjectInfo}
+                  setTaskInfo={this.props.setTaskInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                />
+              ) : null}
+            </Col>
+            <Col xs={8}>
+              <h4>{start + "→" + end}</h4>
+            </Col>
+            <Col className="text-right">
+              <Button
+                className="btn-light border-dark"
+                onClick={() => this.props.toggleSidebar(null, null)}
+              >
+                <i className="fa fa-close"></i>
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col xs={8}>
+              {this.props.dependency.relationshipType === "fs"
+                ? "Finish-Start"
+                : "Start-Start"}
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col xs={8}>Duration: {this.props.dependency.duration} days</Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col>
+              {this.props.userPermission["update"] === true ? (
+                <UpdateDependency
+                  project={this.props.project}
+                  dependency={this.props.dependency}
+                  getProjectInfo={this.props.getProjectInfo}
+                  setTaskInfo={this.props.setTaskInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                />
+              ) : null}
+            </Col>
+          </Row>
+          <hr />
+        </Container>
+      </React.Fragment>
+    );
+  }
 }
 
-class DependencySidebar extends React.Component{
-    render(){
-
-        var start;
-        var end;
-
-        for(var x=0; x<this.props.nodes.length; x++)
-        {
-            if(this.props.nodes[x].id === this.props.dependency.source){
-                start = this.props.nodes[x].name
-            }
-
-            else if(this.props.nodes[x].id === this.props.dependency.target){
-                end = this.props.nodes[x].name
-            }
-        }
-
-
-        return(
-            <React.Fragment>
-                <Container className="text-white text-center rounded mb-0 border border-secondary bg-dark py-2">
-                    <Row>
-                        <Col> 
-                            <DeleteDependency dependency={this.props.dependency} getProjectInfo={this.props.getProjectInfo} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/>
-                        </Col>
-                        <Col xs={6} ><h3>{start+"→"+end}</h3></Col>
-                        <Col className="text-right" ><Button className="btn-dark" onClick={()=>this.props.toggleSidebar(null, null)}><i className="fa fa-close"></i></Button></Col>
-                    </Row>
-                    <Row>
-                        <Col><p>{this.props.dependency.relationshipType === "fs" ? "Finish-Start" : "Start-Start"}</p></Col>
-                    </Row>
-                    <Row>
-                        <Col><p>Duration: {this.props.dependency.duration}</p></Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <UpdateDependency project={this.props.project} dependency={this.props.dependency} getProjectInfo={this.props.getProjectInfo} setTaskInfo={this.props.setTaskInfo} toggleSidebar={this.props.toggleSidebar}/>
-                        </Col>
-                    </Row>
-                </Container>
-            </React.Fragment>
-        )
-    }
+class LegendSidebar extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        <Container
+          className="text-black text-center"
+          style={{ fontSize: "20px" }}
+        >
+          <Row>
+            <Col className="text-center">
+              <h4>Task progress key</h4>
+            </Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Incomplete
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "#77dd77",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Complete
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "#ff6961",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Overdue
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "#ffae42",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Issue
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-primary m-1 p-1"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                width: "120px",
+              }}
+            >
+              Critical Path
+            </Col>
+            <Col></Col>
+          </Row>
+        </Container>
+      </React.Fragment>
+    );
+  }
 }
 
 export default GraphPage;

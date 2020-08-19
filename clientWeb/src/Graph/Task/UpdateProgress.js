@@ -1,94 +1,114 @@
-import React from 'react';
-import {Form, Modal, Button, ButtonGroup} from 'react-bootstrap'
+import React from "react";
+import { Form, Modal, Button } from "react-bootstrap";
 
-class UpdateProgress extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = { Show:false,                        
-                        id: this.props.task.id,
-                        progress: this.props.task.progress
-                    };
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.setProgress = this.setProgress.bind(this);
-    }
+class UpdateProgress extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      Show: false,
+      id: this.props.task.id,
+      progress: this.props.task.progress,
+    };
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.setProgress = this.setProgress.bind(this);
+  }
 
-    showModal(){
-        this.setState({ Show:true});
-    }
+  showModal() {
+    this.setState({ Show: true });
+  }
 
-    hideModal(){
-        this.setState({ Show:false});
-    }
+  hideModal() {
+    this.setState({ Show: false });
+  }
 
-    setProgress(prog){
-        this.setState({progress:prog})
-    }
+  setProgress(prog) {
+    this.setState({ progress: prog });
+  }
 
-    refreshState(){
-        this.setState(
-            {
-                id: this.props.task.id,
-                progress: this.props.task.progress
-            }
-        )
-    }
+  refreshState() {
+    this.setState({
+      id: this.props.task.id,
+      progress: this.props.task.progress,
+    });
+  }
 
-    async handleSubmit(event) {
-        event.preventDefault();
-        let data = {
-            id: this.state.id,
-            progress: this.state.progress
-        }
+  async handleSubmit(event) {
+    event.preventDefault();
+    let data = {
+      id: this.state.id,
+      progress: this.state.progress,
+    };
 
-        await fetch('/task/progress', {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
+    await fetch("/task/progress", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-        this.props.toggleSidebar(null, null)
-        this.props.setTaskInfo();
-        //this.setState({ Show:false })
-    }
+    this.props.toggleSidebar(null, null);
+    this.props.setTaskInfo();
+  }
 
-    render(){
-        if(this.state.id !== this.props.task.id)
-            this.refreshState();
+  render() {
+    if (this.state.id !== this.props.task.id) this.refreshState();
 
-        return (
-            <React.Fragment>
-                <Button className="btn-light" onClick={this.showModal}><i className="fa fa-edit"> </i> Update Progress </Button>
-                <Modal show={this.state.Show} onHide={this.hideModal}>
-                    <Form onSubmit={this.handleSubmit}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Update Progress</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <ButtonGroup aria-label="Basic example">
-                                <Button variant="secondary" onClick={() => this.setProgress("Complete")}>Complete</Button>
-                                <Button variant="secondary" onClick={() => this.setProgress("Issue")}>Issue</Button>
-                                <Button variant="secondary" onClick={() => this.setProgress("Incomplete")}>Incomplete</Button>
-                            </ButtonGroup>
-                            <br />
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={this.hideModal}>
-                            Cancel
-                            </Button>
-                            <Button  type="submit" variant="dark">
-                            Update Task
-                            </Button>
-                        </Modal.Footer>
-                    </Form>
-                </Modal>
-            </React.Fragment>
-        );
-    }
+    return (
+      <React.Fragment>
+        <Button variant="outline-dark" onClick={this.showModal}>
+          <i className="fa fa-edit"> Update Progress</i>
+        </Button>
+        <Modal show={this.state.Show} onHide={this.hideModal}>
+          <Form onSubmit={this.handleSubmit}>
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
+              <Modal.Title>Update Progress</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="text-center">
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => this.setProgress("Complete")}
+              >
+                Complete
+              </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => this.setProgress("Issue")}
+              >
+                Issue
+              </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => this.setProgress("Incomplete")}
+              >
+                Incomplete
+              </Button>
+              <br />
+            </Modal.Body>
+            <Modal.Footer
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
+              <Button variant="secondary" onClick={this.hideModal}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="dark">
+                Update Task
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+      </React.Fragment>
+    );
+  }
 }
 
 export default UpdateProgress;
