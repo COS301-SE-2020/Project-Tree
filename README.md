@@ -12,6 +12,7 @@ The project entails the development of a project management system. The system r
 | Project management tool  | [Asana](https://app.asana.com/0/1175793006340426/board)                                                                      |
 | Project Tree Application | [Prototype](https://projecttree.herokuapp.com/)                                                                              |
 | User Manual              | [User Manual](https://drive.google.com/file/d/1gPZr6EWH1bM36_Yq4nx0D55inuCIZRNa/view?usp=sharing)                            |
+| Technical Installation Manual              | [Technical Installation Manual](https://drive.google.com/file/d/1ObufSIvrVCSqpog9ENT2ud-sVO8fbyo1/view?usp=sharing)                            |
 
 ## Demos
 
