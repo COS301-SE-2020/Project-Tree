@@ -27,6 +27,7 @@ function createTask(req, res) {
         startDate: result.records[0]._fields[0].properties.startDate,
         endDate: result.records[0]._fields[0].properties.endDate,
         duration: result.records[0]._fields[0].properties.duration.low,
+        progress: result.records[0]._fields[0].properties.progress,
       };
       req.body.nodes.push(task);
       res.status(200);
@@ -40,7 +41,7 @@ function createTask(req, res) {
     .catch((err) => {
       console.log(err);
       res.status(400);
-      res.send(err);
+      res.send({ message: err });
     });
 }
 
@@ -54,12 +55,12 @@ function deleteTask(req, res) {
   db.getSession()
     .run(
       `
-        MATCH (n) 
-        WHERE ID(n)=${req.body.changedInfo.id} 
-        DETACH DELETE (n)		
+        MATCH (n)
+        WHERE ID(n)=${req.body.changedInfo.id}
+        DETACH DELETE (n)
       `
     )
-    .then(async (result) => {
+    .then(async () => {
       for (var x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == req.body.changedInfo.id) {
           if (x == 0) {
@@ -101,15 +102,15 @@ function deleteTask(req, res) {
       });
       updateProject.excecuteQueries(queriesArray);
     })
-    .catch(function (err) {
+    .catch((err) => {
       console.log(err);
+      res.status(400);
+      res.send({ message: err });
     });
 }
 
 async function updateTask(req, res) {
   //update a task with a certain ID with specified fields
-  var taskArr = [];
-  
   result = await db
     .getSession()
     .run(
@@ -168,8 +169,10 @@ async function updateTask(req, res) {
       });
       updateProject.excecuteQueries(queriesArray);
     })
-    .catch(function (err) {
+    .catch((err) => {
       console.log(err);
+      res.status(400);
+      res.send({ message: err });
     });
 }
 
@@ -177,13 +180,14 @@ async function updateProgress(req, res) {
   db.getSession()
     .run(
       `
-      MATCH (n)
-      WHERE ID(n) = ${req.body.id}
-      SET n.progress = toString("${req.body.progress}")
-      RETURN n
-    `
+        MATCH (n)
+        WHERE ID(n) = ${req.body.id}
+        SET n.progress = toString("${req.body.progress}")
+        RETURN n
+      `
     )
     .then((result) => {
+      res.status(200);
       res.send({ ret: result });
     });
 }

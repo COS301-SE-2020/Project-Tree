@@ -67,7 +67,10 @@ class UpdateDependency extends React.Component {
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Update Dependencies</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -85,14 +88,6 @@ class UpdateDependency extends React.Component {
                 value={this.state.did}
                 onChange={() => {}}
               />
-              {/*<Form.Group>
-                            <Form.Label>Select First Task by ID:</Form.Label>
-                            <Form.Control required type='text' name="ud_Fid" value={this.state.Fid}/>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Select Second Task by ID:</Form.Label>
-                                <Form.Control required type='text' name="ud_Sid" value={this.state.Sid}/>
-                            </Form.Group>*/}
               <Form.Group>
                 <Form.Label>Relationship Type</Form.Label>
                 <Form.Control
@@ -122,7 +117,9 @@ class UpdateDependency extends React.Component {
                 />
               </Form.Group>
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Footer
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>

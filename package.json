@@ -42,7 +42,8 @@
   },
   "devDependencies": {
     "concurrently": "^4.1.2",
+    "jest": "^24.9.0",
     "node-sass": "^4.14.1",
-    "prettier": "2.0.5"
+    "prettier": "^2.0.5"
   }
 }

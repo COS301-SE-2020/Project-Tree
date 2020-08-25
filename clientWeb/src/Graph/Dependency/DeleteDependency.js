@@ -59,7 +59,10 @@ class DeleteDependency extends React.Component {
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Delete Dependency</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -76,7 +79,9 @@ class DeleteDependency extends React.Component {
                 />
               </Form.Group>
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Footer
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>

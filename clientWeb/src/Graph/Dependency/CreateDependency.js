@@ -6,7 +6,7 @@ function stringifyFormData(fd) {
   for (let key of fd.keys()) {
     data[key] = fd.get(key);
   }
-  return data; //changed
+  return data; 
 }
 
 class CreateDependency extends React.Component {
@@ -55,10 +55,12 @@ class CreateDependency extends React.Component {
 
     return (
       <React.Fragment>
-        {/*<Button size="sm" variant="secondary" block onClick={this.ShowModal}>Create Dependency</Button>*/}
         <Modal show={true} onHide={this.props.closeModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Create Dependency</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -95,7 +97,9 @@ class CreateDependency extends React.Component {
                 <Form.Control required type="number" name="cd_duration" />
               </Form.Group>
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Footer
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Button variant="secondary" onClick={this.props.closeModal}>
                 Cancel
               </Button>

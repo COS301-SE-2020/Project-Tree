@@ -1,21 +1,18 @@
 const db = require("../DB");
 
-async function getProjectTasks(req, res) {
-  var session = db.getSession();
-  var projID = parseInt(req.body.id);
-  var taskArr = [];
-  var relArr = [];
-  await session
+function getProjectTasks(req, res) {
+  db.getSession()
     .run(
       `
-        MATCH (n {
-          projId: ${projID}
+        MATCH (n:Task {
+          projId: ${req.body.id}
         }) 
         RETURN n
       `
     )
-    .then(function (result) {
-      result.records.forEach(function (record) {
+    .then((result) => {
+      let taskArr = [];
+      result.records.forEach((record) => {
         taskArr.push({
           id: record._fields[0].identity.low,
           name: record._fields[0].properties.name,
@@ -26,34 +23,39 @@ async function getProjectTasks(req, res) {
           progress: record._fields[0].properties.progress,
         });
       });
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  await session
-    .run(
-      `
-        MATCH (n)-[r {
-          projId: ${projID}
-        }]->(m) 
-        RETURN r
-      `
-    )
-    .then(function (result) {
-      result.records.forEach(function (record) {
-        relArr.push({
-          id: record._fields[0].identity.low,
-          duration: record._fields[0].properties.duration.low,
-          relationshipType: record._fields[0].properties.relationshipType,
-          source: record._fields[0].start.low,
-          target: record._fields[0].end.low,
+      db.getSession()
+        .run(
+          `
+            MATCH (n:Task)-[r:DEPENDENCY {
+              projId: ${req.body.id}
+            }]->(m:Task) 
+            RETURN r
+          `
+        )
+        .then((result) => {
+          let relArr = [];
+          result.records.forEach((record) => {
+            relArr.push({
+              id: record._fields[0].identity.low,
+              duration: record._fields[0].properties.duration.low,
+              relationshipType: record._fields[0].properties.relationshipType,
+              source: record._fields[0].start.low,
+              target: record._fields[0].end.low,
+            });
+          });
+          res.send({ tasks: taskArr, rels: relArr });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(400);
+          res.send({ message: err });
         });
-      });
     })
-    .catch(function (err) {
+    .catch((err) => {
       console.log(err);
+      res.status(400);
+      res.send({ message: err });
     });
-  res.send({ tasks: taskArr, rels: relArr });
 }
 
 module.exports = {

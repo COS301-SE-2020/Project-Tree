@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button, Row, Col } from "react-bootstrap";
+import {Form, Modal, Button, Row, Col } from "react-bootstrap";
 
 function stringifyFormData(fd) {
   const data = {};
@@ -30,13 +30,13 @@ class UpdateTask extends React.Component {
       duration: this.props.task.duration,
       endDate: `${eyear}-${emonth}-${eday}`,
       description: this.props.task.description,
-      people:this.props.allUsers,
-      pacManSearchTerm:'',
-      resourcesSearchTerm:'',
-      resPersonSearchTerm:'',
-      pacManList:this.props.pacMans,
-      resourcesList:this.props.resources,
-      resPersonList:this.props.resPersons,
+      people: this.props.allUsers,
+      pacManSearchTerm: "",
+      resourcesSearchTerm: "",
+      resPersonSearchTerm: "",
+      pacManList: this.props.pacMans,
+      resourcesList: this.props.resources,
+      resPersonList: this.props.resPersons,
     };
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
@@ -48,11 +48,8 @@ class UpdateTask extends React.Component {
     this.addResPerson = this.addResPerson.bind(this);
     this.addResource = this.addResource.bind(this);
     this.removeAssignedPeople = this.removeAssignedPeople.bind(this);
+    this.removeAssignedPerson = this.removeAssignedPerson.bind(this);
   }
-
-  // componentDidMount(){
-  //   this.removeAssignedPeople();
-  // }
 
   refreshState() {
     var syear = `${this.props.task.startDate.year.low}`;
@@ -72,69 +69,85 @@ class UpdateTask extends React.Component {
       duration: this.props.task.duration,
       endDate: `${eyear}-${emonth}-${eday}`,
       description: this.props.task.description,
-      people:this.props.allUsers,
-      pacManSearchTerm:'',
-      resourcesSearchTerm:'',
-      resPersonSearchTerm:'',
-      pacManList:this.props.pacMans,
-      resourcesList:this.props.resources,
-      resPersonList:this.props.resPersons,
+      people: this.props.allUsers,
+      pacManSearchTerm: "",
+      resourcesSearchTerm: "",
+      resPersonSearchTerm: "",
+      pacManList: this.props.pacMans,
+      resourcesList: this.props.resources,
+      resPersonList: this.props.resPersons,
     });
   }
 
-  /*
-  * Removes people from the people list if they are already assigned to a role so that they can't be selected again
-  */
-  removeAssignedPeople(){
-    //console.log(this.state.people)
-    for(let x = 0; x < this.state.people.length; x++){
-      for(let y = 0; y < this.state.pacManList.length; y++){
-        if(this.state.pacManList[y].id === this.state.people[x].id){
-          if(x === 0) this.state.people.shift();
-          else if(x === this.state.people.length-1) this.state.people.pop()
-          else this.state.people.splice(x,1)
+  
+  //Removes people from the people list if they are already assigned to a role so that they can't be selected again
+  removeAssignedPeople() {
+    for (let x = 0; x < this.state.people.length; x++) {
+      for (let y = 0; y < this.state.pacManList.length; y++) {
+        if (
+          this.state.pacManList[y] !== undefined &&
+          this.state.people[x] !== undefined
+        ) {
+          if (this.state.pacManList[y].id === this.state.people[x].id) {
+            if (x === 0) this.state.people.shift();
+            else if (x === this.state.people.length - 1)
+              this.state.people.pop();
+            else this.state.people.splice(x, 1);
+          }
         }
       }
     }
 
-    for(let x = 0; x < this.state.people.length; x++){
-      for(let y = 0; y < this.state.resPersonList.length; y++){
-        if(this.state.resPersonList[y].id === this.state.people[x].id){
-          if(x === 0) this.state.people.shift();
-          else if(x === this.state.people.length-1) this.state.people.pop()
-          else this.state.people.splice(x,1)
+    for (let x = 0; x < this.state.people.length; x++) {
+      for (let y = 0; y < this.state.resPersonList.length; y++) {
+        if (
+          this.state.resPersonList[y] !== undefined &&
+          this.state.people[x] !== undefined
+        ) {
+          if (this.state.resPersonList[y].id === this.state.people[x].id) {
+            if (x === 0) this.state.people.shift();
+            else if (x === this.state.people.length - 1)
+              this.state.people.pop();
+            else this.state.people.splice(x, 1);
+          }
         }
       }
     }
 
-    for(let x = 0; x < this.state.people.length; x++){
-      for(let y = 0; y < this.state.resourcesList.length; y++){
-        if(this.state.resourcesList[y].id === this.state.people[x].id){
-          if(x === 0) this.state.people.shift();
-          else if(x === this.state.people.length-1) this.state.people.pop()
-          else this.state.people.splice(x,1)
+    for (let x = 0; x < this.state.people.length; x++) {
+      for (let y = 0; y < this.state.resourcesList.length; y++) {
+        if (
+          this.state.resourcesList[y] !== undefined &&
+          this.state.people[x] !== undefined
+        ) {
+          if (this.state.resourcesList[y].id === this.state.people[x].id) {
+            if (x === 0) this.state.people.shift();
+            else if (x === this.state.people.length - 1)
+              this.state.people.pop();
+            else this.state.people.splice(x, 1);
+          }
         }
       }
     }
   }
 
   ShowModal() {
-    this.setState({ Show: true, people:this.props.allUsers });
+    this.setState({ Show: true, people: this.props.allUsers });
     this.removeAssignedPeople();
   }
 
   HideModal() {
     // Resets the people list
-    for(let x = 0; x < this.state.pacManList.length; x++){
-      this.state.people.push(this.state.pacManList[x])
+    for (let x = 0; x < this.state.pacManList.length; x++) {
+      this.state.people.push(this.state.pacManList[x]);
     }
-    for(let x = 0; x < this.state.resPersonList.length; x++){
-      this.state.people.push(this.state.resPersonList[x])
+    for (let x = 0; x < this.state.resPersonList.length; x++) {
+      this.state.people.push(this.state.resPersonList[x]);
     }
-    for(let x = 0; x < this.state.resourcesList.length; x++){
-      this.state.people.push(this.state.resourcesList[x])
+    for (let x = 0; x < this.state.resourcesList.length; x++) {
+      this.state.people.push(this.state.resourcesList[x]);
     }
-    
+
     this.setState({ Show: false });
   }
 
@@ -198,15 +211,15 @@ class UpdateTask extends React.Component {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body:JSON.stringify({
-        ut_taskId:this.state.id,
-        ut_pacMans:this.state.pacManList,
-        ut_resPersons:this.state.resPersonList,
-        ut_resources:this.state.resourcesList,
-        ut_originalPacMans:this.props.pacMans,
-        ut_originalResPersons:this.props.resPersons,
-        ut_originalResources:this.props.resources
-      })
+      body: JSON.stringify({
+        ut_taskId: this.state.id,
+        ut_pacMans: this.state.pacManList,
+        ut_resPersons: this.state.resPersonList,
+        ut_resources: this.state.resourcesList,
+        ut_originalPacMans: this.props.pacMans,
+        ut_originalResPersons: this.props.resPersons,
+        ut_originalResources: this.props.resources,
+      }),
     });
 
     await this.props.setTaskInfo(
@@ -217,141 +230,152 @@ class UpdateTask extends React.Component {
     );
 
     // Resets the people list
-    for(let x = 0; x < this.state.pacManList.length; x++){
-      this.state.people.push(this.state.pacManList[x])
+    for (let x = 0; x < this.state.pacManList.length; x++) {
+      this.state.people.push(this.state.pacManList[x]);
     }
-    for(let x = 0; x < this.state.resPersonList.length; x++){
-      this.state.people.push(this.state.resPersonList[x])
+    for (let x = 0; x < this.state.resPersonList.length; x++) {
+      this.state.people.push(this.state.resPersonList[x]);
     }
-    for(let x = 0; x < this.state.resourcesList.length; x++){
-      this.state.people.push(this.state.resourcesList[x])
+    for (let x = 0; x < this.state.resourcesList.length; x++) {
+      this.state.people.push(this.state.resourcesList[x]);
     }
 
     this.setState({ Show: false });
   }
 
-  updateSearch(event, mode){
-    if(mode===0) this.setState({pacManSearchTerm:event.target.value});
-    if(mode==1) this.setState({resPersonSearchTerm:event.target.value});
-    if(mode==2) this.setState({resourcesSearchTerm:event.target.value});
+  updateSearch(event, mode) {
+    if (mode === 0) this.setState({ pacManSearchTerm: event.target.value });
+    if (mode === 1) this.setState({ resPersonSearchTerm: event.target.value });
+    if (mode === 2) this.setState({ resourcesSearchTerm: event.target.value });
   }
 
-  addPacMan(person){
+  addPacMan(person) {
     let tempPacManList = this.state.pacManList;
     tempPacManList.push(person);
 
     // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
-    for(let x = 0; x < this.state.people.length; x++){
-      if(this.state.people[x].id === person.id){
-        if(x === 0) this.state.people.shift();
-        else if(x === this.state.people.length-1) this.state.people.pop()
-        else this.state.people.splice(x,1)
+    for (let x = 0; x < this.state.people.length; x++) {
+      if (this.state.people[x].id === person.id) {
+        if (x === 0) this.state.people.shift();
+        else if (x === this.state.people.length - 1) this.state.people.pop();
+        else this.state.people.splice(x, 1);
       }
     }
 
-    this.setState({pacManList:tempPacManList,pacManSearchTerm:''});
+    this.setState({ pacManList: tempPacManList, pacManSearchTerm: "" });
   }
 
-  addResPerson(person){
+  addResPerson(person) {
     let tempResPersonList = this.state.resPersonList;
     tempResPersonList.push(person);
-    
+
     // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
-    for(let x = 0; x < this.state.people.length; x++){
-      if(this.state.people[x].id === person.id){
-        if(x === 0) this.state.people.shift();
-        else if(x === this.state.people.length-1) this.state.people.pop()
-        else this.state.people.splice(x,1)
+    for (let x = 0; x < this.state.people.length; x++) {
+      if (this.state.people[x].id === person.id) {
+        if (x === 0) this.state.people.shift();
+        else if (x === this.state.people.length - 1) this.state.people.pop();
+        else this.state.people.splice(x, 1);
       }
     }
 
-    this.setState({resPersonList:tempResPersonList,resPersonSearchTerm:''});
+    this.setState({
+      resPersonList: tempResPersonList,
+      resPersonSearchTerm: "",
+    });
   }
 
-  addResource(person){
+  addResource(person) {
     let tempResourceList = this.state.resourcesList;
     tempResourceList.push(person);
-    
+
     // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
-    for(let x = 0; x < this.state.people.length; x++){
-      if(this.state.people[x].id === person.id){
-        if(x === 0) this.state.people.shift();
-        else if(x === this.state.people.length-1) this.state.people.pop()
-        else this.state.people.splice(x,1)
+    for (let x = 0; x < this.state.people.length; x++) {
+      if (this.state.people[x].id === person.id) {
+        if (x === 0) this.state.people.shift();
+        else if (x === this.state.people.length - 1) this.state.people.pop();
+        else this.state.people.splice(x, 1);
       }
     }
 
-    this.setState({resourceList:tempResourceList,resourcesSearchTerm:''});
+    this.setState({ resourceList: tempResourceList, resourcesSearchTerm: "" });
   }
 
-  removeAssignedPerson(person,mode){
+  removeAssignedPerson(person, mode) {
     let peopleList = this.state.people;
-    if(mode === 0){
-      for(let x = 0; x < this.state.pacManList.length; x++){
-        if(person.id === this.state.pacManList[x].id){
-          if(x === 0) this.state.pacManList.shift();
-          else if(x === this.state.pacManList.length-1) this.state.pacManList.pop();
-          else this.state.pacManList.splice(x,1);
+    if (mode === 0) {
+      for (let x = 0; x < this.state.pacManList.length; x++) {
+        if (person.id === this.state.pacManList[x].id) {
+          if (x === 0) this.state.pacManList.shift();
+          else if (x === this.state.pacManList.length - 1)
+            this.state.pacManList.pop();
+          else this.state.pacManList.splice(x, 1);
         }
       }
     }
 
-    if(mode === 1){
-      for(let x = 0; x < this.state.resPersonList.length; x++){
-        if(person.id === this.state.resPersonList[x].id){
-          if(x === 0) this.state.resPersonList.shift();
-          else if(x === this.state.resPersonList.length-1) this.state.resPersonList.pop();
-          else this.state.resPersonList.splice(x,1);
+    if (mode === 1) {
+      for (let x = 0; x < this.state.resPersonList.length; x++) {
+        if (person.id === this.state.resPersonList[x].id) {
+          if (x === 0) this.state.resPersonList.shift();
+          else if (x === this.state.resPersonList.length - 1)
+            this.state.resPersonList.pop();
+          else this.state.resPersonList.splice(x, 1);
         }
       }
     }
 
-    if(mode === 2){
-      for(let x = 0; x < this.state.resourcesList.length; x++){
-        if(person.id === this.state.resourcesList[x].id){
-          if(x === 0) this.state.resourcesList.shift();
-          else if(x === this.state.resourcesList.length-1) this.state.resourcesList.pop();
-          else this.state.resourcesList.splice(x,1);
+    if (mode === 2) {
+      for (let x = 0; x < this.state.resourcesList.length; x++) {
+        if (person.id === this.state.resourcesList[x].id) {
+          if (x === 0) this.state.resourcesList.shift();
+          else if (x === this.state.resourcesList.length - 1)
+            this.state.resourcesList.pop();
+          else this.state.resourcesList.splice(x, 1);
         }
       }
     }
     peopleList.push(person);
-    this.setState({people:peopleList})
+    this.setState({ people: peopleList });
   }
 
   render() {
     if (this.state.id !== this.props.task.id) this.refreshState();
 
-    /*
-    * Filters the list of people to only show people matching the search term
-    */
-    let filteredPacMan = this.state.people.filter(
-      (person) => {
-        return person.name.toLowerCase().indexOf(
-          this.state.pacManSearchTerm.toLowerCase()) !== -1;
-      }
-    );
-    let filteredResPerson = this.state.people.filter(
-      (person) => {
-        return person.name.toLowerCase().indexOf(
-          this.state.resPersonSearchTerm.toLowerCase()) !== -1;
-      }
-    );
-    let filteredResources = this.state.people.filter(
-      (person) => {
-        return person.name.toLowerCase().indexOf(
-          this.state.resourcesSearchTerm.toLowerCase()) !== -1;
-      }
-    );
+    
+    //Filters the list of people to only show people matching the search term
+    let filteredPacMan = this.state.people.filter((person) => {
+      return (
+        person.name
+          .toLowerCase()
+          .indexOf(this.state.pacManSearchTerm.toLowerCase()) !== -1
+      );
+    });
+    let filteredResPerson = this.state.people.filter((person) => {
+      return (
+        person.name
+          .toLowerCase()
+          .indexOf(this.state.resPersonSearchTerm.toLowerCase()) !== -1
+      );
+    });
+    let filteredResources = this.state.people.filter((person) => {
+      return (
+        person.name
+          .toLowerCase()
+          .indexOf(this.state.resourcesSearchTerm.toLowerCase()) !== -1
+      );
+    });
 
     return (
       <React.Fragment>
-        <Button variant="outline-dark"  onClick={this.ShowModal}>
-          <i className="fa fa-edit"> </i> Edit{" "}
+        <Button variant="outline-dark" onClick={this.ShowModal}>
+          <i className="fa fa-edit"> Edit</i>
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Update Task</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -438,23 +462,41 @@ class UpdateTask extends React.Component {
                 <Form.Label>Package Manager</Form.Label>
                 <Row>
                   <Col>
-                    <input type='text'
+                    <input
+                      type="text"
                       value={this.state.pacManSearchTerm}
-                      onChange={(e)=>this.updateSearch(e,0)}
-                      placeholder='Search for a name'/>
-                    {this.state.pacManSearchTerm.length >=2 ? <ul>
-                      {filteredPacMan.map((person) => {
-                        return <li key={person.id}>
-                            <button type='button' onClick={()=>this.addPacMan(person)}>{person.name}&nbsp;{person.surname}</button>
-                          </li>
-                      })}
-                    </ul>:null}
+                      onChange={(e) => this.updateSearch(e, 0)}
+                      placeholder="Search for a name"
+                    />
+                    {this.state.pacManSearchTerm.length >= 2 ? (
+                      <ul>
+                        {filteredPacMan.map((person) => {
+                          return (
+                            <li key={person.id}>
+                              <button
+                                type="button"
+                                onClick={() => this.addPacMan(person)}
+                              >
+                                {person.name}&nbsp;{person.surname}
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : null}
                   </Col>
                   <Col>
                     {this.state.pacManList.map((person) => {
-                      return <li key={person.id}>
-                          <button type='button' onClick={()=>this.removeAssignedPerson(person,0)}>{person.name}&nbsp;{person.surname}</button>
+                      return (
+                        <li key={person.id}>
+                          <button
+                            type="button"
+                            onClick={() => this.removeAssignedPerson(person, 0)}
+                          >
+                            {person.name}&nbsp;{person.surname}
+                          </button>
                         </li>
+                      );
                     })}
                   </Col>
                 </Row>
@@ -463,23 +505,41 @@ class UpdateTask extends React.Component {
                 <Form.Label>Responsible Person(s)</Form.Label>
                 <Row>
                   <Col>
-                    <input type='text'
+                    <input
+                      type="text"
                       value={this.state.resPersonSearchTerm}
-                      onChange={(e)=>this.updateSearch(e,1)}
-                      placeholder='Search for a name'/>
-                    {this.state.resPersonSearchTerm.length >=2 ? <ul>
-                      {filteredResPerson.map((person) => {
-                        return <li key={person.id}>
-                            <button type='button' onClick={()=>this.addResPerson(person)}>{person.name}&nbsp;{person.surname}</button>
-                          </li>
-                      })}
-                    </ul>:null}
+                      onChange={(e) => this.updateSearch(e, 1)}
+                      placeholder="Search for a name"
+                    />
+                    {this.state.resPersonSearchTerm.length >= 2 ? (
+                      <ul>
+                        {filteredResPerson.map((person) => {
+                          return (
+                            <li key={person.id}>
+                              <button
+                                type="button"
+                                onClick={() => this.addResPerson(person)}
+                              >
+                                {person.name}&nbsp;{person.surname}
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : null}
                   </Col>
                   <Col>
                     {this.state.resPersonList.map((person) => {
-                      return <li key={person.id}>
-                          <button type='button' onClick={()=>this.removeAssignedPerson(person,1)}>{person.name}&nbsp;{person.surname}</button>
+                      return (
+                        <li key={person.id}>
+                          <button
+                            type="button"
+                            onClick={() => this.removeAssignedPerson(person, 1)}
+                          >
+                            {person.name}&nbsp;{person.surname}
+                          </button>
                         </li>
+                      );
                     })}
                   </Col>
                 </Row>
@@ -488,30 +548,50 @@ class UpdateTask extends React.Component {
                 <Form.Label>Resource(s)</Form.Label>
                 <Row>
                   <Col>
-                    <input type='text'
+                    <input
+                      type="text"
                       value={this.state.resourcesSearchTerm}
-                      onChange={(e)=>this.updateSearch(e,2)}
-                      placeholder='Search for a name'/>
-                    {this.state.resourcesSearchTerm.length >=2 ? <ul>
-                      {filteredResources.map((person) => {
-                        return <li key={person.id}>
-                            <button type='button' onClick={()=>this.addResource(person)}>{person.name}&nbsp;{person.surname}</button>
-                          </li>
-                      })}
-                    </ul>:null}
+                      onChange={(e) => this.updateSearch(e, 2)}
+                      placeholder="Search for a name"
+                    />
+                    {this.state.resourcesSearchTerm.length >= 2 ? (
+                      <ul>
+                        {filteredResources.map((person) => {
+                          return (
+                            <li key={person.id}>
+                              <button
+                                type="button"
+                                onClick={() => this.addResource(person)}
+                              >
+                                {person.name}&nbsp;{person.surname}
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    ) : null}
                   </Col>
                   <Col>
                     {this.state.resourcesList.map((person) => {
-                      return <li key={person.id}>
-                          <button type='button' onClick={()=>this.removeAssignedPerson(person,2)}>{person.name}&nbsp;{person.surname}</button>
+                      return (
+                        <li key={person.id}>
+                          <button
+                            type="button"
+                            onClick={() => this.removeAssignedPerson(person, 2)}
+                          >
+                            {person.name}&nbsp;{person.surname}
+                          </button>
                         </li>
+                      );
                     })}
                   </Col>
                 </Row>
               </Form.Group>
               <br />
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Footer
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>

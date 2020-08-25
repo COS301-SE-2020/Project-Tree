@@ -2,7 +2,6 @@ import React from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import $ from "jquery";
 
-
 function returnFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
@@ -14,7 +13,7 @@ function returnFormData(fd) {
 class SendTaskNotification extends React.Component {
   constructor() {
     super();
-    this.state={show: false, mode: 2, notificationRec: []}
+    this.state = { show: false, mode: 2, notificationRec: [] };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,11 +31,12 @@ class SendTaskNotification extends React.Component {
     event.preventDefault();
 
     let notification = returnFormData(new FormData(event.target));
-    let timestamp = (new Date().toISOString());
-    console.log(this.state.notificationRec)
+    let timestamp = new Date();
+    timestamp.setHours(timestamp.getHours() + 2);
+    timestamp = timestamp.toISOString();
 
     let data = {
-      type: 'task',     //personal, task, project, auto
+      type: "task", //personal, task, project, auto
       fromName: this.props.user.name + " " + this.props.user.sname,
       recipients: JSON.stringify(this.state.notificationRec),
       timestamp: timestamp,
@@ -44,62 +44,82 @@ class SendTaskNotification extends React.Component {
       taskName: this.props.task.name,
       projName: this.props.project.name,
       projID: this.props.project.id,
-      mode: this.state.mode
-    }
-  
-    $.post("/sendNotification",  data, (response) => {
-      console.log(response.response);
+      mode: this.state.mode,
+    };
+
+    $.post("/sendNotification", data, (response) => {
       this.setState({ show: false });
-    })
-    .fail(() => {
+    }).fail(() => {
       alert("Unable to send notification");
-    })
+    });
   }
 
-  notifyUsers(){
-    let userNotifications =[];
-    for(let x = 0; x < this.props.taskPacMans.length; x++){
-      let user={
-        id:this.props.taskPacMans[x].id,
-        email:this.props.taskPacMans[x].email
-      }
-      userNotifications.push(user)
+  notifyUsers() {
+    let userNotifications = [];
+    for (let x = 0; x < this.props.taskPacMans.length; x++) {
+      let user = {
+        id: this.props.taskPacMans[x].id,
+        email: this.props.taskPacMans[x].email,
+      };
+      userNotifications.push(user);
     }
-  
-    for(let x = 0; x < this.props.taskResPersons.length; x++){
-      let user={
-        id:this.props.taskResPersons[x].id,
-        email:this.props.taskResPersons[x].email
-      }
-      userNotifications.push(user)
+
+    for (let x = 0; x < this.props.taskResPersons.length; x++) {
+      let user = {
+        id: this.props.taskResPersons[x].id,
+        email: this.props.taskResPersons[x].email,
+      };
+      userNotifications.push(user);
     }
-  
-    for(let x = 0; x < this.props.taskResources.length; x++){
-      let user={
-        id:this.props.taskResources[x].id,
-        email:this.props.taskResources[x].email
-      }
-      userNotifications.push(user)
+
+    for (let x = 0; x < this.props.taskResources.length; x++) {
+      let user = {
+        id: this.props.taskResources[x].id,
+        email: this.props.taskResources[x].email,
+      };
+      userNotifications.push(user);
     }
 
     let addMyself = true;
-    for(let x=0; x<userNotifications.length; x++){
-      if(userNotifications[x].id === this.props.user.id) addMyself=false
+    for (let x = 0; x < userNotifications.length; x++) {
+      if (userNotifications[x].id === this.props.user.id) addMyself = false;
     }
-    if(addMyself===true)userNotifications.push({id:this.props.user.id, email:this.props.user.email});
+    if (addMyself === true)
+      userNotifications.push({
+        id: this.props.user.id,
+        email: this.props.user.email,
+      });
 
-    this.setState({notificationRec: userNotifications})
+    this.setState({ notificationRec: userNotifications });
   }
 
   render() {
-    return ( 
+    return (
       <React.Fragment>
-       <Button className="ml-3" variant="outline-dark" onClick={() => {this.showModal();this.notifyUsers()}}>
-          <i className="fa fa-bell-o"> </i> 
+        <Button
+          variant="outline-dark"
+          onClick={() => {
+            this.showModal();
+            this.notifyUsers();
+          }}
+        >
+          <i className="fa fa-bullhorn"> </i>
         </Button>
-        <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
-          <Form onSubmit={event => {this.handleSubmit(event)}}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+        <Modal
+          show={this.state.show}
+          onHide={() => {
+            this.hideModal();
+          }}
+        >
+          <Form
+            onSubmit={(event) => {
+              this.handleSubmit(event);
+            }}
+          >
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Send Notification</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -113,30 +133,45 @@ class SendTaskNotification extends React.Component {
                   required
                 />
               </Form.Group>
-              <Button className="m-2"
-                  variant="secondary"
-                  onClick={()=>{this.setState({mode:0})}}
-                >
-                  Email
-                </Button>
-                <Button className="m-2"
-                  variant="secondary"
-                  onClick={()=>{this.setState({mode:1})}}
-                >
-                  Notice Board
-                </Button>
-                <Button className="m-2"
-                  variant="secondary"
-                  onClick={()=>{this.setState({mode:2})}}
-                >
-                  Both
-                </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => {
+                  this.setState({ mode: 0 });
+                }}
+              >
+                Email
+              </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => {
+                  this.setState({ mode: 1 });
+                }}
+              >
+                Notice Board
+              </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => {
+                  this.setState({ mode: 2 });
+                }}
+              >
+                Both
+              </Button>
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47"}}>
-              <Button variant="secondary" onClick={() => {this.hideModal()}}>
+            <Modal.Footer style={{ backgroundColor: "#184D47" }}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  this.hideModal();
+                }}
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="dark">Send Notification
+              <Button type="submit" variant="dark">
+                Send Notification
               </Button>
             </Modal.Footer>
           </Form>

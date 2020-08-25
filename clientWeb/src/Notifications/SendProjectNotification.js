@@ -2,7 +2,6 @@ import React from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import $ from "jquery";
 
-
 function returnFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
@@ -14,7 +13,7 @@ function returnFormData(fd) {
 class SendProjectNotification extends React.Component {
   constructor() {
     super();
-    this.state={show: false, mode: 2}
+    this.state = { show: false, mode: 2 };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,10 +31,12 @@ class SendProjectNotification extends React.Component {
     event.preventDefault();
 
     let notification = returnFormData(new FormData(event.target));
-    let timestamp = (new Date().toISOString());
+    let timestamp = new Date();
+    timestamp.setHours(timestamp.getHours() + 2);
+    timestamp = timestamp.toISOString();
 
     let data = {
-      type: 'project',     //personal, task, project, auto
+      type: "project", //personal, task, project, auto
       fromName: this.props.user.name + " " + this.props.user.sname,
       recipients: [],
       timestamp: timestamp,
@@ -43,33 +44,49 @@ class SendProjectNotification extends React.Component {
       taskName: undefined,
       projName: this.props.project.name,
       projID: this.props.project.id,
-      mode: this.state.mode
-    }
+      mode: this.state.mode,
+    };
 
-    console.log(data);
-  
-    $.post("/sendNotification",  data, (response) => {
+    $.post("/sendNotification", data, (response) => {
       this.setState({ show: false });
-    })
-    .fail(() => {
+    }).fail(() => {
       alert("Unable to send notification");
-    })
+    });
+
+    this.props.updateNoticeBoardRefreshKey();
   }
 
   render() {
-    return ( 
+    return (
       <React.Fragment>
         <Button
           className="my-2"
-          style={{backgroundColor:"#184D47", color:"white", borderColor:"#184D47"}}
-          onClick={() => {this.showModal()}}
-
+          style={{
+            backgroundColor: "#184D47",
+            color: "white",
+            borderColor: "#184D47",
+          }}
+          onClick={() => {
+            this.showModal();
+          }}
         >
-            <i className="fa fa-bell-o">  </i> Send Notification {" "}
+          <i className="fa fa-bullhorn"></i>
         </Button>
-        <Modal show={this.state.show} onHide={() => {this.hideModal()}}>
-          <Form onSubmit={event => {this.handleSubmit(event)}}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+        <Modal
+          show={this.state.show}
+          onHide={() => {
+            this.hideModal();
+          }}
+        >
+          <Form
+            onSubmit={(event) => {
+              this.handleSubmit(event);
+            }}
+          >
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Send Notification</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -83,30 +100,45 @@ class SendProjectNotification extends React.Component {
                   required
                 />
               </Form.Group>
-              <Button className="m-2"
-                  variant="secondary"
-                  onClick={()=>{this.setState({mode:0})}}
-                >
-                  Email
-                </Button>
-                <Button className="m-2"
-                  variant="secondary"
-                  onClick={()=>{this.setState({mode:1})}}
-                >
-                  Notice Board
-                </Button>
-                <Button className="m-2"
-                  variant="secondary"
-                  onClick={()=>{this.setState({mode:2})}}
-                >
-                  Both
-                </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => {
+                  this.setState({ mode: 0 });
+                }}
+              >
+                Email
+              </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => {
+                  this.setState({ mode: 1 });
+                }}
+              >
+                Notice Board
+              </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => {
+                  this.setState({ mode: 2 });
+                }}
+              >
+                Both
+              </Button>
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47"}}>
-              <Button variant="secondary" onClick={() => {this.hideModal()}}>
+            <Modal.Footer style={{ backgroundColor: "#184D47" }}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  this.hideModal();
+                }}
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="dark">Send Notification
+              <Button type="submit" variant="dark">
+                Send Notification
               </Button>
             </Modal.Footer>
           </Form>

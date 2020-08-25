@@ -52,7 +52,6 @@ class UpdateProgress extends React.Component {
 
     this.props.toggleSidebar(null, null);
     this.props.setTaskInfo();
-    //this.setState({ Show:false })
   }
 
   render() {
@@ -61,35 +60,43 @@ class UpdateProgress extends React.Component {
     return (
       <React.Fragment>
         <Button variant="outline-dark" onClick={this.showModal}>
-          <i className="fa fa-edit"> </i> Update Progress{" "}
+          <i className="fa fa-edit"> Update Progress</i>
         </Button>
         <Modal show={this.state.Show} onHide={this.hideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Header
+              closeButton
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Modal.Title>Update Progress</Modal.Title>
             </Modal.Header>
             <Modal.Body className="text-center">
-                <Button className="m-2"
-                  variant="secondary"
-                  onClick={() => this.setProgress("Complete")}
-                >
-                  Complete
-                </Button>
-                <Button className="m-2"
-                  variant="secondary"
-                  onClick={() => this.setProgress("Issue")}
-                >
-                  Issue
-                </Button>
-                <Button className="m-2"
-                  variant="secondary"
-                  onClick={() => this.setProgress("Incomplete")}
-                >
-                  Incomplete
-                </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => this.setProgress("Complete")}
+              >
+                Complete
+              </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => this.setProgress("Issue")}
+              >
+                Issue
+              </Button>
+              <Button
+                className="m-2"
+                variant="secondary"
+                onClick={() => this.setProgress("Incomplete")}
+              >
+                Incomplete
+              </Button>
               <br />
             </Modal.Body>
-            <Modal.Footer style={{backgroundColor:"#184D47", color:"white"}}>
+            <Modal.Footer
+              style={{ backgroundColor: "#184D47", color: "white" }}
+            >
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>
