@@ -33,6 +33,7 @@ class CreateTask extends React.Component {
     this.addPacMan = this.addPacMan.bind(this);
     this.addResPerson = this.addResPerson.bind(this);
     this.addResource = this.addResource.bind(this);
+    this.assignPeople = this.assignPeople.bind(this);
   }
 
   async hideModal() {
@@ -180,6 +181,46 @@ class CreateTask extends React.Component {
     this.setState({ usablePeople: peopleList });
   }
 
+  /*
+  * Assigns people to tasks
+  */
+  assignPeople(newTask){
+    let peopleArray = this.props.assignedProjUsers;
+    for(let x = 0; x < this.state.pacManList.length; x++){
+      let user = this.state.pacManList[x];
+      let relationship = {
+        start: this.state.pacManList[x].id,
+        end: newTask,
+        type: "PACKAGE_MANAGER"
+      }
+      let userRel = [user,relationship];
+      peopleArray.push(userRel);
+    }
+
+    for(let x = 0; x < this.state.resPersonList.length; x++){
+      let user = this.state.resPersonList[x];
+      let relationship = {
+        start: this.state.resPersonList[x].id,
+        end: newTask,
+        type: "RESPONSIBLE_PERSON"
+      }
+      let userRel = [user,relationship];
+      peopleArray.push(userRel);
+    }
+
+    for(let x = 0; x < this.state.resourcesList.length; x++){
+      let user = this.state.resourcesList[x];
+      let relationship = {
+        start: this.state.resourcesList[x].id,
+        end: newTask,
+        type: "RESOURCE"
+      }
+      let userRel = [user,relationship];
+      peopleArray.push(userRel);
+    }
+    return peopleArray;
+  }
+
   async handleSubmit(event) {
     event.preventDefault();
     let data = new FormData(event.target);
@@ -197,8 +238,10 @@ class CreateTask extends React.Component {
     });
 
     const body = await response.json();
-
     let newTask = body.displayNode;
+
+    let assignedPeople = this.assignPeople(newTask);
+
     let timestamp = new Date();
     timestamp.setHours(timestamp.getHours() + 2);
     timestamp = timestamp.toISOString();
@@ -229,14 +272,15 @@ class CreateTask extends React.Component {
       body.nodes,
       body.rels,
       body.displayNode,
-      body.displayRel
+      body.displayRel,
+      assignedPeople
     );
 
     this.hideModal();
   }
 
   render() {
-     // Filters the list of people to only show people matching the search term
+    // Filters the list of people to only show people matching the search term
     let filteredPacMan = null;
     let filteredResPerson = null;
     let filteredResources = null;

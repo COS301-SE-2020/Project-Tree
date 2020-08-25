@@ -455,6 +455,7 @@ class Graph extends React.Component {
             setTaskInfo={this.props.setTaskInfo}
             toggleSidebar={this.props.toggleSidebar}
             allUsers={this.props.allUsers}
+            assignedProjUsers={this.props.assignedProjUsers}
           />
         ) : null}
       </React.Fragment>

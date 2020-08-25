@@ -397,17 +397,6 @@ async function updateResources(taskId, persons, originalResources) {
         return 400;
       });
   }
-
-  // let peopleToRemove = originalResources;
-  // for(let x = 0; x < peopleToRemove.length; x++){
-  //   for(let y = 0; y < persons.length; y++){
-  //     if(peopleToRemove[x].id === persons[y].id){
-  //       if(x === 0) peopleToRemove.shift();
-  //       else if(x === peopleToRemove.length-1) peopleToRemove.pop()
-  //       else peopleToRemove.splice(x,1)
-  //     }
-  //   }
-  // }
 }
 
 async function getAllUsers(req, res) {
@@ -438,7 +427,7 @@ async function getAllUsers(req, res) {
     });
 }
 
-async function getProjectUsers(req, res) {
+async function getAssignedProjectUsers(req,res){
   let session = db.getSession();
   var projID = parseInt(req.body.id);
   let usersArr = [];
@@ -482,5 +471,5 @@ module.exports = {
   assignPeople,
   updateAssignedPeople,
   getAllUsers,
-  getProjectUsers,
+  getAssignedProjectUsers
 };

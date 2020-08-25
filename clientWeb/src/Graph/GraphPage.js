@@ -13,14 +13,14 @@ import $ from "jquery";
 class GraphPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      project: this.props.project,
-      task: null,
-      dependency: null,
-      nodes: null,
-      links: null,
-      allUsers: null,
-      projUsers: null,
+    this.state = { 
+      project: this.props.project, 
+      task:null, 
+      dependency:null, 
+      nodes:null, 
+      links:null,
+      allUsers:null, 
+      assignedProjUsers:null
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
@@ -34,19 +34,18 @@ class GraphPage extends React.Component {
       throw Error(err);
     });
 
-    $.post("/people/getAllUsers", { id: this.state.project.id }, (response) => {
+    // Gets all the users in the database, might update to be all users assigned to the project
+    $.post( "/people/getAllUsers", {id: this.state.project.id} , response => {
       this.setState({ allUsers: response.users });
     }).fail((err) => {
       throw Error(err);
     });
 
-    $.post(
-      "/people/projectUsers",
-      { id: this.state.project.id },
-      (response) => {
-        this.setState({ projUsers: response.projectUsers });
-      }
-    ).fail((err) => {
+    // Gets all users already assigned to a task in a project
+    $.post( "/people/assignedProjectUsers", {id: this.state.project.id} , response => {
+      this.setState({assignedProjUsers:response.projectUsers});
+    })
+    .fail(err => {
       throw Error(err);
     });
   }
@@ -63,25 +62,21 @@ class GraphPage extends React.Component {
         throw Error(err);
       });
 
-      $.post(
-        "/people/getAllUsers",
-        { id: this.state.project.id },
-        (response) => {
-          this.setState({ allUsers: response.users });
-        }
-      ).fail((err) => {
+      // Gets all the users in the database, might update to be all users assigned to the project
+      $.post( "/people/getAllUsers", {id: this.state.project.id} , response => {
+        this.setState({ allUsers: response.users });
+      })
+      .fail(err => {
         throw Error(err);
       });
-
-      $.post(
-        "/people/projectUsers",
-        { id: this.state.project.id },
-        (response) => {
-          this.setState({ projUsers: response.projectUsers });
-        }
-      ).fail((err) => {
-        throw Error(err);
-      });
+      
+      // Gets all users already assigned to a task in a project
+      // $.post( "/people/assignedProjectUsers", {id: this.state.project.id} , response => {
+      //   this.setState({assignedProjUsers:response.projectUsers});
+      // })
+      // .fail(err => {
+      //   throw Error(err);
+      // });
     }
   }
 
@@ -89,11 +84,15 @@ class GraphPage extends React.Component {
     return { nodes: this.state.nodes, rels: this.state.links };
   }
 
-  setTaskInfo(nodes, rels, displayNode, displayRel) {
+  setTaskInfo(nodes, rels, displayNode, displayRel, assignedPeople) {
     if (nodes !== undefined && rels !== undefined) {
       this.setState({ nodes: nodes, links: rels });
 
       if (displayNode !== undefined || displayRel !== undefined) {
+        // Will set the state of the assigned project users when a task is created or updated
+        if(assignedPeople !== undefined){
+          this.setState({assignedProjUsers: assignedPeople});
+        }
         this.toggleSidebar(displayNode, displayRel);
       }
 
@@ -118,13 +117,10 @@ class GraphPage extends React.Component {
         }
       }
 
-      $.post(
-        "/people/projectUsers",
-        { id: this.state.project.id },
-        (response) => {
-          this.setState({ projUsers: response.projectUsers });
-        }
-      ).fail((err) => {
+      $.post( "/people/assignedProjectUsers", {id: this.state.project.id} , response => {
+        this.setState({assignedProjUsers:response.projectUsers});
+      })
+      .fail(err => {
         throw Error(err);
       });
 
@@ -177,7 +173,7 @@ class GraphPage extends React.Component {
                   toggleSidebar={this.toggleSidebar}
                   setTaskInfo={this.setTaskInfo}
                   getProjectInfo={this.getProjectInfo}
-                  projUsers={this.state.projUsers}
+                  assignedProjUsers={this.state.assignedProjUsers}
                   allUsers={this.state.allUsers}
                   user={this.props.user}
                   project={this.state.project}
@@ -213,6 +209,7 @@ class GraphPage extends React.Component {
                   toggleSidebar={this.toggleSidebar}
                   getProjectInfo={this.getProjectInfo}
                   allUsers={this.state.allUsers}
+                  assignedProjUsers={this.state.assignedProjUsers}
                 />
               ) : null}
             </Col>
@@ -237,9 +234,9 @@ class TaskSidebar extends React.Component {
     let taskResources = [];
 
     // Get the users that are part of the selected task
-    for (let x = 0; x < this.props.projUsers.length; x++) {
-      if (this.props.projUsers[x][1].end === this.props.task.id) {
-        taskUsers.push(this.props.projUsers[x]);
+    for(let x = 0; x < this.props.assignedProjUsers.length; x++){
+      if(this.props.assignedProjUsers[x][1].end === this.props.task.id){
+        taskUsers.push(this.props.assignedProjUsers[x])
       }
     }
 
