@@ -305,6 +305,7 @@ class GraphScreen extends Component {
             projID={this.props.project.id}
             setProjectInfo={this.setProjectInfo}
             getProjectInfo={this.getProjectInfo}
+            links = {this.state.links}
           />
           <CreateTask
             projectID={this.props.project.id}

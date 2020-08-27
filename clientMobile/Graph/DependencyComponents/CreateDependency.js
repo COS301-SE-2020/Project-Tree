@@ -33,11 +33,28 @@ class CreateDependency extends Component {
     this.setState({createDependencyVisibility: visible});
   }
 
+  recDepCheck(curr, target) {
+    for (let i = 0; i < this.props.links.length; i++) {
+      const el = this.props.links[i];
+      if (el.source === curr) {
+        if (target === el.target) return true;
+        return this.recDepCheck(el.target, target);
+      }
+    }
+    return false;
+  }
+
   handleCreateDependency() {
     if (
       this.props.sourceCreateDependency === null ||
       this.props.targetCreateDependency === null
     ) {
+      return;
+    }
+
+    if ( this.recDepCheck(this.props.targetCreateDependency, this.props.sourceCreateDependency) === true) {
+      alert('A task cannot be directly or indirectly dependent on itself');
+      this.props.setCreateDependency(null);
       return;
     }
 
