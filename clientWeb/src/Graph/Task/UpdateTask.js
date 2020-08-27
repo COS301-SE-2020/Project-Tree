@@ -207,6 +207,10 @@ class UpdateTask extends React.Component {
 
     const body = await response.json();
 
+    let timestamp = new Date();
+    timestamp.setHours(timestamp.getHours() + 2);
+    timestamp = timestamp.toISOString();
+
     await fetch("/people/updateAssignedPeople", {
       method: "POST",
       headers: {
@@ -221,6 +225,14 @@ class UpdateTask extends React.Component {
         ut_originalPacMans: this.props.pacMans,
         ut_originalResPersons: this.props.resPersons,
         ut_originalResources: this.props.resources,
+        auto_notification: {
+          timestamp: timestamp,
+          projName: this.props.project.name,
+          projID: this.props.project.id,
+          taskName: data.ut_name,
+          type: "auto",
+          mode: 2,
+        }
       }),
     });
 

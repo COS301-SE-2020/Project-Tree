@@ -342,6 +342,7 @@ class TaskSidebar extends React.Component {
                   allUsers={this.props.allUsers}
                   assignedProjUsers={this.props.assignedProjUsers}
                   updateAssignedPeople={this.props.updateAssignedPeople}
+                  project={this.props.project}
                 />
               </Col>
             </Row>
