@@ -358,6 +358,7 @@ class TaskSidebar extends React.Component {
                   resPersons={taskResPersons}
                   resources={taskResources}
                   allUsers={this.props.allUsers}
+                  project={this.props.project}
                 />
               </Col>
             </Row>
