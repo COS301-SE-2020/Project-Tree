@@ -37,6 +37,7 @@ class CreateTask extends React.Component {
   }
 
   async hideModal() {
+    // Resets the people list
     for (let x = 0; x < this.state.pacManList.length; x++) {
       this.state.people.push(this.state.pacManList[x]);
     }

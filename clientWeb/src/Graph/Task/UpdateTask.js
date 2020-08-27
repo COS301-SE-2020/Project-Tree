@@ -31,12 +31,13 @@ class UpdateTask extends React.Component {
       endDate: `${eyear}-${emonth}-${eday}`,
       description: this.props.task.description,
       people: this.props.allUsers,
+      assignedProjUsers: this.props.assignedProjUsers,
       pacManSearchTerm: "",
       resourcesSearchTerm: "",
       resPersonSearchTerm: "",
-      pacManList: this.props.pacMans,
-      resourcesList: this.props.resources,
-      resPersonList: this.props.resPersons,
+      pacManList: [...this.props.pacMans],
+      resourcesList: [...this.props.resources],
+      resPersonList: [...this.props.resPersons],
     };
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
@@ -70,12 +71,13 @@ class UpdateTask extends React.Component {
       endDate: `${eyear}-${emonth}-${eday}`,
       description: this.props.task.description,
       people: this.props.allUsers,
+      assignedProjUsers: this.props.assignedProjUsers,
       pacManSearchTerm: "",
       resourcesSearchTerm: "",
       resPersonSearchTerm: "",
-      pacManList: this.props.pacMans,
-      resourcesList: this.props.resources,
-      resPersonList: this.props.resPersons,
+      pacManList: [...this.props.pacMans],
+      resourcesList: [...this.props.resources],
+      resPersonList: [...this.props.resPersons],
     });
   }
 
@@ -226,7 +228,8 @@ class UpdateTask extends React.Component {
       body.nodes,
       body.rels,
       body.displayNode,
-      body.displayRel
+      body.displayRel,
+      this.state.assignedProjUsers
     );
 
     // Resets the people list
@@ -253,21 +256,15 @@ class UpdateTask extends React.Component {
     let tempPacManList = this.state.pacManList;
     tempPacManList.push(person);
 
-    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
-    for (let x = 0; x < this.state.people.length; x++) {
-      if (this.state.people[x].id === person.id) {
-        if (x === 0) this.state.people.shift();
-        else if (x === this.state.people.length - 1) this.state.people.pop();
-        else this.state.people.splice(x, 1);
-      }
-    }
-
-    this.setState({ pacManList: tempPacManList, pacManSearchTerm: "" });
-  }
-
-  addResPerson(person) {
-    let tempResPersonList = this.state.resPersonList;
-    tempResPersonList.push(person);
+    let tempProjUsersList = this.state.assignedProjUsers;
+    let userTask = []
+    userTask.push(person);
+    userTask.push({
+      start: person.id,
+      end: this.state.id,
+      type: "PACKAGE_MANAGER"
+    });
+    tempProjUsersList.push(userTask);
 
     // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
     for (let x = 0; x < this.state.people.length; x++) {
@@ -279,14 +276,25 @@ class UpdateTask extends React.Component {
     }
 
     this.setState({
-      resPersonList: tempResPersonList,
-      resPersonSearchTerm: "",
+      assignedProjUsers: tempProjUsersList,
+      pacManList: tempPacManList,
+      pacManSearchTerm: ""
     });
   }
 
-  addResource(person) {
-    let tempResourceList = this.state.resourcesList;
-    tempResourceList.push(person);
+  addResPerson(person) {
+    let tempResPersonList = this.state.resPersonList;
+    tempResPersonList.push(person);
+
+    let tempProjUsersList = this.state.assignedProjUsers;
+    let userTask = []
+    userTask.push(person);
+    userTask.push({
+      start: person.id,
+      end: this.state.id,
+      type: "RESPONSIBLE_PERSON"
+    });
+    tempProjUsersList.push(userTask);
 
     // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
     for (let x = 0; x < this.state.people.length; x++) {
@@ -297,9 +305,46 @@ class UpdateTask extends React.Component {
       }
     }
 
-    this.setState({ resourceList: tempResourceList, resourcesSearchTerm: "" });
+    this.setState({
+      assignedProjUsers: tempProjUsersList,
+      resPersonList: tempResPersonList,
+      resPersonSearchTerm: "",
+    });
   }
 
+  addResource(person) {
+    let tempResourceList = this.state.resourcesList;
+    tempResourceList.push(person);
+
+    let tempProjUsersList = this.state.assignedProjUsers;
+    let userTask = []
+    userTask.push(person);
+    userTask.push({
+      start: person.id,
+      end: this.state.id,
+      type: "RESOURCE"
+    });
+    tempProjUsersList.push(userTask);
+
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for (let x = 0; x < this.state.people.length; x++) {
+      if (this.state.people[x].id === person.id) {
+        if (x === 0) this.state.people.shift();
+        else if (x === this.state.people.length - 1) this.state.people.pop();
+        else this.state.people.splice(x, 1);
+      }
+    }
+
+    this.setState({
+      assignedProjUsers: tempProjUsersList,
+      resourceList: tempResourceList,
+      resourcesSearchTerm: ""
+    });
+  }
+
+  /*
+  * Removes an assigned person from the assigned people arrays
+  */
   removeAssignedPerson(person, mode) {
     let peopleList = this.state.people;
     if (mode === 0) {
@@ -334,6 +379,16 @@ class UpdateTask extends React.Component {
         }
       }
     }
+
+    for(let x = 0; x < this.state.assignedProjUsers.length; x++){
+      if (person.id === this.state.assignedProjUsers[x][0].id) {
+        if (x === 0) this.state.assignedProjUsers.shift();
+        else if (x === this.state.assignedProjUsers.length - 1)
+        this.state.assignedProjUsers.pop();
+        else this.state.assignedProjUsers.splice(x, 1);
+      }
+    }
+    
     peopleList.push(person);
     this.setState({ people: peopleList });
   }
@@ -341,8 +396,9 @@ class UpdateTask extends React.Component {
   render() {
     if (this.state.id !== this.props.task.id) this.refreshState();
 
-    
-    //Filters the list of people to only show people matching the search term
+    /*
+    * Filters the list of people to only show people matching the search term
+    */
     let filteredPacMan = this.state.people.filter((person) => {
       return (
         person.name

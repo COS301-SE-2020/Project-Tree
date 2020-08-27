@@ -107,31 +107,25 @@ function updateAssignedPeople(req, res) {
   let responsiblePersons = req.body.ut_resPersons;
   let resources = req.body.ut_resources;
 
-  let pacManAddStatus = updatePackageManager(
-    taskId,
-    packageManagers,
-    originalPackageManagers
-  );
-  if (pacManAddStatus === 400) res.sendStatus(400);
+  if(!isEmpty(packageManagers) || !isEmpty(originalPackageManagers)){
+    let pacManAddStatus = updatePackageManager(taskId, packageManagers, originalPackageManagers);
+    if (pacManAddStatus === 400) res.sendStatus(400);
+  }
 
-  let resPersonAddStatus = updateResponsiblePerson(
-    taskId,
-    responsiblePersons,
-    originalResponsiblePersons
-  );
-  if (resPersonAddStatus === 400) res.sendStatus(400);
+  if(!isEmpty(responsiblePersons) || !isEmpty(originalResponsiblePersons)){
+    let resPersonAddStatus = updateResponsiblePerson(taskId, responsiblePersons, originalResponsiblePersons);
+    if (resPersonAddStatus === 400) res.sendStatus(400);
+  }
 
-  let resourcesAddStatus = updateResources(
-    taskId,
-    resources,
-    originalResources
-  );
-  if (resourcesAddStatus === 400) res.sendStatus(400);
+  if(!isEmpty(resources) || !isEmpty(originalResources)){
+    let resourcesAddStatus = updateResources(taskId, resources, originalResources);
+    if (resourcesAddStatus === 400) res.sendStatus(400);
+  }
 
   res.sendStatus(200);
 }
 
-async function updatePackageManager(taskId, persons, originalPackageManagers) {
+async function updatePackageManager(taskId,persons,originalPackageManagers) {
   var session = db.getSession();
 
   if (isEmpty(persons) && !isEmpty(originalPackageManagers)) {
@@ -219,11 +213,7 @@ async function updatePackageManager(taskId, persons, originalPackageManagers) {
   }
 }
 
-async function updateResponsiblePerson(
-  taskId,
-  persons,
-  originalResponsiblePersons
-) {
+async function updateResponsiblePerson(taskId,persons,originalResponsiblePersons) {
   var session = db.getSession();
 
   if (isEmpty(persons) && !isEmpty(originalResponsiblePersons)) {
@@ -311,7 +301,7 @@ async function updateResponsiblePerson(
   }
 }
 
-async function updateResources(taskId, persons, originalResources) {
+async function updateResources(taskId,persons,originalResources) {
   var session = db.getSession();
 
   if (isEmpty(persons) && !isEmpty(originalResources)) {

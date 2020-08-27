@@ -25,6 +25,7 @@ class GraphPage extends React.Component {
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
     this.getProjectInfo = this.getProjectInfo.bind(this);
+    this.updateAssignedPeople = this.updateAssignedPeople.bind(this);
   }
 
   componentDidMount() {
@@ -61,22 +62,6 @@ class GraphPage extends React.Component {
       }).fail((err) => {
         throw Error(err);
       });
-
-      // Gets all the users in the database, might update to be all users assigned to the project
-      $.post( "/people/getAllUsers", {id: this.state.project.id} , response => {
-        this.setState({ allUsers: response.users });
-      })
-      .fail(err => {
-        throw Error(err);
-      });
-      
-      // Gets all users already assigned to a task in a project
-      // $.post( "/people/assignedProjectUsers", {id: this.state.project.id} , response => {
-      //   this.setState({assignedProjUsers:response.projectUsers});
-      // })
-      // .fail(err => {
-      //   throw Error(err);
-      // });
     }
   }
 
@@ -105,6 +90,10 @@ class GraphPage extends React.Component {
     });
   }
 
+  updateAssignedPeople(newPeopleList){
+    this.setState({assignedProjUsers:newPeopleList})
+  }
+
   toggleSidebar(newTaskID, newDependencyID) {
     var newTask = null;
     var newDependency = null;
@@ -116,14 +105,6 @@ class GraphPage extends React.Component {
           newTask = this.state.nodes[x];
         }
       }
-
-      $.post( "/people/assignedProjectUsers", {id: this.state.project.id} , response => {
-        this.setState({assignedProjUsers:response.projectUsers});
-      })
-      .fail(err => {
-        throw Error(err);
-      });
-
       this.setState({ task: newTask, dependency: newDependency });
     } else if (newDependencyID != null) {
       for (x = 0; x < this.state.links.length; x++) {
@@ -175,6 +156,7 @@ class GraphPage extends React.Component {
                   getProjectInfo={this.getProjectInfo}
                   assignedProjUsers={this.state.assignedProjUsers}
                   allUsers={this.state.allUsers}
+                  updateAssignedPeople={this.updateAssignedPeople}
                   user={this.props.user}
                   project={this.state.project}
                 />
@@ -358,6 +340,8 @@ class TaskSidebar extends React.Component {
                   resPersons={taskResPersons}
                   resources={taskResources}
                   allUsers={this.props.allUsers}
+                  assignedProjUsers={this.props.assignedProjUsers}
+                  updateAssignedPeople={this.props.updateAssignedPeople}
                 />
               </Col>
             </Row>
