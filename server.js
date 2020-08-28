@@ -84,12 +84,12 @@ app.post("/mobile", async (req, res) => {
     criticalPath: JSON.stringify(criticalPath),
   });
 });
-app.post("/people/getAllUsers", personQueries.getAllUsers);
-app.post("/people/assignPeople", personQueries.assignPeople);
-app.post("/people/updateAssignedPeople", personQueries.updateAssignedPeople);
-app.post("/people/projectUsers", personQueries.getProjectUsers);
-app.post("/sendNotification", nh.sendNotification);
-app.post("/retrieveNotifications", nh.retrieveNotifications);
+app.post('/people/getAllUsers',personQueries.getAllUsers);
+app.post('/people/assignPeople',personQueries.assignPeople);
+app.post('/people/updateAssignedPeople',personQueries.updateAssignedPeople);
+app.post('/people/assignedProjectUsers',personQueries.getAssignedProjectUsers);
+app.post('/sendNotification', nh.sendNotification);
+app.post('/retrieveNotifications', nh.retrieveNotifications);
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files

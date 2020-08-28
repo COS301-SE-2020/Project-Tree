@@ -8,10 +8,13 @@ The project entails the development of a project management system. The system r
 
 | Document                 | Links                                                                                                                        |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| SRS                      | [Software Requirements Specification V2](https://drive.google.com/file/d/1n98-NLL15CfXkzxZjh6qA4oEXYbvMa7F/view?usp=sharing) |
+| SRS                      | [Software Requirements Specification V3](https://drive.google.com/file/d/1xjLBOQCMQuwiLpBqkmlKaFXmSfa3HJSd/view?usp=sharing) |
 | Project management tool  | [Asana](https://app.asana.com/0/1175793006340426/board)                                                                      |
-| Project Tree Application | [Prototype](https://projecttree.herokuapp.com/)                                                                              |
-| User Manual              | [User Manual](https://drive.google.com/file/d/1gPZr6EWH1bM36_Yq4nx0D55inuCIZRNa/view?usp=sharing)                            |
+| Project Tree Website | [Website](https://projecttree.herokuapp.com/)                                                                              |
+| Project Tree Mobile | [Mobile App](https://drive.google.com/file/d/1xgWt-K9mzN6L9JeMkQ-rF9eO_YAiVuRY/view?usp=sharing)                                                                              |
+| User Manual              | [User Manual](https://drive.google.com/file/d/1I-THn5WdSYVK8owDEb2rAukejthtZ-Cy/view?usp=sharing)                            |
+| Technical Installation Manual              | [Technical Installation Manual](https://drive.google.com/file/d/1ObufSIvrVCSqpog9ENT2ud-sVO8fbyo1/view?usp=sharing)                            |
+|Coding Standards              | [Coding Standards](https://drive.google.com/file/d/10XIZpqaFohxW8eiQM4hKsrCR_ZDSC-8K/view?usp=sharing)                            |
 
 ## Demos
 
@@ -19,7 +22,7 @@ The project entails the development of a project management system. The system r
 | ------ | ---------------------------------------------------------------------------------- |
 | Demo 1 | https://drive.google.com/file/d/17IvRjiCgk0UrZ-0tS3sZzuLqDuC2974h/view?usp=sharing |
 | Demo 2 | https://drive.google.com/file/d/1y-Tusz-JW2x_LZHjYNQ9Dgiep79vkA6B/view?usp=sharing |
-| Demo 3 | N/A                                                                                |
+| Demo 3 | https://drive.google.com/file/d/1uGShoR3nrLJ55MSdohj2IJYRvHNAQEj0/view?usp=sharing                                                                                |
 | Demo 4 | N/A                                                                                |
 
 ## Group Members
@@ -50,6 +53,13 @@ I am currently a Computer Science Student at The University of Pretoria
   - Implementation of react web app framework/routing
   
 </details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Caught up mobile app in terms of previous website functionality
+  - Implemented server side handling of notifications
+  - Implemented mobile client handling of notifications
+  
+</details>
 
 ### Damian Venter (u18076514)
 
@@ -77,6 +87,12 @@ Undergraduate student studying BIT at the University of Pretoria.
   - Implementation of task progress
   
 </details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Caught up mobile app in terms of previous website functionality
+  - Implemented functionality to assign people to tasks on the website
+  
+</details>
 
 ### Dayne Moonsamy (u16148721)
 
@@ -102,6 +118,14 @@ Final year undergraduate student studying Computer Science at The University of 
   - Implementation of Create Projects
   - Implementation of Modals/forms for tasks 
   - Implementation of graphing/view project
+  
+</details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Implemented user management (login/logout/register) for website
+  - Implemented user management (login/logout/register) for mobile app
+  - Implemented edit user preferences for website
+  - Implemented edit user preferences for mobile app
   
 </details>
 
@@ -132,6 +156,13 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
   - Project page server call optimization
   
 </details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Redesign of the website including extra functionality 
+  - Implementation of critical path feature
+  - Implemented permissions throughout website
+  
+</details>
 
 ### Amber Grill (u18164022)
 
@@ -156,5 +187,11 @@ Final year student studying BSc IT at the University of Pretoria.
   
   - Implementation of Delete Projects
   - Implementation and design of bootstrap UI for the web app
+  
+</details>
+<details><summary> What I did for Demo 3</summary>
+  
+  - Redesign of the website  
+  - Implemented web client handling of notifications
   
 </details>
