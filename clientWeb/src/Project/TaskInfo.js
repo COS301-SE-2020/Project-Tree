@@ -84,8 +84,21 @@ class TaskInfo extends React.Component {
       else {
         list = [];
         this.props.tasks.forEach((el) => {
-          if (el.progress === this.state.taskType) {
-            list.push(el);
+          switch (this.state.taskType) {
+            case "Complete":
+              if (el.progress === "Complete") {
+                list.push(el);
+              }
+              break;
+            case "Incomplete":
+              if (el.progress === "Incomplete") {
+                list.push(el);
+              }
+            case "Issue":
+              if (el.progress === "Issue") {
+                list.push(el);
+              }
+              break;
           }
         });
         if (list.length === 0)
