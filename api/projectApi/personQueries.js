@@ -1,6 +1,7 @@
 const db = require("../DB");
 const { isEmpty } = require("lodash");
 const sendProjectNotification = require("../notificationApi/notificationHandler");
+const notificationHandler = require("../notificationApi/notificationHandler");
 
 function assignPeople(req, res) {
   let taskId = req.body.ct_taskId;
@@ -104,6 +105,9 @@ function updateAssignedPeople(req, res) {
   let originalPackageManagers = req.body.ut_originalPacMans;
   let originalResponsiblePersons = req.body.ut_originalResPersons;
   let originalResources = req.body.ut_originalResources;
+  let notificationOrigPacMan = [...originalPackageManagers];
+  let notificationOrigResPer = [...originalResponsiblePersons];
+  let notificationOrigRes = [...originalResources];
   let responsiblePersons = req.body.ut_resPersons;
   let resources = req.body.ut_resources;
 
@@ -121,6 +125,32 @@ function updateAssignedPeople(req, res) {
     let resourcesAddStatus = updateResources(taskId, resources, originalResources);
     if (resourcesAddStatus === 400) res.sendStatus(400);
   }
+
+  for(var x=0; x<notificationOrigPacMan.length; x++){
+    packageManagers = packageManagers.filter( ( el ) => el.id !== notificationOrigPacMan[x].id );
+  }
+
+  for(var x=0; x<notificationOrigResPer.length; x++){
+    responsiblePersons = responsiblePersons.filter( ( el ) => el.id !== notificationOrigResPer[x].id );
+  }
+
+  for(var x=0; x<notificationOrigRes.length; x++){
+    resources = resources.filter( ( el ) => el.id !== notificationOrigRes[x].id );
+  }
+  
+  let data = sendProjectNotification.formatAutoAssignData(
+    packageManagers,
+    responsiblePersons,
+    resources,
+    req.body.auto_notification
+  );
+
+  if (data.packMan.recipients.length !== 0)
+    sendProjectNotification.sendNotification({ body: data.packMan });
+  if (data.resPer.recipients.length !== 0)
+    sendProjectNotification.sendNotification({ body: data.resPer });
+  if (data.res.recipients.length !== 0)
+    sendProjectNotification.sendNotification({ body: data.res });
 
   res.sendStatus(200);
 }
