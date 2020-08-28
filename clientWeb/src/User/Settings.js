@@ -208,24 +208,6 @@ class Settings extends React.Component {
                     />
                   )}
                 </Row>
-                <Form.Control
-                  type="hidden"
-                  id="ut_name"
-                  name="ut_name"
-                  value={this.state.name}
-                  onChange={(e) => {
-                    this.setState({ name: e.target.value });
-                    this.value = this.state.name;
-                  }}
-                />
-                <input
-                  hidden
-                  type="number"
-                  id="userId"
-                  name="userId"
-                  value={this.state.user.id}
-                  onChange={() => {}}
-                />
               </Container>
             </Modal.Body>
             <Container>
