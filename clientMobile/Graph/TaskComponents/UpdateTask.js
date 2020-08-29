@@ -42,7 +42,8 @@ class UpdateTask extends Component {
                   height: 1,
                   width: '60%',
                   marginBottom: 10,
-                }}></View>
+                }}>
+              </View>
             </View>
             <UpdateTaskForm
               task={this.props.task}
@@ -89,6 +90,7 @@ class UpdateTaskForm extends Component {
       endDate: new Date(eYear + '-' + eMonth + '-' + eDay),
       taskDuration: this.props.task.duration,
       startDatePickerVisible: false,
+      error:null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -127,16 +129,13 @@ class UpdateTaskForm extends Component {
   }
 
   formatValidateInput() {
-    if (this.state.taskName === null || this.state.taskDescription === null) {
-      alert('You have not entered all the details');
-      return null;
-    }
+    if(this.checkFormData('all') === false) return null;
 
     let data = {
       ut_id: this.props.task.id,
       ut_name: this.state.taskName,
       ut_startDate: this.state.startDate.toISOString().substr(0, 10),
-      ut_duration: parseInt(this.state.taskDuration),
+      ut_duration: !(this.state.taskDuration.toString()).trim().length || this.state.taskDuration < 0 ? 0 : parseInt(this.state.taskDuration),
       ut_endDate: this.state.endDate.toISOString().substr(0, 10),
       ut_description: this.state.taskDescription,
     };
@@ -170,15 +169,39 @@ class UpdateTaskForm extends Component {
     this.props.setProjectInfo(body.nodes, body.rels);
   }
 
+  checkFormData(check){
+    if(check === "name" || check === "all"){
+      let name = this.state.taskName;
+      if(name === null || !name.trim().length){
+        this.setState({error:"Please enter a task name"});
+        return false;
+      }
+
+      else{
+        this.setState({error:null});
+      }
+    }
+
+    if(check === "duration" || check === "all"){
+      let duration = this.state.taskDuration
+      if(!(duration.toString()).trim().length || duration<0){
+        this.setState({taskDuration:0});
+        this.setEndDate(this.state.startDate, 0);
+      }
+    }
+  }
+
   render() {
     return (
       <View>
         <Form>
+          <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
           <Item floatingLabel>
             <Label>Name of Task</Label>
             <Input
               value={this.state.taskName}
               onChangeText={(val) => this.setState({taskName: val})}
+              onEndEditing={()=>this.checkFormData("name")} 
             />
           </Item>
           <Item floatingLabel>
@@ -195,6 +218,7 @@ class UpdateTaskForm extends Component {
               type="AntDesign"
               name="plus"
               onPress={() => {
+                this.checkFormData("duration");
                 this.setState({startDatePickerVisible: true});
               }}
             />
@@ -203,6 +227,7 @@ class UpdateTaskForm extends Component {
             <Label>Duration (days)</Label>
             <Input
               value={this.state.taskDuration.toString()}
+              onEndEditing={()=>this.checkFormData("duration")}
               onChangeText={this.handleDuration}
             />
           </Item>
@@ -221,7 +246,7 @@ class UpdateTaskForm extends Component {
             onChange={this.handleStartDateSelect}
           />
         )}
-        <View styles={{padding: 10}}>
+        <View styles={{padding: 20}}>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={this.handleSubmit}>
@@ -256,7 +281,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 500,
+    height: 530,
     width: 350,
   },
   hideButton: {

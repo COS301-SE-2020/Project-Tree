@@ -94,6 +94,7 @@ class CreateTaskForm extends Component {
       endDate: new Date(),
       taskDuration: 0,
       startDatePickerVisible: false,
+      error: null,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleStartDateSelect = this.handleStartDateSelect.bind(this);
@@ -131,15 +132,12 @@ class CreateTaskForm extends Component {
   }
 
   formatValidateInput() {
-    if (this.state.taskName === null || this.state.taskDescription === null) {
-      alert('You have not entered all the details');
-      return null;
-    }
+    if(this.checkFormData('all') === false) return null;
 
     let data = {
       ct_Name: this.state.taskName,
       ct_startDate: this.state.startDate.toISOString().substr(0, 10),
-      ct_duration: parseInt(this.state.taskDuration),
+      ct_duration: !(this.state.taskDuration.toString()).trim().length || this.state.taskDuration < 0 ? 0 : parseInt(this.state.taskDuration),
       ct_endDate: this.state.endDate.toISOString().substr(0, 10),
       ct_description: this.state.taskDescription,
       ct_pid: this.props.projectID,
@@ -172,13 +170,39 @@ class CreateTaskForm extends Component {
     this.props.setProjectInfo(body.nodes, body.rels);
   }
 
+  checkFormData(check){
+    if(check === "name" || check === "all"){
+      let name = this.state.taskName;
+      if(name === null || !name.trim().length){
+        this.setState({error:"Please enter a task name"});
+        return false;
+      }
+
+      else{
+        this.setState({error:null});
+      }
+    }
+
+    if(check === "duration" || check === "all"){
+      let duration = this.state.taskDuration
+      if(!(duration.toString()).trim().length || duration<0){
+        this.setState({taskDuration:0});
+        this.setEndDate(this.state.startDate, 0);
+      }
+    }
+  }
+
   render() {
     return (
       <View>
         <Form>
+          <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
           <Item floatingLabel>
             <Label>Name of Task</Label>
-            <Input onChangeText={(val) => this.setState({taskName: val})} />
+            <Input 
+              onChangeText={(val) => this.setState({taskName: val})}
+              onEndEditing={()=>this.checkFormData("name")} 
+            />
           </Item>
           <Item floatingLabel>
             <Label>Description of Task</Label>
@@ -193,6 +217,7 @@ class CreateTaskForm extends Component {
               type="AntDesign"
               name="plus"
               onPress={() => {
+                this.checkFormData("duration");
                 this.setState({startDatePickerVisible: true});
               }}
             />
@@ -201,6 +226,7 @@ class CreateTaskForm extends Component {
             <Label>Duration (days)</Label>
             <Input
               value={this.state.taskDuration.toString()}
+              onEndEditing={()=>this.checkFormData("duration")}
               onChangeText={this.handleDuration}
             />
           </Item>
