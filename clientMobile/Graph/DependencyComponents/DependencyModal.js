@@ -89,24 +89,33 @@ class DependencyModal extends Component {
                   ' days'}
               </Text>
               <View style={{flex: 1}}>
-                <View style={{flex: 1}}>
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => this.toggleVisibility(false, true)}>
-                    <Icon type="AntDesign" name="edit" style={{color: 'white'}}>
-                      <Text>&nbsp;Edit</Text>
-                    </Icon>
-                  </TouchableOpacity>
-                </View>
-                <View style={{flex: 1}}>
-                  <DeleteDependency
-                    dependency={this.props.selectedDependency}
-                    toggleVisibility={this.toggleVisibility}
-                    getProjectInfo={this.props.getProjectInfo}
-                    setProjectInfo={this.props.setProjectInfo}
-                    name={name}
-                  />
-                </View>
+                {this.props.userPermissions["update"] === true?
+                  <View style={{flex: 1}}> 
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => this.toggleVisibility(false, true)}>
+                      <Icon type="AntDesign" name="edit" style={{color: 'white'}}>
+                        <Text>&nbsp;Edit</Text>
+                      </Icon>
+                    </TouchableOpacity>
+                  </View>
+                :
+                  null
+                }
+                
+                {this.props.userPermissions["update"] === true?
+                  <View style={{flex: 1}}> 
+                    <DeleteDependency
+                      dependency={this.props.selectedDependency}
+                      toggleVisibility={this.toggleVisibility}
+                      getProjectInfo={this.props.getProjectInfo}
+                      setProjectInfo={this.props.setProjectInfo}
+                      name={name}
+                    />
+                  </View>
+                :
+                  null
+                }
               </View>
             </View>
           </View>

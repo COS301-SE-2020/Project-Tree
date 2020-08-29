@@ -199,6 +199,7 @@ class Home extends Component {
             navigation={this.props.navigation}
             setProjectInfo={this.setProjectInfo}
             token={this.state.token}
+            userPermissions={this.props.userPermissions}
           />
         </Drawer>
       </Screen>
@@ -330,11 +331,15 @@ class HomeScreen extends Component {
                     </View>
                     <View
                       style={{width: 40, height: 40, justifyContent: 'center'}}>
-                      <DeleteProject
-                        project={this.props.project}
-                        setProjectInfo={this.props.setProjectInfo}
-                        token={this.props.token}
-                      />
+                      {this.props.userPermissions["project"] === true?
+                        <DeleteProject
+                          project={this.props.project}
+                          setProjectInfo={this.props.setProjectInfo}
+                          token={this.props.token}
+                        />
+                      :
+                        null
+                      }
                     </View>
                   </View>
                 </Body>
@@ -351,16 +356,22 @@ class HomeScreen extends Component {
                   project={this.props.project}
                   user={this.props.user}
                 />
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() =>
-                    this.setModalVisible(!this.state.modalVisible)
-                  }>
-                  <Icon
-                    type="FontAwesome"
-                    name="edit"
-                    style={{color: 'white'}}></Icon>
-                </TouchableOpacity>
+                
+                {this.props.userPermissions["project"] === true?
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() =>
+                      this.setModalVisible(!this.state.modalVisible)
+                    }>
+                    <Icon
+                      type="FontAwesome"
+                      name="edit"
+                      style={{color: 'white'}}>
+                    </Icon>
+                  </TouchableOpacity>
+                :
+                  null
+                }
               </CardItem>
               <CardItem>
                 <View style={{width: '100%', alignItems: 'center'}}>

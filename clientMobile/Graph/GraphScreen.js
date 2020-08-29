@@ -117,6 +117,7 @@ class Graph extends Component {
             <GraphDrawer
               setDrawerVisible={this.setDrawerVisible}
               project={this.props.project}
+              userPermissions={this.props.userPermissions}
               navigation={this.props.navigation}
               direction={this.state.direction}
               toggleDirection={this.toggleDirection}
@@ -134,6 +135,7 @@ class Graph extends Component {
           <React.Fragment>
             <GraphScreen
               project={this.props.project}
+              userPermissions={this.props.userPermissions}
               navigation={this.props.navigation}
               setDrawerVisible={this.setDrawerVisible}
               direction={this.state.direction}
@@ -219,6 +221,10 @@ class GraphScreen extends Component {
   }
 
   setCreateDependency(id) {
+    if ( this.props.userPermissions["create"] === false) {
+      alert("You do not have permissions to create any dependencies.");
+      return;
+    }
     if (id === null) {
       this.setState({
         sourceCreateDependency: null,
@@ -275,6 +281,7 @@ class GraphScreen extends Component {
 
         <TaskModal
           project={this.props.project}
+          userPermissions={this.props.userPermissions}
           selectedTask={this.state.selectedTask}
           displayTaskDependency={this.displayTaskDependency}
           getProjectInfo={this.getProjectInfo}
@@ -282,6 +289,7 @@ class GraphScreen extends Component {
         />
         <DependencyModal
           project={this.props.project}
+          userPermissions={this.props.userPermissions}
           selectedDependency={this.state.selectedDependency}
           displayTaskDependency={this.displayTaskDependency}
           getProjectInfo={this.getProjectInfo}
@@ -307,11 +315,15 @@ class GraphScreen extends Component {
             getProjectInfo={this.getProjectInfo}
             links = {this.state.links}
           />
-          <CreateTask
-            projectID={this.props.project.id}
-            getProjectInfo={this.getProjectInfo}
-            setProjectInfo={this.setProjectInfo}
-          />
+          {this.props.userPermissions["create"] === true?
+            <CreateTask
+              projectID={this.props.project.id}
+              getProjectInfo={this.getProjectInfo}
+              setProjectInfo={this.setProjectInfo}
+            />
+          :
+            null
+          }
         </View>
       </View>
     ) : (

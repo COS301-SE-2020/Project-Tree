@@ -52,14 +52,6 @@ class TaskModal extends Component {
 
     return (
       <React.Fragment>
-        <UpdateTask
-          task={this.props.selectedTask}
-          modalVisibility={this.state.displayUpdateModal}
-          toggleVisibility={this.toggleVisibility}
-          getProjectInfo={this.props.getProjectInfo}
-          setProjectInfo={this.props.setProjectInfo}
-          displayTaskDependency={this.props.displayTaskDependency}
-        />
         <UpdateProgress
           project={this.props.project}
           task={this.props.selectedTask}
@@ -115,37 +107,49 @@ class TaskModal extends Component {
                 Duration: {this.props.selectedTask.duration} days
               </Text>
               <View style={{flex: 1}}>
-                <View style={{flex: 1}}>
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => this.toggleVisibility(false, true)}>
-                    <Icon type="AntDesign" name="edit" style={{color: 'white'}}>
-                      <Text>&nbsp;Edit</Text>
-                    </Icon>
-                  </TouchableOpacity>
-                </View>
+                {this.props.userPermissions["update"] === true?
+                  <View style={{flex: 1}}>
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => this.toggleVisibility(false, true)}>
+                      <Icon type="AntDesign" name="edit" style={{color: 'white'}}>
+                        <Text>&nbsp;Edit</Text>
+                      </Icon>
+                    </TouchableOpacity>
+                  </View>
+                :
+                  null
+                }
 
-                <View style={{flex: 1}}>
-                  <DeleteTask
-                    task={this.props.selectedTask}
-                    toggleVisibility={this.toggleVisibility}
-                    getProjectInfo={this.props.getProjectInfo}
-                    setProjectInfo={this.props.setProjectInfo}
-                  />
-                </View>
+                {this.props.userPermissions["delete"] === true?
+                  <View style={{flex: 1}}>
+                    <DeleteTask
+                      task={this.props.selectedTask}
+                      toggleVisibility={this.toggleVisibility}
+                      getProjectInfo={this.props.getProjectInfo}
+                      setProjectInfo={this.props.setProjectInfo}
+                    />
+                  </View>
+                :
+                  null
+                }
 
-                <View style={{flex: 1}}>
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => this.toggleProgressModal(false, true)}>
-                    <Icon
-                      type="Entypo"
-                      name="progress-one"
-                      style={{color: 'white', paddingBottom: 10}}>
-                      <Text>&nbsp;Update Progress</Text>
-                    </Icon>
-                  </TouchableOpacity>
-                </View>
+                {this.props.userPermissions["update"] === true?
+                  <View style={{flex: 1}}>
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => this.toggleProgressModal(false, true)}>
+                      <Icon
+                        type="Entypo"
+                        name="progress-one"
+                        style={{color: 'white', paddingBottom: 10}}>
+                        <Text>&nbsp;Update Progress</Text>
+                      </Icon>
+                    </TouchableOpacity>
+                  </View>
+                :
+                  null
+                }
               </View>
             </View>
           </View>
