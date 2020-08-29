@@ -280,17 +280,9 @@ async function getUser(req, res) {
 }
 
 async function verify(token) {
-  let answer = "initial";
-  bool = false;
+  let value = null;
   try {
-    var user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, {
-      maxAge: 1440,
-    });
-    var milliseconds = +new Date();
-    var seconds = milliseconds / 1000;
-    if (seconds - user.iat > 86400) {
-      return null;
-    }
+    let user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     await db
       .getSession()
@@ -302,21 +294,18 @@ async function verify(token) {
       )
       .then((result) => {
         if (user.password == result.records[0]._fields[0].properties.hash) {
-          answer = result.records[0]._fields[0].identity.low;
-          bool = true;
+          value = result.records[0]._fields[0].identity.low;
         }
       })
       .catch((err) => {
+        console.log(err);
         return null;
       });
   } catch (err) {
     console.log(err);
     return null;
   }
-  if (bool) return answer;
-  else {
-    return null;
-  }
+  return value;
 }
 
 module.exports = {
