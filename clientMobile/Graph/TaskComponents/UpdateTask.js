@@ -388,7 +388,7 @@ class UpdateTaskForm extends Component {
     timestamp.setHours(timestamp.getHours() + 2);
     timestamp = timestamp.toISOString();
 
-    await fetch("http://192.168.137.1:5000/people/updateAssignedPeople", {
+    await fetch("http://projecttree.herokuapp.com/people/updateAssignedPeople", {
       method: "POST",
       headers: {
         Accept: "application/json",
