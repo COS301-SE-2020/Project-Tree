@@ -12,6 +12,7 @@ function login(req, res) {
     )
     .then((result) => {
       if (result.records.length != 0) {
+        let id = result.records[0]._fields[0].identity.low;
         let hash = result.records[0]._fields[0].properties.password;
         bcrypt.compare(req.body.password, hash, (err, result) => {
           if (result) {
