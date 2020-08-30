@@ -115,6 +115,12 @@ class TaskModal extends Component {
           getProjectInfo={this.props.getProjectInfo}
           setProjectInfo={this.props.setProjectInfo}
           displayTaskDependency={this.props.displayTaskDependency}
+          project={this.props.project}
+          pacMans={taskPacMans}
+          resPersons={taskResPersons}
+          resources={taskResources}
+          allUsers={this.props.allUsers}
+          assignedProjUsers={this.props.assignedProjUsers}
         />
         <UpdateProgress
           project={this.props.project}

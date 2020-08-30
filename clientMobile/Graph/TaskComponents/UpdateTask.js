@@ -50,6 +50,12 @@ class UpdateTask extends Component {
               getProjectInfo={this.props.getProjectInfo}
               setProjectInfo={this.props.setProjectInfo}
               displayTaskDependency={this.props.displayTaskDependency}
+              project={this.props.project}
+              pacMans={this.props.pacMans}
+              resPersons={this.props.resPersons}
+              resources={this.props.resources}
+              allUsers={this.props.allUsers}
+              assignedProjUsers={this.props.assignedProjUsers}
             />
           </View>
         </View>
@@ -89,12 +95,26 @@ class UpdateTaskForm extends Component {
       endDate: new Date(eYear + '-' + eMonth + '-' + eDay),
       taskDuration: this.props.task.duration,
       startDatePickerVisible: false,
+      people: this.props.allUsers,
+      assignedProjUsers: [...this.props.assignedProjUsers],
+      pacManSearchTerm: "",
+      resourcesSearchTerm: "",
+      resPersonSearchTerm: "",
+      pacManList: [...this.props.pacMans],
+      resourcesList: [...this.props.resources],
+      resPersonList: [...this.props.resPersons],
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleStartDateSelect = this.handleStartDateSelect.bind(this);
     this.handleDuration = this.handleDuration.bind(this);
     this.formatValidateInput = this.formatValidateInput.bind(this);
+    this.updateSearch = this.updateSearch.bind(this);
+    this.addPacMan = this.addPacMan.bind(this);
+    this.addResPerson = this.addResPerson.bind(this);
+    this.addResource = this.addResource.bind(this);
+    this.removeAssignedPeople = this.removeAssignedPeople.bind(this);
+    this.removeAssignedPerson = this.removeAssignedPerson.bind(this);
   }
 
   handleStartDateSelect(event, selectedDate) {
@@ -144,6 +164,204 @@ class UpdateTaskForm extends Component {
     return data;
   }
 
+  //Removes people from the people list if they are already assigned to a role so that they can't be selected again
+  removeAssignedPeople() {
+    for (let x = 0; x < this.state.people.length; x++) {
+      for (let y = 0; y < this.state.pacManList.length; y++) {
+        if (
+          this.state.pacManList[y] !== undefined &&
+          this.state.people[x] !== undefined
+        ) {
+          if (this.state.pacManList[y].id === this.state.people[x].id) {
+            if (x === 0) this.state.people.shift();
+            else if (x === this.state.people.length - 1)
+              this.state.people.pop();
+            else this.state.people.splice(x, 1);
+          }
+        }
+      }
+    }
+
+    for (let x = 0; x < this.state.people.length; x++) {
+      for (let y = 0; y < this.state.resPersonList.length; y++) {
+        if (
+          this.state.resPersonList[y] !== undefined &&
+          this.state.people[x] !== undefined
+        ) {
+          if (this.state.resPersonList[y].id === this.state.people[x].id) {
+            if (x === 0) this.state.people.shift();
+            else if (x === this.state.people.length - 1)
+              this.state.people.pop();
+            else this.state.people.splice(x, 1);
+          }
+        }
+      }
+    }
+
+    for (let x = 0; x < this.state.people.length; x++) {
+      for (let y = 0; y < this.state.resourcesList.length; y++) {
+        if (
+          this.state.resourcesList[y] !== undefined &&
+          this.state.people[x] !== undefined
+        ) {
+          if (this.state.resourcesList[y].id === this.state.people[x].id) {
+            if (x === 0) this.state.people.shift();
+            else if (x === this.state.people.length - 1)
+              this.state.people.pop();
+            else this.state.people.splice(x, 1);
+          }
+        }
+      }
+    }
+  }
+
+  updateSearch(value, mode) {
+    if (mode === 0) this.setState({ pacManSearchTerm: value });
+    if (mode === 1) this.setState({ resPersonSearchTerm: value });
+    if (mode === 2) this.setState({ resourcesSearchTerm: value });
+  }
+
+  addPacMan(person) {
+    let tempPacManList = this.state.pacManList;
+    tempPacManList.push(person);
+
+    let tempProjUsersList = this.state.assignedProjUsers;
+    let userTask = []
+    userTask.push(person);
+    userTask.push({
+      start: person.id,
+      end: this.props.task.id,
+      type: "PACKAGE_MANAGER"
+    });
+    tempProjUsersList.push(userTask);
+
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for (let x = 0; x < this.state.people.length; x++) {
+      if (this.state.people[x].id === person.id) {
+        if (x === 0) this.state.people.shift();
+        else if (x === this.state.people.length - 1) this.state.people.pop();
+        else this.state.people.splice(x, 1);
+      }
+    }
+
+    this.setState({
+      assignedProjUsers: tempProjUsersList,
+      pacManList: tempPacManList,
+      pacManSearchTerm: ""
+    });
+  }
+
+  addResPerson(person) {
+    let tempResPersonList = this.state.resPersonList;
+    tempResPersonList.push(person);
+
+    let tempProjUsersList = this.state.assignedProjUsers;
+    let userTask = []
+    userTask.push(person);
+    userTask.push({
+      start: person.id,
+      end: this.props.task.id,
+      type: "RESPONSIBLE_PERSON"
+    });
+    tempProjUsersList.push(userTask);
+
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for (let x = 0; x < this.state.people.length; x++) {
+      if (this.state.people[x].id === person.id) {
+        if (x === 0) this.state.people.shift();
+        else if (x === this.state.people.length - 1) this.state.people.pop();
+        else this.state.people.splice(x, 1);
+      }
+    }
+
+    this.setState({
+      assignedProjUsers: tempProjUsersList,
+      resPersonList: tempResPersonList,
+      resPersonSearchTerm: "",
+    });
+  }
+
+  addResource(person) {
+    let tempResourceList = this.state.resourcesList;
+    tempResourceList.push(person);
+
+    let tempProjUsersList = this.state.assignedProjUsers;
+    let userTask = []
+    userTask.push(person);
+    userTask.push({
+      start: person.id,
+      end: this.props.task.id,
+      type: "RESOURCE"
+    });
+    tempProjUsersList.push(userTask);
+
+    // Prevents user from selecting someone for two roles or twice for one role by removing them from state people array
+    for (let x = 0; x < this.state.people.length; x++) {
+      if (this.state.people[x].id === person.id) {
+        if (x === 0) this.state.people.shift();
+        else if (x === this.state.people.length - 1) this.state.people.pop();
+        else this.state.people.splice(x, 1);
+      }
+    }
+
+    this.setState({
+      assignedProjUsers: tempProjUsersList,
+      resourceList: tempResourceList,
+      resourcesSearchTerm: ""
+    });
+  }
+
+  /*
+  * Removes an assigned person from the assigned people arrays
+  */
+  removeAssignedPerson(person, mode) {
+    let peopleList = this.state.people;
+    if (mode === 0) {
+      for (let x = 0; x < this.state.pacManList.length; x++) {
+        if (person.id === this.state.pacManList[x].id) {
+          if (x === 0) this.state.pacManList.shift();
+          else if (x === this.state.pacManList.length - 1)
+            this.state.pacManList.pop();
+          else this.state.pacManList.splice(x, 1);
+        }
+      }
+    }
+
+    if (mode === 1) {
+      for (let x = 0; x < this.state.resPersonList.length; x++) {
+        if (person.id === this.state.resPersonList[x].id) {
+          if (x === 0) this.state.resPersonList.shift();
+          else if (x === this.state.resPersonList.length - 1)
+            this.state.resPersonList.pop();
+          else this.state.resPersonList.splice(x, 1);
+        }
+      }
+    }
+
+    if (mode === 2) {
+      for (let x = 0; x < this.state.resourcesList.length; x++) {
+        if (person.id === this.state.resourcesList[x].id) {
+          if (x === 0) this.state.resourcesList.shift();
+          else if (x === this.state.resourcesList.length - 1)
+            this.state.resourcesList.pop();
+          else this.state.resourcesList.splice(x, 1);
+        }
+      }
+    }
+
+    for(let x = 0; x < this.state.assignedProjUsers.length; x++){
+      if (person.id === this.state.assignedProjUsers[x][0].id) {
+        if (x === 0) this.state.assignedProjUsers.shift();
+        else if (x === this.state.assignedProjUsers.length - 1)
+        this.state.assignedProjUsers.pop();
+        else this.state.assignedProjUsers.splice(x, 1);
+      }
+    }
+    
+    peopleList.push(person);
+    this.setState({ people: peopleList });
+  }
+
   async handleSubmit() {
     let input = this.formatValidateInput();
     if (input === null) return;
@@ -165,12 +383,82 @@ class UpdateTaskForm extends Component {
     );
 
     const body = await response.json();
+
+    let timestamp = new Date();
+    timestamp.setHours(timestamp.getHours() + 2);
+    timestamp = timestamp.toISOString();
+
+    await fetch("http://192.168.137.1:5000/people/updateAssignedPeople", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ut_taskId: this.props.task.id,
+        ut_pacMans: this.state.pacManList,
+        ut_resPersons: this.state.resPersonList,
+        ut_resources: this.state.resourcesList,
+        ut_originalPacMans: this.props.pacMans,
+        ut_originalResPersons: this.props.resPersons,
+        ut_originalResources: this.props.resources,
+        auto_notification: {
+          timestamp: timestamp,
+          projName: this.props.project.name,
+          projID: this.props.project.id,
+          taskName: projectData.ut_name,
+          type: "auto",
+          mode: 2,
+        }
+      }),
+    });
+
+    // Resets the people list
+    for (let x = 0; x < this.state.pacManList.length; x++) {
+      this.state.people.push(this.state.pacManList[x]);
+    }
+    for (let x = 0; x < this.state.resPersonList.length; x++) {
+      this.state.people.push(this.state.resPersonList[x]);
+    }
+    for (let x = 0; x < this.state.resourcesList.length; x++) {
+      this.state.people.push(this.state.resourcesList[x]);
+    }
+
     this.props.toggleVisibility(true, false);
     this.props.displayTaskDependency(null, null);
-    this.props.setProjectInfo(body.nodes, body.rels);
+    this.props.setProjectInfo(body.nodes, body.rels, this.state.assignedProjUsers);
+  }
+
+  componentDidMount(){
+    this.removeAssignedPeople();
   }
 
   render() {
+    /*
+    * Filters the list of people to only show people matching the search term
+    */
+    let filteredPacMan = this.state.people.filter((person) => {
+      return (
+        person.name
+          .toLowerCase()
+          .indexOf(this.state.pacManSearchTerm.toLowerCase()) !== -1
+      );
+    });
+    let filteredResPerson = this.state.people.filter((person) => {
+      return (
+        person.name
+          .toLowerCase()
+          .indexOf(this.state.resPersonSearchTerm.toLowerCase()) !== -1
+      );
+    });
+    let filteredResources = this.state.people.filter((person) => {
+      return (
+        person.name
+          .toLowerCase()
+          .indexOf(this.state.resourcesSearchTerm.toLowerCase()) !== -1
+      );
+    });
+
     return (
       <View>
         <Form>
@@ -210,6 +498,123 @@ class UpdateTaskForm extends Component {
             <Label>End Date</Label>
             <Input value={this.state.endDate.toISOString().substr(0, 10)} />
           </Item>
+          <Item floatingLabel disabled>
+            <Label>Package Manager</Label>
+            <Input
+              value={this.state.pacManSearchTerm}
+              onChangeText={(val) => this.updateSearch(val, 0)}
+            />
+          </Item>
+          <View style={{flexDirection: 'row'}}>
+            {this.state.pacManSearchTerm.length >= 2 ? (
+              <View>
+                {filteredPacMan.map((person) => {
+                  return (
+                    <TouchableOpacity
+                      type="button"
+                      onPress={() => this.addPacMan(person)}
+                      key={person.id}
+                      style={styles.peopleButtons}
+                    >
+                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ) : null}
+            <View>
+              {this.state.pacManList.map((person) => {
+                return (
+                  <TouchableOpacity
+                    type="button"
+                    onPress={() => this.removeAssignedPerson(person, 0)}
+                    key={person.id}
+                    style={styles.peopleButtons}
+                  >
+                    <Text>{person.name}&nbsp;{person.surname}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+          <Item floatingLabel disabled>
+            <Label>Responsible Person</Label>
+            <Input
+              value={this.state.resPersonSearchTerm}
+              onChangeText={(val) => this.updateSearch(val, 1)}
+            />
+          </Item>
+          <View style={{flexDirection: 'row'}}>
+            {this.state.resPersonSearchTerm.length >= 2 ? (
+              <View>
+                {filteredResPerson.map((person) => {
+                  return (
+                    <TouchableOpacity
+                      type="button"
+                      onPress={() => this.addResPerson(person)}
+                      key={person.id}
+                      style={styles.peopleButtons}
+                    >
+                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ) : null}
+            <View>
+              {this.state.resPersonList.map((person) => {
+                return (
+                  <TouchableOpacity
+                    type="button"
+                    onPress={() => this.removeAssignedPerson(person, 1)}
+                    key={person.id}
+                    style={styles.peopleButtons}
+                  >
+                    <Text>{person.name}&nbsp;{person.surname}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+          <Item floatingLabel disabled>
+            <Label>Resource(s)</Label>
+            <Input
+              value={this.state.resourcesSearchTerm}
+              onChangeText={(val) => this.updateSearch(val, 2)}
+            />
+          </Item>
+          <View style={{flexDirection: 'row'}}>
+            {this.state.resourcesSearchTerm.length >= 2 ? (
+              <View>
+                {filteredResources.map((person) => {
+                  return (
+                    <TouchableOpacity
+                      type="button"
+                      onPress={() => this.addResource(person)}
+                      key={person.id}
+                      style={styles.peopleButtons}
+                    >
+                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ) : null}
+            <View>
+              {this.state.resourcesList.map((person) => {
+                return (
+                  <TouchableOpacity
+                    type="button"
+                    onPress={() => this.removeAssignedPerson(person, 2)}
+                    key={person.id}
+                    style={styles.peopleButtons}
+                  >
+                    <Text>{person.name}&nbsp;{person.surname}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
         </Form>
         {this.state.startDatePickerVisible && (
           <DateTimePicker
@@ -256,7 +661,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 500,
+    height: 800,
     width: 350,
   },
   hideButton: {
@@ -297,6 +702,22 @@ const styles = StyleSheet.create({
   title: {flex: 1, backgroundColor: '#f6f8fa'},
   row: {height: 40},
   text: {margin: 6, textAlign: 'center'},
+  peopleButtons: {
+    backgroundColor: '#184D47',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 45,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0.1,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
+    margin: 3,
+  }
 });
 
 export default UpdateTask;
