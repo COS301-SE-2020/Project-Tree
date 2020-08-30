@@ -11,20 +11,41 @@ function login(req, res) {
       `
     )
     .then((result) => {
-      let id = result.records[0]._fields[0].identity.low;
       if (result.records.length != 0) {
         let hash = result.records[0]._fields[0].properties.password;
         bcrypt.compare(req.body.password, hash, (err, result) => {
           if (result) {
-            res.status(200);
-            res.send({
-              sessionToken: JWT.sign(
-                { email: req.body.email, hash },
-                process.env.ACCESS_TOKEN_SECRET
-              ),
-              status: true,
-              id: id,
-            });
+            let token = JWT.sign(
+              { email: req.body.email, hash },
+              process.env.ACCESS_TOKEN_SECRET
+            );
+            db.getSession()
+              .run(
+                `
+                  Match (n:User { email: "${req.body.email}" })
+                  SET n += {
+                    session: "${token}"
+                  }
+                  RETURN n
+                `
+              )
+              .then((result) => {
+                if (result.records.length != 0) {
+                  res.send({
+                    sessionToken: token,
+                    status: true,
+                    id: id,
+                  });
+                } else {
+                  res.status(400);
+                  res.send({ status: false, message: "err" });
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+                res.status(400);
+                res.send({ message: err });
+              });
           } else {
             res.status(400);
             res.send({ status: false, message: "err" });
@@ -169,7 +190,8 @@ async function register(req, res) {
                   name:"${req.body.name}",
                   sname:"${req.body.sname}",
                   birthday: "${req.body.um_date}",
-                  profilepicture: "${x}"
+                  profilepicture: "${x}",
+                  session: tokem
                 })
                 RETURN a
               `
@@ -296,7 +318,7 @@ async function verify(token) {
       .getSession()
       .run(
         `
-          Match (n:User { email: "${user.email}" })
+          Match (n:User { email: "${user.email}", session: "${token}" })
           RETURN n
         `
       )
