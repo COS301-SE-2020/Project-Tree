@@ -13,6 +13,10 @@ import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
 import UpdateProgress from '../UpdateProgress';
 
+let taskPacMans = null;
+let taskResPersons = null;
+let taskResources = null;
+
 class TaskModal extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +27,7 @@ class TaskModal extends Component {
     };
     this.toggleVisibility = this.toggleVisibility.bind(this);
     this.toggleProgressModal = this.toggleProgressModal.bind(this);
+    this.classifyExistingUsers = this.classifyExistingUsers.bind(this);
   }
 
   toggleVisibility(taskModal, updateModal, selectedTask) {
@@ -47,8 +52,59 @@ class TaskModal extends Component {
     });
   }
 
+  classifyExistingUsers() {
+    let taskUsers = [];
+    let taskPacMans = [];
+    let taskResPersons = [];
+    let taskResources = [];
+
+    // Get the users that are part of the selected task
+    for(let x = 0; x < this.props.assignedProjUsers.length; x++){
+      if(this.props.assignedProjUsers[x][1].end === this.props.selectedTask.id){
+        taskUsers.push(this.props.assignedProjUsers[x])
+      }
+    }
+
+    // Assign users to their respective roles by putting them in arrays
+    for (let x = 0; x < taskUsers.length; x++) {
+      if (taskUsers[x][1].type === "PACKAGE_MANAGER") {
+        taskPacMans.push(taskUsers[x][0]);
+      }
+      if (taskUsers[x][1].type === "RESPONSIBLE_PERSON") {
+        taskResPersons.push(taskUsers[x][0]);
+      }
+      if (taskUsers[x][1].type === "RESOURCE") {
+        taskResources.push(taskUsers[x][0]);
+      }
+    }
+
+    taskUsers = [];
+    taskUsers.push(taskPacMans);
+    taskUsers.push(taskResPersons);
+    taskUsers.push(taskResources);
+
+    return taskUsers;
+  }
+
+  printUsers(people) {
+    let list = [];
+    for (let x = 0; x < people.length; x++) {
+      list.push(
+        <Text key={people[x].id} style={styles.personText}>
+          {people[x].name}&nbsp;{people[x].surname}
+        </Text>
+      );
+    }
+    return list;
+  }
+
   render() {
-    if (this.props.selectedTask === null) return null;
+    if (this.props.selectedTask === null || this.props.assignedProjUsers === null) return null;
+
+    let taskUsers = this.classifyExistingUsers();
+    taskPacMans = taskUsers[0];
+    taskResPersons = taskUsers[1];
+    taskResources = taskUsers[2];
 
     return (
       <React.Fragment>
@@ -114,6 +170,13 @@ class TaskModal extends Component {
               <Text style={styles.modalText}>
                 Duration: {this.props.selectedTask.duration} days
               </Text>
+              <Text style={styles.roleText}>Package managers:</Text>
+              {this.printUsers(taskPacMans)}
+              <Text style={styles.roleText}>Responsible persons:</Text>
+              {this.printUsers(taskResPersons)}
+              <Text style={styles.roleText}>Resources:</Text>
+              {this.printUsers(taskResources)}
+              
               <View style={{flex: 1}}>
                 <View style={{flex: 1}}>
                   <TouchableOpacity
@@ -178,7 +241,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 470,
+    height: 700,
     width: 350,
   },
   textStyle: {
@@ -190,6 +253,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     fontSize: 20,
+  },
+  roleText: {
+    marginBottom: 5,
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  personText: {
+    marginBottom: 5,
+    textAlign: 'center',
+    fontSize: 16,
   },
   hideButton: {
     flex: 0.15,
