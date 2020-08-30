@@ -77,6 +77,7 @@ class UpdateDependencyForm extends Component {
       dependencyRelationship: this.props.dependency.relationshipType,
       selectedIndex: this.props.dependency.relationshipType === 'ss' ? 0 : 1,
       dependencyDuration: this.props.dependency.duration,
+      error: null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -93,6 +94,8 @@ class UpdateDependencyForm extends Component {
   }
 
   formatValidateInput() {
+    if(this.checkFormData("all") === false) return null;
+
     let data = {
       ud_did: this.props.dependency.id,
       ud_duration: parseInt(this.state.dependencyDuration),
@@ -128,6 +131,14 @@ class UpdateDependencyForm extends Component {
     this.props.setProjectInfo(body.nodes, body.rels);
   }
 
+  checkFormData(){
+    let duration = this.state.dependencyDuration;
+    if(!(duration.toString()).trim().length){
+      this.setState({error: "Please enter a duration for your dependency"});
+      return false;
+    }
+  }
+
   render() {
     const component1 = () => <Text>Start→Start</Text>;
     const component2 = () => <Text>Finish→Start</Text>;
@@ -147,8 +158,9 @@ class UpdateDependencyForm extends Component {
             selectedButtonStyle={{backgroundColor: '#EEBB4D'}}
           />
         </View>
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, marginBottom:20}}>
           <Form>
+            <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
             <Item floatingLabel>
               <Label>Duration (Days)</Label>
               <Input
@@ -193,7 +205,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 400,
+    height: 410,
     width: 350,
   },
   hideButton: {

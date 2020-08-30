@@ -104,6 +104,7 @@ class CreateProjectForm extends Component {
       projName: null,
       projDescription: null,
       tableFormData: ['', '', '', '', '', '', '', '', ''],
+      error: null,
     };
     this.setElementClicked = this.setElementClicked.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -116,15 +117,7 @@ class CreateProjectForm extends Component {
   }
 
   async handleSubmit() {
-    if (this.state.projName == null) {
-      alert('Please enter a project name');
-      return;
-    }
-
-    if (this.state.projDescription == null) {
-      alert('Please enter a project description');
-      return;
-    }
+    if(this.checkFormData("all") === false) return;
 
     this.props.setModalVisible(false);
 
@@ -168,18 +161,47 @@ class CreateProjectForm extends Component {
     this.props.setProjectInfo(body);
   }
 
+  checkFormData(check){
+    if(check === "name" || check === "all"){
+      let name = this.state.projName;
+      if(name === null || !name.trim().length){
+        this.setState({error:"Please enter a project name"});
+        return false;
+      }
+
+      else{
+        this.setState({error:null});
+      }
+    }
+
+    if(check === "description" || check === "all"){
+      if(this.state.error !== null){return false;}
+      let description = this.state.projDescription;
+      if(description === null || !description.trim().length){
+        this.setState({error:"Please enter a project description"});
+        return false;
+      }
+
+      else{
+        this.setState({error:null});
+      }
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
         <Form>
+          <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
           <Item floatingLabel>
             <Label>Name of project</Label>
-            <Input onChangeText={(val) => this.setState({projName: val})} />
+            <Input onChangeText={(val) => this.setState({projName: val})} onEndEditing={()=>this.checkFormData("name")}/>
           </Item>
           <Item floatingLabel>
             <Label>Description of project</Label>
             <Input
               onChangeText={(val) => this.setState({projDescription: val})}
+              onEndEditing={()=>this.checkFormData("description")}
             />
           </Item>
         </Form>

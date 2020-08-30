@@ -120,6 +120,12 @@ export default class App extends Component {
       selectedProject: null,
       userInfo: null,
       switchToLog: false,
+      userPermissions: {
+        create: false,
+        update: false,
+        delete: false,
+        project: false,
+      },
     };
 
     this.handleLogin = this.handleLogin.bind(this);
@@ -129,12 +135,45 @@ export default class App extends Component {
   }
 
   async setSelectedProject(project) {
+    let tokenVal = null;
+    try {
+      await AsyncStorage.getItem('sessionToken').then((value) => {
+        if (value) {
+          tokenVal = JSON.parse(value);
+        }
+      });
+    } catch {
+      console.log('Error');
+    }
+
+    let data = JSON.stringify({token: tokenVal, project});
+    const response = await fetch('http://projecttree.herokuapp.com/user/checkpermission', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({data: data}),
+    });
+
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    let userPermissions = {
+      create: body.create,
+      update: body.update,
+      delete: body.delete,
+      project: body.project,
+    }
     try {
       await AsyncStorage.setItem('selectedProject', JSON.stringify(project));
+      await AsyncStorage.setItem('userPermissions', JSON.stringify(userPermissions));
     } catch (e) {
       console.log('Could not set key');
     }
-    this.setState({selectedProject: project});
+    this.setState({
+      selectedProject: project,
+      userPermissions: userPermissions,
+    });
   }
 
   async setLogout(mode) {
@@ -201,6 +240,11 @@ export default class App extends Component {
     AsyncStorage.getItem('selectedProject').then((value) => {
       if (value) this.setState({selectedProject: JSON.parse(value)});
     });
+
+    AsyncStorage.getItem('userPermissions').then((value) => {
+      console.log(value);
+      if (value) this.setState({userPermissions: JSON.parse(value)});
+    });
   }
 
   async setUserInfo() {
@@ -265,6 +309,7 @@ export default class App extends Component {
                 <Home
                   user={this.state.userInfo}
                   project={this.state.selectedProject}
+                  userPermissions={this.state.userPermissions}
                   setSelectedProject={this.setSelectedProject}
                 />
               )}
@@ -280,7 +325,11 @@ export default class App extends Component {
             />
             <Tabs.Screen
               name="Project Tree"
-              children={() => <Graph project={this.state.selectedProject} />}
+              children={() => 
+                <Graph 
+                  project={this.state.selectedProject} 
+                  userPermissions={this.state.userPermissions}
+                />}
               options={{
                 tabBarIcon: ({focused, color}) => (
                   <EntypoTabBarIcon
