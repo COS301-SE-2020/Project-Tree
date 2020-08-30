@@ -20,7 +20,8 @@ function getProjectTasks(req, res) {
           startDate: record._fields[0].properties.startDate,
           endDate: record._fields[0].properties.endDate,
           duration: record._fields[0].properties.duration.low,
-          progress: record._fields[0].properties.progress,
+          type: record._fields[0].properties.type,
+          progress: record._fields[0].properties.progress.low,
         });
       });
       db.getSession()

@@ -208,35 +208,6 @@ async function updateProject(req, res) {
   }
 }
 
-function getProgress(req, res) {
-  db.getSession()
-    .run(
-      `
-        MATCH (a)-[:PART_OF]->(x:Project) 
-        RETURN a.projId, x.name, a.progress, a.name, a.duration
-      `
-    )
-    .then((result) => {
-      let response = [];
-      result.records.forEach((record) => {
-        response.push({
-          projectId: record._fields[0].low,
-          projectName: record._fields[1],
-          progress: record._fields[2],
-          taskName: record._fields[3],
-          duration: record._fields[4].low,
-        });
-      });
-      res.status(200);
-      res.send({ response: response });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send({ message: err });
-    });
-}
-
 async function getProjects(req, res) {
   let userId = await uq.verify(req.body.token);
   if (userId != null) {
@@ -343,7 +314,8 @@ function getProjectTasks(req, res) {
           name: record._fields[0].properties.name,
           description: record._fields[0].properties.description,
           startDate: record._fields[0].properties.startDate,
-          progress: record._fields[0].properties.progress,
+          type: record._fields[0].properties.type,
+          progress: record._fields[0].properties.progress.low,
           endDate: record._fields[0].properties.endDate,
           duration: record._fields[0].properties.duration.low,
         });
@@ -387,7 +359,6 @@ module.exports = {
   deleteProject,
   updateProject,
   getProjects,
-  getProgress,
   getProjectTasks,
   getCriticalPath,
 };

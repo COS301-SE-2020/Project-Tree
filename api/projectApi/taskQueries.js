@@ -14,7 +14,8 @@ function createTask(req, res) {
           duration:${req.body.changedInfo.ct_duration}, 
           description:"${req.body.changedInfo.ct_description}", 
           projId:${req.body.changedInfo.ct_pid}, 
-          progress:"Incomplete"
+          type:"Incomplete",
+          progress: 0
         })-[n:PART_OF]->(b) 
         RETURN a
       `
@@ -27,7 +28,8 @@ function createTask(req, res) {
         startDate: result.records[0]._fields[0].properties.startDate,
         endDate: result.records[0]._fields[0].properties.endDate,
         duration: result.records[0]._fields[0].properties.duration.low,
-        progress: result.records[0]._fields[0].properties.progress,
+        type: result.records[0]._fields[0].properties.type,
+        progress: result.records[0]._fields[0].properties.progress.low,
       };
       req.body.nodes.push(task);
       res.status(200);
@@ -182,7 +184,10 @@ async function updateProgress(req, res) {
       `
         MATCH (n)
         WHERE ID(n) = ${req.body.id}
-        SET n.progress = toString("${req.body.progress}")
+        SET n += {
+          progress:${req.body.progress},
+          type: "${req.body.type}"
+        }
         RETURN n
       `
     )
