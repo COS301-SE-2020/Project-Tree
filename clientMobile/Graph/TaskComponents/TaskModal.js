@@ -9,6 +9,7 @@ import {
 import {
   Icon
 } from 'native-base';
+import * as Progress from 'react-native-progress';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
 import UpdateProgress from '../UpdateProgress';
@@ -49,6 +50,10 @@ class TaskModal extends Component {
 
   render() {
     if (this.props.selectedTask === null) return null;
+
+    let color = 'green';
+    if (this.props.selectedTask.progress.low < 33) color = 'red';
+    else if (this.props.selectedTask.progress.low < 66) color = '#EEBB4D';
 
     return (
       <React.Fragment>
@@ -92,6 +97,15 @@ class TaskModal extends Component {
                     marginBottom: 10,
                   }}></View>
               </View>
+              <Progress.Bar
+                progress={this.props.selectedTask.progress.low}
+                
+                showsText={true}
+                formatText={() => {
+                  return `${this.props.selectedTask.progress.low}%`;
+                }}
+                color={color}
+              />
               <Text style={styles.modalText}>
                 {this.props.selectedTask.description}
               </Text>

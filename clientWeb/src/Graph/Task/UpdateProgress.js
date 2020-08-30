@@ -47,9 +47,9 @@ class UpdateProgress extends React.Component {
     if (parseInt(this.state.task.progress) === 100) type = "Complete";
 
     let data = {
-      "id": this.state.task.id,
-      "progress": this.state.task.progress,
-      "type": type,
+      id: this.state.task.id,
+      progress: this.state.task.progress,
+      type: type,
     }
     $.post("/task/progress", data, (response) => {
       this.setState({ show: false });
@@ -120,7 +120,7 @@ class UpdateProgress extends React.Component {
                     if(parseInt(this.state.task.progress) === 100){
                       this.setState({ issue: false });
                       this.checked = false;
-                      alert("you cant specify that a complete task has an issue")
+                      alert("you cant specify that a complete task has an issue");
                     } else {
                       this.setState({ issue: e.target.checked });
                       this.checked = this.state.issue;

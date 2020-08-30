@@ -124,9 +124,8 @@ class ProgressDashboard extends Component {
       percentage = 0;
 
     this.props.tasks.forEach((task) => {
-      if (task.progress === 'Complete')
-        completeDur = completeDur + task.duration;
-      totalDur += task.duration;
+        completeDur += task.progress.low;
+      totalDur += 100;
     });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
     else percentage = 0;
@@ -145,13 +144,11 @@ class ProgressDashboard extends Component {
     )
       this.props.criticalPath.path.segments.forEach((el, i) => {
         if (i === 0) {
-          if (el.start.properties.progress === 'Complete')
-            completeDur = completeDur + el.start.properties.duration.low;
-          totalDur += el.start.properties.duration.low;
+          completeDur += el.start.properties.progress.low;
+          totalDur += 100;
         }
-        if (el.end.properties.progress === 'Complete')
-          completeDur = completeDur + el.end.properties.duration.low;
-        totalDur += el.end.properties.duration.low;
+        completeDur += el.end.properties.progress.low;
+        totalDur += 100;
       });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
     else percentage = 0;
