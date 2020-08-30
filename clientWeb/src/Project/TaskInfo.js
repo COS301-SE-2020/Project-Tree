@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Container, Row, Col } from "react-bootstrap";
+import { ProgressBar, Form, Container, Row, Col } from "react-bootstrap";
 import "./Project.css";
 
 class TaskInfo extends React.Component {
@@ -161,6 +161,9 @@ class TaskInfo extends React.Component {
               } else color = "#ff6961";
               break;
           }
+          let progressColor = "success"
+          if (el.progress < 33) progressColor = "danger";
+          else if (el.progress < 66) progressColor = "warning";
           list[i] = (
             <Col
               key={i}
@@ -194,6 +197,15 @@ class TaskInfo extends React.Component {
               </Row>
               <Row>
                 <Col className="text-center">Duration: {el.duration}</Col>
+              </Row>
+              <Row>
+                <Col>
+                  <ProgressBar
+                    variant={progressColor}
+                    now={el.progress}
+                    label={`${Math.round(el.progress)}% Complete`}
+                  />
+                </Col>
               </Row>
             </Col>
           );
