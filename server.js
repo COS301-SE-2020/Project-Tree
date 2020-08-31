@@ -1,75 +1,103 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path')
-var neo4j = require('neo4j-driver');
-var tq = require('./api/taskQueries')
-var dq = require('./api/dependencyQueries')
-var pq = require('./api/projectQueries')
-var gq = require('./api/graphQueries')
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require("path");
+const tq = require("./api/projectApi/taskQueries");
+const dq = require("./api/projectApi/dependencyQueries");
+const pq = require("./api/projectApi/projectQueries");
+const gq = require("./api/projectApi/graphQueries");
+const um = require("./api/userManagementApi/userQueries");
+const personQueries = require("./api/projectApi/personQueries");
+const nh = require("./api/notificationApi/notificationHandler");
+
+const db = require("./api/DB");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/views");
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-var driver = neo4j.driver('bolt://hobby-mhcikakdabfpgbkehagladel.dbs.graphenedb.com:24786', neo4j.auth.basic("basicuser", "b.Gfev5nJbFk0m.KsFizDJjQRcy36cR"), {encrypted: 'ENCRYPTION_ON'});
-var session = driver.session();
+app.post("/project/get", pq.getProjects);
+app.post("/project/add", pq.createProject);
+app.post("/project/delete", pq.deleteProject);
+app.post("/project/update", pq.updateProject);
+app.post("/project/projecttasks", pq.getProjectTasks);
+app.post("/project/criticalpath", pq.getCriticalPath);
+app.post("/task/add", tq.createTask);
+app.post("/task/update", tq.updateTask);
+app.post("/task/delete", tq.deleteTask);
+app.post("/task/progress", tq.updateProgress);
+app.post("/dependency/add", dq.createDependency);
+app.post("/dependency/update", dq.updateDependency);
+app.post("/dependency/delete", dq.deleteDependency);
+app.post("/getProject", gq.getProjectTasks);
+app.post("/login", um.login);
+app.post("/register", um.register);
+app.post("/verify", um.verify);
+app.post("/user/get", um.getUser);
+app.post("/user/edit", um.editUser);
+app.post("/user/checkpermission", um.checkPermission);
+app.post("/mobile", async (req, res) => {
+  taskArr = req.body.nodes;
+  relArr = req.body.links;
+  direction = req.body.graphDir;
 
-app.get('/getAll', async function(req, res){
-	var taskArr = [];
-	await session
-			.run('MATCH (n) RETURN n LIMIT 25')
-			.then(function(result){
-				result.records.forEach(function(record){
-					taskArr.push({
-						id: record._fields[0].identity.low,
-						name: record._fields[0].properties.name,
-					});
-
-				});
-			})
-			.catch(function(err){
-				console.log(err);
-			});
-	res.send({nodes: taskArr});
-});
-
-app.post('/api/world', async function(req, res){
-	var taskArr = [];
-	await session
-			.run('MATCH (n) RETURN n LIMIT 25')
-			.then(function(result){
-				result.records.forEach(function(record){
-					console.log(record._fields[0].properties.name)
-					taskArr.push({
-						id: record._fields[0].identity.low,
-						name: record._fields[0].properties.name,
-					});
-
-				});
-			})
-			.catch(function(err){
-				console.log(err);
-			});
-		console.log(taskArr[0])
-	res.send({taskArr});
-});
-
-app.get('/projectInfo', pq.getProjects);
-app.post('/project/add', pq.createProject);
-app.post('/project/delete', pq.deleteProject);
-app.post('/task/add', tq.createTask);
-app.post('/getProject', gq.getProjectTasks)
-
-if (process.env.NODE_ENV === 'production') {
-	// Serve any static files
-	app.use(express.static(path.join(__dirname, 'client/build')));
-	  
-	// Handle React routing, return all requests to React app
-	app.get('*', function(req, res) {
-	  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-	});
+  let criticalPath = null;
+  if (req.body.criticalPath === "true") {
+    criticalPath = await db
+      .getSession()
+      .run(
+        `
+      MATCH (a:Task {projId: ${parseInt(
+        req.body.projId
+      )}})-[:DEPENDENCY *..]->(b:Task {projId: ${parseInt(req.body.projId)}})
+      WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
+      MATCH p = (c:Task {projId: ${parseInt(
+        req.body.projId
+      )}})-[:DEPENDENCY *..]->(d:Task {projId: ${parseInt(req.body.projId)}})
+      WHERE duration.inDays(c.startDate, d.endDate) = dur
+      RETURN p
+    `
+      )
+      .then((result) => {
+        res.status(200);
+        if (result.records[0] != null)
+          return { path: result.records[0]._fields[0] };
+        else return { path: null };
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send(err);
+      });
   }
+
+  res.render("GraphMobile", {
+    tasks: taskArr,
+    rels: relArr,
+    graphDirection: direction,
+    criticalPath: JSON.stringify(criticalPath),
+  });
+});
+app.post('/people/getAllUsers',personQueries.getAllUsers);
+app.post('/people/assignPeople',personQueries.assignPeople);
+app.post('/people/updateAssignedPeople',personQueries.updateAssignedPeople);
+app.post('/people/assignedProjectUsers',personQueries.getAssignedProjectUsers);
+app.post('/sendNotification', nh.sendNotification);
+app.post('/retrieveNotifications', nh.retrieveNotifications);
+
+if (process.env.NODE_ENV === "production") {
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, "clientWeb/build")));
+
+  // Handle React routing, return all requests to React app
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "clientWeb/build", "index.html"));
+  });
+}
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
