@@ -21,12 +21,14 @@ class GraphPage extends React.Component {
       nodes:null, 
       links:null,
       allUsers:null, 
-      assignedProjUsers:null
+      assignedProjUsers:null,
+      filterOn:false,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.updateAssignedPeople = this.updateAssignedPeople.bind(this);
+    this.setFilterOn = this.setFilterOn.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +66,10 @@ class GraphPage extends React.Component {
         throw Error(err);
       });
     }
+  }
+
+  setFilterOn(value){
+    this.setState({filterOn: value});
   }
 
   getProjectInfo() {
@@ -179,6 +185,8 @@ class GraphPage extends React.Component {
                 users={this.state.assignedProjUsers} 
                 setTaskInfo={this.setTaskInfo} 
                 links={this.state.links}
+                filterOn={this.state.filterOn}
+                setFilterOn={this.setFilterOn}
                 />
                 :null
               }

@@ -5,7 +5,7 @@ import Autosuggest from 'react-autosuggest';
 export default class FilterComponent extends React.Component{
     constructor(props){
         super(props);
-        this.state = {filterMode: "highlight", filterTaskOption: "taskAll", filterPeopleOption: null, tempSearchValue:'', searchValue: null, filterOn: false}
+        this.state = {filterMode: "highlight", filterTaskOption: "taskAll", filterPeopleOption: null, tempSearchValue:'', searchValue: null}
         this.setSearchValue = this.setSearchValue.bind(this);
         this.setTempSearchValue = this.setTempSearchValue.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -69,7 +69,7 @@ export default class FilterComponent extends React.Component{
         }
 
         this.props.setTaskInfo(tasks, this.filterDependencies(tasks, [...this.props.links]));
-        this.setState({filterOn:true});
+        this.props.setFilterOn(true);
     }
 
     highlightTasks(searchValue){
@@ -107,7 +107,7 @@ export default class FilterComponent extends React.Component{
         }
 
         this.props.setTaskInfo(tasks, this.props.links);
-        this.setState({filterOn:true});
+        this.props.setFilterOn(true);
     }
 
     filterPeople(searchValue){
@@ -161,7 +161,7 @@ export default class FilterComponent extends React.Component{
         }
 
         this.props.setTaskInfo(tasks, this.props.links);
-        this.setState({filterOn:true});
+        this.props.setFilterOn(true);
     }
 
     highlightPeople(searchValue){
@@ -215,7 +215,7 @@ export default class FilterComponent extends React.Component{
         }
 
         this.props.setTaskInfo(tasks, this.filterDependencies(tasks, [...this.props.links]));
-        this.setState({filterOn:true});
+        this.props.setFilterOn(true);
     }
 
     handleSearch(){
@@ -243,13 +243,13 @@ export default class FilterComponent extends React.Component{
     }
 
     render(){
-        if(this.state.filterOn){
+        if(this.props.filterOn){
             return(
                 <Container>
                     <Row>
                         <Col>
                             <Button onClick={()=>{
-                                this.setState({filterOn:false});
+                                this.props.setFilterOn(false);
                                 this.props.setTaskInfo();
                             }}>
                                 Clear Filter
