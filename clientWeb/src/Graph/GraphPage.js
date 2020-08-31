@@ -8,6 +8,7 @@ import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
 import SendTaskNotification from "../Notifications/SendTaskNotification";
+import FilterComponent from "./FilterComponent";
 import $ from "jquery";
 
 class GraphPage extends React.Component {
@@ -172,6 +173,15 @@ class GraphPage extends React.Component {
                   getProjectInfo={this.getProjectInfo}
                 />
               ) : null}
+              {this.state.dependency===null && this.state.task===null ?
+                <FilterComponent 
+                nodes={this.state.nodes} 
+                users={this.state.assignedProjUsers} 
+                setTaskInfo={this.setTaskInfo} 
+                links={this.state.links}
+                />
+                :null
+              }
               <LegendSidebar />
             </Col>
             <Col
