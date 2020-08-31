@@ -70,9 +70,12 @@ class SideBar extends React.Component {
                   </Link>
                 </Col>
                 <Col>
-                  <Link to="/project">
-                    <DeleteProject/>
-                  </Link>
+                  <DeleteProject
+                    project={project}
+                    setProject={(project) => {
+                      this.props.setProject(project);
+                    }}
+                  />
                 </Col>
               </Row>
             </Container>
@@ -144,11 +147,6 @@ class SideBar extends React.Component {
                     >
                      <i className="fa fa-line-chart"></i> Graph
                     </Button>
-                  </Link>
-                </Col>
-                <Col>
-                  <Link to="/project">
-                    <DeleteProject/>
                   </Link>
                 </Col>
               </Row>
