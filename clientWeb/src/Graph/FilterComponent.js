@@ -261,56 +261,59 @@ export default class FilterComponent extends React.Component{
         }
 
         return(
-            <Container className="border">
+            <Container className="p-2">
                 <Row>
                     <Col>
                         <ButtonGroup>
-                            <Button>Filter My Tasks</Button>
-                            <Button>Highlight My tasks</Button>
+                            <Button variant="outline-dark">Filter my tasks</Button>
+                            <Button variant="outline-dark">Highlight my tasks</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>
+                <hr/>
                 <Row>
-                    <Col>
+                    <Col className="p-2">
                         <ToggleButtonGroup name="filterMode" value={this.state.filterMode} defaultValue={this.state.filterMode}>
-                            <ToggleButton value="filter" onClick={()=>this.setState({filterMode:"filter"})}>Filter</ToggleButton>
-                            <ToggleButton value="highlight" onClick={()=>this.setState({filterMode:"highlight"})}>Highlight</ToggleButton>
+                            <ToggleButton variant="secondary" value="filter" onClick={()=>this.setState({filterMode:"filter"})}>Filter</ToggleButton>
+                            <ToggleButton variant="secondary" value="highlight" onClick={()=>this.setState({filterMode:"highlight"})}>Highlight</ToggleButton>
                         </ToggleButtonGroup>
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col className="p-2">
                         <ToggleButtonGroup vertical name="taskFilterOptions" value={this.state.filterTaskOption} defaultValue={this.state.filterTaskOption}>
-                            <ToggleButton value="taskAll" onClick={()=>this.setState({filterTaskOption:"taskAll", filterPeopleOption:null})}>All</ToggleButton>
-                            <ToggleButton value="taskComplete" onClick={()=>this.setState({filterTaskOption:"taskComplete", filterPeopleOption:null})}>Complete</ToggleButton>
-                            <ToggleButton value="taskIncomplete" onClick={()=>this.setState({filterTaskOption:"taskIncomplete", filterPeopleOption:null})}>Incomplete</ToggleButton>
-                            <ToggleButton value="taskIssue" onClick={()=>this.setState({filterTaskOption:"taskIssue", filterPeopleOption:null})}>Issue</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="taskAll" onClick={()=>this.setState({filterTaskOption:"taskAll", filterPeopleOption:null})}>All</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="taskComplete" onClick={()=>this.setState({filterTaskOption:"taskComplete", filterPeopleOption:null})}>Complete</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="taskIncomplete" onClick={()=>this.setState({filterTaskOption:"taskIncomplete", filterPeopleOption:null})}>Incomplete</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="taskIssue" onClick={()=>this.setState({filterTaskOption:"taskIssue", filterPeopleOption:null})}>Issue</ToggleButton>
                         </ToggleButtonGroup>
                     </Col>
-                    <Col>
+                    <Col className="p-2">
                         <ToggleButtonGroup vertical name="peopleFilterOptions" value={this.state.filterPeopleOption} defaultValue={this.state.filterPeopleOption}>
-                            <ToggleButton value="peopleAll" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleAll"})}>All</ToggleButton>
-                            <ToggleButton value="peoplePackMan" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peoplePackMan"})}>Package Managers</ToggleButton>
-                            <ToggleButton value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer"})}>Responsible Persons</ToggleButton>
-                            <ToggleButton value="peopleResources" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResources"})}>Resources</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="peopleAll" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleAll"})}>All</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="peoplePackMan" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peoplePackMan"})}>Package Managers</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer"})}>Responsible Persons</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="peopleResources" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResources"})}>Resources</ToggleButton>
                         </ToggleButtonGroup>
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
-                        <Searchbar 
-                        nodes={this.props.nodes} 
-                        users={this.props.users}
-                        filterTaskOption={this.state.filterTaskOption} 
-                        setSearchValue={this.setSearchValue}
-                        setTempSearchValue={this.setTempSearchValue}
-                        value={this.state.tempSearchValue}
-                        />
-                    </Col>
-                    <Col>
-                        <Button onClick={()=>this.handleSearch()}>Search</Button>
+                    <Col className="text-center">    
+                        <Searchbar bg-light
+                            nodes={this.props.nodes} 
+                            users={this.props.users}
+                            filterTaskOption={this.state.filterTaskOption} 
+                            setSearchValue={this.setSearchValue}
+                            setTempSearchValue={this.setTempSearchValue}
+                            value={this.state.tempSearchValue} />
+                    </Col>   
+                </Row>  
+                <Row>
+                    <Col className="text-center p-2">
+                        <Button variant="dark" onClick={()=>this.handleSearch()}>GO!</Button>
                     </Col>
                 </Row>
+                <hr/>
             </Container>
             
         )
@@ -407,17 +410,25 @@ class Searchbar extends React.Component{
     renderSuggestion(suggestion){
         if(this.props.filterTaskOption !== null){
             return(
-                <div>
-                    {suggestion.name + " " + suggestion.id}
-                </div>
+                <Container>
+                    <Row>
+                        <Col className="bg-white text-center align-items-center border rounded border-dark m-1 p-1" >
+                            {suggestion.name + " " + suggestion.id}
+                        </Col>
+                    </Row>
+                </Container>
             )
         }
 
         else{
             return(
-                <div>
-                    {suggestion.name + " " + suggestion.surname}
-                </div>
+                <Container>
+                    <Row>
+                        <Col className="bg-white text-center align-items-center border rounded border-dark m-1 p-1" >
+                        {suggestion.name + " " + suggestion.surname}
+                        </Col>
+                    </Row>
+                </Container>
             ) 
         }
         
