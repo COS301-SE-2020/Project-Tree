@@ -181,12 +181,13 @@ class GraphPage extends React.Component {
               ) : null}
               {this.state.dependency===null && this.state.task===null ?
                 <FilterComponent 
-                nodes={this.state.nodes} 
-                users={this.state.assignedProjUsers} 
-                setTaskInfo={this.setTaskInfo} 
-                links={this.state.links}
-                filterOn={this.state.filterOn}
-                setFilterOn={this.setFilterOn}
+                  nodes={this.state.nodes} 
+                  users={this.state.assignedProjUsers} 
+                  setTaskInfo={this.setTaskInfo} 
+                  links={this.state.links}
+                  filterOn={this.state.filterOn}
+                  setFilterOn={this.setFilterOn}
+                  user={this.props.user}
                 />
                 :null
               }

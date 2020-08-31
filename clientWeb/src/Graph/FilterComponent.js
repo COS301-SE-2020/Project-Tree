@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Container, Row, Col, ToggleButtonGroup, ToggleButton, ButtonGroup } from "react-bootstrap";
 import Autosuggest from 'react-autosuggest';
+import {isEmpty} from 'lodash'
 
 export default class FilterComponent extends React.Component{
     constructor(props){
@@ -13,10 +14,11 @@ export default class FilterComponent extends React.Component{
         this.highlightTasks = this.highlightTasks.bind(this);
         this.filterPeople = this.filterPeople.bind(this);
         this.highlightPeople = this.highlightPeople.bind(this);
+        this.quickSearch = this.quickSearch.bind(this);
     }
 
     setTempSearchValue(value){
-        this.setState({tempSearchValue:value})
+        this.setState({tempSearchValue:value});
     }
 
     setSearchValue(value){
@@ -35,7 +37,7 @@ export default class FilterComponent extends React.Component{
 
     filterDependencies(tasks, dependencies){
         dependencies = dependencies.filter((dependency)=>{
-            return this.checkDependency(tasks, dependency.source) && this.checkDependency(tasks, dependency.target)
+            return this.checkDependency(tasks, dependency.source) && this.checkDependency(tasks, dependency.target);
         })
 
         return dependencies;
@@ -105,6 +107,8 @@ export default class FilterComponent extends React.Component{
                 if(tempTasks[y].id === tasks[z].id) tasks[z].highlighted = true;
             }
         }
+
+        if(isEmpty(tasks)){console.log('hello')}
 
         this.props.setTaskInfo(tasks, this.props.links);
         this.props.setFilterOn(true);
@@ -218,6 +222,16 @@ export default class FilterComponent extends React.Component{
         this.props.setFilterOn(true);
     }
 
+    quickSearch(mode){
+        if(mode === "filter"){
+            this.filterPeople(this.props.user);
+        }
+
+        else{
+            this.highlightPeople(this.props.user);
+        }
+    }
+
     handleSearch(){
         let searchValue = this.state.searchValue;
 
@@ -265,8 +279,8 @@ export default class FilterComponent extends React.Component{
                 <Row>
                     <Col>
                         <ButtonGroup>
-                            <Button>Filter My Tasks</Button>
-                            <Button>Highlight My tasks</Button>
+                            <Button onClick={()=>this.quickSearch("filter")}>Filter My Tasks</Button>
+                            <Button onClick={()=>this.quickSearch("highlight")}>Highlight My tasks</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>
