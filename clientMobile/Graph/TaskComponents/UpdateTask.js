@@ -96,7 +96,7 @@ class UpdateTaskForm extends Component {
       endDate: new Date(eYear + '-' + eMonth + '-' + eDay),
       taskDuration: this.props.task.duration,
       startDatePickerVisible: false,
-      people: this.props.allUsers,
+      people: [...this.props.allUsers],
       assignedProjUsers: [...this.props.assignedProjUsers],
       pacManSearchTerm: "",
       resourcesSearchTerm: "",
@@ -522,7 +522,7 @@ class UpdateTaskForm extends Component {
                   );
                 })}
               </View>
-            ) : null}
+            ) : <View style={{flex:0.5}}></View>}
             <View style={{flex:0.5}}>
               {this.state.pacManList.map((person) => {
                 return (
@@ -561,7 +561,7 @@ class UpdateTaskForm extends Component {
                   );
                 })}
               </View>
-            ) : null}
+            ) : <View style={{flex:0.5}}></View>}
             <View style={{flex:0.5}}>
               {this.state.resPersonList.map((person) => {
                 return (
@@ -600,7 +600,7 @@ class UpdateTaskForm extends Component {
                   );
                 })}
               </View>
-            ) : null}
+            ) : <View style={{flex:0.5}}></View>}
             <View style={{flex:0.5}}>
               {this.state.resourcesList.map((person) => {
                 return (
