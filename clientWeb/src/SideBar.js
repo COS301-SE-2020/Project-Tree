@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./App.scss";
-
+import DeleteProject from "./Project/DeleteProject";
 import CreateProject from "./Project/CreateProject";
 
 class SideBar extends React.Component {
@@ -33,26 +33,27 @@ class SideBar extends React.Component {
                 <Col>
                   <Link to="/project">
                     <Button
-                      size="sm"
+                      size="md"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
                         color: "black",
                         fontSize: "15px",
+                        width: "90px"
                       }}
                       onClick={() => {
                         this.props.setProject(project);
                         this.props.closeSideBar(true);
                       }}
                     >
-                      Project Info
+                     <i className="	fa fa-info-circle"></i> Info
                     </Button>
                   </Link>
                 </Col>
                 <Col>
                   <Link to="/graph">
                     <Button
-                      size="sm"
+                      size="md"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
@@ -64,8 +65,13 @@ class SideBar extends React.Component {
                         this.props.closeSideBar(true);
                       }}
                     >
-                      Project Graph
+                     <i className="fa fa-line-chart"></i> Graph
                     </Button>
+                  </Link>
+                </Col>
+                <Col>
+                  <Link to="/project">
+                    <DeleteProject/>
                   </Link>
                 </Col>
               </Row>
@@ -104,26 +110,27 @@ class SideBar extends React.Component {
                 <Col>
                   <Link to="/project">
                     <Button
-                      size="sm"
+                      size="md"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
                         color: "black",
                         fontSize: "15px",
+                        width: "90px"
                       }}
                       onClick={() => {
                         this.props.setProject(project);
                         this.props.closeSideBar(true);
                       }}
                     >
-                      Project Info
+                     <i className="	fa fa-info-circle"></i> Info
                     </Button>
                   </Link>
                 </Col>
                 <Col>
                   <Link to="/graph">
                     <Button
-                      size="sm"
+                      size="md"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
@@ -135,8 +142,13 @@ class SideBar extends React.Component {
                         this.props.closeSideBar(true);
                       }}
                     >
-                      Project Graph
+                     <i className="fa fa-line-chart"></i> Graph
                     </Button>
+                  </Link>
+                </Col>
+                <Col>
+                  <Link to="/project">
+                    <DeleteProject/>
                   </Link>
                 </Col>
               </Row>

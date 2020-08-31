@@ -43,17 +43,15 @@ class CreateProject extends React.Component {
       <React.Fragment>
         <Button
           className="my-2"
-          style={{ borderColor: "#EEBB4D", backgroundColor: "#EEBB4D" }}
+          style={{ borderColor: "#EEBB4D", backgroundColor: "#EEBB4D", width: "170px", color: "black"}}
           onClick={() => {
             this.showModal();
           }}
-          block
-          size="sm"
+          size="md"
         >
           <i
-            className="fa fa-plus"
-            style={{ fontSize: "30px", color: "#184D47" }}
-          ></i>
+            className="fa fa-plus" 
+          ></i>  Create Project{" "}
         </Button>
         <Modal
           show={this.state.show}

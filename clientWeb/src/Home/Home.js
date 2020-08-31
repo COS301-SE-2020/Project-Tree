@@ -34,17 +34,14 @@ class Home extends React.Component {
             <Col md={10} lg={8} xl={6} className="text-center">
               {this.props.ownedProjects.length !== 0 ||
               this.props.otherProjects.length !== 0 ? (
-                <Container>
+                <Container className="text-dark">
                   <Row>
-                    <Col>
-                      <h5>Create Another Project</h5>
-                    </Col>
-                    <Col>
-                      <h5>Open a Project</h5>
-                    </Col>
-                  </Row>
+                  <Col>
+                      <h5>Start Your project planning journey</h5>
+                  </Col>
+                </Row>
                   <Row>
-                    <Col>
+                    <Col className="text-right">
                       <CreateProject
                         setProject={(project) => {
                           this.props.setProject(project);
@@ -61,15 +58,16 @@ class Home extends React.Component {
                           style={{
                             borderColor: "#EEBB4D",
                             backgroundColor: "#EEBB4D",
+                            width: "170px",
+                            color: "black",
                           }}
                           onClick={() => this.props.toggleSideBar()}
                           block
-                          size="sm"
+                          size="md"
                         >
                           <i
-                            className="fa fa-navicon text-dark"
-                            style={{ fontSize: "30px" }}
-                          ></i>
+                            className="fa fa-navicon"
+                          ></i> Open Project {" "}
                         </Button>
                       ) : (
                         <Button
@@ -77,18 +75,18 @@ class Home extends React.Component {
                           style={{
                             borderColor: "#EEBB4D",
                             backgroundColor: "#EEBB4D",
+                            width: "170px",
+                            color: "black",
                           }}
                           onClick={() => this.props.toggleSideBar()}
                           block
-                          size="sm"
+                          size="md"
                         >
                           <i
-                            className="fa fa-navicon text-dark"
-                            style={{
-                              fontSize: "30px",
-                              transform: "rotate(90deg)",
+                            className="fa fa-navicon" style={{
+                              transform: "rotate(90deg)"
                             }}
-                          ></i>
+                          ></i> Open Project {" "}
                         </Button>
                       )}
                     </Col>
@@ -98,7 +96,7 @@ class Home extends React.Component {
                 <Container>
                   <Row>
                     <Col>
-                      <h5>Start Your Project planning journey</h5>
+                        <h5>Start Your project planning journey</h5>
                     </Col>
                   </Row>
                   <Row>

@@ -38,12 +38,12 @@ class DeleteProject extends React.Component {
       <React.Fragment>
         <Button
           className="btn-danger"
-          size="lg"
+          size="md"
           onClick={() => {
             this.showModal();
           }}
         >
-          <i className="fa fa-trash"></i>
+          <i className="fa fa-trash"></i> Delete
         </Button>
         <Modal
           show={this.state.show}
