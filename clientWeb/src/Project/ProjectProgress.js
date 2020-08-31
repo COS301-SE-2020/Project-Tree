@@ -8,9 +8,8 @@ class ProjectProgress extends React.Component {
       percentage = 0,
       color = "success";
     this.props.tasks.forEach((task) => {
-      if (task.progress === "Complete")
-        completeDur = completeDur + task.duration;
-      totalDur += task.duration;
+      completeDur += task.progress;
+      totalDur += 100;
     });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
 
@@ -38,13 +37,11 @@ class ProjectProgress extends React.Component {
     )
       this.props.criticalPath.path.segments.forEach((el, i) => {
         if (i === 0) {
-          if (el.start.properties.progress === "Complete")
-            completeDur = completeDur + el.start.properties.duration.low;
-          totalDur += el.start.properties.duration.low;
+          completeDur += el.start.properties.progress.low;
+          totalDur += 100;
         }
-        if (el.end.properties.progress === "Complete")
-          completeDur = completeDur + el.end.properties.duration.low;
-        totalDur += el.end.properties.duration.low;
+        completeDur += el.end.properties.progress.low;
+        totalDur += 100;
       });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
 

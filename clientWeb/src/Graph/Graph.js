@@ -34,7 +34,7 @@ function makeElement(node, criticalPathNodes) {
   });
 
   var statusColor = "#fff";
-  if (node.progress === "Incomplete") {
+  if (node.type === "Incomplete") {
     let today = new Date();
     if (parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)) {
       if (parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)) {
@@ -55,12 +55,12 @@ function makeElement(node, criticalPathNodes) {
     } else {
       statusColor = "#ff6961";
     }
-  } else if (node.progress === "Complete") {
+  } else if (node.type === "Complete") {
     statusColor = "#77dd77";
-  } else if (node.progress === "Issue") {
+  } else if (node.type === "Issue") {
     statusColor = "#ffae42";
   }
-  if (node.progress === "Incomplete") {
+  if (node.type === "Incomplete") {
     let today = new Date();
     if (parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)) {
       if (parseInt(today.getMonth() + 1) <= parseInt(node.endDate.month.low)) {
@@ -77,9 +77,9 @@ function makeElement(node, criticalPathNodes) {
     } else {
       statusColor = "#ff6961";
     }
-  } else if (node.progress === "Complete") {
+  } else if (node.type === "Complete") {
     statusColor = "#77dd77";
-  } else if (node.progress === "Issue") {
+  } else if (node.type === "Issue") {
     statusColor = "#ffae42";
   }
   var borderColor = "#000";
@@ -214,7 +214,6 @@ class Graph extends React.Component {
   }
 
   handleClick(clickedNode) {
-    console.log(clickedNode.model.id);
     if (clickedNode.model.attributes.attrs.type === "node") {
       this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
     } else if (clickedNode.model.attributes.attrs.type === "link") {

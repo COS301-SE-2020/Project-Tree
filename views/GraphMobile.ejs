@@ -190,7 +190,7 @@
             });
 
             var statusColor = '#fff'
-            if(node.progress === "Incomplete"){
+            if(node.type === "Incomplete"){
                 let today = new Date();
                 if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
                     if(parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)){
@@ -211,10 +211,10 @@
                     statusColor = '#ff6961'
                 }
             }
-            else if(node.progress === "Complete"){
+            else if(node.type === "Complete"){
                 statusColor = '#77dd77'
             }
-            else if(node.progress === "Issue"){
+            else if(node.type === "Issue"){
                 statusColor = '#ffae42'
             }
 

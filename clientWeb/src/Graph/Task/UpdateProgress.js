@@ -1,18 +1,35 @@
 import React from "react";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, InputGroup } from "react-bootstrap";
+import $ from "jquery";
+
+function stringifyFormData(fd) {
+  const data = {};
+  for (let key of fd.keys()) {
+    data[key] = fd.get(key);
+  }
+  return JSON.stringify(data, null, 2);
+}
 
 class UpdateProgress extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       Show: false,
-      id: this.props.task.id,
-      progress: this.props.task.progress,
+      task: this.props.task,
+      issue: this.props.task.type === "Issue",
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.setProgress = this.setProgress.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.task !== prevProps.task) {
+      this.setState({ 
+        task: this.props.task,
+        issue: this.props.task.type === "Issue",
+      });
+    }
   }
 
   showModal() {
@@ -23,40 +40,27 @@ class UpdateProgress extends React.Component {
     this.setState({ Show: false });
   }
 
-  setProgress(prog) {
-    this.setState({ progress: prog });
-  }
-
-  refreshState() {
-    this.setState({
-      id: this.props.task.id,
-      progress: this.props.task.progress,
-    });
-  }
-
   async handleSubmit(event) {
     event.preventDefault();
+    let type = "Incomplete"
+    if (this.state.issue === true) type = "Issue";
+    if (parseInt(this.state.task.progress) === 100) type = "Complete";
+
     let data = {
-      id: this.state.id,
-      progress: this.state.progress,
-    };
-
-    await fetch("/task/progress", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      id: this.state.task.id,
+      progress: this.state.task.progress,
+      type: type,
+    }
+    $.post("/task/progress", data, (response) => {
+      this.setState({ show: false });
+      this.props.toggleSidebar(null, null);
+      this.props.setTaskInfo();
+    }).fail(() => {
+      alert("Unable to update task");
     });
-
-    this.props.toggleSidebar(null, null);
-    this.props.setTaskInfo();
   }
 
   render() {
-    if (this.state.id !== this.props.task.id) this.refreshState();
-
     return (
       <React.Fragment>
         <Button variant="outline-dark" onClick={this.showModal}>
@@ -71,28 +75,59 @@ class UpdateProgress extends React.Component {
               <Modal.Title>Update Progress</Modal.Title>
             </Modal.Header>
             <Modal.Body className="text-center">
-              <Button
-                className="m-2"
-                variant="secondary"
-                onClick={() => this.setProgress("Complete")}
-              >
-                Complete
-              </Button>
-              <Button
-                className="m-2"
-                variant="secondary"
-                onClick={() => this.setProgress("Issue")}
-              >
-                Issue
-              </Button>
-              <Button
-                className="m-2"
-                variant="secondary"
-                onClick={() => this.setProgress("Incomplete")}
-              >
-                Incomplete
-              </Button>
-              <br />
+              <Form.Group>
+                <InputGroup>
+                  <Form.Label>Progress</Form.Label>
+                  <Form.Control
+                    required
+                    type="number"
+                    name="progress"
+                    min={0}
+                    max={100}
+                    value={this.state.task.progress}
+                    onChange={(e) => {
+                      if(parseInt(e.target.value) === 100){
+                        this.setState({ issue: false });
+                      }
+                      let task = this.state.task;
+                      task.progress = e.target.value;
+                      this.setState({ task: task });
+                      this.value = this.state.task.progress;
+                    }}
+                  />
+                  <Form.Control 
+                    type="range"
+                    value={this.state.task.progress}
+                    onChange={(e) => {
+                      if(parseInt(e.target.value) === 100){
+                        this.setState({ issue: false });
+                      }
+                      let task = this.state.task;
+                      task.progress = e.target.value;
+                      this.setState({ task: task });
+                      this.value = this.state.task.progress;
+                    }}
+                    />
+                </InputGroup>
+              </Form.Group>
+              
+              <Form.Group>
+                <Form.Check 
+                  type="checkbox" 
+                  label="There is an issue with the task" 
+                  checked={this.state.issue}
+                  onChange={(e) => {
+                    if(parseInt(this.state.task.progress) === 100){
+                      this.setState({ issue: false });
+                      this.checked = false;
+                      alert("you cant specify that a complete task has an issue");
+                    } else {
+                      this.setState({ issue: e.target.checked });
+                      this.checked = this.state.issue;
+                    }
+                  }}
+                />
+              </Form.Group>
             </Modal.Body>
             <Modal.Footer
               style={{ backgroundColor: "#184D47", color: "white" }}

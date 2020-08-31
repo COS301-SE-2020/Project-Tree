@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { ProgressBar, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
@@ -274,6 +274,11 @@ class TaskSidebar extends React.Component {
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
 
+    
+    let progressColor = "success"
+    if (this.props.task.progress < 33) progressColor = "danger";
+    else if (this.props.task.progress < 66) progressColor = "warning";
+
     return (
       <React.Fragment>
         <Container
@@ -315,6 +320,15 @@ class TaskSidebar extends React.Component {
           <Row className="text-center p-1">
             <Col className="text-center">
               Duration: {this.props.task.duration} days
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <ProgressBar
+                variant={progressColor}
+                now={this.props.task.progress}
+                label={`${Math.round(this.props.task.progress)}% Complete`}
+              />
             </Col>
           </Row>
           {this.props.userPermission["update"] === true ? (

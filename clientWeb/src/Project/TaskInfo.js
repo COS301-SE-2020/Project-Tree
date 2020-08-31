@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Container, Row, Col } from "react-bootstrap";
+import { ProgressBar, Form, Container, Row, Col } from "react-bootstrap";
 import "./Project.css";
 
 class TaskInfo extends React.Component {
@@ -21,7 +21,8 @@ class TaskInfo extends React.Component {
           list.push({
             name: el.start.properties.name,
             description: el.start.properties.description,
-            progress: el.start.properties.progress,
+            type: el.start.properties.type,
+            progress: el.start.properties.progress.low,
             startDate: el.start.properties.startDate,
             endDate: el.start.properties.endDate,
             duration: el.start.properties.duration.low,
@@ -30,7 +31,8 @@ class TaskInfo extends React.Component {
         list.push({
           name: el.end.properties.name,
           description: el.end.properties.description,
-          progress: el.end.properties.progress,
+          type: el.end.properties.type,
+          progress: el.end.properties.progress.low,
           startDate: el.end.properties.startDate,
           endDate: el.end.properties.endDate,
           duration: el.end.properties.duration.low,
@@ -46,7 +48,7 @@ class TaskInfo extends React.Component {
     let list = [];
     if (this.props.tasks !== []) {
       this.props.tasks.forEach((el) => {
-        if (el.progress !== "Complete") {
+        if (el.type !== "Complete") {
           let today = new Date();
           if (parseInt(today.getFullYear()) <= parseInt(el.endDate.year.low)) {
             if (
@@ -86,16 +88,16 @@ class TaskInfo extends React.Component {
         this.props.tasks.forEach((el) => {
           switch (this.state.taskType) {
             case "Complete":
-              if (el.progress === "Complete") {
+              if (el.type === "Complete") {
                 list.push(el);
               }
               break;
             case "Incomplete":
-              if (el.progress === "Incomplete") {
+              if (el.type === "Incomplete") {
                 list.push(el);
               }
             case "Issue":
-              if (el.progress === "Issue") {
+              if (el.type === "Issue") {
                 list.push(el);
               }
               break;
@@ -123,7 +125,7 @@ class TaskInfo extends React.Component {
           eday = eday < 10 ? `0${eday}` : `${eday}`;
 
           let color;
-          switch (el.progress) {
+          switch (el.type) {
             case "Complete":
               color = "#77dd77";
               break;
@@ -159,6 +161,9 @@ class TaskInfo extends React.Component {
               } else color = "#ff6961";
               break;
           }
+          let progressColor = "success"
+          if (el.progress < 33) progressColor = "danger";
+          else if (el.progress < 66) progressColor = "warning";
           list[i] = (
             <Col
               key={i}
@@ -192,6 +197,15 @@ class TaskInfo extends React.Component {
               </Row>
               <Row>
                 <Col className="text-center">Duration: {el.duration}</Col>
+              </Row>
+              <Row>
+                <Col>
+                  <ProgressBar
+                    variant={progressColor}
+                    now={el.progress}
+                    label={`${Math.round(el.progress)}% Complete`}
+                  />
+                </Col>
               </Row>
             </Col>
           );

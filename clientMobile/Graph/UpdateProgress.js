@@ -5,6 +5,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Slider,
+  Switch,
 } from 'react-native';
 import {
   Icon
@@ -57,48 +59,36 @@ class UpdateProgress extends Component {
 class UpdateProgressModal extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       id: this.props.task.id,
-      progress: this.props.task.progress,
-      selectedIndex: null,
+      progress: this.props.task.progress.low,
+      type: this.props.task.type,
+      issue: this.props.task.type === "Issue",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.setProgress = this.setProgress.bind(this);
-    this.updateIndex = this.updateIndex.bind(this);
   }
 
-  updateIndex(selectedIndex) {
-    if (selectedIndex === 0) {
-      this.setState({progress: 'Incomplete', selectedIndex: selectedIndex});
-    }
-    if (selectedIndex === 1) {
-      this.setState({progress: 'Issue', selectedIndex: selectedIndex});
-    }
-    if (selectedIndex === 2) {
-      this.setState({progress: 'Complete', selectedIndex: selectedIndex});
-    }
-  }
-
-  setProgress(prog) {
-    this.setState({progress: prog});
-  }
-
-  componentDidMount() {
-    if (this.props.task.progress === 'Incomplete') {
-      this.setState({selectedIndex: 0});
-    } else if (this.props.task.progress === 'Issue') {
-      this.setState({selectedIndex: 1});
-    } else {
-      this.setState({selectedIndex: 2});
+  componentDidUpdate(prevProps) {
+    if (this.props.task !== prevProps.task) {
+      this.setState({ 
+        id: this.props.task.id,
+        progress: this.props.task.progress.low,
+        type: this.pprops.tasks.type,
+        issue: this.props.task.type === "Issue",
+      });
     }
   }
 
   async handleSubmit() {
+    let type = "Incomplete"
+    if (this.state.issue === true) type = "Issue";
+    if (parseInt(this.state.progress) === 100) type = "Complete";
+    
     let data = {
       id: this.state.id,
       progress: this.state.progress,
-    };
+      type: type,
+    }
 
     await fetch('http://projecttree.herokuapp.com/task/progress', {
       method: 'POST',
@@ -113,7 +103,8 @@ class UpdateProgressModal extends Component {
     let nodes = projInfo.nodes;
     for (let x = 0; x < nodes.length; x++) {
       if (nodes[x].id === this.state.id) {
-        nodes[x].progress = this.state.progress;
+        nodes[x].type = this.state.type;
+        nodes[x].progress.low = this.state.progress;
       }
     }
 
@@ -122,28 +113,45 @@ class UpdateProgressModal extends Component {
   }
 
   render() {
-    const component1 = () => <Text>Incomplete</Text>;
-    const component2 = () => <Text>Issue</Text>;
-    const component3 = () => <Text>Complete</Text>;
-    const {selectedIndex} = this.state;
-    const buttons = [
-      {element: component1},
-      {element: component2},
-      {element: component3},
-    ];
     return (
       <View style={{flex: 3}}>
         <View style={{flex: 1}}>
-          <ButtonGroup
-            onPress={this.updateIndex}
-            selectedIndex={selectedIndex}
-            buttons={buttons}
-            containerStyle={{height: 40}}
-            selectedButtonStyle={{backgroundColor: '#EEBB4D'}}
+          <Text style={styles.text}>{String(this.state.progress)}</Text>
+          <Slider
+            step={1}
+            maximumValue={100}
+            value={this.state.progress}
+            onValueChange={(value) => {
+              if(parseInt(value) === 100){
+                this.setState({ issue: false });
+              }
+              this.setState({ progress: value });
+              this.value = this.state.progress;
+            }}
           />
         </View>
 
-        <View styles={{flex: 1}}>
+        <View style={{flex: 1}}>
+          <Text style={styles.text}>Does your Task have any issues</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={this.state.issue ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={(value) => {
+              if(parseInt(this.state.progress) === 100){
+                this.setState({ issue: false });
+                this.value = false;
+                alert("you cant specify that a complete task has an issue");
+              } else {
+                this.setState({ issue: value });
+                this.value = this.state.issue;
+              }
+            }}
+            value={this.state.issue}
+          />
+        </View>
+
+        <View style={{flex: 1}}>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={this.handleSubmit}>
