@@ -1,12 +1,12 @@
 import React from "react";
 import { Button, Container, Row, Col, ToggleButtonGroup, ToggleButton, ButtonGroup } from "react-bootstrap";
 import Autosuggest from 'react-autosuggest';
-import {isEmpty} from 'lodash'
+import "./FilterComponent.css";
 
 export default class FilterComponent extends React.Component{
     constructor(props){
         super(props);
-        this.state = {filterMode: "highlight", filterTaskOption: "taskAll", filterPeopleOption: null, tempSearchValue:'', searchValue: null}
+        this.state = {filterMode: "highlight", filterTaskOption: "taskAll", filterPeopleOption: null, tempSearchValue:'', searchValue: null, error:false}
         this.setSearchValue = this.setSearchValue.bind(this);
         this.setTempSearchValue = this.setTempSearchValue.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -18,11 +18,11 @@ export default class FilterComponent extends React.Component{
     }
 
     setTempSearchValue(value){
-        this.setState({tempSearchValue:value});
+        this.setState({tempSearchValue:value, error:false});
     }
 
     setSearchValue(value){
-        this.setState({searchValue:value});
+        this.setState({searchValue:value, error:false});
     }
 
     checkDependency(tasks, dependency){
@@ -70,6 +70,12 @@ export default class FilterComponent extends React.Component{
             })
         }
 
+        
+        if(tasks.length === 0){
+            this.setState({searchValue:null, tempSearchValue:'', error:true});
+            return;
+        }
+
         this.props.setTaskInfo(tasks, this.filterDependencies(tasks, [...this.props.links]));
         this.props.setFilterOn(true);
     }
@@ -102,13 +108,20 @@ export default class FilterComponent extends React.Component{
             })
         }
 
+        let searchCheck = false;
         for(var y=0; y<tempTasks.length; y++){
             for(var z=0; z<tasks.length; z++){
-                if(tempTasks[y].id === tasks[z].id) tasks[z].highlighted = true;
+                if(tempTasks[y].id === tasks[z].id){
+                    tasks[z].highlighted = true;
+                    searchCheck = true;
+                } 
             }
         }
 
-        if(isEmpty(tasks)){console.log('hello')}
+        if(!searchCheck){
+            this.setState({searchValue:null, tempSearchValue:'', error:true});
+            return;
+        }
 
         this.props.setTaskInfo(tasks, this.props.links);
         this.props.setFilterOn(true);
@@ -164,7 +177,12 @@ export default class FilterComponent extends React.Component{
             }
         }
 
-        this.props.setTaskInfo(tasks, this.props.links);
+        if(tasks.length === 0){
+            this.setState({searchValue:null, tempSearchValue:'', error:true});
+            return;
+        }
+
+        this.props.setTaskInfo(tasks, this.filterDependencies(tasks, [...this.props.links]));
         this.props.setFilterOn(true);
     }
 
@@ -210,15 +228,22 @@ export default class FilterComponent extends React.Component{
             return user[0].id === userId;
         })
 
+        let searchCheck = false;
         for(x=0; x<filteredUsers.length; x++){
             for(y=0; y<tasks.length; y++){
                 if(filteredUsers[x][1].end === tasks[y].id){
                     tasks[y].highlighted = true;
+                    searchCheck = true;
                 }
             }
         }
 
-        this.props.setTaskInfo(tasks, this.filterDependencies(tasks, [...this.props.links]));
+        if(!searchCheck){
+            this.setState({searchValue:null, tempSearchValue:'', error:true});
+            return;
+        }
+
+        this.props.setTaskInfo(tasks, this.props.links);
         this.props.setFilterOn(true);
     }
 
@@ -288,29 +313,37 @@ export default class FilterComponent extends React.Component{
                 <Row>
                     <Col className="p-2">
                         <ToggleButtonGroup name="filterMode" value={this.state.filterMode} defaultValue={this.state.filterMode}>
-                            <ToggleButton variant="secondary" value="filter" onClick={()=>this.setState({filterMode:"filter"})}>Filter</ToggleButton>
-                            <ToggleButton variant="secondary" value="highlight" onClick={()=>this.setState({filterMode:"highlight"})}>Highlight</ToggleButton>
+                            <ToggleButton variant="secondary" value="filter" onClick={()=>this.setState({filterMode:"filter", error:false})}>Filter</ToggleButton>
+                            <ToggleButton variant="secondary" value="highlight" onClick={()=>this.setState({filterMode:"highlight", error:false})}>Highlight</ToggleButton>
                         </ToggleButtonGroup>
                     </Col>
                 </Row>
                 <Row>
                     <Col className="p-2">
                         <ToggleButtonGroup vertical name="taskFilterOptions" value={this.state.filterTaskOption} defaultValue={this.state.filterTaskOption}>
-                            <ToggleButton variant="outline-secondary" value="taskAll" onClick={()=>this.setState({filterTaskOption:"taskAll", filterPeopleOption:null})}>All</ToggleButton>
-                            <ToggleButton variant="outline-secondary" value="taskComplete" onClick={()=>this.setState({filterTaskOption:"taskComplete", filterPeopleOption:null})}>Complete</ToggleButton>
-                            <ToggleButton variant="outline-secondary" value="taskIncomplete" onClick={()=>this.setState({filterTaskOption:"taskIncomplete", filterPeopleOption:null})}>Incomplete</ToggleButton>
-                            <ToggleButton variant="outline-secondary" value="taskIssue" onClick={()=>this.setState({filterTaskOption:"taskIssue", filterPeopleOption:null})}>Issue</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="taskAll" onClick={()=>this.setState({filterTaskOption:"taskAll", filterPeopleOption:null, error:false})}>All</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="taskComplete" onClick={()=>this.setState({filterTaskOption:"taskComplete", filterPeopleOption:null, error:false})}>Complete</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="taskIncomplete" onClick={()=>this.setState({filterTaskOption:"taskIncomplete", filterPeopleOption:null, error:false})}>Incomplete</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="taskIssue" onClick={()=>this.setState({filterTaskOption:"taskIssue", filterPeopleOption:null, error:false})}>Issue</ToggleButton>
                         </ToggleButtonGroup>
                     </Col>
                     <Col className="p-2">
                         <ToggleButtonGroup vertical name="peopleFilterOptions" value={this.state.filterPeopleOption} defaultValue={this.state.filterPeopleOption}>
-                            <ToggleButton variant="outline-secondary" value="peopleAll" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleAll"})}>All</ToggleButton>
-                            <ToggleButton variant="outline-secondary" value="peoplePackMan" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peoplePackMan"})}>Package Managers</ToggleButton>
-                            <ToggleButton variant="outline-secondary" value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer"})}>Responsible Persons</ToggleButton>
-                            <ToggleButton variant="outline-secondary" value="peopleResources" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResources"})}>Resources</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="peopleAll" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleAll", errror:false})}>All</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="peoplePackMan" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peoplePackMan", error:false})}>Package Managers</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer", error:false})}>Responsible Persons</ToggleButton>
+                            <ToggleButton variant="outline-secondary" value="peopleResources" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResources", error:false})}>Resources</ToggleButton>
                         </ToggleButtonGroup>
                     </Col>
                 </Row>
+                {this.state.error ?
+                    <Row>
+                        <Col>
+                            <p>Your search didn't return anything</p>
+                        </Col>
+                    </Row>
+                    : null
+                } 
                 <Row>
                     <Col className="text-center">    
                         <Searchbar bg-light
@@ -319,9 +352,10 @@ export default class FilterComponent extends React.Component{
                             filterTaskOption={this.state.filterTaskOption} 
                             setSearchValue={this.setSearchValue}
                             setTempSearchValue={this.setTempSearchValue}
-                            value={this.state.tempSearchValue} />
+                            value={this.state.tempSearchValue} 
+                        />
                     </Col>   
-                </Row>  
+                </Row> 
                 <Row>
                     <Col className="text-center p-2">
                         <Button variant="dark" onClick={()=>this.handleSearch()}>GO!</Button>
@@ -439,7 +473,7 @@ class Searchbar extends React.Component{
                 <Container>
                     <Row>
                         <Col className="bg-white text-center align-items-center border rounded border-dark m-1 p-1" >
-                        {suggestion.name + " " + suggestion.surname}
+                            {suggestion.name + " " + suggestion.surname}
                         </Col>
                     </Row>
                 </Container>

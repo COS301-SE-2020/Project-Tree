@@ -88,7 +88,7 @@ function makeElement(node, criticalPathNodes) {
   var borderWidth = 2;
   if (criticalPathNodes.includes(node.id)) borderColor = "#0275d8";
   if(node.highlighted !== undefined){
-    borderColor = "purple";
+    borderColor = "orange";
     borderWidth = 4;
   } 
 
