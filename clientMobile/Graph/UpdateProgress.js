@@ -90,9 +90,6 @@ class UpdateProgressModal extends Component {
       type: type,
     }
 
-    console.log(data);
-    console.log(JSON.stringify(data));
-
     await fetch('http://projecttree.herokuapp.com/task/progress', {
       method: 'POST',
       headers: {
