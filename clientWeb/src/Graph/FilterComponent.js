@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Row, Col, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Button, Container, Row, Col, ToggleButtonGroup, ToggleButton, ButtonGroup } from "react-bootstrap";
 import Autosuggest from 'react-autosuggest';
 
 export default class FilterComponent extends React.Component{
@@ -264,11 +264,18 @@ export default class FilterComponent extends React.Component{
             <Container className="border">
                 <Row>
                     <Col>
+                        <ButtonGroup>
+                            <Button>Filter My Tasks</Button>
+                            <Button>Highlight My tasks</Button>
+                        </ButtonGroup>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
                         <ToggleButtonGroup name="filterMode" value={this.state.filterMode} defaultValue={this.state.filterMode}>
                             <ToggleButton value="filter" onClick={()=>this.setState({filterMode:"filter"})}>Filter</ToggleButton>
                             <ToggleButton value="highlight" onClick={()=>this.setState({filterMode:"highlight"})}>Highlight</ToggleButton>
                         </ToggleButtonGroup>
-                        
                     </Col>
                 </Row>
                 <Row>
