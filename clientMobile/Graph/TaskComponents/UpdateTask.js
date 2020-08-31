@@ -407,7 +407,7 @@ class UpdateTaskForm extends Component {
           timestamp: timestamp,
           projName: this.props.project.name,
           projID: this.props.project.id,
-          taskName: projectData.ut_name,
+          taskName: this.state.taskName,
           type: "auto",
           mode: 2,
         }

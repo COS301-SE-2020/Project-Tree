@@ -16,7 +16,7 @@ async function sendNotification(req, res) {
     data.recipients = await getProjectMembers(data.projID);
   }
 
-  if (data.type === "task") {
+  if (data.type === "task" && data.mobile === undefined) {
     data.recipients = JSON.parse(data.recipients);
   }
 

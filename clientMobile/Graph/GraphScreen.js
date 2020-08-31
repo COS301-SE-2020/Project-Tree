@@ -140,6 +140,7 @@ class Graph extends Component {
               reloadKey={this.state.key}
               reload={this.reload}
               displayCriticalPath={this.state.displayCriticalPath}
+              user={this.props.user}
             />
           </React.Fragment>
         </Drawer>
@@ -320,6 +321,7 @@ class GraphScreen extends Component {
           setProjectInfo={this.setProjectInfo}
           assignedProjUsers={this.state.assignedProjUsers}
           allUsers={this.state.allUsers}
+          user={this.props.user}
         />
         <DependencyModal
           project={this.props.project}

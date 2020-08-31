@@ -280,7 +280,7 @@ export default class App extends Component {
             />
             <Tabs.Screen
               name="Project Tree"
-              children={() => <Graph project={this.state.selectedProject} />}
+              children={() => <Graph project={this.state.selectedProject} user={this.state.userInfo}/>}
               options={{
                 tabBarIcon: ({focused, color}) => (
                   <EntypoTabBarIcon

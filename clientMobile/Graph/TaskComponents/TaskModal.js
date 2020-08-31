@@ -13,6 +13,7 @@ import {
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
 import UpdateProgress from '../UpdateProgress';
+import SendTaskNotification from '../../NoticeBoard/TaskWideNotification'
 
 let taskPacMans = null;
 let taskResPersons = null;
@@ -203,6 +204,18 @@ class TaskModal extends Component {
                     toggleVisibility={this.toggleVisibility}
                     getProjectInfo={this.props.getProjectInfo}
                     setProjectInfo={this.props.setProjectInfo}
+                  />
+                </View>
+
+                <View style={{flex: 1}}>
+                  <SendTaskNotification
+                    project={this.props.project}
+                    user={this.props.user}
+                    task={this.props.selectedTask}
+                    user={this.props.user}
+                    taskPacMans={taskPacMans}
+                    taskResPersons={taskResPersons}
+                    taskResources={taskResources}
                   />
                 </View>
 

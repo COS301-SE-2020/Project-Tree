@@ -19,6 +19,7 @@ async function sendNotification(
     projName: projName,
     projID: projID,
     mode: mode, //email: 0, notice: 1, both: 2
+    mobile: true,
   };
 
   data = JSON.stringify(data);

@@ -208,7 +208,7 @@ class CreateTaskForm extends Component {
           timestamp: timestamp,
           projName: this.props.project.name,
           projID: this.props.project.id,
-          taskName: projectData.ct_Name,
+          taskName: this.state.taskName,
           type: "auto",
           mode: 2,
         },
