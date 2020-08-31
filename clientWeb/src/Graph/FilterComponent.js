@@ -48,19 +48,19 @@ export default class FilterComponent extends React.Component{
 
         if(this.state.filterTaskOption === "taskComplete"){
             tasks = tasks.filter((task)=>{
-                return task.progress === "Complete"
+                return task.type === "Complete"
             })
         }
 
         else if(this.state.filterTaskOption === "taskIncomplete"){
             tasks = tasks.filter((task)=>{
-                return task.progress === "Incomplete"
+                return task.type === "Incomplete"
             })
         }
 
         else if(this.state.filterTaskOption === "taskIssue"){
             tasks = tasks.filter((task)=>{
-                return task.progress === "Issue"
+                return task.type === "Issue"
             })
         }
 
@@ -86,19 +86,19 @@ export default class FilterComponent extends React.Component{
 
         if(this.state.filterTaskOption === "taskComplete"){
             tempTasks = tempTasks.filter((task)=>{
-                return task.progress === "Complete"
+                return task.type === "Complete"
             })
         }
 
         else if(this.state.filterTaskOption === "taskIncomplete"){
             tempTasks = tempTasks.filter((task)=>{
-                return task.progress === "Incomplete"
+                return task.type === "Incomplete"
             })
         }
 
         else if(this.state.filterTaskOption === "taskIssue"){
             tempTasks = tempTasks.filter((task)=>{
-                return task.progress === "Issue"
+                return task.type === "Issue"
             })
         }
 
