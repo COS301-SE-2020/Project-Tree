@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ScrollView
 } from 'react-native';
 import {
   Icon
@@ -154,34 +155,36 @@ class TaskModal extends Component {
                     marginBottom: 10,
                   }}></View>
               </View>
-              <Text style={styles.modalText}>
-                {this.props.selectedTask.description}
-              </Text>
-              <Text style={styles.modalText}>
-                Start Date:{' '}
-                {this.props.selectedTask.startDate.year.low +
-                  '-' +
-                  this.props.selectedTask.startDate.month.low +
-                  '-' +
-                  this.props.selectedTask.startDate.day.low}
-              </Text>
-              <Text style={styles.modalText}>
-                End Date:{' '}
-                {this.props.selectedTask.endDate.year.low +
-                  '-' +
-                  this.props.selectedTask.endDate.month.low +
-                  '-' +
-                  this.props.selectedTask.endDate.day.low}
-              </Text>
-              <Text style={styles.modalText}>
-                Duration: {this.props.selectedTask.duration} days
-              </Text>
-              <Text style={styles.roleText}>Package managers:</Text>
-              {this.printUsers(taskPacMans)}
-              <Text style={styles.roleText}>Responsible persons:</Text>
-              {this.printUsers(taskResPersons)}
-              <Text style={styles.roleText}>Resources:</Text>
-              {this.printUsers(taskResources)}
+              <ScrollView style={{height:200}}>
+                <Text style={styles.modalText}>
+                  {this.props.selectedTask.description}
+                </Text>
+                <Text style={styles.modalText}>
+                  Start Date:{' '}
+                  {this.props.selectedTask.startDate.year.low +
+                    '-' +
+                    this.props.selectedTask.startDate.month.low +
+                    '-' +
+                    this.props.selectedTask.startDate.day.low}
+                </Text>
+                <Text style={styles.modalText}>
+                  End Date:{' '}
+                  {this.props.selectedTask.endDate.year.low +
+                    '-' +
+                    this.props.selectedTask.endDate.month.low +
+                    '-' +
+                    this.props.selectedTask.endDate.day.low}
+                </Text>
+                <Text style={styles.modalText}>
+                  Duration: {this.props.selectedTask.duration} days
+                </Text>
+                <Text style={styles.roleText}>Package managers:</Text>
+                {this.printUsers(taskPacMans)}
+                <Text style={styles.roleText}>Responsible persons:</Text>
+                {this.printUsers(taskResPersons)}
+                <Text style={styles.roleText}>Resources:</Text>
+                {this.printUsers(taskResources)}
+              </ScrollView>
               
               <View style={{flex: 1}}>
                 <View style={{flex: 1}}>
@@ -247,7 +250,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 700,
+    height: 650,
     width: 350,
   },
   textStyle: {

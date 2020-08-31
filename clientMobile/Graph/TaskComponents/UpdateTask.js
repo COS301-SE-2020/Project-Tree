@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ScrollView
 } from 'react-native';
 import {
   Icon,
@@ -460,7 +461,7 @@ class UpdateTaskForm extends Component {
     });
 
     return (
-      <View>
+      <ScrollView style={{height:650}}>
         <Form>
           <Item floatingLabel>
             <Label>Name of Task</Label>
@@ -498,16 +499,16 @@ class UpdateTaskForm extends Component {
             <Label>End Date</Label>
             <Input value={this.state.endDate.toISOString().substr(0, 10)} />
           </Item>
-          <Item floatingLabel disabled>
+          <Item floatingLabel>
             <Label>Package Manager</Label>
             <Input
               value={this.state.pacManSearchTerm}
               onChangeText={(val) => this.updateSearch(val, 0)}
             />
           </Item>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', flex:1}}>
             {this.state.pacManSearchTerm.length >= 2 ? (
-              <View>
+              <View style={{flex:0.5}}>
                 {filteredPacMan.map((person) => {
                   return (
                     <TouchableOpacity
@@ -516,20 +517,20 @@ class UpdateTaskForm extends Component {
                       key={person.id}
                       style={styles.peopleButtons}
                     >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
                     </TouchableOpacity>
                   );
                 })}
               </View>
             ) : null}
-            <View>
+            <View style={{flex:0.5}}>
               {this.state.pacManList.map((person) => {
                 return (
                   <TouchableOpacity
                     type="button"
                     onPress={() => this.removeAssignedPerson(person, 0)}
                     key={person.id}
-                    style={styles.peopleButtons}
+                    style={styles.selectedPeopleButtons}
                   >
                     <Text>{person.name}&nbsp;{person.surname}</Text>
                   </TouchableOpacity>
@@ -537,16 +538,16 @@ class UpdateTaskForm extends Component {
               })}
             </View>
           </View>
-          <Item floatingLabel disabled>
+          <Item floatingLabel>
             <Label>Responsible Person</Label>
             <Input
               value={this.state.resPersonSearchTerm}
               onChangeText={(val) => this.updateSearch(val, 1)}
             />
           </Item>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', flex:1}}>
             {this.state.resPersonSearchTerm.length >= 2 ? (
-              <View>
+              <View style={{flex:0.5}}>
                 {filteredResPerson.map((person) => {
                   return (
                     <TouchableOpacity
@@ -555,20 +556,20 @@ class UpdateTaskForm extends Component {
                       key={person.id}
                       style={styles.peopleButtons}
                     >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
                     </TouchableOpacity>
                   );
                 })}
               </View>
             ) : null}
-            <View>
+            <View style={{flex:0.5}}>
               {this.state.resPersonList.map((person) => {
                 return (
                   <TouchableOpacity
                     type="button"
                     onPress={() => this.removeAssignedPerson(person, 1)}
                     key={person.id}
-                    style={styles.peopleButtons}
+                    style={styles.selectedPeopleButtons}
                   >
                     <Text>{person.name}&nbsp;{person.surname}</Text>
                   </TouchableOpacity>
@@ -576,16 +577,16 @@ class UpdateTaskForm extends Component {
               })}
             </View>
           </View>
-          <Item floatingLabel disabled>
+          <Item floatingLabel>
             <Label>Resource(s)</Label>
             <Input
               value={this.state.resourcesSearchTerm}
               onChangeText={(val) => this.updateSearch(val, 2)}
             />
           </Item>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', flex:1}}>
             {this.state.resourcesSearchTerm.length >= 2 ? (
-              <View>
+              <View style={{flex:0.5}}>
                 {filteredResources.map((person) => {
                   return (
                     <TouchableOpacity
@@ -594,20 +595,20 @@ class UpdateTaskForm extends Component {
                       key={person.id}
                       style={styles.peopleButtons}
                     >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
                     </TouchableOpacity>
                   );
                 })}
               </View>
             ) : null}
-            <View>
+            <View style={{flex:0.5}}>
               {this.state.resourcesList.map((person) => {
                 return (
                   <TouchableOpacity
                     type="button"
                     onPress={() => this.removeAssignedPerson(person, 2)}
                     key={person.id}
-                    style={styles.peopleButtons}
+                    style={styles.selectedPeopleButtons}
                   >
                     <Text>{person.name}&nbsp;{person.surname}</Text>
                   </TouchableOpacity>
@@ -633,7 +634,7 @@ class UpdateTaskForm extends Component {
             <Text style={{color: 'white'}}>Submit</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -704,6 +705,22 @@ const styles = StyleSheet.create({
   text: {margin: 6, textAlign: 'center'},
   peopleButtons: {
     backgroundColor: '#184D47',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 45,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0.1,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
+    margin: 3,
+  },
+  selectedPeopleButtons: {
+    backgroundColor: '#EEBB4D',
     alignItems: 'center',
     justifyContent: 'center',
     height: 45,
