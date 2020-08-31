@@ -8,6 +8,7 @@ import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
 import SendTaskNotification from "../Notifications/SendTaskNotification";
+import FilterComponent from "./FilterComponent";
 import $ from "jquery";
 
 class GraphPage extends React.Component {
@@ -20,12 +21,14 @@ class GraphPage extends React.Component {
       nodes:null, 
       links:null,
       allUsers:null, 
-      assignedProjUsers:null
+      assignedProjUsers:null,
+      filterOn:false,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.updateAssignedPeople = this.updateAssignedPeople.bind(this);
+    this.setFilterOn = this.setFilterOn.bind(this);
   }
 
   componentDidMount() {
@@ -63,6 +66,10 @@ class GraphPage extends React.Component {
         throw Error(err);
       });
     }
+  }
+
+  setFilterOn(value){
+    this.setState({filterOn: value});
   }
 
   getProjectInfo() {
@@ -172,6 +179,18 @@ class GraphPage extends React.Component {
                   getProjectInfo={this.getProjectInfo}
                 />
               ) : null}
+              {this.state.dependency===null && this.state.task===null ?
+                <FilterComponent 
+                  nodes={this.state.nodes} 
+                  users={this.state.assignedProjUsers} 
+                  setTaskInfo={this.setTaskInfo} 
+                  links={this.state.links}
+                  filterOn={this.state.filterOn}
+                  setFilterOn={this.setFilterOn}
+                  user={this.props.user}
+                />
+                :null
+              }
               <LegendSidebar />
             </Col>
             <Col

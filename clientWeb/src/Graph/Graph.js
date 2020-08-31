@@ -11,7 +11,7 @@ import CreateTask from "./Task/CreateTask";
 function makeLink(edge, criticalPathLinks) {
   var strokeColor = "#000";
   if (criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
-  return new joint.shapes.standard.Link({
+  let link = new joint.shapes.standard.Link({
     id: "l" + edge.id,
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
@@ -21,6 +21,8 @@ function makeLink(edge, criticalPathLinks) {
       line: { stroke: strokeColor },
     },
   });
+
+  return link
 }
 
 function makeElement(node, criticalPathNodes) {
@@ -83,7 +85,12 @@ function makeElement(node, criticalPathNodes) {
     statusColor = "#ffae42";
   }
   var borderColor = "#000";
+  var borderWidth = 2;
   if (criticalPathNodes.includes(node.id)) borderColor = "#0275d8";
+  if(node.highlighted !== undefined){
+    borderColor = "orange";
+    borderWidth = 4;
+  } 
 
   return new joint.shapes.standard.Rectangle({
     id: `${node.id}`,
@@ -93,6 +100,7 @@ function makeElement(node, criticalPathNodes) {
       body: {
         fill: statusColor,
         stroke: borderColor,
+        strokeWidth: borderWidth,
       },
       text: {
         text: wraptext,
