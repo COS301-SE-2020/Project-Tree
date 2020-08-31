@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Table, Modal, Button } from "react-bootstrap";
+import { Form, Table, Modal, Button, OverlayTrigger,Tooltip } from "react-bootstrap";
 import $ from "jquery";
 
 function stringifyFormData(fd) {
@@ -66,7 +66,7 @@ class CreateProject extends React.Component {
           >
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
               <Modal.Title>Create Project</Modal.Title>
             </Modal.Header>
@@ -96,16 +96,16 @@ class CreateProject extends React.Component {
                     <td
                       className="text-center"
                       colSpan="4"
-                      style={{ backgroundColor: "#184D47", color: "white" }}
+                      style={{ backgroundColor: "#96BB7C", color: "white" }}
                     >
                       Project Permisions
                     </td>
                   </tr>
                   <tr>
                     <td></td>
-                    <td className="text-center">Create</td>
-                    <td className="text-center">Delete</td>
-                    <td className="text-center">Update</td>
+                    <td className="text-center">Create <OverlayTrigger overlay={<Tooltip>Users assigned to the project can create tasks for the project</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
+                    <td className="text-center">Delete <OverlayTrigger overlay={<Tooltip>Users assigned to the project can delete the project and its tasks</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
+                    <td className="text-center">Edit <OverlayTrigger overlay={<Tooltip>Users assigned to the project can edit the project information and its task's information</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
                   </tr>
                 </thead>
                 <tbody>
@@ -148,7 +148,7 @@ class CreateProject extends React.Component {
                 </tbody>
               </Table>
             </Modal.Body>
-            <Modal.Footer style={{ backgroundColor: "#184D47" }}>
+            <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
               <Button
                 variant="secondary"
                 onClick={() => {
