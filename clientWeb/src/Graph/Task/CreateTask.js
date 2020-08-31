@@ -1,5 +1,7 @@
 import React from "react";
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
+import ms from "ms";
+import $ from "jquery";
 
 function stringifyFormData(fd) {
   const data = {};
@@ -12,12 +14,22 @@ function stringifyFormData(fd) {
 class CreateTask extends React.Component {
   constructor(props) {
     super(props);
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth();
+    month = month < 10 ? "0" + month : month;
+    let day = now.getDate();
+    day = day < 10 ? "0" + day : day;
+    let hour = now.getHours();
+    hour = hour < 10 ? "0" + hour : hour;
+    let min = now.getMinutes();
+    min = min < 10 ? "0" + min : min;
     this.state = {
       Show: true,
       id: this.props.project.id,
-      startDate: 0,
-      duration: 0,
-      endDate: 0,
+      startDate: `${year}-${month}-${day}T${hour}:${min}`,
+      duration: "0ms",
+      endDate: `${year}-${month}-${day}T${hour}:${min}`,
       people: this.props.allUsers,
       pacManSearchTerm: "",
       resourcesSearchTerm: "",
@@ -28,7 +40,6 @@ class CreateTask extends React.Component {
     };
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.setDuration = this.setDuration.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
     this.addPacMan = this.addPacMan.bind(this);
     this.addResPerson = this.addResPerson.bind(this);
@@ -36,7 +47,7 @@ class CreateTask extends React.Component {
     this.assignPeople = this.assignPeople.bind(this);
   }
 
-  async hideModal() {
+  hideModal() {
     // Resets the people list
     for (let x = 0; x < this.state.pacManList.length; x++) {
       this.state.people.push(this.state.pacManList[x]);
@@ -50,41 +61,6 @@ class CreateTask extends React.Component {
 
     this.setState({ Show: false });
     this.props.hideModal();
-  }
-
-  setDuration(e) {
-    var duration;
-    var startDate;
-    if (e.target.id === "ct_startDate") {
-      startDate = e.target.value;
-      duration = this.state.duration;
-    } else if (e.target.id === "ct_duration") {
-      startDate = this.state.startDate;
-      duration = e.target.value;
-    }
-
-    var initialDate;
-    initialDate = new Date(startDate);
-    var endDate = new Date(
-      initialDate.getTime() + 1000 * 60 * 60 * 24 * duration
-    );
-    var dateWithDuration = [
-      endDate.getFullYear(),
-      endDate.getMonth() + 1,
-      endDate.getDate(),
-    ];
-    var edate = dateWithDuration;
-    var formatMonth = edate[1];
-    if (edate[1] < 10) {
-      formatMonth = "0" + edate[1];
-    }
-    var formatDay = edate[2];
-    if (edate[2] < 10) {
-      formatDay = "0" + edate[2];
-    }
-
-    var formatDate = edate[0] + "-" + formatMonth + "-" + formatDay;
-    return formatDate;
   }
 
   updateSearch(event, mode) {
@@ -280,6 +256,13 @@ class CreateTask extends React.Component {
     this.hideModal();
   }
 
+  CalcDiff(sd, ed) 
+  {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+  }
+
   render() {
     // Filters the list of people to only show people matching the search term
     let filteredPacMan = null;
@@ -342,43 +325,60 @@ class CreateTask extends React.Component {
               <Form.Group>
                 <Form.Label>Start date of task</Form.Label>
                 <Form.Control
-                  type="date"
+                  required
+                  type="datetime-local"
                   name="ct_startDate"
-                  id="ct_startDate"
-                  onChange={(e) => {
-                    this.setState({ startDate: e.target.value });
-                    this.value = this.state.startDate;
-                    this.setState({ endDate: this.setDuration(e) });
-                  }}
                   value={this.state.startDate}
-                  required
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Duration</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="ct_duration"
-                  id="ct_duration"
                   onChange={(e) => {
-                    this.setState({ duration: e.target.value });
-                    this.value = this.state.duration;
-                    this.setState({ endDate: this.setDuration(e) });
+                    console.log(e.target.value);
+                    if (this.state.endDate < e.target.value) {
+                      this.setState({ 
+                        startDate: e.target.value, 
+                        endDate: e.target.value,
+                        duration: this.CalcDiff(e.target.value, e.target.value),
+                      }); 
+                    } else {
+                      this.setState({ 
+                        startDate: e.target.value, 
+                        duration: this.CalcDiff(e.target.value, this.state.endDate) 
+                      });
+                    }
+                    this.value = this.state.startDate;
                   }}
-                  value={this.state.duration}
-                  min="0"
-                  required
                 />
               </Form.Group>
               <Form.Group>
                 <Form.Label>End date of task</Form.Label>
                 <Form.Control
-                  type="date"
-                  name="ct_endDate"
-                  id="ct_endDate"
-                  value={this.state.endDate}
-                  readOnly
                   required
+                  type="datetime-local"
+                  name="ct_endDate"
+                  value={this.state.endDate}
+                  onChange={(e) => {
+                    if (this.state.startDate > e.target.value) {
+                      this.setState({ 
+                        startDate: e.target.value, 
+                        endDate: e.target.value,
+                        duration: this.CalcDiff(e.target.value, e.target.value),
+                      }); 
+                    } else {
+                      this.setState({ 
+                        endDate: e.target.value, 
+                        duration: this.CalcDiff(this.state.startDate, e.target.value) 
+                      });
+                    }
+                    this.value = this.state.endDate;
+                  }}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Duration</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="duration"
+                  value={this.state.duration}
+                  readOnly
                 />
               </Form.Group>
               <Form.Group>
