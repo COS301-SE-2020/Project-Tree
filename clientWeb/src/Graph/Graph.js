@@ -272,6 +272,14 @@ class Graph extends React.Component {
 
     paper.on("blank:pointerdblclick", this.addTask);
 
+    paper.on('blank:mousewheel', function(evt, x, y, delta) {
+      evt.preventDefault();
+      evt = evt.originalEvent;
+      var normalizedDelta = Math.max(-1, Math.min(1, (delta))) / 50;
+      graphScale += normalizedDelta; // the current paper scale changed by delta
+      paper.scale(graphScale, graphScale);
+    })
+
     $("#paper").mousemove(function (event) {
       if (dragStartPosition)
         paper.translate(
