@@ -71,7 +71,7 @@ function deleteTask(req, res) {
       `
     )
     .then(async () => {
-      for (var x = 0; x < req.body.nodes.length; x++) {
+      for (let x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == req.body.changedInfo.id) {
           if (x == 0) {
             req.body.nodes.shift();
@@ -81,7 +81,7 @@ function deleteTask(req, res) {
         }
       }
 
-      for (var x = 0; x < req.body.rels.length; x++) {
+      for (let x = 0; x < req.body.rels.length; x++) {
         if (
           req.body.rels[x].target == req.body.changedInfo.id ||
           req.body.rels[x].source == req.body.changedInfo.id
@@ -95,7 +95,7 @@ function deleteTask(req, res) {
       }
 
       let queriesArray = [];
-      for (var x = 0; x < successors.length; x++) {
+      for (let x = 0; x < successors.length; x++) {
         await updateProject.updateProject(
           successors[x].id,
           req.body.nodes,

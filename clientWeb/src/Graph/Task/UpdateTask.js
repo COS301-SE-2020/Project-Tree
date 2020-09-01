@@ -438,7 +438,6 @@ class UpdateTask extends React.Component {
                   name="ut_startDate"
                   value={this.state.startDate}
                   onChange={(e) => {
-                    console.log(e.target.value);
                     if (this.state.endDate < e.target.value) {
                       this.setState({ 
                         startDate: e.target.value, 
