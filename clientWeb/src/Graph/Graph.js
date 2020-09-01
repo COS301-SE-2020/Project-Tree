@@ -15,7 +15,7 @@ function makeLink(edge, criticalPathLinks) {
     id: "l" + edge.id,
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
-    connector: { name: "smooth" },
+    connector: { name: 'smooth' },
     attrs: {
       type: "link",
       line: { stroke: strokeColor },
@@ -35,7 +35,7 @@ function makeElement(node, criticalPathNodes) {
     height: height,
   });
 
-  var statusColor = "#fff";
+  var statusColor = "#77dd77";
   if (node.type === "Incomplete") {
     let today = new Date();
     if (parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)) {
@@ -62,35 +62,30 @@ function makeElement(node, criticalPathNodes) {
   } else if (node.type === "Issue") {
     statusColor = "#ffae42";
   }
-  if (node.type === "Incomplete") {
-    let today = new Date();
-    if (parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)) {
-      if (parseInt(today.getMonth() + 1) <= parseInt(node.endDate.month.low)) {
-        if (
-          parseInt(today.getMonth() + 1) === parseInt(node.endDate.month.low)
-        ) {
-          if (parseInt(today.getDate()) > parseInt(node.endDate.day.low)) {
-            statusColor = "#ff6961";
-          }
-        }
-      } else {
-        statusColor = "#ff6961";
-      }
-    } else {
-      statusColor = "#ff6961";
-    }
-  } else if (node.type === "Complete") {
-    statusColor = "#77dd77";
-  } else if (node.type === "Issue") {
-    statusColor = "#ffae42";
-  }
+  
   var borderColor = "#000";
   var borderWidth = 2;
   if (criticalPathNodes.includes(node.id)) borderColor = "#0275d8";
+
+  let shadowHighlight = {
+    name: 'dropShadow',
+    args: {
+      dx: 1,
+      dy: 1,
+      blur: 2
+    }
+  }
   if(node.highlighted !== undefined){
-    borderColor = "orange";
-    borderWidth = 4;
-  } 
+    shadowHighlight = {
+      name: 'highlight',
+      args: {
+        color: 'purple',
+        width: 3,
+        opacity: 0.7,
+        blur: 5
+      }
+    }
+  }
 
   return new joint.shapes.standard.Rectangle({
     id: `${node.id}`,
@@ -98,7 +93,14 @@ function makeElement(node, criticalPathNodes) {
     attrs: {
       type: "node",
       body: {
-        fill: statusColor,
+        fill: {
+          type: 'linearGradient',
+          stops: [
+            { offset: `${node.progress}%`, color: statusColor },
+            { offset: `${node.progress+1}%`, color: '#fff' },
+          ]
+        },
+        filter: shadowHighlight,
         stroke: borderColor,
         strokeWidth: borderWidth,
       },
@@ -110,7 +112,7 @@ function makeElement(node, criticalPathNodes) {
       rect: {
         rx: 10,
         ry: 10,
-        transform: "translate(1, 1)",
+        transform: "translate(2, 2)",
       },
     },
   });
@@ -260,7 +262,7 @@ class Graph extends React.Component {
       el: $("#paper"),
       width: $("#paper").width(),
       height: $("#paper").height(),
-      gridSize: 1,
+      gridSize: 10,
       model: graph,
       linkPinning: false,
     });
@@ -314,6 +316,20 @@ class Graph extends React.Component {
       nodeSep: 100,
       rankSep: 100,
     });
+
+    var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
+    this.state.graph.resetCells(cells);
+    joint.layout.DirectedGraph.layout(this.state.graph, {
+      dagre: dagre,
+      graphlib: graphlib,
+      setLinkVertices: false,
+      rankDir: "TB",
+      nodeSep: 100,
+      rankSep: 100,
+    });
+
+    console.log(this.state.graph.toJSON())
+    
   }
 
   hideModal() {
