@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ScrollView
 } from 'react-native';
 import {
   Icon
@@ -13,6 +14,11 @@ import * as Progress from 'react-native-progress';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
 import UpdateProgress from '../UpdateProgress';
+import SendTaskNotification from '../../NoticeBoard/TaskWideNotification'
+
+let taskPacMans = null;
+let taskResPersons = null;
+let taskResources = null;
 
 class TaskModal extends Component {
   constructor(props) {
@@ -24,6 +30,7 @@ class TaskModal extends Component {
     };
     this.toggleVisibility = this.toggleVisibility.bind(this);
     this.toggleProgressModal = this.toggleProgressModal.bind(this);
+    this.classifyExistingUsers = this.classifyExistingUsers.bind(this);
   }
 
   toggleVisibility(taskModal, updateModal, selectedTask) {
@@ -48,8 +55,59 @@ class TaskModal extends Component {
     });
   }
 
+  classifyExistingUsers() {
+    let taskUsers = [];
+    let taskPacMans = [];
+    let taskResPersons = [];
+    let taskResources = [];
+
+    // Get the users that are part of the selected task
+    for(let x = 0; x < this.props.assignedProjUsers.length; x++){
+      if(this.props.assignedProjUsers[x][1].end === this.props.selectedTask.id){
+        taskUsers.push(this.props.assignedProjUsers[x])
+      }
+    }
+
+    // Assign users to their respective roles by putting them in arrays
+    for (let x = 0; x < taskUsers.length; x++) {
+      if (taskUsers[x][1].type === "PACKAGE_MANAGER") {
+        taskPacMans.push(taskUsers[x][0]);
+      }
+      if (taskUsers[x][1].type === "RESPONSIBLE_PERSON") {
+        taskResPersons.push(taskUsers[x][0]);
+      }
+      if (taskUsers[x][1].type === "RESOURCE") {
+        taskResources.push(taskUsers[x][0]);
+      }
+    }
+
+    taskUsers = [];
+    taskUsers.push(taskPacMans);
+    taskUsers.push(taskResPersons);
+    taskUsers.push(taskResources);
+
+    return taskUsers;
+  }
+
+  printUsers(people) {
+    let list = [];
+    for (let x = 0; x < people.length; x++) {
+      list.push(
+        <Text key={people[x].id} style={styles.personText}>
+          {people[x].name}&nbsp;{people[x].surname}
+        </Text>
+      );
+    }
+    return list;
+  }
+
   render() {
-    if (this.props.selectedTask === null) return null;
+    if (this.props.selectedTask === null || this.props.assignedProjUsers === null) return null;
+
+    let taskUsers = this.classifyExistingUsers();
+    taskPacMans = taskUsers[0];
+    taskResPersons = taskUsers[1];
+    taskResources = taskUsers[2];
 
     let color = 'green';
     if (this.props.selectedTask.progress.low < 33) color = 'red';
@@ -57,6 +115,20 @@ class TaskModal extends Component {
 
     return (
       <React.Fragment>
+        <UpdateTask
+          task={this.props.selectedTask}
+          modalVisibility={this.state.displayUpdateModal}
+          toggleVisibility={this.toggleVisibility}
+          getProjectInfo={this.props.getProjectInfo}
+          setProjectInfo={this.props.setProjectInfo}
+          displayTaskDependency={this.props.displayTaskDependency}
+          project={this.props.project}
+          pacMans={taskPacMans}
+          resPersons={taskResPersons}
+          resources={taskResources}
+          allUsers={this.props.allUsers}
+          assignedProjUsers={this.props.assignedProjUsers}
+        />
         <UpdateProgress
           project={this.props.project}
           task={this.props.selectedTask}
@@ -89,37 +161,46 @@ class TaskModal extends Component {
                     marginBottom: 10,
                   }}></View>
               </View>
-              <Progress.Bar
-                progress={this.props.selectedTask.progress.low}
-                
-                showsText={true}
-                formatText={() => {
-                  return `${this.props.selectedTask.progress.low}%`;
-                }}
-                color={color}
-              />
-              <Text style={styles.modalText}>
-                {this.props.selectedTask.description}
-              </Text>
-              <Text style={styles.modalText}>
-                Start Date:{' '}
-                {this.props.selectedTask.startDate.year.low +
-                  '-' +
-                  this.props.selectedTask.startDate.month.low +
-                  '-' +
-                  this.props.selectedTask.startDate.day.low}
-              </Text>
-              <Text style={styles.modalText}>
-                End Date:{' '}
-                {this.props.selectedTask.endDate.year.low +
-                  '-' +
-                  this.props.selectedTask.endDate.month.low +
-                  '-' +
-                  this.props.selectedTask.endDate.day.low}
-              </Text>
-              <Text style={styles.modalText}>
-                Duration: {this.props.selectedTask.duration} days
-              </Text>
+              <ScrollView style={{height:200}}>
+                <Progress.Bar
+                  progress={this.props.selectedTask.progress.low}
+                  
+                  showsText={true}
+                  formatText={() => {
+                    return `${this.props.selectedTask.progress.low}%`;
+                  }}
+                  color={color}
+                />
+                <Text style={styles.modalText}>
+                  {this.props.selectedTask.description}
+                </Text>
+                <Text style={styles.modalText}>
+                  Start Date:{' '}
+                  {this.props.selectedTask.startDate.year.low +
+                    '-' +
+                    this.props.selectedTask.startDate.month.low +
+                    '-' +
+                    this.props.selectedTask.startDate.day.low}
+                </Text>
+                <Text style={styles.modalText}>
+                  End Date:{' '}
+                  {this.props.selectedTask.endDate.year.low +
+                    '-' +
+                    this.props.selectedTask.endDate.month.low +
+                    '-' +
+                    this.props.selectedTask.endDate.day.low}
+                </Text>
+                <Text style={styles.modalText}>
+                  Duration: {this.props.selectedTask.duration} days
+                </Text>
+                <Text style={styles.roleText}>Package managers:</Text>
+                {this.printUsers(taskPacMans)}
+                <Text style={styles.roleText}>Responsible persons:</Text>
+                {this.printUsers(taskResPersons)}
+                <Text style={styles.roleText}>Resources:</Text>
+                {this.printUsers(taskResources)}
+              </ScrollView>
+              
               <View style={{flex: 1}}>
                 {this.props.userPermissions["update"] === true?
                   <View style={{flex: 1}}>
@@ -148,7 +229,7 @@ class TaskModal extends Component {
                   null
                 }
 
-                {this.props.userPermissions["update"] === true?
+                {/* {this.props.userPermissions["update"] === true?
                   <View style={{flex: 1}}>
                     <TouchableOpacity
                       style={styles.editButton}
@@ -163,7 +244,18 @@ class TaskModal extends Component {
                   </View>
                 :
                   null
-                }
+                } */}
+                <View style={{flex: 1}}>
+                  <SendTaskNotification
+                    project={this.props.project}
+                    user={this.props.user}
+                    task={this.props.selectedTask}
+                    user={this.props.user}
+                    taskPacMans={taskPacMans}
+                    taskResPersons={taskResPersons}
+                    taskResources={taskResources}
+                  />
+                </View>
               </View>
             </View>
           </View>
@@ -196,7 +288,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 470,
+    height: 650,
     width: 350,
   },
   textStyle: {
@@ -208,6 +300,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     fontSize: 20,
+  },
+  roleText: {
+    marginBottom: 5,
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  personText: {
+    marginBottom: 5,
+    textAlign: 'center',
+    fontSize: 16,
   },
   hideButton: {
     flex: 0.15,

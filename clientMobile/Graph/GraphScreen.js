@@ -142,6 +142,7 @@ class Graph extends Component {
               reloadKey={this.state.key}
               reload={this.reload}
               displayCriticalPath={this.state.displayCriticalPath}
+              user={this.props.user}
             />
           </React.Fragment>
         </Drawer>
@@ -163,6 +164,8 @@ class GraphScreen extends Component {
       key: 0,
       sourceCreateDependency: null,
       targetCreateDependency: null,
+      allUsers:null, 
+      assignedProjUsers:null
     };
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.displayTaskDependency = this.displayTaskDependency.bind(this);
@@ -195,6 +198,40 @@ class GraphScreen extends Component {
 
     if (this._isMounted === true)
       this.setState({nodes: body.tasks, links: body.rels});
+
+    const response2 = await fetch(
+      'http://projecttree.herokuapp.com/people/getAllUsers',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: this.props.project.id}),
+      },
+    );
+
+    const body2 = await response2.json();
+    if (response2.status !== 200) throw Error(body2.message);
+
+    this.setState({ allUsers: body2.users });
+
+    const response3 = await fetch(
+      'http://projecttree.herokuapp.com/people/assignedProjectUsers',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: this.props.project.id}),
+      },
+    );
+
+    const body3 = await response3.json();
+    if (response3.status !== 200) throw Error(body3.message);
+
+    this.setState({ assignedProjUsers:body3.projectUsers });
   }
 
   componentWillUnmount() {
@@ -215,8 +252,11 @@ class GraphScreen extends Component {
     return null;
   }
 
-  setProjectInfo(nodes, rels) {
+  setProjectInfo(nodes, rels, assignedPeople) {
     this.setState({nodes: nodes, links: rels});
+    if(assignedPeople !== undefined){
+      this.setState({assignedProjUsers: assignedPeople});
+    }
     this.props.reload();
   }
 
@@ -286,6 +326,9 @@ class GraphScreen extends Component {
           displayTaskDependency={this.displayTaskDependency}
           getProjectInfo={this.getProjectInfo}
           setProjectInfo={this.setProjectInfo}
+          assignedProjUsers={this.state.assignedProjUsers}
+          allUsers={this.state.allUsers}
+          user={this.props.user}
         />
         <DependencyModal
           project={this.props.project}
@@ -316,11 +359,14 @@ class GraphScreen extends Component {
             links = {this.state.links}
           />
           {this.props.userPermissions["create"] === true?
-            <CreateTask
-              projectID={this.props.project.id}
-              getProjectInfo={this.getProjectInfo}
-              setProjectInfo={this.setProjectInfo}
-            />
+          <CreateTask
+            projectID={this.props.project.id}
+            project={this.props.project}
+            getProjectInfo={this.getProjectInfo}
+            setProjectInfo={this.setProjectInfo}
+            assignedProjUsers={this.state.assignedProjUsers}
+            allUsers={this.state.allUsers}
+          />
           :
             null
           }

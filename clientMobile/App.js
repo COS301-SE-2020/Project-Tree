@@ -329,6 +329,7 @@ export default class App extends Component {
                 <Graph 
                   project={this.state.selectedProject} 
                   userPermissions={this.state.userPermissions}
+                  user={this.state.userInfo}
                 />}
               options={{
                 tabBarIcon: ({focused, color}) => (
