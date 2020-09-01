@@ -124,7 +124,7 @@ class ProgressDashboard extends Component {
       percentage = 0;
 
     this.props.tasks.forEach((task) => {
-        completeDur += task.progress.low;
+        completeDur += task.progress;
       totalDur += 100;
     });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;

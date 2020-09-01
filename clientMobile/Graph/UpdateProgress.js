@@ -61,7 +61,7 @@ class UpdateProgressModal extends Component {
     super(props);
     this.state = {
       id: this.props.task.id,
-      progress: this.props.task.progress.low,
+      progress: this.props.task.progress,
       type: this.props.task.type,
       issue: this.props.task.type === "Issue",
     };
@@ -72,7 +72,7 @@ class UpdateProgressModal extends Component {
     if (this.props.task !== prevProps.task) {
       this.setState({ 
         id: this.props.task.id,
-        progress: this.props.task.progress.low,
+        progress: this.props.task.progress,
         type: this.pprops.tasks.type,
         issue: this.props.task.type === "Issue",
       });
@@ -104,7 +104,7 @@ class UpdateProgressModal extends Component {
     for (let x = 0; x < nodes.length; x++) {
       if (nodes[x].id === this.state.id) {
         nodes[x].type = this.state.type;
-        nodes[x].progress.low = this.state.progress;
+        nodes[x].progress = this.state.progress;
       }
     }
 

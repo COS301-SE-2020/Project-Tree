@@ -375,7 +375,7 @@ class HomeScreen extends Component {
               </CardItem>
               <CardItem>
                 <View style={{width: '100%', alignItems: 'center'}}>
-                  {/* <ProgressDashboard project={this.props.project} /> */}
+                  <ProgressDashboard project={this.props.project} />
                 </View>
               </CardItem>
               <CardItem>

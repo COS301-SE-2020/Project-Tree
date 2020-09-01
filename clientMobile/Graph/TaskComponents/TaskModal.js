@@ -110,8 +110,8 @@ class TaskModal extends Component {
     taskResources = taskUsers[2];
 
     let color = 'green';
-    if (this.props.selectedTask.progress.low < 33) color = 'red';
-    else if (this.props.selectedTask.progress.low < 66) color = '#EEBB4D';
+    if (this.props.selectedTask.progress < 33) color = 'red';
+    else if (this.props.selectedTask.progress < 66) color = '#EEBB4D';
 
     return (
       <React.Fragment>
@@ -163,11 +163,11 @@ class TaskModal extends Component {
               </View>
               <ScrollView style={{height:200}}>
                 <Progress.Bar
-                  progress={this.props.selectedTask.progress.low}
+                  progress={this.props.selectedTask.progress/100}
                   
                   showsText={true}
                   formatText={() => {
-                    return `${this.props.selectedTask.progress.low}%`;
+                    return `${this.props.selectedTask.progress}%`;
                   }}
                   color={color}
                 />
@@ -229,7 +229,7 @@ class TaskModal extends Component {
                   null
                 }
 
-                {/* {this.props.userPermissions["update"] === true?
+                {this.props.userPermissions["update"] === true?
                   <View style={{flex: 1}}>
                     <TouchableOpacity
                       style={styles.editButton}
@@ -244,7 +244,7 @@ class TaskModal extends Component {
                   </View>
                 :
                   null
-                } */}
+                }
                 <View style={{flex: 1}}>
                   <SendTaskNotification
                     project={this.props.project}
