@@ -8,26 +8,34 @@ function createTask(req, res) {
         MATCH (b) 
         WHERE ID(b) = ${req.body.changedInfo.ct_pid} 
         CREATE(a:Task {
-          name:"${req.body.changedInfo.ct_Name}", 
-          startDate: date("${req.body.changedInfo.ct_startDate}"), 
-          endDate:date("${req.body.changedInfo.ct_endDate}"), 
-          duration:${req.body.changedInfo.ct_duration}, 
-          description:"${req.body.changedInfo.ct_description}", 
-          projId:${req.body.changedInfo.ct_pid}, 
-          type:"Incomplete",
+          name: "${req.body.changedInfo.ct_Name}", 
+          startDate: datetime("${req.body.changedInfo.ct_startDate}"), 
+          endDate: datetime("${req.body.changedInfo.ct_endDate}"),
+          description: "${req.body.changedInfo.ct_description}", 
+          projId: ${req.body.changedInfo.ct_pid}, 
+          type: "Incomplete",
           progress: 0
         })-[n:PART_OF]->(b) 
         RETURN a
       `
     )
     .then((result) => {
+      let startDate = result.records[0]._fields[0].properties.startDate;
+      let smonth = startDate.month.low < 10 ? `0${startDate.month.low}` : startDate.month.low ;
+      let sday = startDate.day.low < 10 ? `0${startDate.day.low}` : startDate.day.low ;
+      let shour = startDate.hour.low < 10 ? `0${startDate.hour.low}` : startDate.hour.low ;
+      let smin = startDate.minute.low < 10 ? `0${startDate.minute.low}` : startDate.minute.low ;
+      let endDate = result.records[0]._fields[0].properties.endDate;
+      let emonth = endDate.month.low < 10 ? `0${endDate.month.low}` : endDate.month.low ;
+      let eday = endDate.day.low < 10 ? `0${endDate.day.low}` : endDate.day.low ;
+      let ehour = endDate.hour.low < 10 ? `0${endDate.hour.low}` : endDate.hour.low ;
+      let emin = endDate.minute.low < 10 ? `0${endDate.minute.low}` : endDate.minute.low ;
       let task = {
         id: result.records[0]._fields[0].identity.low,
         name: result.records[0]._fields[0].properties.name,
         description: result.records[0]._fields[0].properties.description,
-        startDate: result.records[0]._fields[0].properties.startDate,
-        endDate: result.records[0]._fields[0].properties.endDate,
-        duration: result.records[0]._fields[0].properties.duration.low,
+        startDate: `${startDate.year.low}-${smonth}-${sday}T${shour}:${smin}`,
+        endDate: `${endDate.year.low}-${emonth}-${eday}T${ehour}:${emin}`,
         type: result.records[0]._fields[0].properties.type,
         progress: result.records[0]._fields[0].properties.progress.low,
       };
@@ -121,22 +129,30 @@ async function updateTask(req, res) {
         WHERE ID(a) = ${req.body.changedInfo.ut_id}
         SET a += {
           name:"${req.body.changedInfo.ut_name}",
-          startDate: date("${req.body.changedInfo.ut_startDate}"),
-          duration: ${req.body.changedInfo.ut_duration},
-          endDate: date("${req.body.changedInfo.ut_endDate}"),
+          startDate: datetime("${req.body.changedInfo.ut_startDate}"),
+          endDate: datetime("${req.body.changedInfo.ut_endDate}"),
           description: "${req.body.changedInfo.ut_description}"
         }
         RETURN a
       `
     )
     .then(async (result) => {
+      let startDate = result.records[0]._fields[0].properties.startDate;
+      let smonth = startDate.month.low < 10 ? `0${startDate.month.low}` : startDate.month.low ;
+      let sday = startDate.day.low < 10 ? `0${startDate.day.low}` : startDate.day.low ;
+      let shour = startDate.hour.low < 10 ? `0${startDate.hour.low}` : startDate.hour.low ;
+      let smin = startDate.minute.low < 10 ? `0${startDate.minute.low}` : startDate.minute.low ;
+      let endDate = result.records[0]._fields[0].properties.endDate;
+      let emonth = endDate.month.low < 10 ? `0${endDate.month.low}` : endDate.month.low ;
+      let eday = endDate.day.low < 10 ? `0${endDate.day.low}` : endDate.day.low ;
+      let ehour = endDate.hour.low < 10 ? `0${endDate.hour.low}` : endDate.hour.low ;
+      let emin = endDate.minute.low < 10 ? `0${endDate.minute.low}` : endDate.minute.low ;
       let changedTask = {
         id: result.records[0]._fields[0].identity.low,
         name: result.records[0]._fields[0].properties.name,
         description: result.records[0]._fields[0].properties.description,
-        startDate: result.records[0]._fields[0].properties.startDate,
-        endDate: result.records[0]._fields[0].properties.endDate,
-        duration: result.records[0]._fields[0].properties.duration.low,
+        startDate: `${startDate.year.low}-${smonth}-${sday}T${shour}:${smin}`,
+        endDate: `${endDate.year.low}-${emonth}-${eday}T${ehour}:${emin}`,
       };
       for (var x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == changedTask.id) {

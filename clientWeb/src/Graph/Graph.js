@@ -36,47 +36,7 @@ function makeElement(node, criticalPathNodes) {
   var statusColor = "#fff";
   if (node.type === "Incomplete") {
     let today = new Date();
-    if (parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)) {
-      if (parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)) {
-        if (
-          parseInt(today.getMonth() + 1) <= parseInt(node.endDate.month.low)
-        ) {
-          if (
-            parseInt(today.getMonth() + 1) === parseInt(node.endDate.month.low)
-          ) {
-            if (parseInt(today.getDate()) > parseInt(node.endDate.day.low)) {
-              statusColor = "#ff6961";
-            }
-          }
-        } else {
-          statusColor = "#ff6961";
-        }
-      }
-    } else {
-      statusColor = "#ff6961";
-    }
-  } else if (node.type === "Complete") {
-    statusColor = "#77dd77";
-  } else if (node.type === "Issue") {
-    statusColor = "#ffae42";
-  }
-  if (node.type === "Incomplete") {
-    let today = new Date();
-    if (parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)) {
-      if (parseInt(today.getMonth() + 1) <= parseInt(node.endDate.month.low)) {
-        if (
-          parseInt(today.getMonth() + 1) === parseInt(node.endDate.month.low)
-        ) {
-          if (parseInt(today.getDate()) > parseInt(node.endDate.day.low)) {
-            statusColor = "#ff6961";
-          }
-        }
-      } else {
-        statusColor = "#ff6961";
-      }
-    } else {
-      statusColor = "#ff6961";
-    }
+    if (today > Date(node.endDate)) statusColor = "#ff6961";
   } else if (node.type === "Complete") {
     statusColor = "#77dd77";
   } else if (node.type === "Issue") {

@@ -108,7 +108,12 @@ class ProjectPage extends React.Component {
           </Col>
         </Row>
         <Row className="my-1">
-          <Col sm={12} md={12} lg={6} xl={6}>
+          <Col 
+            sm={12}
+            md={12}
+            lg={6}
+            xl={6}
+          >
             <ProjectInfo
               project={this.props.project}
               setProject={(project) => this.props.setProject(project)}

@@ -1,7 +1,6 @@
 import React from "react";
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import ms from "ms";
-import $ from "jquery";
 
 function stringifyFormData(fd) {
   const data = {};
@@ -256,8 +255,7 @@ class CreateTask extends React.Component {
     this.hideModal();
   }
 
-  CalcDiff(sd, ed) 
-  {
+  CalcDiff(sd, ed) {
     let startDate = new Date(sd);
     let endDate = new Date(ed);
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
