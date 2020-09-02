@@ -535,35 +535,40 @@ class UpdateTask extends React.Component {
                       value={this.state.pacManSearchTerm}
                       onChange={(e) => this.updateSearch(e, 0)}
                       placeholder="Search for a name"
+                      style={{width:'100%'}}
                     />
                     {this.state.pacManSearchTerm.length >= 2 ? (
-                      <ul>
-                        {filteredPacMan.map((person) => {
+                        filteredPacMan.map((person) => {
                           return (
-                            <li key={person.id}>
+                            <React.Fragment>
                               <button
                                 type="button"
+                                className="selectPersonBtn"
                                 onClick={() => this.addPacMan(person)}
+                                key={person.id}
                               >
                                 {person.name}&nbsp;{person.surname}
                               </button>
-                            </li>
+                              <br />
+                            </React.Fragment>
                           );
-                        })}
-                      </ul>
+                        })
                     ) : null}
                   </Col>
                   <Col>
                     {this.state.pacManList.map((person) => {
                       return (
-                        <li key={person.id}>
+                        <React.Fragment>
                           <button
                             type="button"
+                            className="selectedPersonBtn"
                             onClick={() => this.removeAssignedPerson(person, 0)}
+                            key={person.id}
                           >
                             {person.name}&nbsp;{person.surname}
                           </button>
-                        </li>
+                          <br />
+                        </React.Fragment>
                       );
                     })}
                   </Col>
@@ -578,35 +583,40 @@ class UpdateTask extends React.Component {
                       value={this.state.resPersonSearchTerm}
                       onChange={(e) => this.updateSearch(e, 1)}
                       placeholder="Search for a name"
+                      style={{width:'100%'}}
                     />
                     {this.state.resPersonSearchTerm.length >= 2 ? (
-                      <ul>
-                        {filteredResPerson.map((person) => {
-                          return (
-                            <li key={person.id}>
-                              <button
-                                type="button"
-                                onClick={() => this.addResPerson(person)}
-                              >
-                                {person.name}&nbsp;{person.surname}
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                      filteredResPerson.map((person) => {
+                        return (
+                          <React.Fragment>
+                            <button
+                              type="button"
+                              className="selectPersonBtn"
+                              onClick={() => this.addResPerson(person)}
+                              key={person.id}
+                            >
+                              {person.name}&nbsp;{person.surname}
+                            </button>
+                            <br />
+                          </React.Fragment>
+                        );
+                      })
                     ) : null}
                   </Col>
                   <Col>
                     {this.state.resPersonList.map((person) => {
                       return (
-                        <li key={person.id}>
+                        <React.Fragment>
                           <button
                             type="button"
+                            className="selectedPersonBtn"
                             onClick={() => this.removeAssignedPerson(person, 1)}
+                            key={person.id}
                           >
                             {person.name}&nbsp;{person.surname}
                           </button>
-                        </li>
+                          <br />
+                        </React.Fragment>
                       );
                     })}
                   </Col>
@@ -621,35 +631,40 @@ class UpdateTask extends React.Component {
                       value={this.state.resourcesSearchTerm}
                       onChange={(e) => this.updateSearch(e, 2)}
                       placeholder="Search for a name"
+                      style={{width:'100%'}}
                     />
                     {this.state.resourcesSearchTerm.length >= 2 ? (
-                      <ul>
-                        {filteredResources.map((person) => {
-                          return (
-                            <li key={person.id}>
-                              <button
-                                type="button"
-                                onClick={() => this.addResource(person)}
-                              >
-                                {person.name}&nbsp;{person.surname}
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                      filteredResources.map((person) => {
+                        return (
+                          <React.Fragment>
+                            <button
+                              type="button"
+                              className="selectPersonBtn"
+                              onClick={() => this.addResource(person)}
+                              key={person.id}
+                            >
+                              {person.name}&nbsp;{person.surname}
+                            </button>
+                            <br />
+                          </React.Fragment>
+                        );
+                      })
                     ) : null}
                   </Col>
                   <Col>
                     {this.state.resourcesList.map((person) => {
                       return (
-                        <li key={person.id}>
+                        <React.Fragment>
                           <button
                             type="button"
+                            className="selectedPersonBtn"
                             onClick={() => this.removeAssignedPerson(person, 2)}
+                            key={person.id}
                           >
                             {person.name}&nbsp;{person.surname}
                           </button>
-                        </li>
+                          <br />
+                        </React.Fragment>
                       );
                     })}
                   </Col>
