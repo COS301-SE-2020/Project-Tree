@@ -477,7 +477,7 @@ class WebViewWrapper extends Component {
         renderLoading={this.ActivityIndicatorLoadingView}
         startInLoadingState={true}
         source={{
-          uri: 'http://10.0.2.2:5000/mobile',
+          uri: 'http://projecttree.herokuapp.com/mobile',
           method: 'POST',
           body: `nodes=${JSON.stringify(
             this.props.nodes,
