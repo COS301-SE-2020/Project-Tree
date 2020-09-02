@@ -158,6 +158,17 @@ function addDays(year, month, day, duration) {
   return dateWithDuration;
 }
 
+function datetimeToString(datetime){
+  let obj = {
+    year: datetime.year.low,
+    month: datetime.month.low < 10 ? `0${datetime.month.low}` : datetime.month.low,
+    day: datetime.day.low < 10 ? `0${datetime.day.low}` : datetime.day.low,
+    hour: datetime.hour.low < 10 ? `0${datetime.hour.low}` : datetime.hour.low,
+    min: datetime.minute.low < 10 ? `0${datetime.minute.low}` : datetime.minute.low,
+  }
+  return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.min}`
+}
+
 module.exports = {
   updateProject,
   excecuteQueries,
@@ -167,4 +178,5 @@ module.exports = {
   getSuccessors,
   addDays,
   compareDates,
+  datetimeToString,
 };

@@ -20,22 +20,16 @@ function createTask(req, res) {
       `
     )
     .then((result) => {
-      let startDate = result.records[0]._fields[0].properties.startDate;
-      let smonth = startDate.month.low < 10 ? `0${startDate.month.low}` : startDate.month.low ;
-      let sday = startDate.day.low < 10 ? `0${startDate.day.low}` : startDate.day.low ;
-      let shour = startDate.hour.low < 10 ? `0${startDate.hour.low}` : startDate.hour.low ;
-      let smin = startDate.minute.low < 10 ? `0${startDate.minute.low}` : startDate.minute.low ;
-      let endDate = result.records[0]._fields[0].properties.endDate;
-      let emonth = endDate.month.low < 10 ? `0${endDate.month.low}` : endDate.month.low ;
-      let eday = endDate.day.low < 10 ? `0${endDate.day.low}` : endDate.day.low ;
-      let ehour = endDate.hour.low < 10 ? `0${endDate.hour.low}` : endDate.hour.low ;
-      let emin = endDate.minute.low < 10 ? `0${endDate.minute.low}` : endDate.minute.low ;
       let task = {
         id: result.records[0]._fields[0].identity.low,
         name: result.records[0]._fields[0].properties.name,
         description: result.records[0]._fields[0].properties.description,
-        startDate: `${startDate.year.low}-${smonth}-${sday}T${shour}:${smin}`,
-        endDate: `${endDate.year.low}-${emonth}-${eday}T${ehour}:${emin}`,
+        startDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.startDate
+        ),
+        startDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.endDate
+        ),
         type: result.records[0]._fields[0].properties.type,
         progress: result.records[0]._fields[0].properties.progress.low,
       };
@@ -137,22 +131,18 @@ async function updateTask(req, res) {
       `
     )
     .then(async (result) => {
-      let startDate = result.records[0]._fields[0].properties.startDate;
-      let smonth = startDate.month.low < 10 ? `0${startDate.month.low}` : startDate.month.low ;
-      let sday = startDate.day.low < 10 ? `0${startDate.day.low}` : startDate.day.low ;
-      let shour = startDate.hour.low < 10 ? `0${startDate.hour.low}` : startDate.hour.low ;
-      let smin = startDate.minute.low < 10 ? `0${startDate.minute.low}` : startDate.minute.low ;
-      let endDate = result.records[0]._fields[0].properties.endDate;
-      let emonth = endDate.month.low < 10 ? `0${endDate.month.low}` : endDate.month.low ;
-      let eday = endDate.day.low < 10 ? `0${endDate.day.low}` : endDate.day.low ;
-      let ehour = endDate.hour.low < 10 ? `0${endDate.hour.low}` : endDate.hour.low ;
-      let emin = endDate.minute.low < 10 ? `0${endDate.minute.low}` : endDate.minute.low ;
       let changedTask = {
         id: result.records[0]._fields[0].identity.low,
         name: result.records[0]._fields[0].properties.name,
         description: result.records[0]._fields[0].properties.description,
-        startDate: `${startDate.year.low}-${smonth}-${sday}T${shour}:${smin}`,
-        endDate: `${endDate.year.low}-${emonth}-${eday}T${ehour}:${emin}`,
+        type: record._fields[0].properties.type,
+        progress: record._fields[0].properties.progress.low,
+        startDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.startDate
+        ),
+        endDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.endDate
+        ),
       };
       for (var x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == changedTask.id) {
@@ -162,12 +152,11 @@ async function updateTask(req, res) {
 
       let upDep = false;
       if (
-        result.records[0]._fields[0].properties.startDate !=
+        `${startDate.year.low}-${smonth}-${sday}T${shour}:${smin}` !=
           req.body.changedInfo.ut_startDate ||
-        result.records[0]._fields[0].properties.duration !=
-          req.body.changedInfo.ut_duration
-      )
-        upDep = true;
+        `${endDate.year.low}-${emonth}-${eday}T${ehour}:${emin}` !=
+          req.body.changedInfo.ut_endDate
+      ) upDep = true;
 
       let queriesArray = [];
       if (upDep == true) {

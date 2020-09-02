@@ -6,11 +6,14 @@ function createDependency(req, res) {
     .run(
       `
         MATCH (a),(b)
-        WHERE ID(a) = ${req.body.changedInfo.cd_fid} AND ID(b) = ${req.body.changedInfo.cd_sid}
+        WHERE ID(a) = ${req.body.changedInfo.fid} AND ID(b) = ${req.body.changedInfo.sid}
         CREATE (a)-[n:DEPENDENCY{
-          projId:${req.body.changedInfo.cd_pid},
-          relationshipType:'${req.body.changedInfo.cd_relationshipType}',
-          duration:${req.body.changedInfo.cd_duration}
+          projId:${req.body.changedInfo.projId},
+          relationshipType:'${req.body.changedInfo.relationshipType}',
+          sStartDate: datetime("${req.body.changedInfo.sStartDate}"),
+          sEndDate: datetime("${req.body.changedInfo.sEndDate}"),
+          startDate: datetime("${req.body.changedInfo.startDate}"),
+          endDate: datetime("${req.body.changedInfo.endDate}")
         }]->(b)
         RETURN n
       `
@@ -18,7 +21,18 @@ function createDependency(req, res) {
     .then(async (result) => {
       let rel = {
         id: result.records[0]._fields[0].identity.low,
-        duration: result.records[0]._fields[0].properties.duration.low,
+        sStartDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.sStartDate
+        ),
+        sEndDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.sEndDate
+        ),
+        startDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.startDate
+        ),
+        endDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.endDate
+        ),
         relationshipType:
           result.records[0]._fields[0].properties.relationshipType,
         source: result.records[0]._fields[0].start.low,
@@ -67,7 +81,18 @@ function updateDependency(req, res) {
     .then(async (result) => {
       let rel = {
         id: result.records[0]._fields[0].identity.low,
-        duration: result.records[0]._fields[0].properties.duration.low,
+        sStartDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.sStartDate
+        ),
+        sEndDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.sEndDate
+        ),
+        startDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.startDate
+        ),
+        endDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.endDate
+        ),
         relationshipType:
           result.records[0]._fields[0].properties.relationshipType,
         source: result.records[0]._fields[0].start.low,

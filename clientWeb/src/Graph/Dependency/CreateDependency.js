@@ -24,18 +24,19 @@ class CreateDependency extends React.Component {
       startDate = this.props.source.endDate
     }
     let data = {
+      fid: this.props.source.id,
+      sid: this.props.target.id,
+      projId: this.props.project.id,
       relationshipType: this.state.relationshipType,
       sStartDate: this.props.source.startDate,
       sEndDate: this.props.source.endDate,
       startDate: startDate,
       endDate: this.state.target.startDate,
     }
-    console.log(data);
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
-    console.log(projectData);
-    /*const response = await fetch("/dependency/add", {
+    const response = await fetch("/dependency/add", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -51,7 +52,7 @@ class CreateDependency extends React.Component {
       body.displayNode,
       body.displayRel
     );
-    this.props.clearDependency();*/
+    this.props.clearDependency();
   }
   
   CalcDiff(sd, ed) {
@@ -76,27 +77,6 @@ class CreateDependency extends React.Component {
               <Modal.Title>Create Dependency</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <input
-                hidden
-                type="number"
-                name="cd_pid"
-                value={this.props.project.id}
-                onChange={() => {}}
-              />
-              <input
-                hidden
-                type="number"
-                name="cd_fid"
-                value={this.props.source.id}
-                onChange={() => {}}
-              />
-              <input
-                hidden
-                type="number"
-                name="cd_sid"
-                value={this.props.target.id}
-                onChange={() => {}}
-              />
               <Form.Group>
                 <Form.Label>Relationship Type</Form.Label>
                 <Form.Control
