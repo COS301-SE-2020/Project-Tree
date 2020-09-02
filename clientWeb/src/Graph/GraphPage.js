@@ -257,6 +257,7 @@ class TaskSidebar extends React.Component {
   }
 
   CalcDiff(sd, ed) {
+    console.log(sd);
     let startDate = new Date(sd);
     let endDate = new Date(ed);
     return ms(endDate.getTime() - startDate.getTime(), {long: true});

@@ -115,7 +115,7 @@ class UpdateDependency extends React.Component {
                       dependency.startDate = this.state.dependency.eStartDate;
                       this.setState({
                         dependency: dependency,
-                        duration: this.CalcDiff(this.state.dependency.sEnd, this.state.dependency.endDate) 
+                        duration: this.CalcDiff(this.state.dependency.sEndDate, this.state.dependency.endDate) 
                       });
                     }
                     this.value = this.state.dependency.relationshipType;
@@ -137,12 +137,12 @@ class UpdateDependency extends React.Component {
                   required
                   readOnly
                   type="datetime-local"
-                  name="cd_startDate"
+                  name="ud_startDate"
                   value={
-                    this.state.relationshipType === "ss" ?
-                    this.props.dependency.sStartDate
+                    this.state.dependency.relationshipType === "ss" ?
+                    this.state.dependency.sStartDate
                   :
-                    this.props.dependency.sEndDate
+                    this.state.dependency.sEndDate
                   }
                   onChange={() => {}}
                 />
@@ -155,7 +155,7 @@ class UpdateDependency extends React.Component {
                   required
                   type="datetime-local"
                   name="cd_endDate"
-                  value={this.state.target.startDate}
+                  value={this.state.dependency.endDate}
                   onChange={(e) => {
                     let dependency = this.state.duration;
                     dependency.endDate = e.target.value;
@@ -182,50 +182,6 @@ class UpdateDependency extends React.Component {
                   name="duration"
                   value={this.state.duration}
                   readOnly
-                />
-              </Form.Group>
-            </Modal.Body>
-            <Modal.Body>
-              <input
-                hidden
-                type="number"
-                name="ud_pid"
-                value={this.state.pid}
-                onChange={() => {}}
-              />
-              <input
-                hidden
-                type="number"
-                name="ud_did"
-                value={this.state.did}
-                onChange={() => {}}
-              />
-              <Form.Group>
-                <Form.Label>Relationship Type</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="ud_relationshipType"
-                  value={this.state.relation}
-                  onChange={(e) => {
-                    this.setState({ relation: e.target.value });
-                    this.value = this.state.relation;
-                  }}
-                >
-                  <option value="ss">Start-Start</option>
-                  <option value="fs">Finish-Start</option>
-                </Form.Control>
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Duration:</Form.Label>
-                <Form.Control
-                  required
-                  type="number"
-                  name="ud_duration"
-                  value={this.state.duration}
-                  onChange={(e) => {
-                    this.setState({ duration: e.target.value });
-                    this.value = this.state.duration;
-                  }}
                 />
               </Form.Group>
             </Modal.Body>

@@ -108,12 +108,12 @@ function updateDependency(req, res) {
 
       let queriesArray = [];
 
-      await updateProject.updateProject(
+      /* await updateProject.updateProject(
         changedRel.target,
         req.body.nodes,
         req.body.rels,
         queriesArray
-      );
+      ); */
       res.status(200);
       res.send({
         nodes: req.body.nodes,
@@ -121,7 +121,7 @@ function updateDependency(req, res) {
         displayNode: null,
         displayRel: changedRel.id,
       });
-      updateProject.excecuteQueries(queriesArray);
+      //updateProject.excecuteQueries(queriesArray);
     })
     .catch((err) => {
       console.log(err);

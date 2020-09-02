@@ -27,7 +27,7 @@ function createTask(req, res) {
         startDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.startDate
         ),
-        startDate: updateProject.datetimeToString(
+        endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
         type: result.records[0]._fields[0].properties.type,
