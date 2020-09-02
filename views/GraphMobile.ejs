@@ -61,7 +61,7 @@
         var graph = new joint.dia.Graph();
         var paper = new joint.dia.Paper({
             el: $('#paper'),
-            gridSize: 1,
+            gridSize: 10,
             model: graph,
             linkPinning: false,
             interactive: false
@@ -189,7 +189,7 @@
                 height: height
             });
 
-            var statusColor = '#fff'
+            var statusColor = '#77DD77'
             if(node.type === "Incomplete"){
                 let today = new Date();
                 if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
@@ -221,6 +221,26 @@
             var borderColor = '#000';
             if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
 
+            let shadowHighlight = {
+                name: 'dropShadow',
+                args: {
+                dx: 1,
+                dy: 1,
+                blur: 2
+                }
+            }
+            if(node.highlighted !== undefined){
+                shadowHighlight = {
+                name: 'highlight',
+                args: {
+                    color: 'purple',
+                    width: 3,
+                    opacity: 0.7,
+                    blur: 5
+                }
+                }
+            }
+
             return new joint.shapes.standard.Rectangle({
                 id: `${node.id}`,
                 size:{
@@ -230,19 +250,28 @@
                 attrs:{
                     type:'node',
                     body: {
-                        fill: statusColor,
-                        stroke: borderColor
+                        stroke: borderColor,
+                        fill: {
+                            type: 'linearGradient',
+                            stops: [
+                                { offset: `${node.progress}%`, color: statusColor },
+                                { offset: `${node.progress+1}%`, color: '#fff' },
+                            ]
+                        },
+                        filter: shadowHighlight,
+                    },
+                    rect:{
+                        rx: 10, ry: 10,
+                        //magnet: true
+                        transform: 'translate(15, 15)'
                     },
                     text:{ 
                         text: wraptext, 
                         'font-size': letterSize, 
                         'font-family': 'monospace',
+                        transform: 'translate(15, 15)'
                     },
-                    rect:{
-                        rx: 10, ry: 10,
-                        //magnet: true
-                        transform: 'translate(1, 1)'
-                    }
+                    
                 }
             });
         }
