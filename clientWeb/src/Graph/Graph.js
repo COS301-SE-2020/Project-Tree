@@ -108,6 +108,7 @@ function makeElement(node, criticalPathNodes) {
         text: wraptext,
         "font-size": letterSize,
         "font-family": "monospace",
+        transform: "translate(2, 2)",
       },
       rect: {
         rx: 10,
