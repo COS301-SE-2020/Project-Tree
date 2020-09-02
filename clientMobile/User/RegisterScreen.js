@@ -29,6 +29,10 @@ class RegisterScreen extends Component {
       checkSname: false,
       hiddenText: true,
       confirm_hiddenText: true,
+      passwordError: "",
+      passwordError2: "",
+      passwordError3: "",
+      passwordError4: ""
     };
     this.inputChange = this.inputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
@@ -39,6 +43,7 @@ class RegisterScreen extends Component {
     this.handleValidUser = this.handleValidUser.bind(this);
     this.snameInputChange = this.snameInputChange.bind(this);
     this.handleValidSname = this.handleValidSname.bind(this);
+    this.password_validate = this.password_validate.bind(this);
   }
 
   handleValidUser(val) {
@@ -93,6 +98,25 @@ class RegisterScreen extends Component {
     }
   }
 
+  password_validate(p) {
+     let str = "";
+     let arr = [];
+    // let p = d.password;
+    /[A-Z]/.test(p) === false
+      ? arr.push("Must contain at least one Capital Letter \n")
+      : arr.push ("✓");
+    /[0-9]/.test(p) === false
+      ? arr.push("Must contain at least one number \n")
+      : arr.push("✓");
+    /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
+      ? arr.push("Must contain at least one special character eg. #!@$ \n")
+      : arr.push("✓");
+    /^.{8,22}$/.test(p) === false
+      ? arr.push("Must be between 8 and 22 characters ")
+      : arr.push("✓");
+    return arr;
+  }
+
   emailInputChange(val) {
     if (val.length !== 0) {
       this.setState({
@@ -108,17 +132,24 @@ class RegisterScreen extends Component {
   }
 
   handlePasswordChange(val) {
-    if (val.trim().length >= 8) {
+    let arr = this.password_validate(val);
+    this.setState({
+      passwordError: arr[0],
+      passwordError2: arr[1], 
+      passwordError3: arr[2],
+      passwordError4: arr[3],
+      isValidPassword: false
+    })
+    if(arr[0]== "✓" && arr[1]== "✓" && arr[2]== "✓" && arr[3]== "✓")
+    {
       this.setState({
         password: val,
-        isValidPassword: true,
+        isValidPassword: true
       });
     } else {
       this.setState({
-        password: val,
-        isValidPassword: false,
-      });
-    }
+        isValidPassword: false
+      });    }
   }
 
   updateHiddenText() 
@@ -134,7 +165,8 @@ class RegisterScreen extends Component {
     });
   }
 
-  async handleRegister(userName, password, email, sname) {
+  async handleRegister(userName, password, email, sname) 
+  {
    
     if (userName.trim().length < 1) {
       alert('Please enter a username');
@@ -146,33 +178,35 @@ class RegisterScreen extends Component {
       return;
     }
 
-    if (sname.trim().length < 1) {
-      alert('Please enter a password of at least 8 characters');
+    if (password.trim().length < 1) {
+      alert('Please enter a password');
       return;
     }
 
-    if (email == null) {
+    if (/@/g.test(email) === false)
+    {
       alert('Please enter a valid email address');
       return;
     }
 
-    if (
-      this.state.validUser &&
+    if (this.state.validUser &&
       this.state.isValidPassword &&
-      this.state.isValidEmail
-      ) 
+      this.state.isValidEmail &&
+      this.state.isValidSname
+      )
       {
         let data = {
           name: userName,
           sname: this.state.sname,
           email: this.state.email,
           password: this.state.password,         
-          um_date: '  '
+          um_date: '  ',
+          type: "mobileToken"
       };
       data = JSON.stringify(data);
 
       const response = await fetch(
-        'http://projecttree.herokuapp.com/register',
+        'http://10.0.2.2:5000/register',
         {
           method: 'POST',
           headers: {
@@ -183,7 +217,15 @@ class RegisterScreen extends Component {
         },
       );
       const body = await response.json();
-      this.props.handleLogin(body);
+      console.log(body)
+      if(body.message !== "success")
+      {
+        alert(body.message)
+      }
+      else
+      {
+         this.props.handleLogin(body);
+      }
     } 
     else 
     {
@@ -243,12 +285,13 @@ class RegisterScreen extends Component {
                 onChangeText={(val) => this.snameInputChange(val)}
                 onEndEditing={(val) => this.handleValidSname(this.state.sname)}
               />
-            </View>
+            
             {this.state.checkSname ? (
               <Animatable.View animation="rubberBand">
                 <Feather name="check-circle" color="green" size={20} />
               </Animatable.View>
             ) : null}
+            </View>
             {this.state.isValidSname ? null : (
               <Animatable.View animation="rubberBand" duration={400}>
                 <Text style={styles.errorMsg}>
@@ -274,7 +317,7 @@ class RegisterScreen extends Component {
                 autoCapitalize="none"
                 onChangeText={(val) => this.handlePasswordChange(val)}
               />
-              <TouchableOpacity onPress={this.updatehiddenText}>
+              <TouchableOpacity onPress={this.updateHiddenText}>
                 {this.state.hiddenText ? (
                   <Feather name="eye-off" color="grey" size={20} />
                 ) : (
@@ -282,12 +325,16 @@ class RegisterScreen extends Component {
                 )}
               </TouchableOpacity>
             </View>
-            {this.state.isValidPassword ? null : (
+            {this.state.isValidPassword ? true : (
               <Animatable.View animation="fadeInLeft" duration={500}>
                 <Text style={styles.errorMsg}>
-                  Password must be at least 8 characters long.
+                {"\n"}
+                {this.state.passwordError}{"\n"}
+                {this.state.passwordError2}{"\n"}
+                {this.state.passwordError3}{"\n"}
+                {this.state.passwordError4}
                 </Text>
-              </Animatable.View>
+               </Animatable.View>
             )}
             <Text style={[styles.text_footer, {marginTop: 35}]}>Email</Text>
             <View style={styles.mover}>
