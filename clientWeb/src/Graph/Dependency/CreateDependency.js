@@ -2,14 +2,6 @@ import React from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import ms from "ms";
 
-function stringifyFormData(fd) {
-  const data = {};
-  for (let key of fd.keys()) {
-    data[key] = fd.get(key);
-  }
-  return data; 
-}
-
 class CreateDependency extends React.Component {
   constructor(props) {
     super(props);
@@ -24,13 +16,26 @@ class CreateDependency extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    let data = new FormData(event.target);
-    data = await stringifyFormData(data);
+
+    let startDate;
+    if (this.state.relationshipType === "ss") {
+      startDate = this.props.source.startDate;
+    } else {
+      startDate = this.props.source.endDate
+    }
+    let data = {
+      relationshipType: this.state.relationshipType,
+      sStartDate: this.props.source.startDate,
+      sEndDate: this.props.source.endDate,
+      startDate: startDate,
+      endDate: this.state.target.startDate,
+    }
+    console.log(data);
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
-
-    const response = await fetch("/dependency/add", {
+    console.log(projectData);
+    /*const response = await fetch("/dependency/add", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -46,7 +51,7 @@ class CreateDependency extends React.Component {
       body.displayNode,
       body.displayRel
     );
-    this.props.clearDependency();
+    this.props.clearDependency();*/
   }
   
   CalcDiff(sd, ed) {
@@ -75,7 +80,7 @@ class CreateDependency extends React.Component {
                 hidden
                 type="number"
                 name="cd_pid"
-                value={this.props.pid}
+                value={this.props.project.id}
                 onChange={() => {}}
               />
               <input
@@ -169,7 +174,7 @@ class CreateDependency extends React.Component {
                         duration: this.CalcDiff(this.props.source.endDate, e.target.value) 
                       });
                     }
-                    this.value = this.state.target.value;
+                    this.value = this.state.target.startDate;
                   }}
                 />
               </Form.Group>

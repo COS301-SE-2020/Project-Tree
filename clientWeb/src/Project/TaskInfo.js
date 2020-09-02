@@ -92,11 +92,15 @@ class TaskInfo extends React.Component {
                 list.push(el);
               }
               break;
-            case "Incomplete":
+            case "Issue":
+                if (el.type === "Issue") {
+                  list.push(el);
+                }
+                break;
+            default:
               if (el.type === "Incomplete") {
                 list.push(el);
               }
-            case "Issue":
               if (el.type === "Issue") {
                 list.push(el);
               }
