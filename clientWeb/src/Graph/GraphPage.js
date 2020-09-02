@@ -307,6 +307,11 @@ class TaskSidebar extends React.Component {
             <Col className="text-center">{this.props.task.description}</Col>
           </Row>
           <Row className="text-center p-1">
+            <Col className="text-center">
+              Task Id: {this.props.task.id}
+            </Col>
+          </Row>
+          <Row className="text-center p-1">
             <Col className="text-center">Start Date: {startDate}</Col>
           </Row>
           <Row className="text-center p-1">
@@ -506,8 +511,7 @@ class LegendSidebar extends React.Component {
                 backgroundColor: "#ff6961",
                 color: "black",
                 width: "120px",
-              }}
-            >
+              }}>
               Overdue
             </Col>
             <Col></Col>

@@ -60,8 +60,15 @@ export class Register extends React.Component {
     let arr = this.password_validate(x);
     if (arr.length === 0) {
       $.post("/register", JSON.parse(data), (response) => {
+       if(response.message == "duplicate")
+       {
+          alert("User with this email already exists. Try with a different email.")
+       }
+       else
+       {       
         localStorage.setItem("sessionToken", response.sessionToken);
         this.props.handleReg(response);
+      }
       })
       .fail(() => {
         alert("Unable to create User");
@@ -141,6 +148,14 @@ export class Register extends React.Component {
                 name="um_date"
                 id="um_date"
                 value={" "}
+                onChange={() => {}}
+              />
+              <input
+                hidden
+                type="text"
+                name="type"
+                id="type"
+                value={"webToken"}
                 onChange={() => {}}
               />
               <div style={{ fontSize: 12, color: "red" }}>

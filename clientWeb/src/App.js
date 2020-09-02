@@ -68,14 +68,14 @@ class App extends Component {
         });
       }).fail((response) => {
         localStorage.removeItem("sessionToken");
-        alert(response.message);
+        window.location.reload(false);
       });
 
       $.post("/user/get", { token }, (response) => {
         this.setState({ user: response.user });
       }).fail((response) => {
         localStorage.removeItem("sessionToken");
-        alert(response.message);
+        window.location.reload(false);
       });
 
       this.setState({ loggedInStatus: true });

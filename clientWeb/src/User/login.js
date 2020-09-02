@@ -19,6 +19,7 @@ export class Login extends Component {
       email: "",
       password: "",
       loginErrors: "",
+      webToken: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -76,6 +77,14 @@ export class Login extends Component {
               </div>
             </div>
           </div>
+          <input
+                hidden
+                type="text"
+                name="type"
+                id="type"
+                value={"webToken"}
+                onChange={() => {}}
+         />
           <div className="footer">
             <Button type="submit" className="btn">
               Login

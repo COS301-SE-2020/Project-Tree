@@ -26,6 +26,7 @@
     "react-native-animated-nav-tab-bar": "^3.0.3",
     "react-native-drawer": "^2.5.1",
     "react-native-elements": "^2.1.0",
+    "react-native-flash-message": "^0.1.16",
     "react-native-floating-action": "^1.21.0",
     "react-native-gesture-handler": "^1.7.0",
     "react-native-linear-gradient": "^2.5.6",

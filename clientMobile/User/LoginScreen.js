@@ -63,10 +63,11 @@ class LoginScreen extends Component {
       let data = {
         email: Email.trim(),
         password: password,
+        type: "mobileToken"
       };
       data = JSON.stringify(data);
 
-      const response = await fetch('http://projecttree.herokuapp.com/login', {
+      const response = await fetch('http://10.0.2.2:5000/login', {
         method: 'POST',
         headers: {
           Accept: 'application/json',

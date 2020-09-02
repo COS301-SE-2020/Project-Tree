@@ -164,11 +164,9 @@ export default class App extends Component {
 
   async handleLogin(data) {
     try {
-      await AsyncStorage.setItem(
-        'sessionToken',
-        JSON.stringify(data.sessionToken),
-      );
-    } catch (e) {
+      await AsyncStorage.setItem('sessionToken',JSON.stringify(data.sessionToken));
+    } 
+    catch (e) {
       Alert.alert(
         'Error',
         'User details not found. Please ensure details are correct',

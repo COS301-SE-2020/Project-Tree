@@ -96,6 +96,10 @@ class TaskModal extends Component {
                 {this.props.selectedTask.description}
               </Text>
               <Text style={styles.modalText}>
+                Task Id:{' '} 
+                {this.props.selectedTask.id}
+              </Text>
+              <Text style={styles.modalText}>
                 Start Date:{' '}
                 {this.props.selectedTask.startDate.year.low +
                   '-' +

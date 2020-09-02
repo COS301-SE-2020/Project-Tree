@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
+  Modal
 } from 'react-native';
 import {
   Icon,
@@ -21,6 +22,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 class UserSettings extends Component {
   constructor(props) {
@@ -44,21 +46,65 @@ class UserSettings extends Component {
       checkSname: false,
       secureTextEntry: true,
       confirm_secureTextEntry: true,
-      confirmPassword: true,
+      confirmPassword: '',
+      hiddenText: true,
+      confirm_hiddenText: true,
+      newPass: '',
+      confirmNewPass: true,
+      passwordError: "",
+      passwordError2: "",
+      passwordError3: "",
+      passwordError4: ""
     };
     this.textInputChange = this.textInputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleNewPasswordChange = this.handleNewPasswordChange.bind(this);
     this.updateSecureTextEntry = this.updateSecureTextEntry.bind(this);
-    this.updateConfirmSecureTextEntry = this.updateConfirmSecureTextEntry.bind(
-      this,
-    );
+    this.updateConfirmSecureTextEntry = this.updateConfirmSecureTextEntry.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleValidUser = this.handleValidUser.bind(this);
     this.snameInputChange = this.snameInputChange.bind(this);
     this.handleValidSname = this.handleValidSname.bind(this);
     this.onChange = this.onChange.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
+    this.updateHiddenText = this.updateHiddenText.bind(this);
+    this.updateConfirmHiddenText = this.updateConfirmHiddenText.bind(this);
+    this.handlePass = this.handlePass.bind(this);
+    this.password_validate = this.password_validate.bind(this);
+  }
+
+  password_validate(p) {
+    let str = "";
+    let arr = [];
+   // let p = d.password;
+   /[A-Z]/.test(p) === false
+     ? arr.push("Must contain at least one Capital Letter \n")
+     : arr.push ("✓");
+   /[0-9]/.test(p) === false
+     ? arr.push("Must contain at least one number \n")
+     : arr.push("✓");
+   /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
+     ? arr.push("Must contain at least one special character eg. #!@$ \n")
+     : arr.push("✓");
+   /^.{8,22}$/.test(p) === false
+     ? arr.push("Must be between 8 and 22 characters ")
+     : arr.push("✓");
+   return arr;
+ }
+
+  updateHiddenText() 
+  {
+    this.setState({
+      hiddenText: !this.state.hiddenText,
+    });
+    console.log(this.state.hiddenText)
+  }
+
+  updateConfirmHiddenText() {
+    this.setState({
+      confirm_hiddenText: !this.state.confirm_hiddenText,
+    });
   }
 
   onChange(event, selectedDate) {
@@ -70,7 +116,7 @@ class UserSettings extends Component {
     this.setState({startDate: selectedDate, startDatePickerVisible: false});
   }
 
-  setModalVisible(visible) {
+  async setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
 
@@ -91,10 +137,11 @@ class UserSettings extends Component {
       this.setState({
         userName: body.user.name,
         sname: body.user.sname,
-        password: body.user.password,
         email: body.user.email,
         initialEmail: body.user.email,
       });
+      if(body.user.birthday == '  '){}
+      else{this.setState({startDate: new Date(body.user.birthday)})}
     });
   }
 
@@ -164,25 +211,34 @@ class UserSettings extends Component {
     }
   }
 
-  handlePasswordChange(val, flag) {
-    if (flag) {
-      if (val.trim().length >= 8) {
+
+  handleNewPasswordChange(val) {
+      let arr = this.password_validate(val);
+      this.setState({
+        passwordError: arr[0],
+        passwordError2: arr[1], 
+        passwordError3: arr[2],
+        passwordError4: arr[3],
+        isValidPassword: false
+      })
+      if(arr[0]== "✓" && arr[1]== "✓" && arr[2]== "✓" && arr[3]== "✓")
+      {
         this.setState({
-          password: val,
-          isValidPassword: true,
+          newPass: val,
+          confirmNewPass: true,
         });
       } else {
         this.setState({
-          password: val,
-          isValidPassword: false,
-        });
-      }
-    } else {
-      this.setState({
-        confirmPassword: val,
-      });
+          confirmNewPass: true,
+        });    }
     }
-  }
+
+
+  handlePasswordChange(val) {
+        this.setState({
+          confirmPassword: val,
+          isValidPassword: true,
+    })}
 
   updateSecureTextEntry() {
     this.setState({
@@ -195,6 +251,56 @@ class UserSettings extends Component {
       confirm_secureTextEntry: !this.state.confirm_secureTextEntry,
     });
   }
+
+  async handlePass(pass, passNew) 
+  {
+    console.log(passNew.trim().length, "        ", pass.trim().length)
+
+    if (pass.trim().length < 1) {
+      alert('Please enter your password you wish to change');
+      return;
+    }
+
+    if (passNew.trim().length < 1) {
+      alert('Please ensure all password criteria are met');
+      return;
+    }
+
+    console.log(pass, passNew)
+    if(!this.state.confirmNewPass && !this.state.confirmNewPass)
+    {
+      alert("Invalid password")
+    }
+    else
+    {
+      let data = {
+        token: this.state.token,
+        testPass: pass,
+        newPass: passNew
+      };
+      data = JSON.stringify(data);
+      console.log(data)
+      const response = await fetch('http://10.0.2.2:5000/user/pass', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data,
+      });
+      const body = await response.json();
+      if(body.message === "wrong")
+      {
+        alert('Password entered does not match password registered with this account.');
+      }
+      else if(body.message === "success")
+      {
+        alert("Success")
+        this.props.userScreen(false);
+      }
+     }
+  }
+
 
   async handleEdit(pass) {
     if (this.state.userName.trim().length < 1) {
@@ -211,16 +317,14 @@ class UserSettings extends Component {
 
     if (
       this.state.isValidUser &&
-      this.state.isValidPassword &&
-      this.state.isValidEmail &&
-      this.state.isValidPasswordConfirm
+      this.state.isValidEmail 
     ) {
       let data = {
         token: this.state.token,
         name: this.state.userName,
         email: this.state.email,
         sname: this.state.sname,
-        bday: this.state.startDate.toISOString().substr(0, 10),
+        bday: this.state.startDate,
         testEmail: this.state.initialEmail,
         testPass: pass,
       };
@@ -275,6 +379,15 @@ class UserSettings extends Component {
                 </Text>
               </Animatable.View>
             )}
+              {this.state.startDatePickerVisible && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                onChange={this.onChange}
+                value={this.state.startDate}
+                mode={'date'}
+                is24Hour={true}
+              />
+            )}
             <Text
               style={[
                 styleUser.text_footer,
@@ -323,37 +436,175 @@ class UserSettings extends Component {
                 </Animatable.View>
               ) : null}
             </View>
+            <Text style={[styleUser.text_footer, {marginTop: 35}]}>Date of Birth</Text>
+            <View>
             <Form>
               <Item floatingLabel disabled>
-                <Label>Birthday</Label>
-                <Input
-                  value={this.state.startDate.toISOString().substr(0, 10)}
+              <Input value={this.state.startDate.toISOString().substr(0, 10)} editable={false} />
+               <TextInput
+                  style={styleUser.textInput}
+                 // defaultValue={this.state.startDate}
+                  placeholder="startDate"
+                  editable={false} 
                 />
                 <Icon
                   type="AntDesign"
-                  name="plus"
+                  name="calendar"
                   onPress={() => {
                     this.setState({startDatePickerVisible: true});
                   }}
                 />
               </Item>
             </Form>
-
-            {this.state.startDatePickerVisible && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                onChange={this.onChange}
-                value={this.state.startDate}
-                mode={'date'}
-                is24Hour={true}
+            </View>
+            <Modal
+              animationType="fade"
+              transperant={true}
+              visible={this.state.modalVisible}
+              onRequestClose={() => this.setModalVisible(false)}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <TouchableOpacity
+                  style={styles.hideButton}
+                  onPress={() => this.setModalVisible(false)}>
+                  <Icon type="FontAwesome" name="close" />
+                  </TouchableOpacity>
+                <View style={{alignItems: 'center'}}>
+                <Text style={{fontSize: 25, color: '#184D47'}}>Password Change</Text>
+                <View
+                  style={{
+                    backgroundColor: '#EEBB4D',
+                    height: 1,
+                    width: '60%',
+                    marginBottom: 10,
+                  }}></View>
+              </View>
+              <Text
+                style={[
+                  styles.text_footer,
+                  {
+                    marginTop: 35,
+                  },
+                ]}>
+                Current Password
+              </Text>
+            <View style={styles.mover}>
+              <Feather name="lock" color="#05375a" size={20} />
+              <TextInput
+                placeholder="Password"
+                secureTextEntry={this.state.hiddenText ? true : false}
+                style={styles.inputT}
+                autoCapitalize="none"
+                onChangeText={(val) => this.handlePasswordChange(val)}
               />
+              <TouchableOpacity onPress={this.updateHiddenText}>
+                {this.state.hiddenText ? (
+                  <Feather name="eye-off" color="grey" size={20} />
+                ): 
+                (
+                  <Feather name="eye" color="grey" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+
+            <Text
+              style={[
+                styles.text_footer,
+                {
+                  marginTop: 35,
+                },
+              ]}>
+              New Password
+            </Text>
+            <View style={styles.mover}>
+              <Feather name="lock" color="#05375a" size={20} />
+              <TextInput
+                placeholder="Password"
+                secureTextEntry={this.state.hiddenText ? true : false}
+                style={styles.inputT}
+                autoCapitalize="none"
+                onChangeText={(val) => this.handleNewPasswordChange(val)}
+              />
+              <TouchableOpacity onPress={this.updateHiddenText}>
+                {this.state.hiddenText ? (
+                  <Feather name="eye-off" color="grey" size={20} />
+                ) : (
+                  <Feather name="eye" color="grey" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+            {this.state.isValidPassword ? true : (
+              <Animatable.View animation="fadeInLeft" duration={500}>
+                <Text style={styles.errorMsg}>
+                {"\n"}
+                {this.state.passwordError}{"\n"}
+                {this.state.passwordError2}{"\n"}
+                {this.state.passwordError3}{"\n"}
+                {this.state.passwordError4}
+                </Text>
+               </Animatable.View>
             )}
+            <View style={styleUser.buttonSign}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.handlePass(
+                    this.state.confirmPassword,
+                    this.state.newPass
+                  );
+                }}
+                style={[
+                  styleUser.signIn,
+                  {
+                    borderColor: '#296d98',
+                    borderWidth: 2,
+                    marginTop: 0,
+                    paddding: 140
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styleUser.textSign,
+                    {
+                      color: '#296d98',
+                    },
+                  ]}>
+                  Confirm Password Change
+                </Text>
+              </TouchableOpacity>
+            </View>           
+            </View>
+           </View>
+          </Modal>
             <View style={styleUser.button}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({modalVisible: true})
+                }}
+                style={[
+                  styleUser.signIn,
+                  {
+                    borderColor: '#296d98',
+                    borderWidth: 2,
+                    marginTop: 38,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styleUser.textSign,
+                    {
+                      color: '#296d98',
+                    },
+                  ]}>
+                  Change Password   
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styleUser.buttonSign}>
               <TouchableOpacity
                 onPress={() => {
                   this.handleEdit(
                     this.state.userName,
-                    this.state.password,
                     this.state.email,
                     this.state.sname,
                     this.state.startDate,
@@ -364,7 +615,7 @@ class UserSettings extends Component {
                   {
                     borderColor: '#296d98',
                     borderWidth: 2,
-                    marginTop: 8,
+                    marginTop: 0,
                   },
                 ]}>
                 <Text
@@ -409,6 +660,19 @@ const styleUser = StyleSheet.create({
     paddingVertical: 30,
     paddingTop: 40,
   },
+  inputT: {
+    flex: 1,
+    paddingLeft: 10,
+    color: 'black',
+    marginTop: Platform.OS === 'ios' ? 0 : -12
+  },
+  mover: {
+    flexDirection: 'row',
+    marginTop: 10,
+    paddingBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f2f2f2',
+  },
   text_header: {
     color: '#fff',
     fontWeight: 'bold',
@@ -435,6 +699,11 @@ const styleUser = StyleSheet.create({
   button: {
     alignItems: 'center',
     marginTop: 20,
+    paddingBottom: 10,
+  },
+  buttonSign: {
+    alignItems: 'center',
+    marginTop: 20,
     paddingBottom: 50,
   },
   signIn: {
@@ -448,26 +717,18 @@ const styleUser = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  textPrivate: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 20,
-  },
-  color_textPrivate: {
-    color: 'grey',
-  },
   centeredView: {
     position: 'absolute',
-    width: '20%',
-    height: '12%',
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(100,100,100, 0.8)',
     padding: 20,
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'green',
+    margin: 80,
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 10,
     shadowColor: '#000',
@@ -478,8 +739,8 @@ const styleUser = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 1020,
-    width: '20%',
+    height: 500,
+    width: 350,
   },
   openButton: {
     backgroundColor: '#F194FF',
@@ -512,7 +773,7 @@ const styleUser = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'flex-end',
     marginRight: 10,
-    marginTop: 10,
+    marginTop: 0,
     bottom: 0,
   },
   submitButton: {
