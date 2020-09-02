@@ -14,11 +14,14 @@ import TaskModal from './TaskComponents/TaskModal';
 import DependencyModal from './DependencyComponents/DependencyModal';
 import CreateDependency from './DependencyComponents/CreateDependency';
 import IconEntypo from 'react-native-vector-icons/AntDesign';
+import IconFeather from 'react-native-vector-icons/Feather';
+import IconMaterial from 'react-native-vector-icons/MaterialIcons';
 import Drawer from 'react-native-drawer';
 import styled from 'styled-components/native';
 import GraphDrawer from './GraphDrawer';
 import {useNavigation} from '@react-navigation/native';
 import {Spinner} from 'native-base';
+import Filter from './FilterComponent'
 
 function GoToHome() {
   const navigation = useNavigation();
@@ -165,13 +168,17 @@ class GraphScreen extends Component {
       sourceCreateDependency: null,
       targetCreateDependency: null,
       allUsers:null, 
-      assignedProjUsers:null
+      assignedProjUsers:null,
+      filterVisibility:false,
+      filterOn:false,
     };
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.displayTaskDependency = this.displayTaskDependency.bind(this);
     this.setProjectInfo = this.setProjectInfo.bind(this);
     this.getName = this.getName.bind(this);
     this.setCreateDependency = this.setCreateDependency.bind(this);
+    this.setFilterVisibility = this.setFilterVisibility.bind(this);
+    this.setFilterOn = this.setFilterOn.bind(this);
   }
 
   async componentDidMount() {
@@ -252,11 +259,40 @@ class GraphScreen extends Component {
     return null;
   }
 
-  setProjectInfo(nodes, rels, assignedPeople) {
-    this.setState({nodes: nodes, links: rels});
-    if(assignedPeople !== undefined){
-      this.setState({assignedProjUsers: assignedPeople});
+  setFilterVisibility(value){
+    this.setState({filterVisibility:value})
+  }
+
+  setFilterOn(value){
+    this.setState({filterOn:value})
+  }
+
+  async setProjectInfo(nodes, rels, assignedPeople) {
+    if(nodes !== undefined && rels !== undefined){
+      this.setState({nodes: nodes, links: rels});
+      if(assignedPeople !== undefined){
+        this.setState({assignedProjUsers: assignedPeople});
+      }
     }
+
+    else{
+      const response = await fetch(
+        'http://projecttree.herokuapp.com/getProject',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({id: this.props.project.id}),
+        },
+      );
+  
+      const body = await response.json();
+      if (response.status !== 200) throw Error(body.message);
+      this.setState({nodes: body.tasks, links: body.rels});
+    }
+
     this.props.reload();
   }
 
@@ -340,14 +376,51 @@ class GraphScreen extends Component {
           getName={this.getName}
         />
 
+        {this.state.filterOn === false?
+        <Filter 
+          filterVisibility={this.state.filterVisibility} 
+          setFilterVisibility={this.setFilterVisibility}
+          nodes={this.state.nodes} 
+          users={this.state.assignedProjUsers} 
+          setProjectInfo={this.setProjectInfo} 
+          links={this.state.links}
+          filterOn={this.state.filterOn}
+          setFilterOn={this.setFilterOn}
+          user={this.props.user}
+        />
+        :
+        null
+        }
+
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <TouchableOpacity
-            style={styles.floatinBtn}
+            style={styles.floatinBtn1}
             onPress={() => {
               this.props.setDrawerVisible(true);
             }}>
             <IconEntypo name="menu-fold" size={25} />
           </TouchableOpacity>
+          
+          {this.state.filterOn === false?
+            <TouchableOpacity
+              style={styles.floatinBtn2}
+              onPress={() => {
+                this.setFilterVisibility(true);
+              }}>
+              <IconFeather name="search" size={25} />
+            </TouchableOpacity>
+            :
+            <TouchableOpacity
+              style={styles.floatinBtn2}
+              onPress={() => {
+                this.setFilterOn(false);
+                this.setProjectInfo();
+              }}>
+              <IconMaterial name="clear" size={25} />
+            </TouchableOpacity>
+          }
+          
+
           <CreateDependency
             sourceCreateDependency={this.state.sourceCreateDependency}
             targetCreateDependency={this.state.targetCreateDependency}
@@ -426,13 +499,24 @@ const styles = StyleSheet.create({
     height: '100%',
     marginBottom: 60,
   },
-  floatinBtn: {
+  floatinBtn1: {
     height: 50,
     width: 50,
     borderRadius: 200,
     position: 'absolute',
     bottom: 72,
     left: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
+  },
+  floatinBtn2: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    left: 80,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EEBB4D',
