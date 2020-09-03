@@ -64,7 +64,7 @@ function makeElement(node, criticalPathNodes) {
   }
   
   var borderColor = "#000";
-  var borderWidth = 2;
+  var borderWidth = 1;
   if (criticalPathNodes.includes(node.id)) borderColor = "#0275d8";
 
   let shadowHighlight = {
@@ -79,7 +79,7 @@ function makeElement(node, criticalPathNodes) {
     shadowHighlight = {
       name: 'highlight',
       args: {
-        color: 'purple',
+        color: '#009999',
         width: 3,
         opacity: 0.7,
         blur: 5
@@ -105,7 +105,7 @@ function makeElement(node, criticalPathNodes) {
         strokeWidth: borderWidth,
       },
       text: {
-        text: wraptext,
+        text: `${wraptext}\n(${node.progress}%)`,
         "font-size": letterSize,
         "font-family": "monospace",
         transform: "translate(2, 2)",

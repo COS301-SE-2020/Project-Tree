@@ -5,6 +5,8 @@ import TaskInfo from "./TaskInfo";
 import $ from "jquery";
 import ProjectProgress from "./ProjectProgress";
 import NoticeBoard from "../Notifications/NoticeBoard";
+import GanttChart from "./GanttChart";
+
 
 class ProjectPage extends React.Component {
   constructor(props) {
@@ -139,6 +141,11 @@ class ProjectPage extends React.Component {
               tasks={this.state.tasks}
               criticalPath={this.state.criticalPath}
             />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <GanttChart project={this.props.project} criticalPathTasks={this.state.criticalPath}/>
           </Col>
         </Row>
       </Container>
