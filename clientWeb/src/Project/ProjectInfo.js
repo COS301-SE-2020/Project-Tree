@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
 import DeleteProject from "./DeleteProject";
+import ProjectProgress from "./ProjectProgress";
 
 class ProjectInfo extends React.Component {
   render() {
@@ -11,7 +12,7 @@ class ProjectInfo extends React.Component {
       <React.Fragment>
         <Container className="block-example border rounded border-secondary">
           <Row className="align-items-center bg-secondary py-2">
-            <Col className="text-left">
+            <Col className="text-center">
               {this.props.userPermission["project"] === true ? (
                 <DeleteProject
                   project={this.props.project}
@@ -21,23 +22,41 @@ class ProjectInfo extends React.Component {
                 />
               ) : null}
             </Col>
+            <Col className="text-center">
+              {this.props.userPermission["project"] === true ? (
+                <UpdateProject
+                  project={this.props.project}
+                  setProject={(project) => {
+                    this.props.setProject(project);
+                  }}
+                />
+              ) : null}
+            </Col>
             <Col
-              xs={6}
               className="text-white text-center"
               style={{ fontSize: "22px" }}
+              xs={4}
             >
               {this.props.project.name}
             </Col>
-            <Col className="text-right">
+            <Col className="text-center">
               <Link to="/graph">
                 <Button
                   variant="warning"
-                  size="md"
-                  style={{ fontSize: "18px" }}
+                  style={{width: "100px"}}
                 >
-                  View Graph
+                  <i className="fa fa-line-chart"></i> Graph{" "}
                 </Button>
               </Link>
+            </Col>
+            <Col className="text-center">
+              <SendProjectNotification
+                project={this.props.project}
+                user={this.props.user}
+                updateNoticeBoardRefreshKey={
+                  this.props.updateNoticeBoardRefreshKey
+                }
+              />
             </Col>
           </Row>
           <Row className="align-items-center py-2">
@@ -108,26 +127,14 @@ class ProjectInfo extends React.Component {
             </Col>
           </Row>
           <Row className="align-items-center py-1">
-            <Col xs={6} className="text-center">
-              {this.props.userPermission["project"] === true ? (
-                <UpdateProject
-                  project={this.props.project}
-                  setProject={(project) => {
-                    this.props.setProject(project);
-                  }}
-                />
-              ) : null}
-            </Col>
-            <Col xs={6} className="text-center">
-              <SendProjectNotification
-                project={this.props.project}
-                user={this.props.user}
-                updateNoticeBoardRefreshKey={
-                  this.props.updateNoticeBoardRefreshKey
-                }
-              />
-            </Col>
-          </Row>
+          <Col>
+            <ProjectProgress
+              project={this.props.project}
+              tasks={this.props.tasks}
+              criticalPath={this.props.criticalPath}
+            />
+          </Col>
+        </Row>
         </Container>
       </React.Fragment>
     );

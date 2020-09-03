@@ -52,11 +52,8 @@ class UpdateProject extends React.Component {
     return (
       <React.Fragment>
         <Button
-          style={{
-            backgroundColor: "#184D47",
-            color: "white",
-            borderColor: "#184D47",
-          }}
+          className="btn-warning"
+          style={{width: "100px"}}
           onClick={() => {
             this.showModal();
           }}

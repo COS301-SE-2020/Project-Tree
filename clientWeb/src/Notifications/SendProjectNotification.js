@@ -60,17 +60,13 @@ class SendProjectNotification extends React.Component {
     return (
       <React.Fragment>
         <Button
-          className="my-2"
-          style={{
-            backgroundColor: "#184D47",
-            color: "white",
-            borderColor: "#184D47",
-          }}
+          className="btn-warning"
+          style={{width: "100px"}}
           onClick={() => {
             this.showModal();
           }}
         >
-          <i className="fa fa-bullhorn"></i>
+          <i className="fa fa-bullhorn"> </i> Notify{" "}
         </Button>
         <Modal
           show={this.state.show}

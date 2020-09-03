@@ -3,7 +3,6 @@ import { Container, Row, Col } from "react-bootstrap";
 import ProjectInfo from "./ProjectInfo";
 import TaskInfo from "./TaskInfo";
 import $ from "jquery";
-import ProjectProgress from "./ProjectProgress";
 import NoticeBoard from "../Notifications/NoticeBoard";
 import GanttChart from "./GanttChart";
 
@@ -101,15 +100,6 @@ class ProjectPage extends React.Component {
     return (
       <Container fluid>
         <Row className="my-1">
-          <Col>
-            <ProjectProgress
-              project={this.props.project}
-              tasks={this.state.tasks}
-              criticalPath={this.state.criticalPath}
-            />
-          </Col>
-        </Row>
-        <Row className="my-1">
           <Col sm={12} md={12} lg={6} xl={6}>
             <ProjectInfo
               project={this.props.project}
@@ -117,6 +107,8 @@ class ProjectPage extends React.Component {
               userPermission={this.props.userPermission}
               user={this.props.user}
               updateNoticeBoardRefreshKey={this.updateNoticeBoardRefreshKey}
+              tasks={this.state.tasks}
+              criticalPath={this.state.criticalPath}
             />
           </Col>
           <Col
@@ -134,7 +126,12 @@ class ProjectPage extends React.Component {
             ) : null}
           </Col>
         </Row>
-        <Row className="my-1">
+        <Row className="mt-2">
+          <Col>
+              <h2>Tasks</h2>
+          </Col>
+        </Row>
+        <Row>
           <Col>
             <TaskInfo
               project={this.props.project}

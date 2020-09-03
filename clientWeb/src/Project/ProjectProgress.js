@@ -60,13 +60,21 @@ class ProjectProgress extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Row className="align-items-center bg-white">
-          <Col md={12} lg={6} style={{ fontSize: "20px" }}>
-            Total Progress: {this.getProjectProgress()}
-          </Col>
-          <Col md={12} lg={6} style={{ fontSize: "20px" }}>
-            Critical Path Progress: {this.getCPProgress()}
-          </Col>
+        <Row className="align-items-center bg-white mb-2 mt-2" style={{ fontSize: "20px" }}>
+            <Col>
+              Total Progress: 
+            </Col>
+            <Col xs={8}>
+             {this.getProjectProgress()}
+            </Col>
+        </Row>
+        <Row className="align-items-center bg-white mb-2 mt-2" style={{ fontSize: "20px" }}>
+            <Col>
+              Critical Path Progress: 
+            </Col>
+            <Col xs={8}>
+              {this.getCPProgress()}
+            </Col>
         </Row>
       </React.Fragment>
     );

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./App.scss";
-
+import DeleteProject from "./Project/DeleteProject";
 import CreateProject from "./Project/CreateProject";
 
 class SideBar extends React.Component {
@@ -30,33 +30,33 @@ class SideBar extends React.Component {
                 <Col className="text-center">{project.name}</Col>
               </Row>
               <Row className="align-items-center py-2">
-                <Col>
+                <Col className="text-center">
                   <Link to="/project">
                     <Button
-                      size="sm"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
                         color: "black",
                         fontSize: "15px",
+                        width: "100px"
                       }}
                       onClick={() => {
                         this.props.setProject(project);
                         this.props.closeSideBar(true);
                       }}
                     >
-                      Project Info
+                     <i className="	fa fa-info-circle"></i> Info
                     </Button>
                   </Link>
                 </Col>
-                <Col>
+                <Col className="text-center">
                   <Link to="/graph">
                     <Button
-                      size="sm"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
                         color: "black",
+                        width: "100px",
                         fontSize: "15px",
                       }}
                       onClick={() => {
@@ -64,9 +64,17 @@ class SideBar extends React.Component {
                         this.props.closeSideBar(true);
                       }}
                     >
-                      Project Graph
+                     <i className="fa fa-line-chart"></i> Graph
                     </Button>
                   </Link>
+                </Col>
+                <Col className="text-center">
+                  <DeleteProject
+                    project={project}
+                    setProject={(project) => {
+                      this.props.setProject(project);
+                    }}
+                  />
                 </Col>
               </Row>
             </Container>
@@ -101,29 +109,30 @@ class SideBar extends React.Component {
                 <Col className="text-center">{project.name}</Col>
               </Row>
               <Row className="align-items-center py-2">
-                <Col>
+                <Col className="text-center">
                   <Link to="/project">
                     <Button
-                      size="sm"
+                      size="md"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
                         color: "black",
                         fontSize: "15px",
+                        width: "90px"
                       }}
                       onClick={() => {
                         this.props.setProject(project);
                         this.props.closeSideBar(true);
                       }}
                     >
-                      Project Info
+                     <i className="	fa fa-info-circle"></i> Info
                     </Button>
                   </Link>
                 </Col>
-                <Col>
+                <Col className="text-center">
                   <Link to="/graph">
                     <Button
-                      size="sm"
+                      size="md"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
@@ -135,7 +144,7 @@ class SideBar extends React.Component {
                         this.props.closeSideBar(true);
                       }}
                     >
-                      Project Graph
+                     <i className="fa fa-line-chart"></i> Graph
                     </Button>
                   </Link>
                 </Col>
