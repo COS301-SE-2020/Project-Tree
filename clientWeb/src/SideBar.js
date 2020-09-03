@@ -30,16 +30,15 @@ class SideBar extends React.Component {
                 <Col className="text-center">{project.name}</Col>
               </Row>
               <Row className="align-items-center py-2">
-                <Col>
+                <Col className="text-center">
                   <Link to="/project">
                     <Button
-                      size="md"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
                         color: "black",
                         fontSize: "15px",
-                        width: "90px"
+                        width: "100px"
                       }}
                       onClick={() => {
                         this.props.setProject(project);
@@ -50,14 +49,14 @@ class SideBar extends React.Component {
                     </Button>
                   </Link>
                 </Col>
-                <Col>
+                <Col className="text-center">
                   <Link to="/graph">
                     <Button
-                      size="md"
                       style={{
                         borderColor: "#EEBB4D",
                         backgroundColor: "#EEBB4D",
                         color: "black",
+                        width: "100px",
                         fontSize: "15px",
                       }}
                       onClick={() => {
@@ -69,7 +68,7 @@ class SideBar extends React.Component {
                     </Button>
                   </Link>
                 </Col>
-                <Col>
+                <Col className="text-center">
                   <DeleteProject
                     project={project}
                     setProject={(project) => {
@@ -110,7 +109,7 @@ class SideBar extends React.Component {
                 <Col className="text-center">{project.name}</Col>
               </Row>
               <Row className="align-items-center py-2">
-                <Col>
+                <Col className="text-center">
                   <Link to="/project">
                     <Button
                       size="md"
@@ -130,7 +129,7 @@ class SideBar extends React.Component {
                     </Button>
                   </Link>
                 </Col>
-                <Col>
+                <Col className="text-center">
                   <Link to="/graph">
                     <Button
                       size="md"

@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import CreateProject from "../Project/CreateProject";
-import image from "../Images/BigTree.png";
+import image from "../Images/BigTree.svg";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
 class Home extends React.Component {
@@ -37,7 +37,7 @@ class Home extends React.Component {
                 <Container className="text-dark">
                   <Row>
                   <Col>
-                      <h5>Start Your project planning journey</h5>
+                      <h5>Start your project planning journey</h5>
                   </Col>
                 </Row>
                   <Row>
@@ -96,7 +96,7 @@ class Home extends React.Component {
                 <Container>
                   <Row>
                     <Col>
-                        <h5>Start Your project planning journey</h5>
+                        <h5>Start your project planning journey</h5>
                     </Col>
                   </Row>
                   <Row>

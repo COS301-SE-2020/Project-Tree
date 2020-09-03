@@ -132,8 +132,10 @@ class Settings extends React.Component {
             </Modal.Header>
             <Modal.Body>
               <Container>
-                <Row>
-                  Name: &nbsp;
+                <Row className="mb-2">
+                {this.state.toggleEdit === false ?
+                    "First Name: " :
+                    "First Name*: "}
                   {this.state.toggleEdit === false ? (
                     this.state.user.name
                   ) : (
@@ -151,8 +153,10 @@ class Settings extends React.Component {
                     />
                   )}
                 </Row>
-                <Row>
-                  Surname: &nbsp;
+                <Row className="mb-2">
+                {this.state.toggleEdit === false ?
+                    "Surname: " :
+                    "Surname*: "}
                   {this.state.toggleEdit === false ? (
                     this.state.user.sname
                   ) : (
@@ -170,9 +174,11 @@ class Settings extends React.Component {
                     />
                   )}
                 </Row>
-                <Row>
-                  Email: &nbsp;
-                  {this.state.toggleEdit === false ? (
+                <Row className="mb-2">
+                  {this.state.toggleEdit === false ?
+                    "Email: " :
+                    "Email*: "}
+                  {this.state.toggleEdit === false ?  (
                     this.state.user.email
                   ) : (
                     <Form.Control
@@ -189,11 +195,14 @@ class Settings extends React.Component {
                     />
                   )}
                 </Row>
-                <Row>
-                  Birthdate: &nbsp;
-                  {this.state.toggleEdit === false ? (
-                    this.state.user.birthday
-                  ) : (
+                <Row className="mb-2">
+                    {"Birthdate: "}
+                  {this.state.toggleEdit === false ? 
+                    this.state.user.birthday === "" ?
+                      "None"
+                    :
+                      this.state.user.birthday
+                   : (
                     <Form.Control
                       type="date"
                       name="bday"
@@ -214,56 +223,71 @@ class Settings extends React.Component {
               {this.state.toggleEdit === true ? (
                 <Row>
                   <Col>
-                    <Button
-                      block
-                      variant="secondary"
-                      className="m-2"
-                      onClick={() => {
-                        this.closeEdit();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      type="submit"
-                      block
-                      variant="secondary"
-                      className="m-2"
-                    >
-                      Save Changes
-                    </Button>
-                  </Col>
-                </Row>
+                    <Row>
+                      <Col>
+                        <Button
+                          block
+                          variant="secondary"
+                          className="mb-2"
+                          onClick={() => {
+                            this.closeEdit();
+                          }}
+                        >
+                          <i className="fa fa-remove"> </i> Cancel
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          type="submit"
+                          block
+                          variant="secondary"
+                          className="mb-2"
+                        >
+                          <i className="fa fa-save"> </i> Save Changes{" "}
+                        </Button>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Button
+                          block
+                          variant="dark"
+                          className="mb-2"
+                          onClick={() => this.handleLogout()}
+                        >
+                          <i className="fa fa-sign-out"> </i> Logout{" "}
+                        </Button>
+                      </Col>
+                  </Row>
+                </Col>
+              </Row>
               ) : (
                 <Row>
                   <Col>
                     <Button
                       block
                       variant="secondary"
-                      className="m-2"
+                      className="mb-2"
                       onClick={() => {
                         this.openEdit();
                       }}
                     >
-                      Edit Details
+                      <i className="fa fa-edit"> </i> Edit details{" "}
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      block
+                      variant="dark"
+                      className="mb-2"
+                      onClick={() => this.handleLogout()}
+                    >
+                      <i className="fa fa-sign-out"> </i> Logout{" "}
                     </Button>
                   </Col>
                 </Row>
               )}
-              <Row>
-                <Col>
-                  <Button
-                    block
-                    variant="dark"
-                    className="m-2"
-                    onClick={() => this.handleLogout()}
-                  >
-                    Logout
-                  </Button>
-                </Col>
-              </Row>
+
             </Container>
           </Form>
         </Modal>

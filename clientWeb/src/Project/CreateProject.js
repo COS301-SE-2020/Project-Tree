@@ -47,7 +47,6 @@ class CreateProject extends React.Component {
           onClick={() => {
             this.showModal();
           }}
-          size="md"
         >
           <i
             className="fa fa-plus" 
