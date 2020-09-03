@@ -112,7 +112,6 @@ async function register(req, res) {
 }
 
 function login(req, res) {
-  console.log(req.body)
   db.getSession()
     .run(
       `
@@ -138,7 +137,6 @@ function login(req, res) {
                 `
               )
               .then((result) => {
-                console.log("TOKEN  ", token)
                 if (result.records.length != 0) {
                   res.send({
                     sessionToken: token,
@@ -262,12 +260,6 @@ async function checkPermissionInternal(token, project) {
   }
 }
 
-async function checkPermission(req, res) 
-{
-  
-}
-
-
 async function checkPermission(req, res) {
   body = JSON.parse(req.body.data);
   let response = await checkPermissionInternal(body.token, body.project);
@@ -285,16 +277,15 @@ async function editPassword(req, res) {
   db.getSession()
   .run(
     `
-            MATCH (u:User) 
-            WHERE ID(u) = ${userId} 
-            RETURN u
+      MATCH (u:User) 
+      WHERE ID(u) = ${userId} 
+      RETURN u
     `
   )
   .then((result) => {
     if (result.records.length != 0) {
       let hash = result.records[0]._fields[0].properties.password;   
       bcrypt.compare(req.body.testPass, hash, (err, result) => {
-        //console.log(req.body.testPass, "       ", hash,  "       ",  req.body.newPass)
         let newPass = bcrypt.hashSync(req.body.newPass, 10);
         if (result) 
         {
@@ -304,7 +295,7 @@ async function editPassword(req, res) {
                     MATCH (a) 
                     WHERE ID(a) = ${userId}
                     SET a += {
-                      password:"${newPass}"         
+                      password:"${newPass}"
                     } 
                     RETURN a
                   `
@@ -316,7 +307,7 @@ async function editPassword(req, res) {
                     console.log(err);
                     res.status(400);
                     res.send({ message: err });
-                  });           
+                  });
                   }
                   else {
                     res.status(200);
@@ -328,40 +319,6 @@ async function editPassword(req, res) {
       res.send({ message: "err" });
     }
   })
- // let userId = await verify(req.body.token);
-//   console.log(userId)
-//   if (userId != null) {
-//     console.log(req.body.newPass)
-//     db.getSession()
-//       .run(
-//         `
-//           MATCH (a) 
-//           WHERE ID(a) = ${userId}
-//           SET a += {
-//             password:"${req.body.newPass}"         
-//           } 
-//           RETURN a
-//         `
-//       )
-//       .then((result) => {
-//         let user = {
-//           id: result.records[0]._fields[0].identity.low,
-//         };
-//         res.status(200);
-//         res.send({ user });
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//         res.status(400);
-//         res.send({ message: err });
-//       });
-//   } else {
-//     res.status(400);
-//     res.send({
-//       message: "Invalid User",
-//     });
-//   }
-// }
 }
 
 async function getUser(req, res) {
@@ -416,7 +373,6 @@ async function verify(token) {
         `
       )
       .then((result) => {
-       // console.log("S")
         if (user.password == result.records[0]._fields[0].properties.hash) {
           value = result.records[0]._fields[0].identity.low;
         }
@@ -426,15 +382,10 @@ async function verify(token) {
         return null;
       });
   } catch (err) {
-   // console.log("F")
     console.log(err);
     return null;
   }
-  if (bool) return answer;
-  else {
-   // console.log("E")
-    return null;
-  }
+  return value;
 }
 
 module.exports = {
