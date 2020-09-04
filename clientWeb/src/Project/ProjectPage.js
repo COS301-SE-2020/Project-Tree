@@ -127,8 +127,8 @@ class ProjectPage extends React.Component {
           </Col>
         </Row>
         <Row className="mt-2">
-          <Col>
-              <h2>Tasks</h2>
+          <Col style={{ color: "#EEBB4D" }}>
+              <h3>Tasks</h3>
           </Col>
         </Row>
         <Row>
@@ -138,6 +138,11 @@ class ProjectPage extends React.Component {
               tasks={this.state.tasks}
               criticalPath={this.state.criticalPath}
             />
+          </Col>
+        </Row>
+        <Row className="mt-2">
+          <Col style={{ color: "#EEBB4D" }}>
+              <h3>Gant Chart</h3>
           </Col>
         </Row>
         <Row>

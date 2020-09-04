@@ -63,14 +63,14 @@ class UpdateProgress extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button variant="outline-dark" onClick={this.showModal}>
+        <Button variant="outline-dark" style={{width: "170px" }} onClick={this.showModal}>
           <i className="fa fa-edit"> Update Progress</i>
         </Button>
         <Modal show={this.state.Show} onHide={this.hideModal}>
           <Form onSubmit={this.handleSubmit}>
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C" }}
             >
               <Modal.Title>Update Progress</Modal.Title>
             </Modal.Header>
@@ -120,7 +120,7 @@ class UpdateProgress extends React.Component {
                     if(parseInt(this.state.task.progress) === 100){
                       this.setState({ issue: false });
                       this.checked = false;
-                      alert("you cant specify that a complete task has an issue");
+                      alert("You can't specify that a complete task has an issue");
                     } else {
                       this.setState({ issue: e.target.checked });
                       this.checked = this.state.issue;
@@ -130,13 +130,13 @@ class UpdateProgress extends React.Component {
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
-              style={{ backgroundColor: "#184D47", color: "white" }}
+               style={{ backgroundColor: "#96BB7C" }}
             >
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Update Task
+                Update
               </Button>
             </Modal.Footer>
           </Form>

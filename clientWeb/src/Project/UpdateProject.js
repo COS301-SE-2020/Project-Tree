@@ -73,7 +73,7 @@ class UpdateProject extends React.Component {
           >
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C" }}
             >
               <Modal.Title>Edit Project</Modal.Title>
             </Modal.Header>
@@ -127,7 +127,7 @@ class UpdateProject extends React.Component {
                     <td
                       className="text-center"
                       colSpan="4"
-                      style={{ backgroundColor: "#184D47", color: "white" }}
+                      style={{ backgroundColor: "#96BB7C" }}
                     >
                       Project Permisions
                     </td>
@@ -271,13 +271,13 @@ class UpdateProject extends React.Component {
               <br />
             </Modal.Body>
             <Modal.Footer
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C" }}
             >
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Update Project
+               Save
               </Button>
             </Modal.Footer>
           </Form>

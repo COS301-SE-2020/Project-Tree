@@ -5,7 +5,7 @@ import $ from "jquery";
 import dagre from "dagre";
 import graphlib from "graphlib";
 import CreateDependency from "./Dependency/CreateDependency";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
 
 function makeLink(edge, criticalPathLinks) {
@@ -379,8 +379,11 @@ class Graph extends React.Component {
                 </Row>
               ) : null}
               <Row>
+                <Col className="text-left align-top " style={{ fontSize: "27px"}}>
+                    <OverlayTrigger overlay={<Tooltip>Double click on empty space to create a new task or right click on two tasks to create a dependency</Tooltip>}><i className="fa fa-question-circle"></i></OverlayTrigger>
+                </Col>
                 {dependency != null ? (
-                  <Col className="text-center" xs={5}>
+                  <Col className="text-center">
                     <Button
                       onClick={this.openCreateDependency}
                       variant={color}
@@ -408,7 +411,9 @@ class Graph extends React.Component {
                     <Button
                       variant="outline-secondary"
                       block
+                      xs={2}
                       size="sm"
+                      style={{height: "31px", wordWrap: "break-word"}}
                       onClick={() => {
                         this.setState({
                           displayCriticalPath: !this.state.displayCriticalPath,

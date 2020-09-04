@@ -58,17 +58,17 @@ class DeleteProject extends React.Component {
           >
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C" }}
             >
               <Modal.Title>Delete Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
-                <p>Are you sure you want to delete this project</p>
+                <p>Are you sure you want to delete this project?</p>
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C" }}
             >
               <Button
                 variant="secondary"
@@ -79,7 +79,7 @@ class DeleteProject extends React.Component {
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Delete Project
+                Delete 
               </Button>
             </Modal.Footer>
           </Form>

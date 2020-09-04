@@ -287,7 +287,7 @@ export default class FilterComponent extends React.Component{
                 <Container>
                     <Row>
                         <Col>
-                            <Button onClick={()=>{
+                            <Button variant="outline-danger" onClick={()=>{
                                 this.props.setFilterOn(false);
                                 this.props.setTaskInfo();
                             }}>
@@ -295,6 +295,7 @@ export default class FilterComponent extends React.Component{
                             </Button>
                         </Col>
                     </Row>
+                    <hr/>
                 </Container>
             )
         }
@@ -302,17 +303,31 @@ export default class FilterComponent extends React.Component{
         return(
             <Container className="p-2">
                 <Row>
-                    <Col>
-                        <ButtonGroup>
-                            <Button variant="outline-dark" onClick={()=>this.quickSearch("filter")}>Filter my tasks</Button>
-                            <Button variant="outline-dark" onClick={()=>this.quickSearch("highlight")}>Highlight my tasks</Button>
-                        </ButtonGroup>
+                    <Col className="p-2">
+                        <ToggleButtonGroup vertical name="filteringMe">
+                            <ToggleButton variant="info" disabled value="label" style={{fontWeight:"bold"}}>Select my tasks to display</ToggleButton>
+                        </ToggleButtonGroup>    
+                    </Col>
+                </Row>
+                <Row className="m-0">
+                    <Col className="m-0">
+                        <ToggleButtonGroup name="Mytasks" >
+                            <ToggleButton variant="outline-dark" value="FilterMy" onClick={()=>this.quickSearch("filter")}>Filter my tasks</ToggleButton>
+                            <ToggleButton variant="outline-dark" value="HighlightMy" onClick={()=>this.quickSearch("highlight")}>Highlight my tasks</ToggleButton>
+                        </ToggleButtonGroup>
                     </Col>
                 </Row>
                 <hr/>
                 <Row>
                     <Col className="p-2">
-                        <ToggleButtonGroup name="filterMode" value={this.state.filterMode} defaultValue={this.state.filterMode}>
+                        <ToggleButtonGroup vertical name="filtering">
+                            <ToggleButton variant="info" disabled value="label" style={{fontWeight:"bold"}}>Select display option</ToggleButton>
+                        </ToggleButtonGroup>    
+                    </Col>
+                </Row>
+                <Row className="m-0">
+                    <Col className="m-0">
+                        <ToggleButtonGroup horizontal name="filterMode" value={this.state.filterMode} defaultValue={this.state.filterMode}>
                             <ToggleButton variant="secondary" value="filter" onClick={()=>this.setState({filterMode:"filter", error:false})}>Filter</ToggleButton>
                             <ToggleButton variant="secondary" value="highlight" onClick={()=>this.setState({filterMode:"highlight", error:false})}>Highlight</ToggleButton>
                         </ToggleButtonGroup>
@@ -321,6 +336,7 @@ export default class FilterComponent extends React.Component{
                 <Row>
                     <Col className="p-2">
                         <ToggleButtonGroup vertical name="taskFilterOptions" value={this.state.filterTaskOption} defaultValue={this.state.filterTaskOption}>
+                            <ToggleButton variant="info" disabled value="label" style={{fontWeight:"bold"}}>Select task category</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="taskAll" onClick={()=>this.setState({filterTaskOption:"taskAll", filterPeopleOption:null, error:false})}>All</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="taskComplete" onClick={()=>this.setState({filterTaskOption:"taskComplete", filterPeopleOption:null, error:false})}>Complete</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="taskIncomplete" onClick={()=>this.setState({filterTaskOption:"taskIncomplete", filterPeopleOption:null, error:false})}>Incomplete</ToggleButton>
@@ -329,6 +345,7 @@ export default class FilterComponent extends React.Component{
                     </Col>
                     <Col className="p-2">
                         <ToggleButtonGroup vertical name="peopleFilterOptions" value={this.state.filterPeopleOption} defaultValue={this.state.filterPeopleOption}>
+                            <ToggleButton variant="info" disabled value="label" style={{fontWeight:"bold"}}>Select people</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="peopleAll" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleAll", errror:false})}>All</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="peoplePackMan" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peoplePackMan", error:false})}>Package Managers</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer", error:false})}>Responsible Persons</ToggleButton>
@@ -336,14 +353,6 @@ export default class FilterComponent extends React.Component{
                         </ToggleButtonGroup>
                     </Col>
                 </Row>
-                {this.state.error ?
-                    <Row>
-                        <Col>
-                            <p>Your search didn't return anything</p>
-                        </Col>
-                    </Row>
-                    : null
-                } 
                 <Row>
                     <Col className="text-center">    
                         <Searchbar bg-light
@@ -361,6 +370,14 @@ export default class FilterComponent extends React.Component{
                         <Button variant="dark" onClick={()=>this.handleSearch()}>GO!</Button>
                     </Col>
                 </Row>
+                {this.state.error ?
+                    <Row className="mt-2">
+                        <Col style={{color:"red"}}>
+                            Your search didn't return anything
+                        </Col>
+                    </Row>
+                    : null
+                } 
                 <hr/>
             </Container>
             
@@ -460,9 +477,18 @@ class Searchbar extends React.Component{
             return(
                 <Container>
                     <Row>
-                        <Col className="bg-white text-center align-items-center border rounded border-dark m-1 p-1" >
-                            {suggestion.name + " " + suggestion.id}
+                        <Col></Col>
+                        <Col
+                        className="text-center border rounded border-dark m-1"
+                        xs={6}
+                        style={{
+                            color: "black",
+                            height: "30px",
+                        }}
+                        >
+                        {suggestion.name + " " + suggestion.id}
                         </Col>
+                        <Col></Col>
                     </Row>
                 </Container>
             )
@@ -471,10 +497,19 @@ class Searchbar extends React.Component{
         else{
             return(
                 <Container>
-                    <Row>
-                        <Col className="bg-white text-center align-items-center border rounded border-dark m-1 p-1" >
-                            {suggestion.name + " " + suggestion.surname}
+                     <Row>
+                        <Col></Col>
+                        <Col
+                        className="text-center border rounded border-dark m-1"
+                        xs={6}
+                        style={{
+                            color: "black",
+                            height: "30px",
+                        }}
+                        >
+                        {suggestion.name + " " + suggestion.surname}
                         </Col>
+                        <Col></Col>
                     </Row>
                 </Container>
             ) 

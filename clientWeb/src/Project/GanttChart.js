@@ -23,12 +23,11 @@ export default class GanttChartWrapper extends React.Component{
             <React.Fragment>
                 <Container fluid>
                     <Row>
-                        <Col>
                             <Form>
                                 <Button
-                                variant="outline-secondary"
+                                variant="outline-primary"
                                 block
-                                size="sm"
+                                size="md"
                                 onClick={() => {
                                     this.setState({
                                     criticalPath: !this.state.criticalPath,
@@ -48,28 +47,28 @@ export default class GanttChartWrapper extends React.Component{
                                     />
                                 </Button>
                             </Form>
-                        </Col>
                         <Col>
-                            <p>Show tasks starting in the next:</p>
                             <ToggleButtonGroup name="durationType" defaultValue={this.state.durationType}>
-                                <ToggleButton variant="secondary" value="week" onClick={()=>this.setState({durationType:"week"})}>
+                                <ToggleButton variant="outline-primary" disabled value="label" style={{fontWeight:"bold"}}>Show tasks by</ToggleButton>
+                                <ToggleButton variant="primary" value="week" onClick={()=>this.setState({durationType:"week"})}>
                                     Week
                                 </ToggleButton>
-                                <ToggleButton variant="secondary" value="month" onClick={()=>this.setState({durationType:"month"})}>
+                                <ToggleButton variant="primary" value="month" onClick={()=>this.setState({durationType:"month"})}>
                                     Month
                                 </ToggleButton>
-                                <ToggleButton variant="secondary" value="threeMonth" onClick={()=>this.setState({durationType:"threeMonth"})}>
+                                <ToggleButton variant="primary" value="threeMonth" onClick={()=>this.setState({durationType:"threeMonth"})}>
                                     Three Months
                                 </ToggleButton>
-                                <ToggleButton variant="secondary" value="sixMonth" onClick={()=>this.setState({durationType:"sixMonth"})}>
+                                <ToggleButton variant="primary" value="sixMonth" onClick={()=>this.setState({durationType:"sixMonth"})}>
                                     Six Months
                                 </ToggleButton>
-                                <ToggleButton variant="secondary" value="all" onClick={()=>this.setState({durationType:"all"})}>
+                                <ToggleButton variant="primary" value="all" onClick={()=>this.setState({durationType:"all"})}>
                                     All Tasks
                                 </ToggleButton>
                             </ToggleButtonGroup>
                         </Col>
                     </Row>
+                    <Row className="mt-2">
                     {this.state.tasks !== null? 
                     <GanttChart 
                         tasks={this.state.tasks} 
@@ -80,6 +79,7 @@ export default class GanttChartWrapper extends React.Component{
                         durationType={this.state.durationType}
                     /> 
                     : null} 
+                    </Row>
                 </Container>
             </React.Fragment>          
         )

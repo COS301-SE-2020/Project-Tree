@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import $ from "jquery";
 
 function returnFormData(fd) {
@@ -81,7 +81,7 @@ class SendProjectNotification extends React.Component {
           >
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C" }}
             >
               <Modal.Title>Send Notification</Modal.Title>
             </Modal.Header>
@@ -96,35 +96,37 @@ class SendProjectNotification extends React.Component {
                   required
                 />
               </Form.Group>
-              <Button
-                className="m-2"
-                variant="secondary"
-                onClick={() => {
-                  this.setState({ mode: 0 });
-                }}
-              >
-                Email
-              </Button>
-              <Button
-                className="m-2"
-                variant="secondary"
-                onClick={() => {
-                  this.setState({ mode: 1 });
-                }}
-              >
-                Notice Board
-              </Button>
-              <Button
-                className="m-2"
-                variant="secondary"
-                onClick={() => {
-                  this.setState({ mode: 2 });
-                }}
-              >
-                Both
-              </Button>
+              <ToggleButtonGroup horizontal name="notify">
+                <ToggleButton
+                  variant="outline-secondary"
+                  value="email"
+                  onClick={() => {
+                    this.setState({ mode: 0 });
+                  }}
+                >
+                  Email 
+                </ToggleButton>
+                <ToggleButton
+                  value="NB"
+                  variant="outline-secondary"
+                  onClick={() => {
+                    this.setState({ mode: 1 });
+                  }}
+                >
+                  Notice Board
+                  </ToggleButton>
+                <ToggleButton
+                  variant="outline-secondary"
+                  value="both"
+                  onClick={() => {
+                    this.setState({ mode: 2 });
+                  }}
+                >
+                  Both
+                  </ToggleButton>
+              </ToggleButtonGroup>
             </Modal.Body>
-            <Modal.Footer style={{ backgroundColor: "#184D47" }}>
+            <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
               <Button
                 variant="secondary"
                 onClick={() => {
@@ -134,7 +136,7 @@ class SendProjectNotification extends React.Component {
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Send Notification
+                Send 
               </Button>
             </Modal.Footer>
           </Form>

@@ -435,16 +435,16 @@ class UpdateTask extends React.Component {
 
     return (
       <React.Fragment>
-        <Button variant="outline-dark" onClick={this.ShowModal}>
+        <Button variant="outline-dark" style={{width: "170px" }} onClick={this.ShowModal}>
           <i className="fa fa-edit"> Edit</i>
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C" }}
             >
-              <Modal.Title>Update Task</Modal.Title>
+              <Modal.Title>Edit Task</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
@@ -500,7 +500,7 @@ class UpdateTask extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label> Duration</Form.Label>
+                <Form.Label> Duration (days) </Form.Label>
                 <Form.Control
                   required
                   type="number"
@@ -673,13 +673,13 @@ class UpdateTask extends React.Component {
               <br />
             </Modal.Body>
             <Modal.Footer
-              style={{ backgroundColor: "#184D47", color: "white" }}
+               style={{ backgroundColor: "#96BB7C" }}
             >
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Update Task
+                Save
               </Button>
             </Modal.Footer>
           </Form>

@@ -170,7 +170,6 @@ class TaskInfo extends React.Component {
               style={{
                 fontFamily: "Courier New",
                 fontSize: "18px",
-                backgroundColor: `${color}`,
                 maxWidth: "300px",
                 minWidth: "250px",
                 fontWeight: "bold",
@@ -198,12 +197,13 @@ class TaskInfo extends React.Component {
               <Row>
                 <Col className="text-center">Duration: {el.duration}</Col>
               </Row>
-              <Row>
+              <Row className="mb-2"> <hr/>
                 <Col>
                   <ProgressBar
+                    animated
                     variant={progressColor}
                     now={el.progress}
-                    label={`${Math.round(el.progress)}% Complete`}
+                    label={`Task progress ${Math.round(el.progress)}% Complete`}
                   />
                 </Col>
               </Row>

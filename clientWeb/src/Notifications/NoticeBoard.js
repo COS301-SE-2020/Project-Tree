@@ -95,9 +95,10 @@ class NotificationList extends Component {
             className="text-center"
             style={{ fontSize: "20px", color: "#184D47" }}
           >
-            {monthNames[dailyMessages[0].timestamp.month.low - 1] +
+            {dailyMessages[0].timestamp.day.low +
               " " +
-              dailyMessages[0].timestamp.day.low}
+              monthNames[dailyMessages[0].timestamp.month.low - 1] +
+              " " + dailyMessages[0].timestamp.year.low}
           </Col>
         </Row>
         <hr style={{ backgroundColor: "#EEBB4D" }} />
@@ -114,11 +115,11 @@ class NotificationList extends Component {
         <Row>
           <Col>{this.returnRandomUser()}</Col>
           <Col xs={8}>
-            {message.fromName}
-            {" - "}
-            {message.type === "task" ? message.taskName : null}
+            <em>{message.type === "task" ? message.taskName : null}
             {message.type === "project" ? "Project Wide" : null}
-            {message.type === "auto" ? "Auto" : null}{" "}
+            {message.type === "auto" ? "Auto" : null}{" "} </em>
+            <br/>
+            {message.message}
           </Col>
           <Col className="text-right">
             {message.timestamp.hour.low < 10
@@ -131,7 +132,7 @@ class NotificationList extends Component {
           </Col>
         </Row>
         <Row>
-          <Col>{message.message}</Col>
+          <Col>{message.fromName}</Col>
         </Row>
         <hr align="left" style={{ backgroundColor: "#96BB7C", width: "75%" }} />
       </Container>

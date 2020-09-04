@@ -351,7 +351,8 @@ class TaskSidebar extends React.Component {
               <ProgressBar
                 variant={progressColor}
                 now={this.props.task.progress}
-                label={`${Math.round(this.props.task.progress)}% Complete`}
+                animated
+                label={`Task progress ${Math.round(this.props.task.progress)}% Complete`}
               />
             </Col>
           </Row>
@@ -502,18 +503,19 @@ class LegendSidebar extends React.Component {
         >
           <Row>
             <Col className="text-center">
-              <h4>Task progress key</h4>
+              <h4>Graph key</h4>
             </Col>
           </Row>
           <Row>
             <Col></Col>
             <Col
-              className="text-center border rounded border-dark m-1 p-1"
+              className="text-center border rounded border-dark m-1"
               xs={6}
               style={{
                 backgroundColor: "white",
                 color: "black",
                 width: "120px",
+                height: "30px",
               }}
             >
               Incomplete
@@ -523,12 +525,13 @@ class LegendSidebar extends React.Component {
           <Row>
             <Col></Col>
             <Col
-              className="text-center border rounded border-dark m-1 p-1"
+              className="text-center border rounded border-dark m-1"
               xs={6}
               style={{
                 backgroundColor: "#77dd77",
                 color: "black",
                 width: "120px",
+                height: "30px",
               }}
             >
               Complete
@@ -538,12 +541,13 @@ class LegendSidebar extends React.Component {
           <Row>
             <Col></Col>
             <Col
-              className="text-center border rounded border-dark m-1 p-1"
+              className="text-center border rounded border-dark m-1"
               xs={6}
               style={{
                 backgroundColor: "#ff6961",
                 color: "black",
                 width: "120px",
+                height: "30px",
               }}>
               Overdue
             </Col>
@@ -552,12 +556,13 @@ class LegendSidebar extends React.Component {
           <Row>
             <Col></Col>
             <Col
-              className="text-center border rounded border-dark m-1 p-1"
+              className="text-center border rounded border-dark m-1"
               xs={6}
               style={{
                 backgroundColor: "#ffae42",
                 color: "black",
                 width: "120px",
+                height: "30px",
               }}
             >
               Issue
@@ -567,15 +572,32 @@ class LegendSidebar extends React.Component {
           <Row>
             <Col></Col>
             <Col
-              className="text-center border rounded border-primary m-1 p-1"
+              className="text-center border rounded border-primary m-1 align-items-center"
               xs={6}
               style={{
                 backgroundColor: "white",
                 color: "black",
                 width: "120px",
+                height: "30px",
               }}
             >
               Critical Path
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-info m-1 align-items-center z-depth-5"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                width: "120px",
+                height: "30px",
+              }}
+            >
+              Highlight
             </Col>
             <Col></Col>
           </Row>

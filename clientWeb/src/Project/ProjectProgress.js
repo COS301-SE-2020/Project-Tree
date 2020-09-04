@@ -18,7 +18,7 @@ class ProjectProgress extends React.Component {
 
     return (
       <ProgressBar
-        striped
+        animated
         variant={color}
         now={percentage}
         label={`${Math.round(percentage)}% Complete`}
@@ -49,7 +49,7 @@ class ProjectProgress extends React.Component {
     else if (percentage < 66) color = "warning";
     return (
       <ProgressBar
-        striped
+        animated
         variant={color}
         now={percentage}
         label={`${Math.round(percentage)}% Complete`}
