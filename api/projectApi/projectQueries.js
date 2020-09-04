@@ -364,6 +364,10 @@ function getCriticalPath(req, res) {
     });
 }
 
+function getAllInfo(req, res) {
+  
+}
+
 module.exports = {
   createProject,
   deleteProject,
