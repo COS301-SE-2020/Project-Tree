@@ -197,7 +197,8 @@ class TaskInfo extends React.Component {
               <Row>
                 <Col className="text-center">Duration: {el.duration}</Col>
               </Row>
-              <Row className="mb-2"> <hr/>
+              <hr/>
+              <Row className="mb-2">
                 <Col>
                   <ProgressBar
                     animated
