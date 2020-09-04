@@ -7,6 +7,7 @@ import graphlib from "graphlib";
 import CreateDependency from "./Dependency/CreateDependency";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
+import { isElement } from "react-dom/test-utils";
 
 function makeLink(edge, criticalPathLinks) {
   var strokeColor = "#000";
@@ -15,7 +16,9 @@ function makeLink(edge, criticalPathLinks) {
     id: "l" + edge.id,
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
-    connector: { name: 'smooth' },
+    connector: { name: 'rounded' },
+    router: { name: 'manhattan' },
+    // connector: { name: 'smooth' },
     attrs: {
       type: "link",
       line: { stroke: strokeColor },
@@ -141,6 +144,33 @@ function buildGraph(nodes, rels, criticalPath) {
   return elements.concat(links);
 }
 
+function createViews(allNodes, viewNodes){
+  let clonedNodes = allNodes;
+  console.log(allNodes)
+  if(viewNodes !== null){
+    for(let x = 0; x < viewNodes.length; x++){
+      for(let y = 0; y < allNodes.length; y++){
+        if(viewNodes[x].originalNode === parseInt(allNodes[y].id)){
+          let clonedNode = allNodes[y].clone();
+          clonedNode.attributes.attrs.originId = allNodes[y].id;
+          clonedNode.attributes.id = `${viewNodes[x].id}`;
+          clonedNode.id = `${viewNodes[x].id}`;
+          clonedNodes.push(clonedNode);
+        }
+
+        for(let z = 0; z < viewNodes[x].dependencyArr.length; z++){
+          if(`l${viewNodes[x].dependencyArr[z].low}` === allNodes[y].id){
+            allNodes[y].attributes.source = {id: `${viewNodes[x].id}`};
+          }
+        }
+      }
+    }
+
+    
+  }
+  return clonedNodes;
+}
+
 var graphScale = 1;
 var paper = null;
 
@@ -226,7 +256,12 @@ class Graph extends React.Component {
 
   handleClick(clickedNode) {
     if (clickedNode.model.attributes.attrs.type === "node") {
-      this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
+      if(clickedNode.model.attributes.attrs.originId !== undefined){
+        this.props.toggleSidebar(parseInt(clickedNode.model.attributes.attrs.originId), null);
+      }
+      else{
+        this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
+      }    
     } else if (clickedNode.model.attributes.attrs.type === "link") {
       this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)));
     }
@@ -308,6 +343,7 @@ class Graph extends React.Component {
     }
 
     var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
+    cells = createViews(cells, this.props.views)
     this.state.graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(this.state.graph, {
       dagre: dagre,
@@ -316,21 +352,7 @@ class Graph extends React.Component {
       rankDir: "TB",
       nodeSep: 100,
       rankSep: 100,
-    });
-
-    var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
-    this.state.graph.resetCells(cells);
-    joint.layout.DirectedGraph.layout(this.state.graph, {
-      dagre: dagre,
-      graphlib: graphlib,
-      setLinkVertices: false,
-      rankDir: "TB",
-      nodeSep: 100,
-      rankSep: 100,
-    });
-
-    console.log(this.state.graph.toJSON())
-    
+    });   
   }
 
   hideModal() {

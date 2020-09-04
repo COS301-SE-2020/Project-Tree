@@ -35,6 +35,7 @@ app.post("/dependency/add", dq.createDependency);
 app.post("/dependency/update", dq.updateDependency);
 app.post("/dependency/delete", dq.deleteDependency);
 app.post("/getProject", gq.getProjectTasks);
+app.post("/getProjectViews", gq.getProjectViews);
 app.post("/login", um.login);
 app.post("/register", um.register);
 app.post("/verify", um.verify);

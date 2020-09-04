@@ -20,6 +20,7 @@ class GraphPage extends React.Component {
       dependency:null, 
       nodes:null, 
       links:null,
+      views:null,
       allUsers:null, 
       assignedProjUsers:null,
       filterOn:false,
@@ -34,6 +35,12 @@ class GraphPage extends React.Component {
   componentDidMount() {
     $.post("/getProject", { id: this.state.project.id }, (response) => {
       this.setState({ nodes: response.tasks, links: response.rels });
+    }).fail((err) => {
+      throw Error(err);
+    });
+
+    $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+      this.setState({ views: response.views });
     }).fail((err) => {
       throw Error(err);
     });
@@ -205,6 +212,7 @@ class GraphPage extends React.Component {
                   project={this.state.project}
                   nodes={this.state.nodes}
                   links={this.state.links}
+                  views={this.state.views}
                   userPermission={this.props.userPermission}
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
