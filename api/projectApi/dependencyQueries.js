@@ -66,21 +66,19 @@ function createDependency(req, res) {
 }
 
 function updateDependency(req, res) { //update a Dependency between 2 nodes with specified fields
-  let startDate = new Date(req.body.changedInfo.ct_startDate);
-  let endDate = new Date(req.body.changedInfo.ct_endDate);
+  let startDate = new Date(req.body.changedInfo.startDate);
+  let endDate = new Date(req.body.changedInfo.endDate);
   db.getSession()
     .run(
       `
-        MATCH (a)-[r]->(b) 
-        WHERE ID(r) = ${req.body.changedInfo.ud_did}
         MATCH (a)-[r:DEPENDENCY]->(b) 
-        WHERE ID(r) = ${dependency.id}
+        WHERE ID(r) = ${req.body.changedInfo.id}
         SET r += {
-          relationshipType: "${req.body.changedInfo.ud_relationshipType}" 
-          sStartDate: datetime("${dependency.sStartDate}"),
-          sEndDate: datetime("${dependency.sEndDate}"),
-          startDate: datetime("${dependency.startDate}"),
-          endDate: datetime("${dependency.endDate}"),
+          relationshipType: "${req.body.changedInfo.relationshipType}",
+          sStartDate: datetime("${req.body.changedInfo.sStartDate}"),
+          sEndDate: datetime("${req.body.changedInfo.sEndDate}"),
+          startDate: datetime("${req.body.changedInfo.startDate}"),
+          endDate: datetime("${req.body.changedInfo.endDate}"),
           duration: ${endDate.getTime() - startDate.getTime()}
         }
         RETURN r
@@ -114,16 +112,10 @@ function updateDependency(req, res) { //update a Dependency between 2 nodes with
           req.body.rels[x] = changedRel;
         }
       }
-      let target;
-      req.body.nodes.forEach( node => {
-        if (node.id == changedRel.target) target = node;
-      });
-
       await updateProject.updateCurDependency(
-        target,
+        changedRel,
         req.body.nodes,
-        req.body.rels,
-        queriesArray
+        req.body.rels
       );
       res.status(200);
       res.send({

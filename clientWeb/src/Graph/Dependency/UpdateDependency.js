@@ -162,15 +162,15 @@ class UpdateDependency extends React.Component {
                     if (this.state.dependency.relationshipType === "ss") {
                       this.setState({ 
                         dependency: dependency, 
-                        duration: this.CalcDiff(this.state.duration.sStartDate, e.target.value) 
+                        duration: this.CalcDiff(this.state.dependency.sStartDate, e.target.value) 
                       });
                     } else {
                       this.setState({ 
                         dependency: dependency, 
-                        duration: this.CalcDiff(this.state.duration.sEndDate, e.target.value) 
+                        duration: this.CalcDiff(this.state.dependency.sEndDate, e.target.value) 
                       });
                     }
-                    this.value = this.state.duration.endDate;
+                    this.value = this.state.dependency.endDate;
                   }}
                 />
               </Form.Group>

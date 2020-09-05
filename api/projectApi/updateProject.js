@@ -44,8 +44,8 @@ function updateTask(task, nodes, rels) {
   });
   let startDate = maxStartDate;
   let endDate = new Date(startDate.getTime() + task.duration);
-  task.startDate = startDate.toISOString();
-  task.endDate = endDate.toISOString();
+  task.startDate = startDate.toISOString().substring(0, 16);
+  task.endDate = endDate.toISOString().substring(0, 16);
 
   db.getSession()
     .run(
@@ -76,7 +76,7 @@ function updateDependency(dependency, nodes, rels) {
     dependency.startDate = source.startDate;
   else dependency.startDate = source.endDate;
   let startDate = new Date(dependency.startDate);
-  dependency.endDate =  new Date(startDate.getTime() + dependency.duration).toISOString();
+  dependency.endDate =  new Date(startDate.getTime() + dependency.duration).toISOString().substring(0, 16);
 
   db.getSession()
     .run(
