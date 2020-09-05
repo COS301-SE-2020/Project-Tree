@@ -10,31 +10,27 @@ import CriticalPathBarCharts from "./CriticalPathBarCharts";
 class ProjectAnalytic extends React.Component {
   render() {
     return (
-        <Container fluid className="border mt-4" style={{height:'40em'}}>
-          <Row style={{height:"8em"}}>
-            {this.props.displayProjectName ?
-            <Col>
-              <ProjectInfoComponent project={this.props.project.projectInfo}/>
-            </Col>
-            :null}
-            <Col>
-              <ProjectProgressComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
-            </Col>
-          </Row>
-          <Row style={{height:"16em"}}>
-            <Col xs={8}>
-              <DependencyPieChartsComponent />
-            </Col>
-            <Col>
-              <TaskOverviewComponent />
-            </Col>
-          </Row>
-          <Row style={{height:"16em"}}>
-            <Col>
-              <CriticalPathBarCharts />
-            </Col>
-          </Row>
-        </Container>
+      <Container fluid>
+        <Row>
+          {this.props.displayProjectName ?
+          <Col xs={12} sm={12} md={6} lg={4} xl={4}>
+            <ProjectInfoComponent project={this.props.project.projectInfo}/>
+          </Col>
+          :null}
+          <Col xs={12} sm={12} md={6} lg={8} xl={4}>
+            <ProjectProgressComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
+          </Col>
+          <Col xs={12} sm={12} md={6} lg={4} xl={4}>
+            <TaskOverviewComponent />
+          </Col>
+          <Col xs={12} sm={12} md={6} lg={8} xl={5}>
+            <DependencyPieChartsComponent />
+          </Col>
+          <Col xs={12} sm={12} md={12} lg={12} xl={7}>
+            <CriticalPathBarCharts />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

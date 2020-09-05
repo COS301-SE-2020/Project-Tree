@@ -81,16 +81,20 @@ class Dashboard extends React.Component {
     let items = []
     this.state.ownedProjects.forEach(project => {
       items.push(
-        <Scroll.Element name={project.projectInfo.id} className="element mt-4">
-          <ProjectAnalytic project={project} displayProjectName={true} />
-        </Scroll.Element>
+        <Col xl={12} lg={12} className="border mt-4" style={{width:'100%'}}>
+          <Scroll.Element name={project.projectInfo.id} className="element mt-4">
+            <ProjectAnalytic project={project} displayProjectName={true} />
+          </Scroll.Element>
+        </Col>
       )
     });
     this.state.otherProjects.forEach(project => {
       items.push(
-        <Scroll.Element name={project.projectInfo.id} className="element">
-          <ProjectAnalytic project={project} displayProjectName={true} />
-        </Scroll.Element>
+        <Col xl={12} lg={12} className="border mt-4" style={{width:'100%'}}>
+          <Scroll.Element name={project.projectInfo.id} className="element mt-4">
+            <ProjectAnalytic project={project} displayProjectName={true} />
+          </Scroll.Element>
+        </Col>
       )
     })
     return items;
@@ -121,16 +125,16 @@ class Dashboard extends React.Component {
 
     return(
       <Dropdown>
-                <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                  Jump To Project
-                </Dropdown.Toggle>
+        <Dropdown.Toggle variant="primary" id="dropdown-basic">
+          Jump To Project
+        </Dropdown.Toggle>
 
-                <Dropdown.Menu>
-                  <Dropdown.Header>Owned Projects</Dropdown.Header>
-                  {ownedProjects}
-                  <Dropdown.Header>Other Projects</Dropdown.Header>
-                  {otherProjects}
-                </Dropdown.Menu>
+        <Dropdown.Menu>
+          <Dropdown.Header>Owned Projects</Dropdown.Header>
+          {ownedProjects}
+          <Dropdown.Header>Other Projects</Dropdown.Header>
+          {otherProjects}
+        </Dropdown.Menu>
       </Dropdown>
     )
   }
@@ -154,7 +158,9 @@ class Dashboard extends React.Component {
           </Row>
           <Row>
             <Container fluid>
-              {this.ProjectAnalyticList()}
+              <Row>
+                {this.ProjectAnalyticList()}
+              </Row>
               <Row>
                 <Scroll.Element name="calendar" className="element">
                   <Calendar />
