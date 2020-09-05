@@ -135,18 +135,9 @@ function getSuccessors(id, nodes, rels) {
   return successors;
 }
 
-function compareDates(year1, month1, day1, year2, month2, day2) {
-  //returns 1 if date1 < date2, otherwise returns 0
-  date1 = new Date(year1, month1, day1);
-  date2 = new Date(year2, month2, day2);
-
-  if (date1 < date2) {
-    return 1; //sencond date is after first
-  } else if (date2 < date1) {
-    return 0; //first date is after second
-  } else {
-    return 0; //does not matter what is returned as they are equal
-  }
+function compareDates(date1, date2) { //returns 1 if date1 < date2, otherwise returns 
+  if (Date(date1) < Date(date2)) return 1; //second date is after first
+  else return 0; //first date is after second or equal
 }
 
 function addDays(year, month, day, duration) {

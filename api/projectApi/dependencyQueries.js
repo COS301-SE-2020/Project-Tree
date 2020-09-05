@@ -2,6 +2,8 @@ const db = require("../DB");
 const updateProject = require("./updateProject");
 
 function createDependency(req, res) {
+  let startDate = new Date(req.body.changedInfo.startDate);
+  let endDate = new Date(req.body.changedInfo.endDate);
   db.getSession()
     .run(
       `
@@ -13,7 +15,8 @@ function createDependency(req, res) {
           sStartDate: datetime("${req.body.changedInfo.sStartDate}"),
           sEndDate: datetime("${req.body.changedInfo.sEndDate}"),
           startDate: datetime("${req.body.changedInfo.startDate}"),
-          endDate: datetime("${req.body.changedInfo.endDate}")
+          endDate: datetime("${req.body.changedInfo.endDate}"),
+          duration: ${endDate.getTime() - startDate.getTime()}
         }]->(b)
         RETURN n
       `
@@ -33,6 +36,7 @@ function createDependency(req, res) {
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
+        duration: result.records[0]._fields[0].properties.duration,
         relationshipType:
           result.records[0]._fields[0].properties.relationshipType,
         source: result.records[0]._fields[0].start.low,
@@ -64,8 +68,9 @@ function createDependency(req, res) {
     });
 }
 
-function updateDependency(req, res) {
-  //update a Dependency between 2 nodes with specified fields
+function updateDependency(req, res) { //update a Dependency between 2 nodes with specified fields
+  let startDate = new Date(req.body.changedInfo.ct_startDate);
+  let endDate = new Date(req.body.changedInfo.ct_endDate);
   db.getSession()
     .run(
       `
@@ -93,6 +98,7 @@ function updateDependency(req, res) {
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
+        duration: result.records[0]._fields[0].properties.duration,
         relationshipType:
           result.records[0]._fields[0].properties.relationshipType,
         source: result.records[0]._fields[0].start.low,

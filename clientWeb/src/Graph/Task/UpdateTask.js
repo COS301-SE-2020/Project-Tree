@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Modal, Button, Row, Col } from "react-bootstrap";
+import {Form, Modal, Button, Row, Col, InputGroup } from "react-bootstrap";
 import ms from "ms";
 
 function stringifyFormData(fd) {
@@ -21,6 +21,8 @@ class UpdateTask extends React.Component {
       duration: this.CalcDiff(this.props.task.startDate, this.props.task.endDate),
       endDate: this.props.task.endDate,
       description: this.props.task.description,
+      progress: this.props.task.progress,
+      issue: this.props.task.type === "Issue",
       people: this.props.allUsers,
       assignedProjUsers: this.props.assignedProjUsers,
       pacManSearchTerm: "",
@@ -135,8 +137,20 @@ class UpdateTask extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    let data = new FormData(event.target);
-    data = await stringifyFormData(data);
+    
+    let type = "Incomplete"
+    if (this.state.issue === true) type = "Issue";
+    if (parseInt(this.state.progress) === 100) type = "Complete";
+    
+    let data = {
+      id: this.state.id,
+      name: this.state.name,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
+      description: this.state.description,
+      progress: this.state.progress,
+      type: type,
+    }
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
@@ -486,6 +500,55 @@ class UpdateTask extends React.Component {
                   name="duration"
                   value={this.state.duration}
                   readOnly
+                />
+              </Form.Group>
+              <Form.Group>
+                <InputGroup>
+                  <Form.Label>Progress</Form.Label>
+                  <Form.Control
+                    required
+                    type="number"
+                    name="progress"
+                    min={0}
+                    max={100}
+                    value={this.state.progress}
+                    onChange={(e) => {
+                      if(parseInt(e.target.value) === 100){
+                        this.setState({ issue: false });
+                      }
+                      this.setState({ progress: e.target.value });
+                      this.value = this.state.progress;
+                    }}
+                  />
+                  <Form.Control 
+                    type="range"
+                    value={this.state.progress}
+                    onChange={(e) => {
+                      if(parseInt(e.target.value) === 100){
+                        this.setState({ issue: false });
+                      }
+                      this.setState({ progress: e.target.value });
+                      this.value = this.state.progress;
+                    }}
+                    />
+                </InputGroup>
+              </Form.Group>
+              
+              <Form.Group>
+                <Form.Check 
+                  type="checkbox" 
+                  label="There is an issue with the task" 
+                  checked={this.state.issue}
+                  onChange={(e) => {
+                    if(parseInt(this.state.progress) === 100){
+                      this.setState({ issue: false });
+                      this.checked = false;
+                      alert("you cant specify that a complete task has an issue");
+                    } else {
+                      this.setState({ issue: e.target.checked });
+                      this.checked = this.state.issue;
+                    }
+                  }}
                 />
               </Form.Group>
               <Form.Group>

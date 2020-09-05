@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
 import UpdateTask from "./Task/UpdateTask";
-import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
 import SendTaskNotification from "../Notifications/SendTaskNotification";
@@ -326,17 +325,6 @@ class TaskSidebar extends React.Component {
               />
             </Col>
           </Row>
-          {this.props.userPermission["update"] === true ? (
-            <Row className="my-2">
-              <Col xs={12} className="text-center">
-                <UpdateProgress
-                  task={this.props.task}
-                  setTaskInfo={this.props.setTaskInfo}
-                  toggleSidebar={this.props.toggleSidebar}
-                />
-              </Col>
-            </Row>
-          ) : null}
           {this.props.userPermission["update"] === true ? (
             <Row className="my-2">
               <Col xs={12} className="text-center">
