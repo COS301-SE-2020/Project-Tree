@@ -34,9 +34,11 @@
     "path": "^0.12.7",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
+    "react-google-charts": "^3.0.15",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
+    "react-scroll": "^1.8.1",
     "storm-react-diagrams": "^5.2.1",
     "typescript": "^3.9.7"
   },

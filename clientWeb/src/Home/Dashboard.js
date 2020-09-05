@@ -1,10 +1,11 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import Calendar from "./Calendar";
-import ProjectAnalytic from "./ProjectAnalytic";
+import ProjectAnalytic from "../ProjectAnalytics/ProjectAnalytic";
 import image from "../Images/BigTree.png";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import $ from "jquery";
+import * as Scroll from 'react-scroll';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -77,7 +78,6 @@ class Dashboard extends React.Component {
   }
 
   ProjectAnalyticList(){
-    console.log(this.state.ownedProjects);
     return (
       <ProjectAnalytic />
     )
@@ -86,8 +86,28 @@ class Dashboard extends React.Component {
   render() {
     return (
       <React.Fragment>
-          {this.ProjectAnalyticList()}
+          {/* {this.ProjectAnalyticList()} */}
+          <br></br><br></br>
+          <Scroll.Link activeClass="active" to="test1" spy={true} smooth={true} offset={50} duration={500}>
+          Test 1
+          </Scroll.Link>
+          <Button onClick={()=>{
+            Scroll.scroller.scrollTo('test1', {
+              duration: 1500,
+              delay: 100,
+              smooth: true,
+              // containerId: 'ContainerElementID',
+              offset: 50, // Scrolls to element + 50 pixels down the page
+              // ...
+            })
+          }}></Button>
+          <ProjectAnalytic project={this.state.ownedProjects[0]} displayProjectName={true}/>
+          <ProjectAnalytic project={this.state.ownedProjects[0]} displayProjectName={true}/>
+          <ProjectAnalytic id="three" project={this.state.ownedProjects[0]} displayProjectName={true}/>
           <Calendar />
+          <Scroll.Element name="test1" className="element">
+          test 1
+          </Scroll.Element>
       </React.Fragment>
     );
   }
