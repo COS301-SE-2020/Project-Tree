@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import Calendar from "./Calendar";
 import ProjectAnalytic from "../ProjectAnalytics/ProjectAnalytic";
 import image from "../Images/BigTree.png";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Dropdown } from "react-bootstrap";
 import $ from "jquery";
 import * as Scroll from 'react-scroll';
 
@@ -78,36 +78,91 @@ class Dashboard extends React.Component {
   }
 
   ProjectAnalyticList(){
-    return (
-      <ProjectAnalytic />
+    let items = []
+    this.state.ownedProjects.forEach(project => {
+      items.push(
+        <Scroll.Element name={project.projectInfo.id} className="element mt-4">
+          <ProjectAnalytic project={project} displayProjectName={true} />
+        </Scroll.Element>
+      )
+    });
+    this.state.otherProjects.forEach(project => {
+      items.push(
+        <Scroll.Element name={project.projectInfo.id} className="element">
+          <ProjectAnalytic project={project} displayProjectName={true} />
+        </Scroll.Element>
+      )
+    })
+    return items;
+  }
+
+  scroll(scrollValue){
+    Scroll.scroller.scrollTo(scrollValue, {
+      duration: 1000,
+      delay: 100,
+      smooth: true,
+    })
+  }
+
+  MakeDropdown(){
+    let ownedProjects = [];
+    this.state.ownedProjects.forEach(project => {
+      ownedProjects.push(
+        <Dropdown.Item onClick={()=>this.scroll(project.projectInfo.id)}>{project.projectInfo.name}</Dropdown.Item>
+      )
+    });
+
+    let otherProjects = [];
+    this.state.otherProjects.forEach(project => {
+      otherProjects.push(
+        <Dropdown.Item onClick={()=>this.scroll(project.projectInfo.id)}>{project.projectInfo.name}</Dropdown.Item>
+      )
+    });
+
+    return(
+      <Dropdown>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  Jump To Project
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Header>Owned Projects</Dropdown.Header>
+                  {ownedProjects}
+                  <Dropdown.Header>Other Projects</Dropdown.Header>
+                  {otherProjects}
+                </Dropdown.Menu>
+      </Dropdown>
     )
   }
 
   render() {
     return (
       <React.Fragment>
-          {/* {this.ProjectAnalyticList()} */}
-          <br></br><br></br>
-          <Scroll.Link activeClass="active" to="test1" spy={true} smooth={true} offset={50} duration={500}>
-          Test 1
-          </Scroll.Link>
-          <Button onClick={()=>{
-            Scroll.scroller.scrollTo('test1', {
-              duration: 1500,
-              delay: 100,
-              smooth: true,
-              // containerId: 'ContainerElementID',
-              offset: 50, // Scrolls to element + 50 pixels down the page
-              // ...
-            })
-          }}></Button>
-          <ProjectAnalytic project={this.state.ownedProjects[0]} displayProjectName={true}/>
-          <ProjectAnalytic project={this.state.ownedProjects[0]} displayProjectName={true}/>
-          <ProjectAnalytic id="three" project={this.state.ownedProjects[0]} displayProjectName={true}/>
-          <Calendar />
-          <Scroll.Element name="test1" className="element">
-          test 1
-          </Scroll.Element>
+        <Container fluid>
+          <Row>
+            <Col>
+              <h1>Project Dashboard</h1>
+            </Col>
+            <Col>
+              {this.MakeDropdown()}
+            </Col>
+            <Col>
+              <Button onClick={()=>this.scroll("calendar")}>
+                Jump To Calendar
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Container fluid>
+              {this.ProjectAnalyticList()}
+              <Row>
+                <Scroll.Element name="calendar" className="element">
+                  <Calendar />
+                </Scroll.Element>
+              </Row>
+            </Container>
+          </Row>
+        </Container>
       </React.Fragment>
     );
   }

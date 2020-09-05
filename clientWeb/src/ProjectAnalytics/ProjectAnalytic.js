@@ -9,13 +9,9 @@ import CriticalPathBarCharts from "./CriticalPathBarCharts";
 
 class ProjectAnalytic extends React.Component {
   render() {
-    console.log(this.props.project)
     return (
-        <Container className="border primary">
-          <Row>
-            <br></br>
-          </Row>
-          <Row>
+        <Container fluid className="border mt-4" style={{height:'40em'}}>
+          <Row style={{height:"8em"}}>
             {this.props.displayProjectName ?
             <Col>
               <ProjectInfoComponent project={this.props.project.projectInfo}/>
@@ -25,7 +21,7 @@ class ProjectAnalytic extends React.Component {
               <ProjectProgressComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
             </Col>
           </Row>
-          <Row>
+          <Row style={{height:"16em"}}>
             <Col xs={8}>
               <DependencyPieChartsComponent />
             </Col>
@@ -33,7 +29,7 @@ class ProjectAnalytic extends React.Component {
               <TaskOverviewComponent />
             </Col>
           </Row>
-          <Row>
+          <Row style={{height:"16em"}}>
             <Col>
               <CriticalPathBarCharts />
             </Col>
