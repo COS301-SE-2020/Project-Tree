@@ -322,10 +322,7 @@ class App extends Component {
                       )
                     ) : (
                       <div className="row">
-                        <div
-                          className="column"
-                          style={{ backgroundColor: "white" }}
-                        >
+                        <div className="column left" style={{ backgroundColor: "white" }}>
                           <div className="login">
                             <div
                               className="container"
@@ -352,7 +349,7 @@ class App extends Component {
                             />
                           </div>
                         </div>
-                        <div className="column">
+                        <div className="column right" style={{ backgroundColor: "white" }}>
                           <div className="carosal">
                             <About />
                           </div>

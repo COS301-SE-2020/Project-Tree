@@ -46,6 +46,7 @@ export class Register extends React.Component {
       : (str += "");
     return arr;
   }
+  
 
   handleChange(event) {
     this.setState({
