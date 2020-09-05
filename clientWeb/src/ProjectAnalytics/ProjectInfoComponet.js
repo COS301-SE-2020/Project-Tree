@@ -9,7 +9,7 @@ export default class ProjectInfoComponent extends React.Component{
             <Container>
                 <Row>
                     <Col>
-                    <h2>{this.props.project.name}</h2>
+                    <h2 style={{textDecoration: "underline"}}>{this.props.project.name}</h2>
                     </Col>
                 </Row>
                 <Row className="align-items-center py-2">

@@ -84,6 +84,7 @@ class Dashboard extends React.Component {
         <Col xl={12} lg={12} className="m-2" style={{width:'100%'}}>
           <Scroll.Element name={project.projectInfo.id} className="element m-0 p-0">
             <ProjectAnalytic project={project} displayProjectName={true} />
+            <hr style={{ backgroundColor: "#EEBB4D",  height:"4px"  }} />
           </Scroll.Element>
         </Col>
       )
@@ -93,6 +94,7 @@ class Dashboard extends React.Component {
         <Col xl={12} lg={12} className="m-2" style={{width:'100%'}}>
           <Scroll.Element name={project.projectInfo.id} className="element m-0 p-0">
             <ProjectAnalytic project={project} displayProjectName={true} />
+            <hr style={{ backgroundColor: "#EEBB4D", height:"4px"  }} />
           </Scroll.Element>
         </Col>
       )
@@ -125,7 +127,7 @@ class Dashboard extends React.Component {
 
     return(
       <Dropdown>
-        <Dropdown.Toggle variant="primary" id="dropdown-basic">
+        <Dropdown.Toggle variant="warning" id="dropdown-basic">
           Jump To Project
         </Dropdown.Toggle>
 
@@ -145,13 +147,16 @@ class Dashboard extends React.Component {
         <Container fluid className="mt-2">
           <Row>
             <Col>
-              <h1>Project Dashboard</h1>
             </Col>
-            <Col>
+            <Col></Col>
+            <Col xs={3}>
+              <h1 style={{fontWeight: "bold"}}>Project Dashboard</h1>
+            </Col>
+            <Col >
               {this.MakeDropdown()}
             </Col>
             <Col>
-              <Button onClick={()=>this.scroll("calendar")}>
+              <Button variant="warning" onClick={()=>this.scroll("calendar")}>
                 Jump To Calendar
               </Button>
             </Col>
@@ -161,9 +166,11 @@ class Dashboard extends React.Component {
               <Row>
                 {this.ProjectAnalyticList()}
               </Row>
-              <Row style={{marginBottom:'10em', marginTop:'5em'}}>
-                <Col>
+              <Row style={{marginBottom:'10em', marginTop:'2em'}}>
+                <Col className="text-center">
                   <Scroll.Element name="calendar" className="element">
+                    <h1>Calendar</h1>
+                    <hr style={{ backgroundColor: "#EEBB4D", width:"50%"}} />
                     <Calendar ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects}/>
                   </Scroll.Element>
                 </Col>
