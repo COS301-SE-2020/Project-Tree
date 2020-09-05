@@ -6,7 +6,7 @@ export default class DependencyPieChartsComponent extends React.Component {
     render(){
         return(
             <React.Fragment>
-                <Container className="border" fluid>
+                <Container fluid>
                     <Row>
                         <Col>
                             <h4>Dependency Info</h4>

@@ -5,8 +5,8 @@ import { Chart } from 'react-google-charts';
 export default class CriticalPathBarCharts extends React.Component {
     render(){
         return(
-            <Container fluid className="border">
-                <Row className="border">
+            <Container fluid>
+                <Row>
                     <Col>
                         <h4>Critical Path Info</h4>
                         <Chart

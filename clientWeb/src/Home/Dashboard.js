@@ -81,8 +81,8 @@ class Dashboard extends React.Component {
     let items = []
     this.state.ownedProjects.forEach(project => {
       items.push(
-        <Col xl={12} lg={12} className="border mt-4" style={{width:'100%'}}>
-          <Scroll.Element name={project.projectInfo.id} className="element mt-4">
+        <Col xl={12} lg={12} className="m-2" style={{width:'100%'}}>
+          <Scroll.Element name={project.projectInfo.id} className="element m-0 p-0">
             <ProjectAnalytic project={project} displayProjectName={true} />
           </Scroll.Element>
         </Col>
@@ -90,8 +90,8 @@ class Dashboard extends React.Component {
     });
     this.state.otherProjects.forEach(project => {
       items.push(
-        <Col xl={12} lg={12} className="border mt-4" style={{width:'100%'}}>
-          <Scroll.Element name={project.projectInfo.id} className="element mt-4">
+        <Col xl={12} lg={12} className="m-2" style={{width:'100%'}}>
+          <Scroll.Element name={project.projectInfo.id} className="element m-0 p-0">
             <ProjectAnalytic project={project} displayProjectName={true} />
           </Scroll.Element>
         </Col>
@@ -142,7 +142,7 @@ class Dashboard extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container fluid>
+        <Container fluid className="mt-2">
           <Row>
             <Col>
               <h1>Project Dashboard</h1>
@@ -157,14 +157,16 @@ class Dashboard extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Container fluid>
+            <Container fluid className="p-0">
               <Row>
                 {this.ProjectAnalyticList()}
               </Row>
-              <Row>
-                <Scroll.Element name="calendar" className="element">
-                  <Calendar />
-                </Scroll.Element>
+              <Row style={{marginBottom:'10em', marginTop:'5em'}}>
+                <Col>
+                  <Scroll.Element name="calendar" className="element">
+                    <Calendar ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects}/>
+                  </Scroll.Element>
+                </Col>
               </Row>
             </Container>
           </Row>

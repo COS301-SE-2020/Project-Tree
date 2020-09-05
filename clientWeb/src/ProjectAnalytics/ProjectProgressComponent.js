@@ -56,18 +56,24 @@ export default class ProjectProgressComponent extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Row className="align-items-center bg-white">
-            <h4>Project Progress</h4>
-        </Row>
-        <Row className="align-items-center bg-white">
-          <Col sm={12} style={{ fontSize: "20px" }}>
-            Total Progress: {this.getProjectProgress()}
-          </Col>
-          <Col sm={12} style={{ fontSize: "20px" }}>
-            Critical Path Progress: {this.getProjectProgress()}
-            {/* Critical Path Progress: {this.getCPProgress()} */}
-          </Col>
-        </Row>
+        <Container>
+          <Row className="align-items-center bg-white">
+            <Col>
+                <h4>Project Progress</h4>
+            </Col>
+            
+          </Row>
+          <Row className="align-items-center bg-white">
+            <Col sm={12} style={{ fontSize: "20px" }}>
+              Total Progress: {this.getProjectProgress()}
+            </Col>
+            <Col sm={12} style={{ fontSize: "20px" }}>
+              Critical Path Progress: {this.getProjectProgress()}
+              {/* Critical Path Progress: {this.getCPProgress()} */}
+            </Col>
+          </Row>
+        </Container>
+        
       </React.Fragment>
     );
   }

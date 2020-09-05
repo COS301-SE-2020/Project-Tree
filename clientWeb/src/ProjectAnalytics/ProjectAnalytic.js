@@ -13,20 +13,20 @@ class ProjectAnalytic extends React.Component {
       <Container fluid>
         <Row>
           {this.props.displayProjectName ?
-          <Col xs={12} sm={12} md={6} lg={4} xl={4}>
+          <Col xs={12} sm={12} md={6} lg={4} xl={4} className="m-0 p-2 border">
             <ProjectInfoComponent project={this.props.project.projectInfo}/>
           </Col>
           :null}
-          <Col xs={12} sm={12} md={6} lg={8} xl={4}>
+          <Col xs={12} sm={12} md={6} lg={8} xl={4} className="m-0 p-2 border">
             <ProjectProgressComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
           </Col>
-          <Col xs={12} sm={12} md={6} lg={4} xl={4}>
+          <Col xs={12} sm={12} md={6} lg={4} xl={4} className="m-0 p-2 border">
             <TaskOverviewComponent />
           </Col>
-          <Col xs={12} sm={12} md={6} lg={8} xl={5}>
+          <Col xs={12} sm={12} md={6} lg={8} xl={5} className="m-0 p-2 border">
             <DependencyPieChartsComponent />
           </Col>
-          <Col xs={12} sm={12} md={12} lg={12} xl={7}>
+          <Col xs={12} sm={12} md={12} lg={12} xl={7} className="m-0 p-2 border">
             <CriticalPathBarCharts />
           </Col>
         </Row>
