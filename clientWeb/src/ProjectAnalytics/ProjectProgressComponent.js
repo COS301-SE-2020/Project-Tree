@@ -60,10 +60,10 @@ export default class ProjectProgressComponent extends React.Component {
             <h4>Project Progress</h4>
         </Row>
         <Row className="align-items-center bg-white">
-          <Col md={12} lg={6} style={{ fontSize: "20px" }}>
+          <Col sm={12} style={{ fontSize: "20px" }}>
             Total Progress: {this.getProjectProgress()}
           </Col>
-          <Col md={12} lg={6} style={{ fontSize: "20px" }}>
+          <Col sm={12} style={{ fontSize: "20px" }}>
             Critical Path Progress: {this.getProjectProgress()}
             {/* Critical Path Progress: {this.getCPProgress()} */}
           </Col>
