@@ -321,7 +321,7 @@ function getProjectTasks(req, res) {
           endDate: updateProject.datetimeToString(
             record._fields[0].properties.endDate
           ),
-          duration: record._fields[0].properties.duration,
+          duration: record._fields[0].properties.duration.low,
         });
       });
       res.status(200);

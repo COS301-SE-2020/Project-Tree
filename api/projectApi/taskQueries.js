@@ -33,7 +33,7 @@ function createTask(req, res) {
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
-        duration: result.records[0]._fields[0].properties.duration,
+        duration: result.records[0]._fields[0].properties.duration.low,
         type: result.records[0]._fields[0].properties.type,
         progress: result.records[0]._fields[0].properties.progress.low,
       };
@@ -92,23 +92,19 @@ function deleteTask(req, res) {
         }
       }
 
-      let queriesArray = [];
-      for (let x = 0; x < successors.length; x++) {
-        await updateProject.updateProject(
-          successors[x].id,
+      await successors.forEach(async succ => {
+        await updateProject.updateTask(
+          succ,
           req.body.nodes,
-          req.body.rels,
-          queriesArray
+          req.body.rels
         );
-      }
-
+      });
       res.send({
         nodes: req.body.nodes,
         rels: req.body.rels,
         displayNode: null,
         displayRel: null,
       });
-      updateProject.excecuteQueries(queriesArray);
     })
     .catch((err) => {
       console.log(err);
@@ -117,11 +113,10 @@ function deleteTask(req, res) {
     });
 }
 
-async function updateTask(req, res) { //update a task with a certain ID with specified fields
+function updateTask(req, res) { //update a task with a certain ID with specified fields
   let startDate = new Date(req.body.changedInfo.startDate);
   let endDate = new Date(req.body.changedInfo.endDate);
-  result = await db
-    .getSession()
+  db.getSession()
     .run(
       `
         MATCH (a) 
@@ -151,7 +146,7 @@ async function updateTask(req, res) { //update a task with a certain ID with spe
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
-        duration: result.records[0]._fields[0].properties.duration,
+        duration: result.records[0]._fields[0].properties.duration.low,
       };
       for (var x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == changedTask.id) {
@@ -159,23 +154,11 @@ async function updateTask(req, res) { //update a task with a certain ID with spe
         }
       }
 
-      let upDep = false;
-      if (
-        updateProject.datetimeToString(result.records[0]._fields[0].properties.startDate) !=
-          req.body.changedInfo.ut_startDate ||
-        updateProject.datetimeToString(result.records[0]._fields[0].properties.endDate) !=
-          req.body.changedInfo.ut_endDate
-      ) upDep = true;
-
-      let queriesArray = [];
-      if (upDep == true) {
-        await updateProject.updateProject(
-          changedTask.id,
-          req.body.nodes,
-          req.body.rels,
-          queriesArray
-        );
-      }
+      await updateProject.updateTask(
+        changedTask,
+        req.body.nodes,
+        req.body.rels,
+      );
 
       res.send({
         nodes: req.body.nodes,
@@ -183,7 +166,6 @@ async function updateTask(req, res) { //update a task with a certain ID with spe
         displayNode: changedTask.id,
         displayRel: null,
       });
-      updateProject.excecuteQueries(queriesArray);
     })
     .catch((err) => {
       console.log(err);

@@ -157,7 +157,7 @@ class UpdateDependency extends React.Component {
                   name="cd_endDate"
                   value={this.state.dependency.endDate}
                   onChange={(e) => {
-                    let dependency = this.state.duration;
+                    let dependency = this.state.dependency;
                     dependency.endDate = e.target.value;
                     if (this.state.dependency.relationshipType === "ss") {
                       this.setState({ 
