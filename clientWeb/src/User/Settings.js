@@ -10,6 +10,18 @@ function stringifyFormData(fd) {
   return data;
 }
 
+function getBase64(file) {
+  console.log(file)
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function () {
+    return (reader.result);
+  };
+  reader.onerror = function (error) {
+    console.log('Error: ', error);
+  };
+}
+
 class Settings extends React.Component {
   constructor(props) {
     super(props);
@@ -66,15 +78,14 @@ class Settings extends React.Component {
   }
 
   async handleSubmit(event) {
+    console.log((this.state.user.profilepicture))
     event.preventDefault();
     let data = new FormData();
     data.append("name", this.state.user.name);
     data.append("sname", this.state.user.sname);
     data.append("email", this.state.user.email);
     data.append("bday", this.state.user.birthday);
-    data.append(
-      "profilePicture",
-      JSON.stringify(this.state.user.profilepicture)
+    data.append("profilePicture", getBase64(this.state.user.profilepicture)
     );
     data.append("token", localStorage.getItem("sessionToken"));
     data = await stringifyFormData(data);
