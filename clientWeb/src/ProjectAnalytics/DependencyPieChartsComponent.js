@@ -1,9 +1,75 @@
 import React from "react";
 import { Container, Row, Col, Button, ProgressBar } from "react-bootstrap";
 import { Chart } from 'react-google-charts';
+import { format } from "path";
 
 export default class DependencyPieChartsComponent extends React.Component {
+    createCriticalPath() {
+        let list = [];
+        if (
+        this.props.criticalPath !== undefined &&
+          this.props.criticalPath.path !== undefined &&
+          this.props.criticalPath !== null &&
+          this.props.criticalPath.path !== null 
+        ) {
+          this.props.criticalPath.path.segments.forEach((el, index) => {
+            if (index === 0) {
+              list.push({
+                id: el.start.identity.low,
+                name: el.start.properties.name,
+                description: el.start.properties.description,
+                type: el.start.properties.type,
+                progress: el.start.properties.progress.low,
+                startDate: el.start.properties.startDate,
+                endDate: el.start.properties.endDate,
+                duration: el.start.properties.duration.low,
+              });
+            }
+            list.push({
+              id: el.end.identity.low,
+              name: el.end.properties.name,
+              description: el.end.properties.description,
+              type: el.end.properties.type,
+              progress: el.end.properties.progress.low,
+              startDate: el.end.properties.startDate,
+              endDate: el.end.properties.endDate,
+              duration: el.end.properties.duration.low,
+            });
+          });
+        } 
+
+        return list;
+    }
+
+    formatData(tasks){
+        let data = [];
+        data.push(['Task', 'Number of Dependencies']);
+        tasks.forEach((task)=>{
+            data.push(
+                [task.name, this.getNumberOfDependencies(task)]
+            )
+        });
+
+        return data;
+    }
+
+    getNumberOfDependencies(task){
+        let count = 0;
+        let rels = this.props.rels;
+
+        for(var x=0; x<rels.length; x++){
+            if(task.id === rels[x].source){
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     render(){
+        let tasks = this.formatData(this.props.tasks)
+        let criticalPath = this.formatData(this.createCriticalPath());
+
         return(
             <React.Fragment>
                 <Container fluid>
@@ -19,16 +85,10 @@ export default class DependencyPieChartsComponent extends React.Component {
                                 height={'100%'}
                                 chartType="PieChart"
                                 loader={<div>Loading Chart</div>}
-                                data={[
-                                    ['Task', 'Hours per Day'],
-                                    ['Task A', 11],
-                                    ['Task B', 2],
-                                    ['Task C', 2],
-                                    ['Task D', 2],
-                                    ['Task E', 7],
-                                ]}
+                                data={tasks}
                                 options={{
-                                    title: 'Tasks with the most dependencies',
+                                    title: 'Number of dependencies per task',
+                                    sliceVisibilityThreshold: 0.1
                                 }}
                                 rootProps={{ 'data-testid': '1' }}
                             />
@@ -39,16 +99,10 @@ export default class DependencyPieChartsComponent extends React.Component {
                                 height={'100%'}
                                 chartType="PieChart"
                                 loader={<div>Loading Chart</div>}
-                                data={[
-                                    ['Task', 'Hours per Day'],
-                                    ['Task A', 9],
-                                    ['Task B', 8],
-                                    ['Task C', 6],
-                                    ['Task D', 2],
-                                    ['Task E', 4],
-                                ]}
+                                data={criticalPath}
                                 options={{
-                                    title: 'Critical path tasks with the most dependencies',
+                                    title: 'Number of dependencies per critical path task',
+                                    sliceVisibilityThreshold: 0.1
                                 }}
                                 rootProps={{ 'data-testid': '1' }}
                             />

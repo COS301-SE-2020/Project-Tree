@@ -83,8 +83,8 @@ class Dashboard extends React.Component {
     let items = []
     this.state.ownedProjects.forEach(project => {
       items.push(
-        <Col xl={12} lg={12} className="m-2" style={{width:'100%'}}>
-          <Scroll.Element name={project.projectInfo.id} className="element m-0 p-0">
+        <Col key={project.projectInfo.id.toString()} xl={12} lg={12} className="m-2" style={{width:'100%'}}>
+          <Scroll.Element name={project.projectInfo.id.toString()} className="element m-0 p-0">
             <ProjectAnalytic project={project} displayProjectName={true} setProject={this.props.setProject}/>
             <hr style={{ backgroundColor: "#EEBB4D",  height:"4px"  }} />
           </Scroll.Element>
@@ -93,8 +93,8 @@ class Dashboard extends React.Component {
     });
     this.state.otherProjects.forEach(project => {
       items.push(
-        <Col xl={12} lg={12} className="m-2" style={{width:'100%'}}>
-          <Scroll.Element name={project.projectInfo.id} className="element m-0 p-0">
+        <Col key={project.projectInfo.id.toString()} xl={12} lg={12} className="m-2" style={{width:'100%'}}>
+          <Scroll.Element name={project.projectInfo.id.toString()} className="element m-0 p-0">
             <ProjectAnalytic project={project} displayProjectName={true} setProject={this.props.setProject}/>
             <hr style={{ backgroundColor: "#EEBB4D", height:"4px"  }} />
           </Scroll.Element>
@@ -116,14 +116,14 @@ class Dashboard extends React.Component {
     let ownedProjects = [];
     this.state.ownedProjects.forEach(project => {
       ownedProjects.push(
-        <Dropdown.Item onClick={()=>this.scroll(project.projectInfo.id)}>{project.projectInfo.name}</Dropdown.Item>
+        <Dropdown.Item key={project.projectInfo.id.toString()} onClick={()=>this.scroll(project.projectInfo.id.toString())}>{project.projectInfo.name}</Dropdown.Item>
       )
     });
 
     let otherProjects = [];
     this.state.otherProjects.forEach(project => {
       otherProjects.push(
-        <Dropdown.Item onClick={()=>this.scroll(project.projectInfo.id)}>{project.projectInfo.name}</Dropdown.Item>
+        <Dropdown.Item key={project.projectInfo.id.toString()} onClick={()=>this.scroll(project.projectInfo.id.toString())}>{project.projectInfo.name}</Dropdown.Item>
       )
     });
 

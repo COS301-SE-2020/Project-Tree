@@ -17,7 +17,7 @@ export default class ProjectProgressComponent extends React.Component {
       <ProgressBar
         variant={color}
         now={percentage}
-        label={`${Math.round(percentage)}% Complete`}
+        label={`${Math.round(percentage)}%`}
       />
     );
   }
@@ -26,10 +26,11 @@ export default class ProjectProgressComponent extends React.Component {
     let totalDur = 0,
       completeDur = 0,
       percentage = 0,
-      color = "success";
+      color = "info";
     if (
       this.props.criticalPath !== null &&
-      this.props.criticalPath.path !== null
+      this.props.criticalPath.path !== null &&
+      this.props.criticalPath.path !== undefined
     )
       this.props.criticalPath.path.segments.forEach((el, i) => {
         if (i === 0) {
@@ -41,11 +42,8 @@ export default class ProjectProgressComponent extends React.Component {
       });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
 
-    if (percentage < 33) color = "danger";
-    else if (percentage < 66) color = "warning";
     return (
       <ProgressBar
-        striped
         variant={color}
         now={percentage}
         label={`${Math.round(percentage)}%`}
@@ -68,8 +66,7 @@ export default class ProjectProgressComponent extends React.Component {
               Total Progress: {this.getProjectProgress()}
             </Col>
             <Col sm={12} style={{ fontSize: "20px" }}>
-              Critical Path Progress: {this.getProjectProgress()}
-              {/* Critical Path Progress: {this.getCPProgress()} */}
+              Critical Path Progress: {this.getCPProgress()}
             </Col>
           </Row>
         </Container>
