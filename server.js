@@ -30,7 +30,6 @@ app.post("/project/criticalpath", pq.getCriticalPath);
 app.post("/task/add", tq.createTask);
 app.post("/task/update", tq.updateTask);
 app.post("/task/delete", tq.deleteTask);
-app.post("/task/progress", tq.updateProgress);
 app.post("/dependency/add", dq.createDependency);
 app.post("/dependency/update", dq.updateDependency);
 app.post("/dependency/delete", dq.deleteDependency);

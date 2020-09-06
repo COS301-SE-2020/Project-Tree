@@ -26,6 +26,7 @@ function getProjectTasks(req, res) {
           endDate: updateProject.datetimeToString(
             record._fields[0].properties.endDate
           ),
+          duration: record._fields[0].properties.duration.low,
         });
       });
       db.getSession()
@@ -54,6 +55,7 @@ function getProjectTasks(req, res) {
               endDate: updateProject.datetimeToString(
                 record._fields[0].properties.endDate
               ),
+              duration: record._fields[0].properties.duration.low,
               relationshipType:
                 record._fields[0].properties.relationshipType,
               source: record._fields[0].start.low,

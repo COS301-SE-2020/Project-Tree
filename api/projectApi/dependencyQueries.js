@@ -2,6 +2,8 @@ const db = require("../DB");
 const updateProject = require("./updateProject");
 
 function createDependency(req, res) {
+  let startDate = new Date(req.body.changedInfo.startDate);
+  let endDate = new Date(req.body.changedInfo.endDate);
   db.getSession()
     .run(
       `
@@ -13,7 +15,8 @@ function createDependency(req, res) {
           sStartDate: datetime("${req.body.changedInfo.sStartDate}"),
           sEndDate: datetime("${req.body.changedInfo.sEndDate}"),
           startDate: datetime("${req.body.changedInfo.startDate}"),
-          endDate: datetime("${req.body.changedInfo.endDate}")
+          endDate: datetime("${req.body.changedInfo.endDate}"),
+          duration: ${endDate.getTime() - startDate.getTime()}
         }]->(b)
         RETURN n
       `
@@ -33,20 +36,19 @@ function createDependency(req, res) {
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
+        duration: result.records[0]._fields[0].properties.duration.low,
         relationshipType:
           result.records[0]._fields[0].properties.relationshipType,
         source: result.records[0]._fields[0].start.low,
         target: result.records[0]._fields[0].end.low,
       };
       let changedRel = rel;
-      let queriesArray = [];
       req.body.rels.push(changedRel);
 
-      await updateProject.updateProject(
-        changedRel.target,
+      await updateProject.updateCurDependency(
+        changedRel,
         req.body.nodes,
-        req.body.rels,
-        queriesArray
+        req.body.rels
       );
       res.status(200);
       res.send({
@@ -55,7 +57,6 @@ function createDependency(req, res) {
         displayNode: null,
         displayRel: changedRel.id,
       });
-      updateProject.excecuteQueries(queriesArray);
     })
     .catch((err) => {
       console.log(err);
@@ -64,16 +65,21 @@ function createDependency(req, res) {
     });
 }
 
-function updateDependency(req, res) {
-  //update a Dependency between 2 nodes with specified fields
+function updateDependency(req, res) { //update a Dependency between 2 nodes with specified fields
+  let startDate = new Date(req.body.changedInfo.startDate);
+  let endDate = new Date(req.body.changedInfo.endDate);
   db.getSession()
     .run(
       `
-        MATCH (a)-[r]->(b) 
-        WHERE ID(r) = ${req.body.changedInfo.ud_did}
-        SET r += { 
-          duration:${req.body.changedInfo.ud_duration}, 
-          relationshipType: "${req.body.changedInfo.ud_relationshipType}" 
+        MATCH (a)-[r:DEPENDENCY]->(b) 
+        WHERE ID(r) = ${req.body.changedInfo.id}
+        SET r += {
+          relationshipType: "${req.body.changedInfo.relationshipType}",
+          sStartDate: datetime("${req.body.changedInfo.sStartDate}"),
+          sEndDate: datetime("${req.body.changedInfo.sEndDate}"),
+          startDate: datetime("${req.body.changedInfo.startDate}"),
+          endDate: datetime("${req.body.changedInfo.endDate}"),
+          duration: ${endDate.getTime() - startDate.getTime()}
         }
         RETURN r
       `
@@ -93,6 +99,7 @@ function updateDependency(req, res) {
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
+        duration: result.records[0]._fields[0].properties.duration.low,
         relationshipType:
           result.records[0]._fields[0].properties.relationshipType,
         source: result.records[0]._fields[0].start.low,
@@ -105,15 +112,11 @@ function updateDependency(req, res) {
           req.body.rels[x] = changedRel;
         }
       }
-
-      let queriesArray = [];
-
-      /* await updateProject.updateProject(
-        changedRel.target,
+      await updateProject.updateCurDependency(
+        changedRel,
         req.body.nodes,
-        req.body.rels,
-        queriesArray
-      ); */
+        req.body.rels
+      );
       res.status(200);
       res.send({
         nodes: req.body.nodes,
@@ -121,7 +124,6 @@ function updateDependency(req, res) {
         displayNode: null,
         displayRel: changedRel.id,
       });
-      //updateProject.excecuteQueries(queriesArray);
     })
     .catch((err) => {
       console.log(err);
@@ -137,12 +139,10 @@ function deleteDependency(req, res) {
         MATCH (a:Task)-[r:DEPENDENCY]->(b:Task)
         WHERE ID(r)=${req.body.changedInfo.dd_did}
         DELETE r
-        RETURN *
 		  `
     )
     .then(async () => {
-      let queriesArray = [];
-      let = {};
+      let rel = {};
 
       for (let x = 0; x < req.body.rels.length; x++) {
         if (req.body.rels[x].id == req.body.changedInfo.dd_did) {
@@ -155,12 +155,16 @@ function deleteDependency(req, res) {
           }
         }
       }
+      
+      let target;
+      req.body.nodes.forEach( node => {
+        if (node.id == rel.target) target = node;
+      });
 
-      await updateProject.updateProject(
-        rel.target,
+      await updateProject.updateTask(
+        target,
         req.body.nodes,
-        req.body.rels,
-        queriesArray
+        req.body.rels
       );
       res.status(200);
       res.send({
@@ -169,7 +173,6 @@ function deleteDependency(req, res) {
         displayNode: null,
         displayRel: null,
       });
-      updateProject.excecuteQueries(queriesArray);
     })
     .catch((err) => {
       console.log(err);

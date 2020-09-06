@@ -1,161 +1,134 @@
 const db = require("../DB");
 
-async function updateProject(rootId, nodes, rels, queriesArray) {
-  let root = nodes.find(findNode, rootId);
-  propagateDependencies(root, nodes, rels, queriesArray);
-
-  var query = "";
-  for (var x = 0; x < queriesArray.length; x++) {
-    if (x == queriesArray.length - 1) {
-      query += queriesArray[x];
-    } else {
-      query += queriesArray[x] + ";";
-    }
-  }
+function updateCurTask(task, nodes, rels) {
+  //needed for future development
+  /* getPredDependencies(task.id, rels)
+    .forEach(dep => {
+      if (task.startDate != dep.endDate) {
+        dep.endDate = task.startDate;
+        let startDate = new Date(dep.startDate);
+        let endDate = new Date(dep.endDate);
+        dep.duration = endDate.getTime() - startDate.getTime();
+        db.getSession()
+          .run(
+            `
+              MATCH (a)-[r]->(b) 
+              WHERE ID(r) = ${dep.id}
+              SET r += {  
+                endDate: datetime("${dep.endDate}"), 
+                duration:${dep.duration},
+              }
+            `
+          ).catch((err) => {
+            console.log(err);
+          });
+        
+      }
+    }); */
+  getSuccDependencies(task, rels)
+    .forEach(dep => updateDependency(dep, nodes, rels));
 }
 
-function excecuteQueries(queriesArray) {
-  for (var x = 0; x < queriesArray.length; x++) {
-    executeQuery(queriesArray[x]);
-  }
-}
-
-function executeQuery(query) {
-  let session = db.getSession();
-  session.run(query).catch((err) => {
-    console.log(err);
+function updateCurDependency(dependency, nodes, rels) {
+  nodes.forEach( node => {
+    if (node.id == dependency.target) updateTask(node, nodes, rels);
   });
 }
 
-async function propagateDependencies(currentNode, nodes, rels, queriesArray) {
-  let predecessors = getPredecessors(currentNode.id, nodes, rels);
-  let successors = getSuccessors(currentNode.id, nodes, rels);
+function updateTask(task, nodes, rels) {
+  let maxStartDate = new Date(task.startDate);
+  getPredDependencies(task.id, rels)
+    .forEach(dep => {
+      let endDate = new Date(dep.endDate)
+      if (endDate > maxStartDate) maxStartDate = endDate;
+  });
+  let startDate = maxStartDate;
+  let endDate = new Date(startDate.getTime() + task.duration);
+  task.startDate = startDate.toISOString().substring(0, 16);
+  task.endDate = endDate.toISOString().substring(0, 16);
 
-  if (predecessors != 0) {
-    var tempLatestDate = [2000, 1, 1];
+  db.getSession()
+    .run(
+      `
+        MATCH (a:Task) 
+        WHERE ID(a) = ${task.id}
+        SET a += {
+          startDate: datetime("${task.startDate}"),
+          endDate: datetime("${task.endDate}")
+        }
+      `
+    ).catch((err) => {
+      console.log(err);
+    });
 
-    for (var x = 0; x < predecessors.length; x++) {
-      var relType = predecessors[x].rel.relationshipType;
-      var relDuration = predecessors[x].rel.duration;
-      var relativeDate;
-
-      if (relType == "fs") {
-        relativeDate = predecessors[x].node.endDate;
-      } else {
-        relativeDate = predecessors[x].node.startDate;
-      }
-
-      var newTempDate = addDays(
-        relativeDate.year.low,
-        relativeDate.month.low,
-        relativeDate.day.low,
-        relDuration
-      );
-      if (
-        compareDates(
-          tempLatestDate[0],
-          tempLatestDate[1],
-          tempLatestDate[2],
-          newTempDate[0],
-          newTempDate[1],
-          newTempDate[2]
-        ) == 1
-      ) {
-        tempLatestDate = newTempDate;
-      }
-    }
-
-    addNewQuery(currentNode, tempLatestDate, queriesArray);
-  }
-
-  for (var x = 0; x < successors.length; x++) {
-    propagateDependencies(successors[x], nodes, rels, queriesArray);
-  }
+  getSuccDependencies(task.id, rels)
+    .forEach( dep => updateDependency(dep, nodes, rels))
 }
 
-function addNewQuery(currentNode, startDate, queriesArray) {
-  let endDate = addDays(
-    startDate[0],
-    startDate[1],
-    startDate[2],
-    currentNode.duration
-  );
+function updateDependency(dependency, nodes, rels) {
+  let source;
+  nodes.forEach( node => {
+    if (node.id == dependency.source) source = node;
+  });
+  dependency.sStartDate = source.startDate;
+  dependency.sEndDate = source.endDate;
+  if (dependency.relationshipType == "ss") 
+    dependency.startDate = source.startDate;
+  else dependency.startDate = source.endDate;
+  let startDate = new Date(dependency.startDate);
+  dependency.endDate =  new Date(startDate.getTime() + dependency.duration).toISOString().substring(0, 16);
 
-  currentNode.startDate.year.low = startDate[0];
-  currentNode.startDate.month.low = startDate[1];
-  currentNode.startDate.day.low = startDate[2];
-
-  currentNode.endDate.year.low = endDate[0];
-  currentNode.endDate.month.low = endDate[1];
-  currentNode.endDate.day.low = endDate[2];
-
-  let query = `
-      MATCH(n) 
-      WHERE ID(n) = ${currentNode.id}
-      SET n +={
-        startDate:date("${startDate[0]}-${startDate[1]}-${startDate[2]}"), 
-        endDate:date("${endDate[0]}-${endDate[1]}-${endDate[2]}")
-      }
-    `;
-  queriesArray.push(query);
+  db.getSession()
+    .run(
+      `
+        MATCH (a)-[r:DEPENDENCY]->(b) 
+        WHERE ID(r) = ${dependency.id}
+        SET r += {
+          sStartDate: datetime("${dependency.sStartDate}"),
+          sEndDate: datetime("${dependency.sEndDate}"),
+          startDate: datetime("${dependency.startDate}"),
+          endDate: datetime("${dependency.endDate}")
+        }
+      `
+    ).catch((err) => {
+      console.log(err);
+    });
+    nodes.forEach( node => {
+      if (node.id == dependency.target) updateTask(node, nodes, rels);
+    });
 }
 
-function findNode(node) {
-  return node.id == this;
-}
 
-function deleteDependency(rel) {
-  return rel.id != this;
-}
-
-function getPredecessors(id, nodes, rels) {
-  let predecessors = [];
-
+function getPredDependencies(id, rels) {
+  let dependencies = [];
   rels.forEach((rel) => {
     if (rel.target == id) {
-      predecessors.push({
-        node: nodes.find(findNode, rel.source),
-        rel: rel,
-      });
+      dependencies.push(rel);
     }
   });
+  return dependencies;
+}
 
-  return predecessors;
+function getSuccDependencies(id, rels) {
+  let dependencies = [];
+  rels.forEach((rel) => {
+    if (rel.source == id) {
+      dependencies.push(rel);
+    }
+  });
+  return dependencies;
 }
 
 function getSuccessors(id, nodes, rels) {
   let successors = [];
-
   rels.forEach((rel) => {
     if (rel.source == id) {
-      successors.push(nodes.find(findNode, rel.target));
+      nodes.forEach( node => {
+        if (node.id == rel.target) successors.push(node);
+      });
     }
   });
-
   return successors;
-}
-
-function compareDates(year1, month1, day1, year2, month2, day2) {
-  //returns 1 if date1 < date2, otherwise returns 0
-  date1 = new Date(year1, month1, day1);
-  date2 = new Date(year2, month2, day2);
-
-  if (date1 < date2) {
-    return 1; //sencond date is after first
-  } else if (date2 < date1) {
-    return 0; //first date is after second
-  } else {
-    return 0; //does not matter what is returned as they are equal
-  }
-}
-
-function addDays(year, month, day, duration) {
-  //adds days to a date to generate new date in the form [year, month, day]
-  var initialDate = new Date(year, month - 1, day);
-  const copy = new Date(Number(initialDate));
-  copy.setDate(initialDate.getDate() + duration);
-  dateWithDuration = [copy.getFullYear(), copy.getMonth() + 1, copy.getDate()];
-  return dateWithDuration;
 }
 
 function datetimeToString(datetime){
@@ -170,13 +143,10 @@ function datetimeToString(datetime){
 }
 
 module.exports = {
-  updateProject,
-  excecuteQueries,
-  executeQuery,
-  findNode,
-  deleteDependency,
+  updateCurTask,
+  updateCurDependency,
+  updateTask,
+  updateDependency,
   getSuccessors,
-  addDays,
-  compareDates,
   datetimeToString,
 };

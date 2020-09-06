@@ -52,6 +52,7 @@ class CreateDependency extends React.Component {
       body.displayNode,
       body.displayRel
     );
+    this.props.closeModal();
     this.props.clearDependency();
   }
   
@@ -123,7 +124,7 @@ class CreateDependency extends React.Component {
                   type="datetime-local"
                   name="cd_startDate"
                   value={
-                    this.state.relationshipType === "ss" ?
+                  this.state.relationshipType === "ss" ?
                     this.props.source.startDate
                   :
                     this.props.source.endDate

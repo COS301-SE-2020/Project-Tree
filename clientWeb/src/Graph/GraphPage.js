@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
 import UpdateTask from "./Task/UpdateTask";
-import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
 import SendTaskNotification from "../Notifications/SendTaskNotification";
@@ -257,7 +256,6 @@ class TaskSidebar extends React.Component {
   }
 
   CalcDiff(sd, ed) {
-    console.log(sd);
     let startDate = new Date(sd);
     let endDate = new Date(ed);
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
@@ -329,17 +327,6 @@ class TaskSidebar extends React.Component {
           {this.props.userPermission["update"] === true ? (
             <Row className="my-2">
               <Col xs={12} className="text-center">
-                <UpdateProgress
-                  task={this.props.task}
-                  setTaskInfo={this.props.setTaskInfo}
-                  toggleSidebar={this.props.toggleSidebar}
-                />
-              </Col>
-            </Row>
-          ) : null}
-          {this.props.userPermission["update"] === true ? (
-            <Row className="my-2">
-              <Col xs={12} className="text-center">
                 <UpdateTask
                   task={this.props.task}
                   setTaskInfo={this.props.setTaskInfo}
@@ -388,6 +375,14 @@ class TaskSidebar extends React.Component {
 }
 
 class DependencySidebar extends React.Component {
+  
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+  }
+
+
   render() {
     var start;
     var end;
@@ -440,7 +435,7 @@ class DependencySidebar extends React.Component {
           </Row>
           <Row>
             <Col></Col>
-            <Col xs={8}>Duration: {this.props.dependency.duration} days</Col>
+            <Col xs={8}>Duration: {this.CalcDiff(this.props.dependency.startDate, this.props.dependency.endDate)}</Col>
             <Col></Col>
           </Row>
           <Row>
