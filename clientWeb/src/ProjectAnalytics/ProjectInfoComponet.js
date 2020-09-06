@@ -24,8 +24,7 @@ export default class ProjectInfoComponent extends React.Component{
                                 width: "100px"
                             }}
                             onClick={() => {
-                                // this.props.setProject(project);
-                                // this.props.closeSideBar(true);
+                                this.props.setProject(this.props.project);
                             }}
                             >
                             <i className="	fa fa-info-circle"></i> Info
@@ -43,8 +42,7 @@ export default class ProjectInfoComponent extends React.Component{
                                 fontSize: "15px",
                             }}
                             onClick={() => {
-                                // this.props.setProject(project);
-                                // this.props.closeSideBar(true);
+                                this.props.setProject(this.props.project);
                             }}
                             >
                             <i className="fa fa-line-chart"></i> Graph
@@ -52,12 +50,7 @@ export default class ProjectInfoComponent extends React.Component{
                         </Link>
                     </Col>
                     <Col className="text-center">
-                        <DeleteProject
-                            // project={project}
-                            // setProject={(project) => {
-                            //   this.props.setProject(project);
-                            // }}
-                        />
+                        <DeleteProject setProject={this.props.setProject} project={this.props.project}/>
                     </Col>
                 </Row>
             </Container>

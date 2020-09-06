@@ -61,6 +61,7 @@ class Home extends React.Component {
         <Dashboard 
           ownedProjects={this.props.ownedProjects}
           otherProjects={this.props.otherProjects}
+          setProject={this.props.setProject}
         />
     );
   }
