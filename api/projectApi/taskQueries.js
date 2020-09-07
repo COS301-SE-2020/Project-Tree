@@ -197,9 +197,33 @@ async function updateProgress(req, res) {
     });
 }
 
+async function createClone(req, res) {
+  db.getSession()
+    .run(
+     `
+      MATCH (b) 
+      WHERE ID(b) = ${req.body.id}
+      CREATE(a:View {
+        dependencyArr:[],
+        originalNode: ${req.body.id}
+      })-[n:VIEW_OF]->(b)
+     `
+    )
+    .then((result) => {
+      res.status(200);
+      res.send({ ret: result });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send({ message: err });
+    });
+}
+
 module.exports = {
   createTask,
   deleteTask,
   updateTask,
   updateProgress,
+  createClone,
 };

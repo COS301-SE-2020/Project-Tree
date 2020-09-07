@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
 import UpdateTask from "./Task/UpdateTask";
+import CloneTask from "./Task/CloneTask";
 import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
@@ -72,6 +73,12 @@ class GraphPage extends React.Component {
       }).fail((err) => {
         throw Error(err);
       });
+
+      $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+        this.setState({ views: response.views });
+      }).fail((err) => {
+        throw Error(err);
+      });
     }
   }
 
@@ -83,7 +90,7 @@ class GraphPage extends React.Component {
     return { nodes: this.state.nodes, rels: this.state.links };
   }
 
-  setTaskInfo(nodes, rels, displayNode, displayRel, assignedPeople) {
+  setTaskInfo(nodes, rels, displayNode, displayRel, assignedPeople, views) {
     if (nodes !== undefined && rels !== undefined) {
       this.setState({ nodes: nodes, links: rels });
 
@@ -97,6 +104,11 @@ class GraphPage extends React.Component {
 
       return;
     }
+
+    if(views !== undefined) {
+      this.setState({views: views});
+    }
+
     $.post("/getProject", { id: this.state.project.id }, (response) => {
       this.setState({ nodes: response.tasks, links: response.rels });
     }).fail((err) => {
@@ -402,6 +414,15 @@ class TaskSidebar extends React.Component {
                 taskPacMans={taskPacMans}
                 taskResPersons={taskResPersons}
                 taskResources={taskResources}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            <Col xs={12} className="text-center">
+              <CloneTask
+                task={this.props.task}
+                project={this.props.project}
+                setTaskInfo={this.props.setTaskInfo}
               />
             </Col>
           </Row>
