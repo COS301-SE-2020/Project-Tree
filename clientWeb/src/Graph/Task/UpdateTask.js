@@ -22,6 +22,7 @@ class UpdateTask extends React.Component {
       endDate: this.props.task.endDate,
       description: this.props.task.description,
       progress: this.props.task.progress,
+      initialProgress: this.props.task.progress,
       issue: this.props.task.type === "Issue",
       people: this.props.allUsers,
       assignedProjUsers: this.props.assignedProjUsers,
@@ -141,6 +142,17 @@ class UpdateTask extends React.Component {
     let type = "Incomplete"
     if (this.state.issue === true) type = "Issue";
     if (parseInt(this.state.progress) === 100) type = "Complete";
+
+    let timeComplete = undefined;
+    if(this.state.initialProgress < 100 && parseInt(this.state.progress) === 100){
+      timeComplete = new Date();
+      timeComplete.setHours(timeComplete.getHours() + 2);
+      timeComplete = timeComplete.toISOString();
+    }
+    else if(this.state.initialProgress === 100 && parseInt(this.state.progress) < 100){
+      timeComplete = null;
+    }
+
     
     let data = {
       id: this.state.id,
@@ -150,6 +162,7 @@ class UpdateTask extends React.Component {
       description: this.state.description,
       progress: this.state.progress,
       type: type,
+      timeComplete: timeComplete,
     }
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;

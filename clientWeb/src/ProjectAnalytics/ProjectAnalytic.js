@@ -21,7 +21,7 @@ class ProjectAnalytic extends React.Component {
             <ProjectProgressComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
           </Col>
           <Col xs={12} sm={12} md={6} lg={4} xl={4} className="m-0 p-2 border">
-            <TaskOverviewComponent task={this.props.project.tasks}/>
+            <TaskOverviewComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
           </Col>
           <Col xs={12} sm={12} md={6} lg={8} xl={5} className="m-0 p-2 border">
             <DependencyPieChartsComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath} rels={this.props.project.rels}/>

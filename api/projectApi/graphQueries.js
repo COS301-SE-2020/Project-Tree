@@ -27,6 +27,11 @@ function getProjectTasks(req, res) {
             record._fields[0].properties.endDate
           ),
           duration: record._fields[0].properties.duration.low,
+          timeComplete: record._fields[0].properties.timeComplete !== undefined ? updateProject.datetimeToString(
+            record._fields[0].properties.timeComplete
+          )
+          :
+          null,
         });
       });
       db.getSession()
