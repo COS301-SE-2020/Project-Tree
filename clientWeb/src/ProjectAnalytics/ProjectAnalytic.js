@@ -6,6 +6,7 @@ import ProjectProgressComponent from "./ProjectProgressComponent";
 import DependencyPieChartsComponent from "./DependencyPieChartsComponent";
 import TaskOverviewComponent from "./TaskOverviewComponent";
 import CriticalPathBarCharts from "./CriticalPathBarCharts";
+import ScheduleTrackingComponent from "./ScheduleTrackingComponent";
 
 class ProjectAnalytic extends React.Component {
   render() {
@@ -28,6 +29,9 @@ class ProjectAnalytic extends React.Component {
           </Col>
           <Col xs={12} sm={12} md={12} lg={12} xl={7} className="m-0 p-2 border">
             <CriticalPathBarCharts tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
+          </Col>
+          <Col className="m-0 p-2 border">
+            <ScheduleTrackingComponent tasks={this.props.project.tasks} />
           </Col>
         </Row>
       </Container>

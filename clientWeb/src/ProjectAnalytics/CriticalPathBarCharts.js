@@ -42,10 +42,10 @@ export default class CriticalPathBarCharts extends React.Component {
 
     formatData(tasks){
         let data = [];
-        data.push(['Critical Path Task', 'Duration (Days)', 'Percent Complete']);
+        data.push(['Critical Path Task', 'Duration (Days)']);
         tasks.forEach((task)=>{
             data.push(
-                [task.name, (task.duration / (60*60*24*1000)), task.progress]
+                [task.name, (task.duration / (60*60*24*1000))]
             )
         });
 
@@ -68,7 +68,7 @@ export default class CriticalPathBarCharts extends React.Component {
                         data={criticalPath}
                         options={{
                             chart: {
-                            subtitle: 'Duration and Percentage Complete',
+                            subtitle: 'Duration',
                             },
                         }}
                         rootProps={{ 'data-testid': '2' }}
