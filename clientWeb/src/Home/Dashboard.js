@@ -1,8 +1,6 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
 import Calendar from "./Calendar";
 import ProjectAnalytic from "../ProjectAnalytics/ProjectAnalytic";
-import image from "../Images/BigTree.png";
 import { Container, Row, Col, Button, Dropdown } from "react-bootstrap";
 import $ from "jquery";
 import * as Scroll from 'react-scroll';

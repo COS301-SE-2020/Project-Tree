@@ -12,7 +12,7 @@ class ProjectAnalytic extends React.Component {
   render() {
     return (
       <Container fluid>
-        {/* <Row>
+        <Row>
           {this.props.displayProjectName ?
           <Col xs={12} sm={12} md={6} lg={4} xl={4} className="m-0 p-2 border">
             <ProjectInfoComponent project={this.props.project.projectInfo} setProject={this.props.setProject}/>
@@ -33,7 +33,7 @@ class ProjectAnalytic extends React.Component {
           <Col className="m-0 p-2 border">
             <ScheduleTrackingComponent tasks={this.props.project.tasks} />
           </Col>
-        </Row> */}
+        </Row>
       </Container>
     );
   }
