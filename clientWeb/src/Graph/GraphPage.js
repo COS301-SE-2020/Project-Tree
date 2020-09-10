@@ -128,10 +128,10 @@ class GraphPage extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container fluid className="m-0 p-0">
-          <Row >
+        <Container fluid className="m-0 p-0 h-100">
+          <Row className="h-100">
             <Col
-              className="text-center border-right border-secondary bg-light "
+              className="text-center border-right border-secondary bg-light h-100"
             >
               <Container>
                 <Row>

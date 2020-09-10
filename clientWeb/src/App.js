@@ -205,9 +205,8 @@ class App extends Component {
       <React.Fragment>
         <BrowserRouter>
           <Navbar
-            sticky="top"
             bg="#96BB7C"
-            style={{ fontFamily: "Courier New", backgroundColor: "#96BB7C" }}
+            style={{ fontFamily: "Courier New", backgroundColor: "#96BB7C", position:"fixed", width: "100%", zIndex:"90"}}
           >
             <Nav className="form-inline ">
               {this.state.loggedInStatus === true ? (
@@ -230,7 +229,7 @@ class App extends Component {
             </Nav>
             <Nav className="m-auto form-inline">
               <Nav.Link href="/">
-                <img src={logo} alt="Logo" style={{ width: "110px" }} />
+                <img src={logo} alt="Logo" style={{ width: "110px"}} />
               </Nav.Link>
             </Nav>
             <Nav className="form-inline">
@@ -239,14 +238,15 @@ class App extends Component {
               ) : null}
             </Nav>
           </Navbar>
-          <Container fluid style={{ height: "100%" }}>
+          <Container fluid style={{paddingTop:"88px"}}>
             <Row style={{ height: "100%" }}>
               {this.state.showSideBar !== false ? (
                 <Col
                   sm={12}
                   md={6}
                   lg={4}
-                  xl={3.2}
+                  xl={4}
+                  xs={4}
                   className="border-right border-dark"
                   style={{
                     height: "100%",
