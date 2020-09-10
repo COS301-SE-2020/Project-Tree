@@ -154,7 +154,7 @@ function updateTask(req, res) { //update a task with a certain ID with specified
         }
       }
 
-      await updateProject.updateTask(
+      await updateProject.updateCurTask(
         changedTask,
         req.body.nodes,
         req.body.rels,

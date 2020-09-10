@@ -5,6 +5,8 @@ const {
   verify,
 } = require("../userManagementApi/userQueries");
 
+const up = require("./updateProject");
+
 async function createProject(req, res) {
   let userId = await uq.verify(req.body.token);
   if (userId != null) {
@@ -315,10 +317,10 @@ function getProjectTasks(req, res) {
           description: record._fields[0].properties.description,
           type: record._fields[0].properties.type,
           progress: record._fields[0].properties.progress.low,
-          startDate: updateProject.datetimeToString(
+          startDate: up.datetimeToString(
             record._fields[0].properties.startDate
           ),
-          endDate: updateProject.datetimeToString(
+          endDate: up.datetimeToString(
             record._fields[0].properties.endDate
           ),
           duration: record._fields[0].properties.duration.low,

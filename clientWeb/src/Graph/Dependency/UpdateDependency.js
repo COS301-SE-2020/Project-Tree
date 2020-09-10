@@ -14,13 +14,28 @@ class UpdateDependency extends React.Component {
     this.state = {
       Show: false,
       pid: this.props.project.id,
-      dependency: this.props.dependency,
+      dependency: JSON.parse(JSON.stringify(this.props.dependency)),
       duration: duration,
     };
 
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.dependency !== prevProps.dependency) {
+      let duration;
+      if (this.props.dependency.relationshipType === "ss") {
+        duration = this.CalcDiff(this.props.dependency.sStartDate, this.props.dependency.endDate);
+      } else {
+        duration = this.CalcDiff(this.props.dependency.sStartDate, this.props.dependency.endDate);
+      }
+      this.setState({
+        dependency: JSON.parse(JSON.stringify(this.props.dependency)),
+        duration: duration,
+      })
+    }
   }
 
   ShowModal() {

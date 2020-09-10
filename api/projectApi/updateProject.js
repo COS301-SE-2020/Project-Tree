@@ -2,7 +2,7 @@ const db = require("../DB");
 
 function updateCurTask(task, nodes, rels) {
   //needed for future development
-  /* getPredDependencies(task.id, rels)
+  /* getPredDependencies(task, rels)
     .forEach(dep => {
       if (task.startDate != dep.endDate) {
         dep.endDate = task.startDate;
@@ -36,12 +36,15 @@ function updateCurDependency(dependency, nodes, rels) {
 }
 
 function updateTask(task, nodes, rels) {
-  let maxStartDate = new Date(task.startDate);
-  getPredDependencies(task.id, rels)
-    .forEach(dep => {
+  let maxStartDate =new Date(task.startDate);
+  let predDependencies = getPredDependencies(task, rels);
+  if(predDependencies != []){
+    maxStartDate = new Date(0);
+    predDependencies.forEach(dep => {
       let endDate = new Date(dep.endDate)
       if (endDate > maxStartDate) maxStartDate = endDate;
-  });
+    });
+  }
   let startDate = maxStartDate;
   let endDate = new Date(startDate.getTime() + task.duration);
   task.startDate = startDate.toISOString().substring(0, 16);
@@ -61,7 +64,7 @@ function updateTask(task, nodes, rels) {
       console.log(err);
     });
 
-  getSuccDependencies(task.id, rels)
+  getSuccDependencies(task, rels)
     .forEach( dep => updateDependency(dep, nodes, rels))
 }
 
@@ -99,20 +102,20 @@ function updateDependency(dependency, nodes, rels) {
 }
 
 
-function getPredDependencies(id, rels) {
+function getPredDependencies(task, rels) {
   let dependencies = [];
   rels.forEach((rel) => {
-    if (rel.target == id) {
+    if (rel.target == task.id) {
       dependencies.push(rel);
     }
   });
   return dependencies;
 }
 
-function getSuccDependencies(id, rels) {
+function getSuccDependencies(task, rels) {
   let dependencies = [];
   rels.forEach((rel) => {
-    if (rel.source == id) {
+    if (rel.source == task.id) {
       dependencies.push(rel);
     }
   });

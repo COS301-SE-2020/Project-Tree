@@ -433,10 +433,14 @@ class DependencySidebar extends React.Component {
             </Col>
             <Col></Col>
           </Row>
-          <Row>
-            <Col></Col>
-            <Col xs={8}>Duration: {this.CalcDiff(this.props.dependency.startDate, this.props.dependency.endDate)}</Col>
-            <Col></Col>
+          <Row className="text-center p-1">
+            <Col className="text-center">Start Date: {this.props.dependency.startDate}</Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col className="text-center">End Date: {this.props.dependency.endDate}</Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col className="text-center">Duration: {this.CalcDiff(this.props.dependency.startDate, this.props.dependency.endDate)}</Col>
           </Row>
           <Row>
             <Col>
