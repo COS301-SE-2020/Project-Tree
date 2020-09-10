@@ -9,7 +9,7 @@ import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
 
 function makeLink(edge, criticalPathLinks) {
-  var strokeColor = "#000";
+  let strokeColor = "#000";
   if (criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
   return new joint.shapes.standard.Link({
     id: "l" + edge.id,
@@ -24,16 +24,16 @@ function makeLink(edge, criticalPathLinks) {
 }
 
 function makeElement(node, criticalPathNodes) {
-  var letterSize = 16;
-  var width = 100;
-  var height = 80;
+  let letterSize = 16;
+  let width = 100;
+  let height = 80;
 
-  var wraptext = joint.util.breakText(node.name, {
+  let wraptext = joint.util.breakText(node.name, {
     width: width - 20,
     height: height,
   });
 
-  var statusColor = "#fff";
+  let statusColor = "#fff";
   if (node.type === "Incomplete") {
     let today = new Date();
     if (today > new Date(node.endDate)) statusColor = "#ff6961";
@@ -42,7 +42,7 @@ function makeElement(node, criticalPathNodes) {
   } else if (node.type === "Issue") {
     statusColor = "#ffae42";
   }
-  var borderColor = "#000";
+  let borderColor = "#000";
   if (criticalPathNodes.includes(node.id)) borderColor = "#0275d8";
 
   return new joint.shapes.standard.Rectangle({
@@ -69,8 +69,8 @@ function makeElement(node, criticalPathNodes) {
 }
 
 function buildGraph(nodes, rels, criticalPath) {
-  var elements = [];
-  var links = [];
+  let elements = [];
+  let links = [];
   let criticalPathLinks = [];
   let criticalPathNodes = [];
   if (criticalPath !== null && criticalPath.path !== null)
@@ -90,8 +90,8 @@ function buildGraph(nodes, rels, criticalPath) {
   return elements.concat(links);
 }
 
-var graphScale = 1;
-var paper = null;
+let graphScale = 1;
+let paper = null;
 
 class Graph extends React.Component {
   constructor(props) {
@@ -138,7 +138,7 @@ class Graph extends React.Component {
       return;
     }
 
-    var new_source_targetID = parseInt(clickedNode.model.id);
+    let new_source_targetID = parseInt(clickedNode.model.id);
     this.setState({ alert: null });
 
     if (new_source_targetID === null) {
@@ -146,8 +146,8 @@ class Graph extends React.Component {
       return;
     }
 
-    var source_target;
-    for (var x = 0; x < this.props.nodes.length; x++) {
+    let source_target;
+    for (let x = 0; x < this.props.nodes.length; x++) {
       if (this.props.nodes[x].id === new_source_targetID) {
         source_target = this.props.nodes[x];
       }
@@ -207,7 +207,7 @@ class Graph extends React.Component {
   }
 
   componentDidMount() {
-    var graph = new joint.dia.Graph();
+    let graph = new joint.dia.Graph();
     paper = new joint.dia.Paper({
       el: $("#paper"),
       width: $("#paper").width(),
@@ -221,7 +221,7 @@ class Graph extends React.Component {
 
     paper.on("cell:pointerclick", this.handleClick);
 
-    var dragStartPosition;
+    let dragStartPosition;
     paper.on("blank:pointerdown", function (event, x, y) {
       dragStartPosition = { x: x * graphScale, y: y * graphScale };
     });
@@ -248,7 +248,7 @@ class Graph extends React.Component {
       return;
     }
 
-    var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
+    let cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
     this.state.graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(this.state.graph, {
       dagre: dagre,
@@ -285,8 +285,8 @@ class Graph extends React.Component {
       });
     } else this.drawGraph(null);
 
-    var dependency = null;
-    var color = "outline-dark";
+    let dependency = null;
+    let color = "outline-dark";
     if (this.state.source != null && this.state.target != null) {
       dependency = this.state.source.name + "→" + this.state.target.name;
       color = "success";
