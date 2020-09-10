@@ -13,22 +13,13 @@ function stringifyFormData(fd) {
 class CreateTask extends React.Component {
   constructor(props) {
     super(props);
-    let now = new Date();
-    let year = now.getFullYear();
-    let month = now.getMonth();
-    month = month < 10 ? "0" + month : month;
-    let day = now.getDate();
-    day = day < 10 ? "0" + day : day;
-    let hour = now.getHours();
-    hour = hour < 10 ? "0" + hour : hour;
-    let min = now.getMinutes();
-    min = min < 10 ? "0" + min : min;
+    let now = new Date().toISOString().substring(0, 16);
     this.state = {
       Show: true,
       id: this.props.project.id,
-      startDate: `${year}-${month}-${day}T${hour}:${min}`,
+      startDate: now,
       duration: "0ms",
-      endDate: `${year}-${month}-${day}T${hour}:${min}`,
+      endDate: now,
       people: this.props.allUsers,
       pacManSearchTerm: "",
       resourcesSearchTerm: "",

@@ -36,7 +36,7 @@ function makeElement(node, criticalPathNodes) {
   var statusColor = "#fff";
   if (node.type === "Incomplete") {
     let today = new Date();
-    if (today > Date(node.endDate)) statusColor = "#ff6961";
+    if (today > new Date(node.endDate)) statusColor = "#ff6961";
   } else if (node.type === "Complete") {
     statusColor = "#77dd77";
   } else if (node.type === "Issue") {
@@ -80,11 +80,11 @@ function buildGraph(nodes, rels, criticalPath) {
       criticalPathNodes.push(element.end.identity.low);
     });
 
-  _.each(nodes, function (node) {
+  _.each(nodes, (node) => {
     elements.push(makeElement(node, criticalPathNodes));
   });
 
-  _.each(rels, function (edge) {
+  _.each(rels, (edge) => {
     links.push(makeLink(edge, criticalPathLinks));
   });
   return elements.concat(links);
