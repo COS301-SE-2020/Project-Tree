@@ -25,7 +25,9 @@ class GraphPage extends React.Component {
       allUsers:null, 
       assignedProjUsers:null,
       filterOn:false,
-      viewId:null
+      viewId:null,
+      sourceView:null,
+      targetView:null
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
@@ -121,7 +123,7 @@ class GraphPage extends React.Component {
     this.setState({assignedProjUsers:newPeopleList})
   }
 
-  toggleSidebar(newTaskID, newDependencyID, viewId) {
+  toggleSidebar(newTaskID, newDependencyID, viewId, sourceView, targetView) {
     var newTask = null;
     var newDependency = null;
     var x;
@@ -144,7 +146,12 @@ class GraphPage extends React.Component {
           newDependency = this.state.links[x];
         }
       }
-      this.setState({ task: newTask, dependency: newDependency });
+      if(sourceView !== undefined && targetView !== undefined) {
+        this.setState({ task: newTask, dependency: newDependency, sourceView: sourceView, targetView: targetView });
+      }
+      else {
+        this.setState({ task: newTask, dependency: newDependency, sourceView: null, targetView: null });
+      }
     } else {
       this.setState({ task: null, dependency: null });
     }
@@ -203,6 +210,8 @@ class GraphPage extends React.Component {
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
                   getProjectInfo={this.getProjectInfo}
+                  sourceView={this.state.sourceView}
+                  targetView={this.state.targetView}
                 />
               ) : null}
               {this.state.dependency===null && this.state.task===null ?
@@ -480,6 +489,8 @@ class DependencySidebar extends React.Component {
                   getProjectInfo={this.props.getProjectInfo}
                   setTaskInfo={this.props.setTaskInfo}
                   toggleSidebar={this.props.toggleSidebar}
+                  sourceView={this.props.sourceView}
+                  targetView={this.props.targetView}
                 />
               ) : null}
             </Col>

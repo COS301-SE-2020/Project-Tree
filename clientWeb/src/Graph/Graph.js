@@ -289,7 +289,21 @@ class Graph extends React.Component {
         this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
       }    
     } else if (clickedNode.model.attributes.attrs.type === "link") {
-      this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)));
+      console.log(this.props.views)
+      let source = parseInt(clickedNode.model.attributes.source.id);
+      let target = parseInt(clickedNode.model.attributes.target.id);
+      let sourceView = null;
+      let targetView = null;
+
+      for(let x = 0; x < this.props.views.length; x++) {
+        if(this.props.views[x].id === source){
+          sourceView = source;
+        }
+        else if(this.props.views[x].id === target){
+          targetView = target;
+        }
+      }
+      this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)), undefined, sourceView, targetView);
     }
   }
 

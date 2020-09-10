@@ -77,6 +77,20 @@ class DeleteDependency extends React.Component {
                   value={this.state.did}
                   onChange={() => {}}
                 />
+                <input
+                  hidden
+                  type="number"
+                  name="sourceView"
+                  value={this.props.sourceView !== null ? this.props.sourceView : ""}
+                  onChange={() => {}}
+                />
+                <input
+                  hidden
+                  type="number"
+                  name="targetView"
+                  value={this.props.targetView !== null ? this.props.targetView : ""}
+                  onChange={() => {}}
+                />
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
