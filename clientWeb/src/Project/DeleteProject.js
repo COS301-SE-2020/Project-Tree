@@ -31,6 +31,8 @@ class DeleteProject extends React.Component {
     }).fail(() => {
       alert("Unable to delete project");
     });
+
+    this.hideModal();
   }
 
   render() {
