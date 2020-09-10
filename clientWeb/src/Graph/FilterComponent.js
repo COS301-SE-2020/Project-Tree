@@ -302,7 +302,7 @@ export default class FilterComponent extends React.Component{
 
         return(
             <Container className="p-2">
-                <Row>
+                {/* <Row>
                     <Col className="text-center">
                         <h4>Search for my tasks</h4>
                     </Col>
@@ -315,17 +315,14 @@ export default class FilterComponent extends React.Component{
                         </ToggleButtonGroup>
                     </Col>
                 </Row>
-                <hr/>
+                <hr/> */}
                 <Row>
                     <Col className="text-center">
                         <h4>Search</h4>
                     </Col>
                 </Row>
                 <Row>
-                    <Col className= "align-text-center text-right m-0" style={{fontSize: "18px"}}>
-                        Select display option:
-                    </Col>
-                    <Col className="m-0">
+                    <Col className="text-center">
                         <ToggleButtonGroup horizontal name="filterMode" value={this.state.filterMode} defaultValue={this.state.filterMode}>
                             <ToggleButton variant="secondary" value="filter" onClick={()=>this.setState({filterMode:"filter", error:false})}>Filter</ToggleButton>
                             <ToggleButton variant="secondary" value="highlight" onClick={()=>this.setState({filterMode:"highlight", error:false})}>Highlight</ToggleButton>
@@ -335,8 +332,8 @@ export default class FilterComponent extends React.Component{
                 </Row>
                 <Row>
                     <Col className="p-2">
-                        <ToggleButtonGroup vertical name="taskFilterOptions" value={this.state.filterTaskOption} defaultValue={this.state.filterTaskOption}>
-                            Select task category 
+                        <Col>{"Select task category"} </Col>
+                        <ToggleButtonGroup vertical name="taskFilterOptions" value={this.state.filterTaskOption} defaultValue={this.state.filterTaskOption} style={{width: "95%"}}>
                             <ToggleButton variant="outline-secondary" value="taskAll" onClick={()=>this.setState({filterTaskOption:"taskAll", filterPeopleOption:null, error:false})}>All</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="taskComplete" onClick={()=>this.setState({filterTaskOption:"taskComplete", filterPeopleOption:null, error:false})}>Complete</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="taskIncomplete" onClick={()=>this.setState({filterTaskOption:"taskIncomplete", filterPeopleOption:null, error:false})}>Incomplete</ToggleButton>
@@ -344,11 +341,11 @@ export default class FilterComponent extends React.Component{
                         </ToggleButtonGroup>
                     </Col>
                     <Col className="p-2">
-                        <ToggleButtonGroup vertical name="peopleFilterOptions" value={this.state.filterPeopleOption} defaultValue={this.state.filterPeopleOption}>
-                            {"   Select people"} 
+                        <Col>{"Select people"} </Col>
+                        <ToggleButtonGroup vertical name="peopleFilterOptions" value={this.state.filterPeopleOption} defaultValue={this.state.filterPeopleOption} style={{width: "95%"}}>
                             <ToggleButton variant="outline-secondary" value="peopleAll" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleAll", errror:false})}>All</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="peoplePackMan" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peoplePackMan", error:false})}>Package Managers</ToggleButton>
-                            <ToggleButton variant="outline-secondary" value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer", error:false})}>Responsible Persons</ToggleButton>
+                            <ToggleButton variant="outline-secondary"  value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer", error:false})}>Responsible Persons</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="peopleResources" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResources", error:false})}>Resources</ToggleButton>
                         </ToggleButtonGroup>
                     </Col>
@@ -367,7 +364,7 @@ export default class FilterComponent extends React.Component{
                 </Row> 
                 <Row>
                     <Col className="text-center p-2">
-                        <Button variant="dark" onClick={()=>this.handleSearch()}>GO!</Button>
+                        <Button variant="dark" onClick={()=>this.handleSearch()} style={{width: "25%"}}>GO!</Button>
                     </Col>
                 </Row>
                 {this.state.error ?
