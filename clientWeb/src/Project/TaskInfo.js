@@ -1,6 +1,7 @@
 import React from "react";
 import { ProgressBar, Form, Container, Row, Col } from "react-bootstrap";
 import "./Project.css";
+import ms from "ms";
 
 class TaskInfo extends React.Component {
   constructor(props) {
@@ -8,6 +9,23 @@ class TaskInfo extends React.Component {
     this.state = {
       taskType: "CriticalPath",
     };
+  }
+
+  datetimeToString(datetime){
+    let obj = {
+      year: datetime.year.low,
+      month: datetime.month.low < 10 ? `0${datetime.month.low}` : datetime.month.low,
+      day: datetime.day.low < 10 ? `0${datetime.day.low}` : datetime.day.low,
+      hour: datetime.hour.low < 10 ? `0${datetime.hour.low}` : datetime.hour.low,
+      min: datetime.minute.low < 10 ? `0${datetime.minute.low}` : datetime.minute.low,
+    }
+    return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.min}`
+  }
+
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
   createCriticalPath() {
@@ -23,8 +41,8 @@ class TaskInfo extends React.Component {
             description: el.start.properties.description,
             type: el.start.properties.type,
             progress: el.start.properties.progress.low,
-            startDate: el.start.properties.startDate,
-            endDate: el.start.properties.endDate,
+            startDate: this.datetimeToString(el.start.properties.startDate),
+            endDate: this.datetimeToString(el.start.properties.endDate),
             duration: el.start.properties.duration.low,
           });
         }
@@ -33,8 +51,8 @@ class TaskInfo extends React.Component {
           description: el.end.properties.description,
           type: el.end.properties.type,
           progress: el.end.properties.progress.low,
-          startDate: el.end.properties.startDate,
-          endDate: el.end.properties.endDate,
+          startDate: this.datetimeToString(el.end.properties.startDate),
+          endDate: this.datetimeToString(el.end.properties.endDate),
           duration: el.end.properties.duration.low,
         });
       });
@@ -50,26 +68,7 @@ class TaskInfo extends React.Component {
       this.props.tasks.forEach((el) => {
         if (el.type !== "Complete") {
           let today = new Date();
-          if (parseInt(today.getFullYear()) <= parseInt(el.endDate.year.low)) {
-            if (
-              parseInt(today.getFullYear()) === parseInt(el.endDate.year.low)
-            ) {
-              if (
-                parseInt(today.getMonth() + 1) <= parseInt(el.endDate.month.low)
-              ) {
-                if (
-                  parseInt(today.getMonth() + 1) ===
-                  parseInt(el.endDate.month.low)
-                ) {
-                  if (
-                    parseInt(today.getDate()) > parseInt(el.endDate.day.low)
-                  ) {
-                    list.push(el);
-                  }
-                }
-              } else list.push(el);
-            }
-          } else list.push(el);
+          if (today > new Date(el.endDate)) list.push(el);
         }
       });
     }
@@ -92,11 +91,15 @@ class TaskInfo extends React.Component {
                 list.push(el);
               }
               break;
-            case "Incomplete":
+            case "Issue":
+                if (el.type === "Issue") {
+                  list.push(el);
+                }
+                break;
+            default:
               if (el.type === "Incomplete") {
                 list.push(el);
               }
-            case "Issue":
               if (el.type === "Issue") {
                 list.push(el);
               }
@@ -113,17 +116,6 @@ class TaskInfo extends React.Component {
         return list[0];
       } else {
         list.forEach((el, i) => {
-          let syear = `${el.startDate.year.low}`;
-          let smonth = el.startDate.month.low;
-          smonth = smonth < 10 ? `0${smonth}` : `${smonth}`;
-          let sday = el.startDate.day.low;
-          sday = sday < 10 ? `0${sday}` : `${sday}`;
-          let eyear = `${el.endDate.year.low}`;
-          let emonth = el.endDate.month.low;
-          emonth = emonth < 10 ? `0${emonth}` : `${emonth}`;
-          let eday = el.endDate.day.low;
-          eday = eday < 10 ? `0${eday}` : `${eday}`;
-
           let color;
           switch (el.type) {
             case "Complete":
@@ -134,31 +126,14 @@ class TaskInfo extends React.Component {
               break;
             default:
               color = "#fff";
-              let today = new Date();
-              if (
-                parseInt(today.getFullYear()) <= parseInt(el.endDate.year.low)
-              ) {
-                if (
-                  parseInt(today.getFullYear()) ===
-                  parseInt(el.endDate.year.low)
-                ) {
-                  if (
-                    parseInt(today.getMonth() + 1) <=
-                    parseInt(el.endDate.month.low)
-                  ) {
-                    if (
-                      parseInt(today.getMonth() + 1) ===
-                      parseInt(el.endDate.month.low)
-                    ) {
-                      if (
-                        parseInt(today.getDate()) > parseInt(el.endDate.day.low)
-                      ) {
-                        color = "#ff6961";
-                      }
-                    }
-                  } else color = "#ff6961";
-                }
-              } else color = "#ff6961";
+              if (el.type === "Incomplete") {
+                let today = new Date();
+                if (today > new Date(el.endDate)) color = "#ff6961";
+              } else if (el.type === "Complete") {
+                color = "#77dd77";
+              } else if (el.type === "Issue") {
+                color = "#ffae42";
+              }
               break;
           }
           let progressColor = "success"
@@ -191,11 +166,11 @@ class TaskInfo extends React.Component {
                 <Col className="text-center">End:</Col>
               </Row>
               <Row>
-                <Col className="text-center">{`${syear}-${smonth}-${sday}`}</Col>
-                <Col className="text-center">{`${eyear}-${emonth}-${eday}`}</Col>
+                <Col className="text-center">{el.startDate}</Col>
+                <Col className="text-center">{el.endDate}</Col>
               </Row>
               <Row>
-                <Col className="text-center">Duration: {el.duration}</Col>
+                <Col className="text-center">Duration: {this.CalcDiff(el.startDate, el.endDate)}</Col>
               </Row>
               <hr/>
               <Row className="mb-2">

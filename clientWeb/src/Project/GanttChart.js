@@ -114,8 +114,8 @@ class GanttChart extends React.Component
         let startDate;
         let endDate;
         for(var x=0; x<tasks.length; x++){
-            startDate = new Date(tasks[x].startDate.year.low, tasks[x].startDate.month.low-1, tasks[x].startDate.day.low);
-            endDate = new Date(tasks[x].endDate.year.low, tasks[x].endDate.month.low-1, tasks[x].endDate.day.low);
+            startDate = new Date(tasks[x].startDate);
+            endDate = new Date(tasks[x].endDate);
             formattedTasks.push(
                 [
                     tasks[x].id.toString(),

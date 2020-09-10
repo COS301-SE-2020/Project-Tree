@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
 import UpdateTask from "./Task/UpdateTask";
-import UpdateProgress from "./Task/UpdateProgress";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
 import SendTaskNotification from "../Notifications/SendTaskNotification";
 import FilterComponent from "./FilterComponent";
 import $ from "jquery";
+import ms from "ms";
 
 class GraphPage extends React.Component {
   constructor(props) {
@@ -274,20 +274,13 @@ class TaskSidebar extends React.Component {
     return list;
   }
 
-  render() {
-    let startDate =
-      this.props.task.startDate.year.low +
-      "-" +
-      this.props.task.startDate.month.low +
-      "-" +
-      this.props.task.startDate.day.low;
-    let endDate =
-      this.props.task.endDate.year.low +
-      "-" +
-      this.props.task.endDate.month.low +
-      "-" +
-      this.props.task.endDate.day.low;
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+  }
 
+  render() {
     let taskUsers = this.classifyExistingUsers();
     let taskPacMans = taskUsers[0];
     let taskResPersons = taskUsers[1];
@@ -336,14 +329,14 @@ class TaskSidebar extends React.Component {
             </Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">Start Date: {startDate}</Col>
+            <Col className="text-center">Start Date: {this.props.task.startDate}</Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">End Date: {endDate}</Col>
+            <Col className="text-center">End Date: {this.props.task.endDate}</Col>
           </Row>
           <Row className="text-center p-1">
             <Col className="text-center">
-              Duration: {this.props.task.duration} days
+            Duration: {this.CalcDiff(this.props.task.startDate, this.props.task.endDate)}
             </Col>
           </Row>
           <Row>
@@ -356,17 +349,6 @@ class TaskSidebar extends React.Component {
               />
             </Col>
           </Row>
-          {this.props.userPermission["update"] === true ? (
-            <Row className="my-2">
-              <Col xs={12} className="text-center">
-                <UpdateProgress
-                  task={this.props.task}
-                  setTaskInfo={this.props.setTaskInfo}
-                  toggleSidebar={this.props.toggleSidebar}
-                />
-              </Col>
-            </Row>
-          ) : null}
           {this.props.userPermission["update"] === true ? (
             <Row className="my-2">
               <Col xs={12} className="text-center">
@@ -418,6 +400,14 @@ class TaskSidebar extends React.Component {
 }
 
 class DependencySidebar extends React.Component {
+  
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+  }
+
+
   render() {
     var start;
     var end;
@@ -468,10 +458,14 @@ class DependencySidebar extends React.Component {
             </Col>
             <Col></Col>
           </Row>
-          <Row>
-            <Col></Col>
-            <Col xs={8}>Duration: {this.props.dependency.duration} days</Col>
-            <Col></Col>
+          <Row className="text-center p-1">
+            <Col className="text-center">Start Date: {this.props.dependency.startDate}</Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col className="text-center">End Date: {this.props.dependency.endDate}</Col>
+          </Row>
+          <Row className="text-center p-1">
+            <Col className="text-center">Duration: {this.CalcDiff(this.props.dependency.startDate, this.props.dependency.endDate)}</Col>
           </Row>
           <Row>
             <Col>

@@ -5,6 +5,8 @@ const {
   verify,
 } = require("../userManagementApi/userQueries");
 
+const up = require("./updateProject");
+
 async function createProject(req, res) {
   let userId = await uq.verify(req.body.token);
   if (userId != null) {
@@ -313,10 +315,14 @@ function getProjectTasks(req, res) {
           id: record._fields[0].identity.low,
           name: record._fields[0].properties.name,
           description: record._fields[0].properties.description,
-          startDate: record._fields[0].properties.startDate,
           type: record._fields[0].properties.type,
           progress: record._fields[0].properties.progress.low,
-          endDate: record._fields[0].properties.endDate,
+          startDate: up.datetimeToString(
+            record._fields[0].properties.startDate
+          ),
+          endDate: up.datetimeToString(
+            record._fields[0].properties.endDate
+          ),
           duration: record._fields[0].properties.duration.low,
         });
       });
@@ -335,9 +341,9 @@ function getCriticalPath(req, res) {
     .run(
       `
         MATCH (a:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(b:Task {projId: ${req.body.projId}})
-        WITH MAX(duration.inDays(a.startDate, b.endDate)) as dur
+        WITH MAX(duration.between(a.startDate, b.endDate)) as dur
         MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
-        WHERE duration.inDays(c.startDate, d.endDate) = dur
+        WHERE duration.between(c.startDate, d.endDate) = dur
         RETURN p
       `
     )
@@ -352,6 +358,10 @@ function getCriticalPath(req, res) {
       res.status(400);
       res.send({ message: err });
     });
+}
+
+function getAllInfo(req, res) {
+  
 }
 
 module.exports = {

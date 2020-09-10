@@ -1,5 +1,6 @@
 import React from "react";
-import {Form, Modal, Button, Row, Col } from "react-bootstrap";
+import {Form, Modal, Button, Row, Col, InputGroup } from "react-bootstrap";
+import ms from "ms";
 
 function stringifyFormData(fd) {
   const data = {};
@@ -12,24 +13,17 @@ function stringifyFormData(fd) {
 class UpdateTask extends React.Component {
   constructor(props) {
     super(props);
-    var syear = `${this.props.task.startDate.year.low}`;
-    var smonth = this.props.task.startDate.month.low;
-    smonth = smonth < 10 ? `0${smonth}` : `${smonth}`;
-    var sday = this.props.task.startDate.day.low;
-    sday = sday < 10 ? `0${sday}` : `${sday}`;
-    var eyear = `${this.props.task.endDate.year.low}`;
-    var emonth = this.props.task.endDate.month.low;
-    emonth = emonth < 10 ? `0${emonth}` : `${emonth}`;
-    var eday = this.props.task.endDate.day.low;
-    eday = eday < 10 ? `0${eday}` : `${eday}`;
     this.state = {
       Show: false,
       id: this.props.task.id,
       name: this.props.task.name,
-      startDate: `${syear}-${smonth}-${sday}`,
-      duration: this.props.task.duration,
-      endDate: `${eyear}-${emonth}-${eday}`,
+      startDate: this.props.task.startDate,
+      duration: this.CalcDiff(this.props.task.startDate, this.props.task.endDate),
+      endDate: this.props.task.endDate,
       description: this.props.task.description,
+      progress: this.props.task.progress,
+      initialProgress: this.props.task.progress,
+      issue: this.props.task.type === "Issue",
       people: this.props.allUsers,
       assignedProjUsers: this.props.assignedProjUsers,
       pacManSearchTerm: "",
@@ -42,8 +36,6 @@ class UpdateTask extends React.Component {
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.refreshState = this.refreshState.bind(this);
-    this.setDuration = this.setDuration.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
     this.addPacMan = this.addPacMan.bind(this);
     this.addResPerson = this.addResPerson.bind(this);
@@ -52,35 +44,26 @@ class UpdateTask extends React.Component {
     this.removeAssignedPerson = this.removeAssignedPerson.bind(this);
   }
 
-  refreshState() {
-    var syear = `${this.props.task.startDate.year.low}`;
-    var smonth = this.props.task.startDate.month.low;
-    smonth = smonth < 10 ? `0${smonth}` : `${smonth}`;
-    var sday = this.props.task.startDate.day.low;
-    sday = sday < 10 ? `0${sday}` : `${sday}`;
-    var eyear = `${this.props.task.startDate.year.low}`;
-    var emonth = this.props.task.startDate.month.low;
-    emonth = emonth < 10 ? `0${emonth}` : `${emonth}`;
-    var eday = this.props.task.startDate.day.low;
-    eday = eday < 10 ? `0${eday}` : `${eday}`;
-    this.setState({
-      id: this.props.task.id,
-      name: this.props.task.name,
-      startDate: `${syear}-${smonth}-${sday}`,
-      duration: this.props.task.duration,
-      endDate: `${eyear}-${emonth}-${eday}`,
-      description: this.props.task.description,
-      people: this.props.allUsers,
-      assignedProjUsers: this.props.assignedProjUsers,
-      pacManSearchTerm: "",
-      resourcesSearchTerm: "",
-      resPersonSearchTerm: "",
-      pacManList: [...this.props.pacMans],
-      resourcesList: [...this.props.resources],
-      resPersonList: [...this.props.resPersons],
-    });
+  componentDidUpdate(prevProps) {
+    if (this.props.task !== prevProps.task) {
+      this.setState({
+        id: this.props.task.id,
+        name: this.props.task.name,
+        startDate: this.props.task.startDate,
+        duration: this.CalcDiff(this.props.task.startDate, this.props.task.endDate),
+        endDate: this.props.task.endDate,
+        description: this.props.task.description,
+        people: this.props.allUsers,
+        assignedProjUsers: this.props.assignedProjUsers,
+        pacManSearchTerm: "",
+        resourcesSearchTerm: "",
+        resPersonSearchTerm: "",
+        pacManList: [...this.props.pacMans],
+        resourcesList: [...this.props.resources],
+        resPersonList: [...this.props.resPersons],
+      });
+    }
   }
-
   
   //Removes people from the people list if they are already assigned to a role so that they can't be selected again
   removeAssignedPeople() {
@@ -153,45 +136,34 @@ class UpdateTask extends React.Component {
     this.setState({ Show: false });
   }
 
-  setDuration(e) {
-    var duration;
-    var startDate;
-    if (e.target.id === "ut_startDate") {
-      startDate = e.target.value;
-      duration = this.state.duration;
-    } else if (e.target.id === "ut_duration") {
-      startDate = this.state.startDate;
-      duration = e.target.value;
-    }
-
-    var initialDate;
-    initialDate = new Date(startDate);
-    var endDate = new Date(
-      initialDate.getTime() + 1000 * 60 * 60 * 24 * duration
-    );
-    var dateWithDuration = [
-      endDate.getFullYear(),
-      endDate.getMonth() + 1,
-      endDate.getDate(),
-    ];
-    var edate = dateWithDuration;
-    var formatMonth = edate[1];
-    if (edate[1] < 10) {
-      formatMonth = "0" + edate[1];
-    }
-    var formatDay = edate[2];
-    if (edate[2] < 10) {
-      formatDay = "0" + edate[2];
-    }
-
-    var formatDate = edate[0] + "-" + formatMonth + "-" + formatDay;
-    return formatDate;
-  }
-
   async handleSubmit(event) {
     event.preventDefault();
-    let data = new FormData(event.target);
-    data = await stringifyFormData(data);
+    
+    let type = "Incomplete"
+    if (this.state.issue === true) type = "Issue";
+    if (parseInt(this.state.progress) === 100) type = "Complete";
+
+    let timeComplete = undefined;
+    if(this.state.initialProgress < 100 && parseInt(this.state.progress) === 100){
+      timeComplete = new Date();
+      timeComplete.setHours(timeComplete.getHours() + 2);
+      timeComplete = timeComplete.toISOString();
+    }
+    else if(this.state.initialProgress === 100 && parseInt(this.state.progress) < 100){
+      timeComplete = null;
+    }
+
+    
+    let data = {
+      id: this.state.id,
+      name: this.state.name,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
+      description: this.state.description,
+      progress: this.state.progress,
+      type: type,
+      timeComplete: timeComplete,
+    }
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
@@ -405,9 +377,13 @@ class UpdateTask extends React.Component {
     this.setState({ people: peopleList });
   }
 
-  render() {
-    if (this.state.id !== this.props.task.id) this.refreshState();
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+  }
 
+  render() {
     /*
     * Filters the list of people to only show people matching the search term
     */
@@ -451,7 +427,6 @@ class UpdateTask extends React.Component {
                 <input
                   hidden
                   type="number"
-                  id="ut_id"
                   name="ut_id"
                   value={this.state.id}
                   onChange={() => {}}
@@ -461,7 +436,6 @@ class UpdateTask extends React.Component {
                 <Form.Label>Name of task</Form.Label>
                 <Form.Control
                   type="text"
-                  id="ut_name"
                   name="ut_name"
                   value={this.state.name}
                   onChange={(e) => {
@@ -474,7 +448,6 @@ class UpdateTask extends React.Component {
                 <Form.Label>Description of task</Form.Label>
                 <Form.Control
                   as="textarea"
-                  id="ut_description"
                   name="ut_description"
                   rows="3"
                   value={this.state.description}
@@ -487,43 +460,108 @@ class UpdateTask extends React.Component {
               <Form.Group>
                 <Form.Label>Start date</Form.Label>
                 <Form.Control
-                  type="date"
-                  id="ut_startDate"
+                  required
+                  type="datetime-local"
                   name="ut_startDate"
-                  onChange={(e) => {
-                    this.setState({ startDate: e.target.value });
-                    this.value = this.state.startDate;
-                    this.setState({ endDate: this.setDuration(e) });
-                  }}
                   value={this.state.startDate}
-                  required
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label> Duration (days) </Form.Label>
-                <Form.Control
-                  required
-                  type="number"
-                  min="0"
-                  id="ut_duration"
-                  name="ut_duration"
-                  value={this.state.duration}
                   onChange={(e) => {
-                    this.setState({ duration: e.target.value });
-                    this.value = this.state.duration;
-                    this.setState({ endDate: this.setDuration(e) });
+                    if (this.state.endDate < e.target.value) {
+                      this.setState({ 
+                        startDate: e.target.value, 
+                        endDate: e.target.value,
+                        duration: this.CalcDiff(e.target.value, e.target.value),
+                      }); 
+                    } else {
+                      this.setState({ 
+                        startDate: e.target.value, 
+                        duration: this.CalcDiff(e.target.value, this.state.endDate) 
+                      });
+                    }
+                    this.value = this.state.startDate;
                   }}
                 />
               </Form.Group>
               <Form.Group>
                 <Form.Label>End Date</Form.Label>
                 <Form.Control
-                  type="date"
-                  id="ut_endDate"
+                  required
+                  type="datetime-local"
                   name="ut_endDate"
                   value={this.state.endDate}
-                  readOnly
+                  onChange={(e) => {
+                    if (this.state.startDate > e.target.value) {
+                      this.setState({ 
+                        startDate: e.target.value, 
+                        endDate: e.target.value,
+                        duration: this.CalcDiff(e.target.value, e.target.value),
+                      }); 
+                    } else {
+                      this.setState({ 
+                        endDate: e.target.value, 
+                        duration: this.CalcDiff(this.state.startDate, e.target.value) 
+                      });
+                    }
+                    this.value = this.state.endDate;
+                  }}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label> Duration</Form.Label>
+                <Form.Control
                   required
+                  type="text"
+                  name="duration"
+                  value={this.state.duration}
+                  readOnly
+                />
+              </Form.Group>
+              <Form.Group>
+                <InputGroup>
+                  <Form.Label>Progress</Form.Label>
+                  <Form.Control
+                    required
+                    type="number"
+                    name="progress"
+                    min={0}
+                    max={100}
+                    value={this.state.progress}
+                    onChange={(e) => {
+                      if(parseInt(e.target.value) === 100){
+                        this.setState({ issue: false });
+                      }
+                      this.setState({ progress: e.target.value });
+                      this.value = this.state.progress;
+                    }}
+                  />
+                  <Form.Control 
+                    type="range"
+                    value={this.state.progress}
+                    onChange={(e) => {
+                      if(parseInt(e.target.value) === 100){
+                        this.setState({ issue: false });
+                      }
+                      this.setState({ progress: e.target.value });
+                      this.value = this.state.progress;
+                    }}
+                    />
+                </InputGroup>
+              </Form.Group>
+              
+              <Form.Group>
+                <Form.Check 
+                  type="checkbox" 
+                  label="There is an issue with the task" 
+                  checked={this.state.issue}
+                  onChange={(e) => {
+                    if(parseInt(this.state.progress) === 100){
+                      this.setState({ issue: false });
+                      this.checked = false;
+                      alert("you cant specify that a complete task has an issue");
+                    } else {
+                      this.setState({ issue: e.target.checked });
+                      this.checked = this.state.issue;
+                    }
+                  }}
                 />
               </Form.Group>
               <Form.Group>

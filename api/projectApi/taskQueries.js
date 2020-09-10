@@ -2,19 +2,21 @@ const db = require("../DB");
 let updateProject = require("./updateProject");
 
 function createTask(req, res) {
+  let startDate = new Date(req.body.changedInfo.ct_startDate);
+  let endDate = new Date(req.body.changedInfo.ct_endDate);
   db.getSession()
     .run(
       `
         MATCH (b) 
         WHERE ID(b) = ${req.body.changedInfo.ct_pid} 
         CREATE(a:Task {
-          name:"${req.body.changedInfo.ct_Name}", 
-          startDate: date("${req.body.changedInfo.ct_startDate}"), 
-          endDate:date("${req.body.changedInfo.ct_endDate}"), 
-          duration:${req.body.changedInfo.ct_duration}, 
-          description:"${req.body.changedInfo.ct_description}", 
-          projId:${req.body.changedInfo.ct_pid}, 
-          type:"Incomplete",
+          name: "${req.body.changedInfo.ct_Name}", 
+          startDate: datetime("${req.body.changedInfo.ct_startDate}"), 
+          endDate: datetime("${req.body.changedInfo.ct_endDate}"),
+          duration: ${endDate.getTime() - startDate.getTime()},
+          description: "${req.body.changedInfo.ct_description}", 
+          projId: ${req.body.changedInfo.ct_pid}, 
+          type: "Incomplete",
           progress: 0
         })-[n:PART_OF]->(b) 
         RETURN a
@@ -25,8 +27,12 @@ function createTask(req, res) {
         id: result.records[0]._fields[0].identity.low,
         name: result.records[0]._fields[0].properties.name,
         description: result.records[0]._fields[0].properties.description,
-        startDate: result.records[0]._fields[0].properties.startDate,
-        endDate: result.records[0]._fields[0].properties.endDate,
+        startDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.startDate
+        ),
+        endDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.endDate
+        ),
         duration: result.records[0]._fields[0].properties.duration.low,
         type: result.records[0]._fields[0].properties.type,
         progress: result.records[0]._fields[0].properties.progress.low,
@@ -63,7 +69,7 @@ function deleteTask(req, res) {
       `
     )
     .then(async () => {
-      for (var x = 0; x < req.body.nodes.length; x++) {
+      for (let x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == req.body.changedInfo.id) {
           if (x == 0) {
             req.body.nodes.shift();
@@ -73,7 +79,7 @@ function deleteTask(req, res) {
         }
       }
 
-      for (var x = 0; x < req.body.rels.length; x++) {
+      for (let x = 0; x < req.body.rels.length; x++) {
         if (
           req.body.rels[x].target == req.body.changedInfo.id ||
           req.body.rels[x].source == req.body.changedInfo.id
@@ -86,23 +92,19 @@ function deleteTask(req, res) {
         }
       }
 
-      let queriesArray = [];
-      for (var x = 0; x < successors.length; x++) {
-        await updateProject.updateProject(
-          successors[x].id,
+      await successors.forEach(async succ => {
+        await updateProject.updateTask(
+          succ,
           req.body.nodes,
-          req.body.rels,
-          queriesArray
+          req.body.rels
         );
-      }
-
+      });
       res.send({
         nodes: req.body.nodes,
         rels: req.body.rels,
         displayNode: null,
         displayRel: null,
       });
-      updateProject.excecuteQueries(queriesArray);
     })
     .catch((err) => {
       console.log(err);
@@ -111,20 +113,32 @@ function deleteTask(req, res) {
     });
 }
 
-async function updateTask(req, res) {
-  //update a task with a certain ID with specified fields
-  result = await db
-    .getSession()
+function updateTask(req, res) { //update a task with a certain ID with specified fields
+  let startDate = new Date(req.body.changedInfo.startDate);
+  let endDate = new Date(req.body.changedInfo.endDate);
+
+  let timeCompleteString;
+  if(req.body.changedInfo.timeComplete === null || req.body.changedInfo.timeComplete === undefined){
+    timeCompleteString = `timeComplete: ${null}`;
+  }
+  else{
+    timeCompleteString = `timeComplete: datetime("${req.body.changedInfo.timeComplete}")`;
+  }
+
+  db.getSession()
     .run(
       `
         MATCH (a) 
-        WHERE ID(a) = ${req.body.changedInfo.ut_id}
+        WHERE ID(a) = ${req.body.changedInfo.id}
         SET a += {
-          name:"${req.body.changedInfo.ut_name}",
-          startDate: date("${req.body.changedInfo.ut_startDate}"),
-          duration: ${req.body.changedInfo.ut_duration},
-          endDate: date("${req.body.changedInfo.ut_endDate}"),
-          description: "${req.body.changedInfo.ut_description}"
+          name:"${req.body.changedInfo.name}",
+          startDate: datetime("${req.body.changedInfo.startDate}"),
+          endDate: datetime("${req.body.changedInfo.endDate}"),
+          duration: ${endDate.getTime() - startDate.getTime()},
+          description: "${req.body.changedInfo.description}",
+          progress:${req.body.changedInfo.progress},
+          type: "${req.body.changedInfo.type}",
+          ${timeCompleteString}
         }
         RETURN a
       `
@@ -134,8 +148,14 @@ async function updateTask(req, res) {
         id: result.records[0]._fields[0].identity.low,
         name: result.records[0]._fields[0].properties.name,
         description: result.records[0]._fields[0].properties.description,
-        startDate: result.records[0]._fields[0].properties.startDate,
-        endDate: result.records[0]._fields[0].properties.endDate,
+        type: result.records[0]._fields[0].properties.type,
+        progress: result.records[0]._fields[0].properties.progress.low,
+        startDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.startDate
+        ),
+        endDate: updateProject.datetimeToString(
+          result.records[0]._fields[0].properties.endDate
+        ),
         duration: result.records[0]._fields[0].properties.duration.low,
       };
       for (var x = 0; x < req.body.nodes.length; x++) {
@@ -144,24 +164,11 @@ async function updateTask(req, res) {
         }
       }
 
-      let upDep = false;
-      if (
-        result.records[0]._fields[0].properties.startDate !=
-          req.body.changedInfo.ut_startDate ||
-        result.records[0]._fields[0].properties.duration !=
-          req.body.changedInfo.ut_duration
-      )
-        upDep = true;
-
-      let queriesArray = [];
-      if (upDep == true) {
-        await updateProject.updateProject(
-          changedTask.id,
-          req.body.nodes,
-          req.body.rels,
-          queriesArray
-        );
-      }
+      await updateProject.updateCurTask(
+        changedTask,
+        req.body.nodes,
+        req.body.rels,
+      );
 
       res.send({
         nodes: req.body.nodes,
@@ -169,7 +176,6 @@ async function updateTask(req, res) {
         displayNode: changedTask.id,
         displayRel: null,
       });
-      updateProject.excecuteQueries(queriesArray);
     })
     .catch((err) => {
       console.log(err);
@@ -178,28 +184,8 @@ async function updateTask(req, res) {
     });
 }
 
-async function updateProgress(req, res) {
-  db.getSession()
-    .run(
-      `
-        MATCH (n)
-        WHERE ID(n) = ${req.body.id}
-        SET n += {
-          progress:${req.body.progress},
-          type: "${req.body.type}"
-        }
-        RETURN n
-      `
-    )
-    .then((result) => {
-      res.status(200);
-      res.send({ ret: result });
-    });
-}
-
 module.exports = {
   createTask,
   deleteTask,
   updateTask,
-  updateProgress,
 };

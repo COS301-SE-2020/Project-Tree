@@ -100,7 +100,12 @@ class ProjectPage extends React.Component {
     return (
       <Container fluid>
         <Row className="my-1">
-          <Col sm={12} md={12} lg={6} xl={6}>
+          <Col 
+            sm={12}
+            md={12}
+            lg={6}
+            xl={6}
+          >
             <ProjectInfo
               project={this.props.project}
               setProject={(project) => this.props.setProject(project)}
