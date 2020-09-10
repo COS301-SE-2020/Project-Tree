@@ -58,7 +58,11 @@ class Home extends React.Component {
           </Container>
         </React.Fragment>
       :
-        <Dashboard />
+        <Dashboard 
+          ownedProjects={this.props.ownedProjects}
+          otherProjects={this.props.otherProjects}
+          setProject={this.props.setProject}
+        />
     );
   }
 }

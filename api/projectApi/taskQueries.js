@@ -116,6 +116,15 @@ function deleteTask(req, res) {
 function updateTask(req, res) { //update a task with a certain ID with specified fields
   let startDate = new Date(req.body.changedInfo.startDate);
   let endDate = new Date(req.body.changedInfo.endDate);
+
+  let timeCompleteString;
+  if(req.body.changedInfo.timeComplete === null || req.body.changedInfo.timeComplete === undefined){
+    timeCompleteString = `timeComplete: ${null}`;
+  }
+  else{
+    timeCompleteString = `timeComplete: datetime("${req.body.changedInfo.timeComplete}")`;
+  }
+
   db.getSession()
     .run(
       `
@@ -128,7 +137,8 @@ function updateTask(req, res) { //update a task with a certain ID with specified
           duration: ${endDate.getTime() - startDate.getTime()},
           description: "${req.body.changedInfo.description}",
           progress:${req.body.changedInfo.progress},
-          type: "${req.body.changedInfo.type}"
+          type: "${req.body.changedInfo.type}",
+          ${timeCompleteString}
         }
         RETURN a
       `
