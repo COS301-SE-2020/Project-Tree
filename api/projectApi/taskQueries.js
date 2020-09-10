@@ -221,10 +221,31 @@ async function createClone(req, res) {
     });
 }
 
+async function deleteClone(req, res) {
+  db.getSession()
+    .run(
+      `
+        MATCH (n)
+        WHERE ID(n)=${req.body.changedInfo.viewId}
+        DETACH DELETE (n)
+      `
+    )
+    .then((result) => {
+      res.status(200);
+      res.send({ ret: result });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send({ message: err });
+    });
+}
+
 module.exports = {
   createTask,
   deleteTask,
   updateTask,
   updateProgress,
   createClone,
+  deleteClone
 };

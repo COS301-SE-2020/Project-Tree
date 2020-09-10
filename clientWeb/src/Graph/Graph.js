@@ -283,7 +283,7 @@ class Graph extends React.Component {
   handleClick(clickedNode) {
     if (clickedNode.model.attributes.attrs.type === "node") {
       if(clickedNode.model.attributes.attrs.originId !== undefined){
-        this.props.toggleSidebar(parseInt(clickedNode.model.attributes.attrs.originId), null, true);
+        this.props.toggleSidebar(parseInt(clickedNode.model.attributes.attrs.originId), null, clickedNode.model.id);
       }
       else{
         this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
