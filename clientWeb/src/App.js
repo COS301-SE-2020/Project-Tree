@@ -246,12 +246,12 @@ class App extends Component {
                   sm={12}
                   md={6}
                   lg={4}
-                  xl={3}
+                  xl={3.2}
                   className="border-right border-dark"
                   style={{
                     height: "100%",
                     backgroundColor: "#303030",
-                    position: "relative",
+                    position: "fixed",
                     zIndex: "9",
                   }}
                 >

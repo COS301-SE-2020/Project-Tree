@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Button, ProgressBar } from "react-bootstrap";
 import { Chart } from 'react-google-charts';
-import { format } from "path";
+import image from '../Images/project_analytic_2.svg'
 
 export default class DependencyPieChartsComponent extends React.Component {
     createCriticalPath() {
@@ -44,6 +44,9 @@ export default class DependencyPieChartsComponent extends React.Component {
     formatData(tasks){
         let data = [];
         data.push(['Task', 'Number of Dependencies']);
+
+        if(this.props.rels.length === 0) return data;
+
         tasks.forEach((task)=>{
             data.push(
                 [task.name, this.getNumberOfDependencies(task)]
@@ -70,6 +73,8 @@ export default class DependencyPieChartsComponent extends React.Component {
         let tasks = this.formatData(this.props.tasks)
         let criticalPath = this.formatData(this.createCriticalPath());
 
+        console.log(tasks)
+
         return(
             <React.Fragment>
                 <Container fluid>
@@ -79,34 +84,43 @@ export default class DependencyPieChartsComponent extends React.Component {
                         </Col>
                     </Row>
                     <Row className="align-items-center my-2">
-                        <Col>
-                            <Chart
-                                width={'100%'}
-                                height={'100%'}
-                                chartType="PieChart"
-                                loader={<div>Loading Chart</div>}
-                                data={tasks}
-                                options={{
-                                    title: 'Number of dependencies per task',
-                                    sliceVisibilityThreshold: 0.1
-                                }}
-                                rootProps={{ 'data-testid': '1' }}
-                            />
-                        </Col>
-                        <Col>
-                            <Chart
-                                width={'100%'}
-                                height={'100%'}
-                                chartType="PieChart"
-                                loader={<div>Loading Chart</div>}
-                                data={criticalPath}
-                                options={{
-                                    title: 'Number of dependencies per critical path task',
-                                    sliceVisibilityThreshold: 0.1
-                                }}
-                                rootProps={{ 'data-testid': '1' }}
-                            />
-                        </Col>
+                        {tasks.length === 1 ? 
+                            <Col className="text-center">
+                                No dependencies to display
+                                <img src={image} style={{ width: "90%", height:"10em" }} alt="Logo" />
+                            </Col>
+                            :
+                            <Col>
+                                <Chart
+                                    width={'100%'}
+                                    height={'100%'}
+                                    chartType="PieChart"
+                                    loader={<div>Loading Chart</div>}
+                                    data={tasks}
+                                    options={{
+                                        title: 'Number of dependencies per task',
+                                        sliceVisibilityThreshold: 0.1
+                                    }}
+                                    rootProps={{ 'data-testid': '1' }}
+                                />
+                            </Col>
+                        }
+                        {criticalPath.length === 1 ? null:
+                            <Col>
+                                <Chart
+                                    width={'100%'}
+                                    height={'100%'}
+                                    chartType="PieChart"
+                                    loader={<div>Loading Chart</div>}
+                                    data={criticalPath}
+                                    options={{
+                                        title: 'Number of dependencies per critical path task',
+                                        sliceVisibilityThreshold: 0.1
+                                    }}
+                                    rootProps={{ 'data-testid': '1' }}
+                                />
+                            </Col>
+                        }
                     </Row>
                 </Container>
             </React.Fragment>

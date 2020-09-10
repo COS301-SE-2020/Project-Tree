@@ -5,18 +5,6 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 const localizer = momentLocalizer(moment);
-let now = new Date();
-
-// let myEventsList = [
-//   {
-//     id: 0,
-//     title: 'All Day Event very long title',
-//     allDay: true,
-//     start: new Date(2020, 8, 6),
-//     end: new Date(2020, 8, 7),
-//   },
-  
-// ]
 
 class CalendarWrapper extends React.Component {
   CreateEventsList(){
@@ -58,7 +46,7 @@ class CalendarWrapper extends React.Component {
     
     let events= this.CreateEventsList();
     return (
-      <Container fluid style={{height:(window.innerHeight-300+"px"), width:'100%'}}>
+      <Container fluid style={{height:(window.innerHeight-200+"px"), width:'100%'}}>
         <Calendar
           localizer={localizer}
           events={events}

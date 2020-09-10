@@ -136,9 +136,7 @@ class TaskInfo extends React.Component {
               }
               break;
           }
-          let progressColor = "success"
-          if (el.progress < 33) progressColor = "danger";
-          else if (el.progress < 66) progressColor = "warning";
+          let progressColor = "info"
           list[i] = (
             <Col
               key={i}
@@ -176,10 +174,10 @@ class TaskInfo extends React.Component {
               <Row className="mb-2">
                 <Col>
                   <ProgressBar
-                    animated
+                    striped
                     variant={progressColor}
                     now={el.progress}
-                    label={`Task progress ${Math.round(el.progress)}% Complete`}
+                    label={`${Math.round(el.progress)}%`}
                   />
                 </Col>
               </Row>

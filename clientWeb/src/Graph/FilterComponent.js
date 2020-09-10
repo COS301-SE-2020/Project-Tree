@@ -322,7 +322,7 @@ export default class FilterComponent extends React.Component{
                     </Col>
                 </Row>
                 <Row>
-                    <Col className="text-center">
+                    <Col className="text-center m-0">
                         <ToggleButtonGroup horizontal name="filterMode" value={this.state.filterMode} defaultValue={this.state.filterMode}>
                             <ToggleButton variant="secondary" value="filter" onClick={()=>this.setState({filterMode:"filter", error:false})}>Filter</ToggleButton>
                             <ToggleButton variant="secondary" value="highlight" onClick={()=>this.setState({filterMode:"highlight", error:false})}>Highlight</ToggleButton>

@@ -286,9 +286,7 @@ class TaskSidebar extends React.Component {
     let taskResources = taskUsers[2];
 
     
-    let progressColor = "success"
-    if (this.props.task.progress < 33) progressColor = "danger";
-    else if (this.props.task.progress < 66) progressColor = "warning";
+    let progressColor = "info"
 
     return (
       <React.Fragment>
@@ -341,10 +339,10 @@ class TaskSidebar extends React.Component {
           <Row>
             <Col>
               <ProgressBar
+                striped
                 variant={progressColor}
                 now={this.props.task.progress}
-                animated
-                label={`Task progress ${Math.round(this.props.task.progress)}% Complete`}
+                label={`${Math.round(this.props.task.progress)}%`}
               />
             </Col>
           </Row>

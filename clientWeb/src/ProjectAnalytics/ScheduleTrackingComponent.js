@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { Chart } from 'react-google-charts';
+import image from '../Images/project_analytic_1.svg'
 
 export default class ScheduleTrackingComponent extends React.Component {
     formatData(tasks){
@@ -40,14 +41,21 @@ export default class ScheduleTrackingComponent extends React.Component {
                 <Row>
                     <Col>
                         <h4>Schedule Tracking</h4>
-                        <Chart
-                        width={'100%'}
-                        height={'12em'}
-                        chartType="Bar"
-                        loader={<div>Loading Chart</div>}
-                        data={data}
-                        rootProps={{ 'data-testid': '2' }}
-                        />
+                        {data.length === 1 ?
+                            <Col className="text-center">
+                                No ongoing tasks
+                                <img src={image} style={{ width: "90%", height:"10em" }} alt="Logo" />
+                            </Col>
+                            :
+                            <Chart
+                                width={'100%'}
+                                height={'14em'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={data}
+                                rootProps={{ 'data-testid': '2' }}
+                            />
+                        }
                     </Col>
                 </Row>
             </Container>
