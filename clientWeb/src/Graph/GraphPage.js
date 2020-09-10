@@ -129,9 +129,10 @@ class GraphPage extends React.Component {
     return (
       <React.Fragment>
         <Container fluid className="m-0 p-0 h-100">
-          <Row className="h-100">
+          <Row style={{height:"100%"}}>
             <Col
-              className="text-center border-right border-secondary bg-light h-100"
+              className="text-center border-right border-secondary bg-light "
+              style={{height:"100%", overflow:"auto"}}
             >
               <Container>
                 <Row>
@@ -286,7 +287,9 @@ class TaskSidebar extends React.Component {
     let taskResources = taskUsers[2];
 
     
-    let progressColor = "info"
+    let progressColor = "success"
+    if (this.props.task.progress < 33) progressColor = "danger";
+    else if (this.props.task.progress < 66) progressColor = "warning";
 
     return (
       <React.Fragment>
@@ -339,10 +342,10 @@ class TaskSidebar extends React.Component {
           <Row>
             <Col>
               <ProgressBar
-                striped
                 variant={progressColor}
                 now={this.props.task.progress}
-                label={`${Math.round(this.props.task.progress)}%`}
+                animated
+                label={`Task progress ${Math.round(this.props.task.progress)}% Complete`}
               />
             </Col>
           </Row>

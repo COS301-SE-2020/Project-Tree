@@ -243,8 +243,8 @@ class Graph extends React.Component {
     let graph = new joint.dia.Graph();
     paper = new joint.dia.Paper({
       el: $("#paper"),
-      width: $("#paper").width(),
-      height: $("#paper").height(),
+      width: "100%",
+      height: "85%",
       gridSize: 10,
       model: graph,
       linkPinning: false,
@@ -438,7 +438,7 @@ class Graph extends React.Component {
         </Container>
         <div
           id="paper"
-          className="h-100 w-100 overflow-hidden user-select-none"
+          className="overflow-hidden user-select-none m-10 border"
         ></div>
         {this.state.createDependency ? (
           <CreateDependency
