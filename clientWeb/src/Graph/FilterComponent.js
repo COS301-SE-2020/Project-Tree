@@ -322,7 +322,7 @@ export default class FilterComponent extends React.Component{
                     </Col>
                 </Row>
                 <Row>
-                    <Col className= "align-text-center text-right m-0" style={{fontSize: "18px"}}>
+                    <Col className="align-text-center text-right m-0" style={{fontSize: "18px"}}>
                         Select display option:
                     </Col>
                     <Col className="m-0">

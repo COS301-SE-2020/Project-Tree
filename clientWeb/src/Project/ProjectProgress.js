@@ -6,22 +6,19 @@ class ProjectProgress extends React.Component {
     let totalDur = 0,
       completeDur = 0,
       percentage = 0,
-      color = "success";
+      color = "info";
     this.props.tasks.forEach((task) => {
       completeDur += task.progress;
       totalDur += 100;
     });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
 
-    if (percentage < 33) color = "danger";
-    else if (percentage < 66) color = "warning";
-
     return (
       <ProgressBar
-        animated
+        striped
         variant={color}
         now={percentage}
-        label={`${Math.round(percentage)}% Complete`}
+        label={`${Math.round(percentage)}%`}
       />
     );
   }
@@ -30,7 +27,7 @@ class ProjectProgress extends React.Component {
     let totalDur = 0,
       completeDur = 0,
       percentage = 0,
-      color = "success";
+      color = "info";
     if (
       this.props.criticalPath !== null &&
       this.props.criticalPath.path !== null
@@ -45,14 +42,12 @@ class ProjectProgress extends React.Component {
       });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
 
-    if (percentage < 33) color = "danger";
-    else if (percentage < 66) color = "warning";
     return (
       <ProgressBar
-        animated
+        striped
         variant={color}
         now={percentage}
-        label={`${Math.round(percentage)}% Complete`}
+        label={`${Math.round(percentage)}%`}
       />
     );
   }

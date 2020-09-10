@@ -18,6 +18,7 @@ export default class ProjectProgressComponent extends React.Component {
         variant={color}
         now={percentage}
         label={`${Math.round(percentage)}%`}
+        striped
       />
     );
   }
@@ -47,6 +48,7 @@ export default class ProjectProgressComponent extends React.Component {
         variant={color}
         now={percentage}
         label={`${Math.round(percentage)}%`}
+        striped
       />
     );
   }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Button, ProgressBar } from "react-bootstrap";
 import { Chart } from 'react-google-charts';
+import image from '../Images/project_analytic_3.svg'
 
 export default class CriticalPathBarCharts extends React.Component {
     createCriticalPath() {
@@ -60,19 +61,26 @@ export default class CriticalPathBarCharts extends React.Component {
                 <Row>
                     <Col>
                         <h4>Critical Path Info</h4>
-                        <Chart
-                        width={'100%'}
-                        height={'12em'}
-                        chartType="Bar"
-                        loader={<div>Loading Chart</div>}
-                        data={criticalPath}
-                        options={{
-                            chart: {
-                            subtitle: 'Duration',
-                            },
-                        }}
-                        rootProps={{ 'data-testid': '2' }}
-                        />
+                        {criticalPath.length === 1 ?
+                          <Col className="text-center">
+                            No critical path to display
+                            <img src={image} style={{ width: "90%", height:"10em" }} alt="Logo" />
+                          </Col>
+                          :
+                          <Chart
+                            width={'100%'}
+                            height={'12em'}
+                            chartType="Bar"
+                            loader={<div>Loading Chart</div>}
+                            data={criticalPath}
+                            options={{
+                                chart: {
+                                subtitle: 'Duration',
+                                },
+                            }}
+                            rootProps={{ 'data-testid': '2' }}
+                          />
+                        }
                     </Col>
                 </Row>
             </Container>

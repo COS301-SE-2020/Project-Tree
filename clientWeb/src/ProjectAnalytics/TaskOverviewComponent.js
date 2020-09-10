@@ -58,7 +58,7 @@ export default class TaskOverviewComponent extends React.Component {
     }
 
     getNextTaskEnding(){
-        let tasks = this.props.tasks;
+        let tasks = [...this.props.tasks];
 
         if(this.props.tasks === null || this.props.tasks.length === 0){
             return "no tasks remaining"
@@ -68,6 +68,11 @@ export default class TaskOverviewComponent extends React.Component {
         tasks = tasks.filter((task)=>{
             return (new Date(task.endDate)).valueOf() > today.valueOf();
         })
+
+        if(tasks.length === 0){
+            console.log('hello')
+            return "no tasks remaining"
+        } 
 
         let soonestTaskEnding = tasks[0];
         tasks.forEach((task)=>{
@@ -80,16 +85,19 @@ export default class TaskOverviewComponent extends React.Component {
     }
 
     getNextTaskStarting(){
-        let tasks = this.props.tasks;
+        let tasks = [...this.props.tasks];
 
         if(this.props.tasks === null || this.props.tasks.length === 0){
             return "no tasks remaining"
         } 
-
         let today = new Date();
         tasks = tasks.filter((task)=>{
             return (new Date(task.startDate)).valueOf() > today.valueOf();
         })
+
+        if(tasks.length === 0){
+            return "no tasks remaining"
+        } 
 
         let soonestTaskStarting = tasks[0];
         tasks.forEach((task)=>{
@@ -103,7 +111,7 @@ export default class TaskOverviewComponent extends React.Component {
 
     render(){
         if(this.props.tasks === undefined || this.props.tasks.length === 0 || this.props.tasks ===null) return null;
-        let tasks = this.props.tasks;
+        let tasks = [...this.props.tasks];
         let cpTasks = this.getCriticalPath(this.createCriticalPath());
 
        

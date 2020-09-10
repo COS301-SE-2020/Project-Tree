@@ -149,7 +149,7 @@ class Dashboard extends React.Component {
             <Col>
             </Col>
             <Col></Col>
-            <Col xl={4} xs={3}>
+            <Col xl={4} xs={3} className="text-center">
               <h1 style={{fontWeight: "bold"}}>Project Dashboard</h1>
             </Col>
             <Col >
