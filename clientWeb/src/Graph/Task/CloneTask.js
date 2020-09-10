@@ -30,24 +30,13 @@ class CloneTask extends React.Component {
       body: JSON.stringify({ id: this.props.task.id })
 		});
 
-		// const response = await fetch("/getProject", {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ id: this.props.project.id })
-		// });
-
-		// const body = await response.json();
-
 		const response = await fetch("/getProjectViews", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: this.props.project.id })
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ id: this.props.project.id })
 		});
 
 		const body = await response.json();

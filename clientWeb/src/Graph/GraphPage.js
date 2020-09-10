@@ -25,6 +25,7 @@ class GraphPage extends React.Component {
       allUsers:null, 
       assignedProjUsers:null,
       filterOn:false,
+      isView:false
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
@@ -120,7 +121,7 @@ class GraphPage extends React.Component {
     this.setState({assignedProjUsers:newPeopleList})
   }
 
-  toggleSidebar(newTaskID, newDependencyID) {
+  toggleSidebar(newTaskID, newDependencyID, isView) {
     var newTask = null;
     var newDependency = null;
     var x;
@@ -131,7 +132,12 @@ class GraphPage extends React.Component {
           newTask = this.state.nodes[x];
         }
       }
-      this.setState({ task: newTask, dependency: newDependency });
+      if(isView !== undefined){
+        this.setState({ task: newTask, dependency: newDependency, isView: true });
+      }
+      else{
+        this.setState({ task: newTask, dependency: newDependency, isView: false });
+      }
     } else if (newDependencyID != null) {
       for (x = 0; x < this.state.links.length; x++) {
         if (this.state.links[x].id === newDependencyID) {
@@ -185,6 +191,7 @@ class GraphPage extends React.Component {
                   updateAssignedPeople={this.updateAssignedPeople}
                   user={this.props.user}
                   project={this.state.project}
+                  isView={this.state.isView}
                 />
               ) : null}
               {this.state.dependency !== null ? (
@@ -332,11 +339,12 @@ class TaskSidebar extends React.Component {
                   setTaskInfo={this.props.setTaskInfo}
                   getProjectInfo={this.props.getProjectInfo}
                   toggleSidebar={this.props.toggleSidebar}
+                  isView={this.props.isView}
                 />
               ) : null}
             </Col>
             <Col xs={6}>
-              <h3>{this.props.task.name}</h3>
+              {this.props.isView === true ? <h3>{this.props.task.name}<br />(View)</h3> : <h3>{this.props.task.name}</h3>}
             </Col>
             <Col className="text-right">
               <Button

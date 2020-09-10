@@ -28,6 +28,58 @@ function createDependency(req, res) {
       let queriesArray = [];
       req.body.rels.push(changedRel);
 
+      if(req.body.changedInfo.cd_viewId_source.length !== 0){
+        if(req.body.changedInfo.cd_viewId_target.length !== 0){
+          db.getSession()
+          .run(
+            `
+              MATCH (a)
+              WHERE ID(a) = ${req.body.changedInfo.cd_viewId_source}
+              SET a.outDepArr=coalesce(a.outDepArr, []) + ${changedRel.id}
+              WITH 1 as dummy
+              MATCH (b)
+              WHERE ID(b) = ${req.body.changedInfo.cd_viewId_target}
+              SET b.inDepArr=coalesce(b.inDepArr, []) + ${changedRel.id}
+            `
+          )
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send({ message: err });
+          });
+        }
+        else{
+          db.getSession()
+          .run(
+            `
+              MATCH (a)
+              WHERE ID(a) = ${req.body.changedInfo.cd_viewId_source}
+              SET a.outDepArr=coalesce(a.outDepArr, []) + ${changedRel.id}
+            `
+          )
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send({ message: err });
+          });
+        }
+      }
+      else if(req.body.changedInfo.cd_viewId_target.length !== 0){
+        db.getSession()
+        .run(
+          `
+            MATCH (a)
+            WHERE ID(a) = ${req.body.changedInfo.cd_viewId_target}
+            SET a.inDepArr=coalesce(a.inDepArr, []) + ${changedRel.id}
+          `
+        )
+        .catch((err) => {
+          console.log(err);
+          res.status(400);
+          res.send({ message: err });
+        });
+      }
+
       await updateProject.updateProject(
         changedRel.target,
         req.body.nodes,

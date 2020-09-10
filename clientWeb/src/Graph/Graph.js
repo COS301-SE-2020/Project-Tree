@@ -146,27 +146,40 @@ function buildGraph(nodes, rels, criticalPath) {
 
 function createViews(allNodes, viewNodes){
   let clonedNodes = allNodes;
-  console.log(allNodes)
   if(viewNodes !== null){
     for(let x = 0; x < viewNodes.length; x++){
       for(let y = 0; y < allNodes.length; y++){
         if(viewNodes[x].originalNode === parseInt(allNodes[y].id)){
           let clonedNode = allNodes[y].clone();
+
+          var width = 100;
+          var height = 80;
+
+          var wraptext = joint.util.breakText(`(View) ${allNodes[y].attributes.attrs.text.text}`, {
+            width: width - 20,
+            height: height,
+          });
+
+          clonedNode.attributes.attrs.text.text = `${wraptext}`
           clonedNode.attributes.attrs.originId = allNodes[y].id;
           clonedNode.attributes.id = `${viewNodes[x].id}`;
           clonedNode.id = `${viewNodes[x].id}`;
           clonedNodes.push(clonedNode);
         }
 
-        for(let z = 0; z < viewNodes[x].dependencyArr.length; z++){
-          if(`l${viewNodes[x].dependencyArr[z].low}` === allNodes[y].id){
+        for(let z = 0; z < viewNodes[x].outDepArr.length; z++){
+          if(`l${viewNodes[x].outDepArr[z].low}` === allNodes[y].id){
             allNodes[y].attributes.source = {id: `${viewNodes[x].id}`};
+          }
+        }
+
+        for(let a = 0; a < viewNodes[x].inDepArr.length; a++){
+          if(`l${viewNodes[x].inDepArr[a].low}` === allNodes[y].id){
+            allNodes[y].attributes.target = {id: `${viewNodes[x].id}`};
           }
         }
       }
     }
-
-    
   }
   return clonedNodes;
 }
@@ -186,6 +199,8 @@ class Graph extends React.Component {
       source: null,
       target: null,
       alert: null,
+      viewId_source: null,
+      viewId_target: null,
       displayCriticalPath: true,
     };
     this.handleClick = this.handleClick.bind(this);
@@ -220,6 +235,9 @@ class Graph extends React.Component {
     }
 
     var new_source_targetID = parseInt(clickedNode.model.id);
+    if(clickedNode.model.attributes.attrs.originId !== undefined){
+      new_source_targetID = parseInt(clickedNode.model.attributes.attrs.originId);
+    }
     this.setState({ alert: null });
 
     if (new_source_targetID === null) {
@@ -235,15 +253,23 @@ class Graph extends React.Component {
     }
 
     if (this.state.source === null) {
-      this.setState({ source: source_target });
+      if(clickedNode.model.attributes.attrs.originId !== undefined){
+        this.setState({ source: source_target, viewId_source: clickedNode.model.id});
+      }
+      else{
+        this.setState({ source: source_target });
+      }
     } else {
       if (this.state.source.id === new_source_targetID) {
         this.setState({ source: null, target: null });
       } else {
-        this.setState({ target: source_target });
-        if (
-          this.recDepCheck(this.state.target.id, this.state.source.id) === true
-        ) {
+        if(clickedNode.model.attributes.attrs.originId !== undefined){
+          this.setState({ target: source_target, viewId_target: clickedNode.model.id});
+        }
+        else{
+          this.setState({ target: source_target });
+        }
+        if (this.recDepCheck(this.state.target.id, this.state.source.id) === true) {
           this.setState({ target: null, alert: 1 });
         }
       }
@@ -251,13 +277,13 @@ class Graph extends React.Component {
   }
 
   clearDependency() {
-    this.setState({ source: null, target: null, alert: null });
+    this.setState({ source: null, target: null, alert: null, viewId_source: null, viewId_target: null });
   }
 
   handleClick(clickedNode) {
     if (clickedNode.model.attributes.attrs.type === "node") {
       if(clickedNode.model.attributes.attrs.originId !== undefined){
-        this.props.toggleSidebar(parseInt(clickedNode.model.attributes.attrs.originId), null);
+        this.props.toggleSidebar(parseInt(clickedNode.model.attributes.attrs.originId), null, true);
       }
       else{
         this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
@@ -499,6 +525,8 @@ class Graph extends React.Component {
             project={this.props.project}
             source={this.state.source}
             target={this.state.target}
+            viewId_source={this.state.viewId_source}
+            viewId_target={this.state.viewId_target}
           />
         ) : null}
         {this.state.createTask ? (

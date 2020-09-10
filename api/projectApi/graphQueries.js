@@ -71,7 +71,8 @@ function getProjectViews(req, res) {
       result.records.forEach((record) => {
         viewsArr.push({
           id: record._fields[0].identity.low,
-          dependencyArr: record._fields[0].properties.dependencyArr,
+          inDepArr: record._fields[0].properties.inDepArr,
+          outDepArr: record._fields[0].properties.outDepArr,
           originalNode: record._fields[0].properties.originalNode.low
         });
       });

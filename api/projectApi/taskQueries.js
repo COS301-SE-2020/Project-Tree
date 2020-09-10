@@ -204,7 +204,8 @@ async function createClone(req, res) {
       MATCH (b) 
       WHERE ID(b) = ${req.body.id}
       CREATE(a:View {
-        dependencyArr:[],
+        inDepArr:[],
+        outDepArr:[],
         originalNode: ${req.body.id}
       })-[n:VIEW_OF]->(b)
      `

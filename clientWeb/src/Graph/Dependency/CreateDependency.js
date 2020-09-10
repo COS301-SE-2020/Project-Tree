@@ -17,6 +17,8 @@ class CreateDependency extends React.Component {
       pid: this.props.project.id,
       fid: this.props.source.id,
       sid: this.props.target.id,
+      viewId_source: this.props.viewId_source,
+      viewId_target: this.props.viewId_target
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -28,6 +30,7 @@ class CreateDependency extends React.Component {
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
+    console.log(projectData)
 
     const response = await fetch("/dependency/add", {
       method: "POST",
@@ -83,6 +86,20 @@ class CreateDependency extends React.Component {
                 type="number"
                 name="cd_sid"
                 value={this.state.sid}
+                onChange={() => {}}
+              />
+              <input
+                hidden
+                type="number"
+                name="cd_viewId_source"
+                value={this.state.viewId_source === null ? "" : this.state.viewId_source}
+                onChange={() => {}}
+              />
+              <input
+                hidden
+                type="number"
+                name="cd_viewId_target"
+                value={this.state.viewId_target === null ? "" : this.state.viewId_target}
                 onChange={() => {}}
               />
               <Form.Group>
