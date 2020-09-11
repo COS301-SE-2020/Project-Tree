@@ -1,7 +1,7 @@
 import React from "react";
-import { ProgressBar, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button, ProgressBar } from "react-bootstrap";
 
-class ProjectProgress extends React.Component {
+export default class ProjectProgressComponent extends React.Component {
   getProjectProgress() {
     let totalDur = 0,
       completeDur = 0,
@@ -15,10 +15,10 @@ class ProjectProgress extends React.Component {
 
     return (
       <ProgressBar
-        striped
         variant={color}
         now={percentage}
         label={`${Math.round(percentage)}%`}
+        striped
       />
     );
   }
@@ -30,7 +30,8 @@ class ProjectProgress extends React.Component {
       color = "info";
     if (
       this.props.criticalPath !== null &&
-      this.props.criticalPath.path !== null
+      this.props.criticalPath.path !== null &&
+      this.props.criticalPath.path !== undefined
     )
       this.props.criticalPath.path.segments.forEach((el, i) => {
         if (i === 0) {
@@ -44,10 +45,10 @@ class ProjectProgress extends React.Component {
 
     return (
       <ProgressBar
-        striped
         variant={color}
         now={percentage}
         label={`${Math.round(percentage)}%`}
+        striped
       />
     );
   }
@@ -55,25 +56,24 @@ class ProjectProgress extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Row className="align-items-center bg-white mb-2 mt-2" style={{ fontSize: "20px" }}>
+        <Container>
+          <Row className="align-items-center bg-white">
             <Col>
-              Total Progress: 
+                <h4>Project Progress</h4>
             </Col>
-            <Col xs={8}>
-             {this.getProjectProgress()}
+            
+          </Row>
+          <Row className="align-items-center bg-white">
+            <Col sm={12} style={{ fontSize: "20px" }}>
+              Total Progress: {this.getProjectProgress()}
             </Col>
-        </Row>
-        <Row className="align-items-center bg-white mb-2 mt-2" style={{ fontSize: "20px" }}>
-            <Col>
-              Critical Path Progress: 
+            <Col sm={12} style={{ fontSize: "20px" }}>
+              Critical Path Progress: {this.getCPProgress()}
             </Col>
-            <Col xs={8}>
-              {this.getCPProgress()}
-            </Col>
-        </Row>
+          </Row>
+        </Container>
+        
       </React.Fragment>
     );
   }
 }
-
-export default ProjectProgress;

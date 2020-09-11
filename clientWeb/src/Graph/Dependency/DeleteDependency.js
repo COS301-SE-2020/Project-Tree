@@ -12,7 +12,7 @@ function stringifyFormData(fd) {
 class DeleteDependency extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { Show: false, did: this.props.dependency.id };
+    this.state = { Show: false };
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -74,7 +74,7 @@ class DeleteDependency extends React.Component {
                   hidden
                   type="number"
                   name="dd_did"
-                  value={this.state.did}
+                  value={this.props.dependency.id}
                   onChange={() => {}}
                 />
               </Form.Group>

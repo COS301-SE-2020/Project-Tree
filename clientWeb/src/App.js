@@ -50,7 +50,9 @@ class App extends Component {
         delete: false,
         project: false,
       },
+      height: 0,
     };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
     this.closeSideBar = this.closeSideBar.bind(this);
@@ -59,6 +61,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     let token = localStorage.getItem("sessionToken");
     if (token != null) {
       $.post("/project/get", { token }, (response) => {
@@ -82,6 +86,15 @@ class App extends Component {
     } else {
       if (this.rightSide) this.rightSide.classList.add("right");
     }
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+
+  updateWindowDimensions() {
+    this.setState({ height: window.innerHeight-87 + "px" });
   }
 
   setProject(proj) {
@@ -205,9 +218,14 @@ class App extends Component {
       <React.Fragment>
         <BrowserRouter>
           <Navbar
-            sticky="top"
             bg="#96BB7C"
-            style={{ fontFamily: "Courier New", backgroundColor: "#96BB7C" }}
+            style={{ 
+              fontFamily: "Courier New", 
+              backgroundColor: "#96BB7C", 
+              position:"fixed",
+              height: "87px",
+              width: "100%",
+              zIndex:"90"}}
           >
             <Nav className="form-inline ">
               {this.state.loggedInStatus === true ? (
@@ -230,7 +248,7 @@ class App extends Component {
             </Nav>
             <Nav className="m-auto form-inline">
               <Nav.Link href="/">
-                <img src={logo} alt="Logo" style={{ width: "110px" }} />
+                <img src={logo} alt="Logo" style={{ width: "110px"}} />
               </Nav.Link>
             </Nav>
             <Nav className="form-inline">
@@ -239,19 +257,20 @@ class App extends Component {
               ) : null}
             </Nav>
           </Navbar>
-          <Container fluid style={{ height: "100%" }}>
-            <Row style={{ height: "100%" }}>
+          <Container fluid style={{paddingTop:"87px", height:"100%"}}>
+            <Row style={{}}>
               {this.state.showSideBar !== false ? (
                 <Col
                   sm={12}
                   md={6}
                   lg={4}
-                  xl={3}
+                  xl={4}
+                  xs={4}
                   className="border-right border-dark"
                   style={{
-                    height: "100%",
+                    height:this.state.height,
                     backgroundColor: "#303030",
-                    position: "relative",
+                    position: "fixed",
                     zIndex: "9",
                   }}
                 >
@@ -263,7 +282,7 @@ class App extends Component {
                   />
                 </Col>
               ) : null}
-              <Col style={{ position: "absolute", height: "100%" }}>
+              <Col style={{ height:this.state.height, overflowY: "auto"}} >
                 <Switch>
                   <Route path="/home">
                     {this.state.loggedInStatus ? (
@@ -294,6 +313,7 @@ class App extends Component {
                   <Route path="/graph">
                     {this.state.project != null ? (
                       <GraphPage
+                        height={this.state.height}
                         project={this.state.project}
                         userPermission={this.state.userPermission}
                         user={this.state.user}
@@ -322,10 +342,7 @@ class App extends Component {
                       )
                     ) : (
                       <div className="row">
-                        <div
-                          className="column"
-                          style={{ backgroundColor: "white" }}
-                        >
+                        <div className="column left" style={{ backgroundColor: "white" }}>
                           <div className="login">
                             <div
                               className="container"
@@ -352,7 +369,7 @@ class App extends Component {
                             />
                           </div>
                         </div>
-                        <div className="column">
+                        <div className="column right" style={{ backgroundColor: "white" }}>
                           <div className="carosal">
                             <About />
                           </div>

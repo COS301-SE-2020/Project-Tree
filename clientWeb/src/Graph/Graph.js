@@ -9,7 +9,7 @@ import { Form, Button, Container, Row, Col, Tooltip, OverlayTrigger } from "reac
 import CreateTask from "./Task/CreateTask";
 
 function makeLink(edge, criticalPathLinks) {
-  var strokeColor = "#000";
+  let strokeColor = "#000";
   if (criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
   let link = new joint.shapes.standard.Link({
     id: "l" + edge.id,
@@ -26,37 +26,19 @@ function makeLink(edge, criticalPathLinks) {
 }
 
 function makeElement(node, criticalPathNodes) {
-  var letterSize = 16;
-  var width = 100;
-  var height = 80;
+  let letterSize = 16;
+  let width = 100;
+  let height = 80;
 
-  var wraptext = joint.util.breakText(node.name, {
+  let wraptext = joint.util.breakText(node.name, {
     width: width - 20,
     height: height,
   });
 
-  var statusColor = "#77dd77";
+  let statusColor = "#77dd77";
   if (node.type === "Incomplete") {
     let today = new Date();
-    if (parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)) {
-      if (parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)) {
-        if (
-          parseInt(today.getMonth() + 1) <= parseInt(node.endDate.month.low)
-        ) {
-          if (
-            parseInt(today.getMonth() + 1) === parseInt(node.endDate.month.low)
-          ) {
-            if (parseInt(today.getDate()) > parseInt(node.endDate.day.low)) {
-              statusColor = "#ff6961";
-            }
-          }
-        } else {
-          statusColor = "#ff6961";
-        }
-      }
-    } else {
-      statusColor = "#ff6961";
-    }
+    if (today > new Date(node.endDate)) statusColor = "#ff6961";
   } else if (node.type === "Complete") {
     statusColor = "#77dd77";
   } else if (node.type === "Issue") {
@@ -120,8 +102,8 @@ function makeElement(node, criticalPathNodes) {
 }
 
 function buildGraph(nodes, rels, criticalPath) {
-  var elements = [];
-  var links = [];
+  let elements = [];
+  let links = [];
   let criticalPathLinks = [];
   let criticalPathNodes = [];
   if (criticalPath !== null && criticalPath.path !== null)
@@ -131,18 +113,18 @@ function buildGraph(nodes, rels, criticalPath) {
       criticalPathNodes.push(element.end.identity.low);
     });
 
-  _.each(nodes, function (node) {
+  _.each(nodes, (node) => {
     elements.push(makeElement(node, criticalPathNodes));
   });
 
-  _.each(rels, function (edge) {
+  _.each(rels, (edge) => {
     links.push(makeLink(edge, criticalPathLinks));
   });
   return elements.concat(links);
 }
 
-var graphScale = 1;
-var paper = null;
+let graphScale = 1;
+let paper = null;
 
 class Graph extends React.Component {
   constructor(props) {
@@ -189,7 +171,7 @@ class Graph extends React.Component {
       return;
     }
 
-    var new_source_targetID = parseInt(clickedNode.model.id);
+    let new_source_targetID = parseInt(clickedNode.model.id);
     this.setState({ alert: null });
 
     if (new_source_targetID === null) {
@@ -197,8 +179,8 @@ class Graph extends React.Component {
       return;
     }
 
-    var source_target;
-    for (var x = 0; x < this.props.nodes.length; x++) {
+    let source_target;
+    for (let x = 0; x < this.props.nodes.length; x++) {
       if (this.props.nodes[x].id === new_source_targetID) {
         source_target = this.props.nodes[x];
       }
@@ -258,11 +240,11 @@ class Graph extends React.Component {
   }
 
   componentDidMount() {
-    var graph = new joint.dia.Graph();
+    let graph = new joint.dia.Graph();
     paper = new joint.dia.Paper({
       el: $("#paper"),
-      width: $("#paper").width(),
-      height: $("#paper").height(),
+      width: "100%",
+      height: "93%",
       gridSize: 10,
       model: graph,
       linkPinning: false,
@@ -272,7 +254,7 @@ class Graph extends React.Component {
 
     paper.on("cell:pointerclick", this.handleClick);
 
-    var dragStartPosition;
+    let dragStartPosition;
     paper.on("blank:pointerdown", function (event, x, y) {
       dragStartPosition = { x: x * graphScale, y: y * graphScale };
     });
@@ -307,7 +289,7 @@ class Graph extends React.Component {
       return;
     }
 
-    var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
+    let cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
     this.state.graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(this.state.graph, {
       dagre: dagre,
@@ -316,21 +298,7 @@ class Graph extends React.Component {
       rankDir: "TB",
       nodeSep: 100,
       rankSep: 100,
-    });
-
-    var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
-    this.state.graph.resetCells(cells);
-    joint.layout.DirectedGraph.layout(this.state.graph, {
-      dagre: dagre,
-      graphlib: graphlib,
-      setLinkVertices: false,
-      rankDir: "TB",
-      nodeSep: 100,
-      rankSep: 100,
-    });
-
-    console.log(this.state.graph.toJSON())
-    
+    });    
   }
 
   hideModal() {
@@ -358,8 +326,8 @@ class Graph extends React.Component {
       });
     } else this.drawGraph(null);
 
-    var dependency = null;
-    var color = "outline-dark";
+    let dependency = null;
+    let color = "outline-dark";
     if (this.state.source != null && this.state.target != null) {
       dependency = this.state.source.name + "→" + this.state.target.name;
       color = "success";
@@ -470,7 +438,7 @@ class Graph extends React.Component {
         </Container>
         <div
           id="paper"
-          className="h-100 w-100 overflow-hidden user-select-none"
+          className="overflow-hidden user-select-none m-10 border"
         ></div>
         {this.state.createDependency ? (
           <CreateDependency

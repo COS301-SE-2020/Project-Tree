@@ -5,20 +5,28 @@
   box-sizing: border-box;
 }
 
-.row {
-  display: flex;
-  //padding-top: 20px;
-}
-
 /* Create two equal columns that sits next to each other */
 .column {
-  flex: 50%;
+  float: left;
   padding: 10px;
-  height: 800px;
+  height: 1300px; /* Should be removed. Only for demonstration */
 }
 
- 
+.left {
+  width: 44%;
+   /* Should be removed. Only for demonstration */
+}
 
+.right {
+  width: 56%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 
 .card-img-top {
   width: 100%;
@@ -73,6 +81,10 @@
 
 //Login Main Container
 .login {
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  transform: scale(0.9);
   text-align: center;
   width: 22em;
   height: 100%;

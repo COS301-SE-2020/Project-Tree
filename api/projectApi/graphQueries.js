@@ -1,4 +1,5 @@
 const db = require("../DB");
+let updateProject = require("./updateProject");
 
 function getProjectTasks(req, res) {
   db.getSession()
@@ -17,11 +18,20 @@ function getProjectTasks(req, res) {
           id: record._fields[0].identity.low,
           name: record._fields[0].properties.name,
           description: record._fields[0].properties.description,
-          startDate: record._fields[0].properties.startDate,
-          endDate: record._fields[0].properties.endDate,
-          duration: record._fields[0].properties.duration.low,
           type: record._fields[0].properties.type,
           progress: record._fields[0].properties.progress.low,
+          startDate: updateProject.datetimeToString(
+            record._fields[0].properties.startDate
+          ),
+          endDate: updateProject.datetimeToString(
+            record._fields[0].properties.endDate
+          ),
+          duration: record._fields[0].properties.duration.low,
+          timeComplete: record._fields[0].properties.timeComplete !== undefined ? updateProject.datetimeToString(
+            record._fields[0].properties.timeComplete
+          )
+          :
+          null,
         });
       });
       db.getSession()
@@ -38,8 +48,21 @@ function getProjectTasks(req, res) {
           result.records.forEach((record) => {
             relArr.push({
               id: record._fields[0].identity.low,
+              sStartDate: updateProject.datetimeToString(
+                record._fields[0].properties.sStartDate
+              ),
+              sEndDate: updateProject.datetimeToString(
+                record._fields[0].properties.sEndDate
+              ),
+              startDate: updateProject.datetimeToString(
+                record._fields[0].properties.startDate
+              ),
+              endDate: updateProject.datetimeToString(
+                record._fields[0].properties.endDate
+              ),
               duration: record._fields[0].properties.duration.low,
-              relationshipType: record._fields[0].properties.relationshipType,
+              relationshipType:
+                record._fields[0].properties.relationshipType,
               source: record._fields[0].start.low,
               target: record._fields[0].end.low,
             });
