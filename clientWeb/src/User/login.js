@@ -35,6 +35,7 @@ export class Login extends Component {
     let data = stringifyFormData(new FormData(event.target));
     $.post("/login", JSON.parse(data), (response) => {
       if (response.status === true) {
+        console.log("LOGGED IN")
         localStorage.setItem("sessionToken", response.sessionToken);
         this.props.handleLogin(response);
       } else alert("Unable to Log");
