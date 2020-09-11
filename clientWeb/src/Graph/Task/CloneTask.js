@@ -56,13 +56,13 @@ class CloneTask extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button variant="outline-dark"  onClick={this.ShowModal}>
-          <i className="fa fa-clone"> Clone</i>
+        <Button variant="outline-dark" style={{width: "170px" }}  onClick={this.ShowModal}>
+          <i className="fa fa-clone"> </i> Clone {" "}
         </Button>
 				<Modal show={this.state.show} onHide={this.HideModal}>
 					<Modal.Header
 							closeButton
-							style={{ backgroundColor: "#184D47", color: "white" }}
+							style={{ backgroundColor: "#96BB7C", color: "white" }}
 						>
 						<Modal.Title>Clone Task</Modal.Title>
 					</Modal.Header>
@@ -70,13 +70,13 @@ class CloneTask extends React.Component {
 						Do you want to create a view of {this.props.task.name}?
 					</Modal.Body>
 					<Modal.Footer
-						style={{ backgroundColor: "#184D47", color: "white" }}
+						style={{ backgroundColor: "#96BB7C", color: "white" }}
 					>
-						<Button variant="outline-dark" onClick={this.handleSubmit}>
-							<i className="fa fa-check"> Create</i>
+						<Button variant="dark" onClick={this.HideModal}>
+							Close 
 						</Button>
-						<Button variant="outline-dark" onClick={this.HideModal}>
-							<i className="fa fa-close"> Close</i>
+						<Button variant="secondary" onClick={this.handleSubmit}>
+							Create 
 						</Button>
 					</Modal.Footer>
         </Modal>

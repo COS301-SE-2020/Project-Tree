@@ -76,7 +76,7 @@ class CreateDependency extends React.Component {
           <Form onSubmit={this.handleSubmit}>
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#96BB7C" }}
+              style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
               <Modal.Title>Create Dependency</Modal.Title>
             </Modal.Header>
@@ -174,13 +174,13 @@ class CreateDependency extends React.Component {
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
-               style={{ backgroundColor: "#96BB7C" }}
+               style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
               <Button variant="secondary" onClick={this.props.closeModal}>
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Create Dependency
+                Create 
               </Button>
             </Modal.Footer>
           </Form>

@@ -21,7 +21,7 @@ export default class GanttChartWrapper extends React.Component{
         if(this.state.tasks === null) return null;
         return(
             <React.Fragment>
-                <Container fluid>
+                <Container fluid className="mb-3">
                     <Row>
                             <Form>
                                 <Button

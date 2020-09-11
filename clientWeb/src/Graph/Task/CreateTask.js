@@ -288,7 +288,7 @@ class CreateTask extends React.Component {
           <Form onSubmit={this.handleSubmit}>
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
               <Modal.Title>Create Task</Modal.Title>
             </Modal.Header>
@@ -527,13 +527,13 @@ class CreateTask extends React.Component {
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Create Task
+                Create
               </Button>
             </Modal.Footer>
           </Form>

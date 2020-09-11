@@ -157,7 +157,7 @@ class CreateProject extends React.Component {
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Create Project
+                Create 
               </Button>
             </Modal.Footer>
           </Form>

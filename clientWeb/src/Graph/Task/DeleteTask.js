@@ -68,14 +68,20 @@ class DeleteTask extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button className="btn-danger" onClick={this.ShowModal}>
-          <i className="fa fa-trash"></i>
+        <Button
+          className="btn-danger"
+          style={{width: "100px"}}
+          onClick={() => {
+            this.showModal();
+          }}
+        >
+          <i className="fa fa-trash"></i> Delete{" "}
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
             <Modal.Header
               closeButton
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
               <Modal.Title>Delete Task</Modal.Title>
             </Modal.Header>
@@ -99,13 +105,13 @@ class DeleteTask extends React.Component {
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
-              style={{ backgroundColor: "#184D47", color: "white" }}
+              style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>
               <Button type="submit" variant="dark">
-                Delete Task
+                Delete 
               </Button>
             </Modal.Footer>
           </Form>
