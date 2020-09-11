@@ -2,20 +2,20 @@ const db = require("../DB");
 let updateProject = require("./updateProject");
 
 function createTask(req, res) {
-  let startDate = new Date(req.body.changedInfo.ct_startDate);
-  let endDate = new Date(req.body.changedInfo.ct_endDate);
+  let startDate = new Date(req.body.changedInfo.startDate);
+  let endDate = new Date(req.body.changedInfo.endDate);
   db.getSession()
     .run(
       `
         MATCH (b) 
-        WHERE ID(b) = ${req.body.changedInfo.ct_pid} 
+        WHERE ID(b) = ${req.body.changedInfo.project.id} 
         CREATE(a:Task {
-          name: "${req.body.changedInfo.ct_Name}", 
-          startDate: datetime("${req.body.changedInfo.ct_startDate}"), 
-          endDate: datetime("${req.body.changedInfo.ct_endDate}"),
+          name: "${req.body.changedInfo.name}", 
+          startDate: datetime("${req.body.changedInfo.startDate}"), 
+          endDate: datetime("${req.body.changedInfo.endDate}"),
           duration: ${endDate.getTime() - startDate.getTime()},
-          description: "${req.body.changedInfo.ct_description}", 
-          projId: ${req.body.changedInfo.ct_pid}, 
+          description: "${req.body.changedInfo.description}", 
+          projId: ${req.body.changedInfo.project.id}, 
           type: "Incomplete",
           progress: 0
         })-[n:PART_OF]->(b) 

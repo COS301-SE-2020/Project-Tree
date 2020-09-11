@@ -5,11 +5,18 @@ import ms from "ms";
 class CreateDependency extends React.Component {
   constructor(props) {
     super(props);
+    let target = JSON.parse(JSON.stringify(this.props.target));
+    let duration = this.CalcDiff(this.props.source.startDate, this.props.target.startDate);
+    if (this.props.source.startDate > target.startDate){
+      target.startDate = this.props.source.startDate;
+      duration = this.CalcDiff(this.props.source.startDate, this.props.source.startDate)
+    }
+    
     this.state = {
       Show: true,
       relationshipType: "ss",
-      target: this.props.target,
-      duration: this.CalcDiff(this.props.source.startDate, this.props.target.startDate),
+      target: target,
+      duration: duration,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -96,11 +103,19 @@ class CreateDependency extends React.Component {
                   }}
                   onChange={(e) => {
                     if (e.target.value === "ss") {
+                      let target = this.state.target;
+                      if (this.props.source.startDate > target.startDate) 
+                        target.startDate = this.props.source.startDate;
+                      
                       this.setState({ 
                         relationshipType: e.target.value,
                         duration: this.CalcDiff(this.props.source.startDate, this.state.target.startDate) 
                       });
                     } else {
+                      let target = this.state.target;
+                      if (this.props.source.endDate > target.startDate) 
+                        target.startDate = this.props.source.endDate;
+                      
                       this.setState({ 
                         relationshipType: e.target.value,
                         duration: this.CalcDiff(this.props.source.endDate, this.state.target.startDate) 
@@ -124,7 +139,7 @@ class CreateDependency extends React.Component {
                 <Form.Control
                   required
                   readOnly
-                  type="datetime-local"
+                  type="text"
                   name="cd_startDate"
                   value={
                   this.state.relationshipType === "ss" ?
@@ -141,22 +156,85 @@ class CreateDependency extends React.Component {
                 </Form.Label>
                 <Form.Control
                   required
-                  type="datetime-local"
-                  name="cd_endDate"
-                  value={this.state.target.startDate}
+                  type="date"
+                  value={this.state.target.startDate.substring(0,10)}
                   onChange={(e) => {
                     let target = this.state.target;
-                    target.startDate = e.target.value;
+                    target.startDate = `${e.target.value}T${this.state.target.startDate.substring(11,16)}`;
                     if (this.state.relationshipType === "ss") {
-                      this.setState({ 
-                        target: target, 
-                        duration: this.CalcDiff(this.props.source.startDate, e.target.value) 
-                      });
+                      if (target.startDate < this.props.source.startDate) {
+                        alert("you can not make the second task earlier then the first");
+                        target.startDate = this.props.source.startDate;
+                        this.setState({ 
+                          target: target, 
+                          duration: this.CalcDiff(this.props.source.startDate, this.props.source.startDate) 
+                        });
+                        return;
+                      } else {
+                        this.setState({ 
+                          target: target, 
+                          duration: this.CalcDiff(this.props.source.startDate, target.startDate) 
+                        });
+                      }
                     } else {
-                      this.setState({ 
-                        target: target, 
-                        duration: this.CalcDiff(this.props.source.endDate, e.target.value) 
-                      });
+                      if (target.startDate < this.props.source.endDate) {
+                        alert("you can not make the second task earlier then the first");
+                        target.endDate = this.props.source.endDate;
+                        this.setState({ 
+                          target: target, 
+                          duration: this.CalcDiff(this.props.source.endDate, this.props.source.endDate) 
+                        });
+                        return;
+                      } else {
+                        this.setState({ 
+                          target: target, 
+                          duration: this.CalcDiff(this.props.source.endDate, target.startDate) 
+                        });
+                      }
+                    }
+                    this.value = this.state.target.startDate;
+                  }}
+                />
+                <Form.Label>
+                  Start Time of Second Task
+                </Form.Label>
+                <Form.Control
+                  required
+                  type="time"
+                  value={this.state.target.startDate.substring(11,16)}
+                  onChange={(e) => {
+                    let target = this.state.target;
+                    target.startDate = `${this.state.target.startDate.substring(0,10)}T${e.target.value}`;
+                    if (this.state.relationshipType === "ss") {
+                      if (target.startDate < this.props.source.startDate) {
+                        alert("you can not make the second task earlier then the first");
+                        target.startDate = this.props.source.startDate;
+                        this.setState({ 
+                          target: target, 
+                          duration: this.CalcDiff(this.props.source.startDate, this.props.source.startDate) 
+                        });
+                        return;
+                      } else {
+                        this.setState({ 
+                          target: target, 
+                          duration: this.CalcDiff(this.props.source.startDate, target.startDate) 
+                        });
+                      }
+                    } else {
+                      if (target.startDate < this.props.source.endDate) {
+                        alert("you can not make the second task earlier then the first");
+                        target.endDate = this.props.source.endDate;
+                        this.setState({ 
+                          target: target, 
+                          duration: this.CalcDiff(this.props.source.endDate, this.props.source.endDate) 
+                        });
+                        return;
+                      } else {
+                        this.setState({ 
+                          target: target, 
+                          duration: this.CalcDiff(this.props.source.endDate, target.startDate) 
+                        });
+                      }
                     }
                     this.value = this.state.target.startDate;
                   }}

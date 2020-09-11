@@ -13,11 +13,14 @@ function stringifyFormData(fd) {
 
 class CreateTask extends React.Component {
   constructor(props) {
-    super(props);
-    let now = new Date().toISOString().substring(0, 16);
+    super(props); 
+    let now = new Date();
+    now = now.toISOString().substring(0,16);
+    console.log(now);
     this.state = {
       Show: true,
-      id: this.props.project.id,
+      name: "",
+      description: "",
       startDate: now,
       duration: "0ms",
       endDate: now,
@@ -29,6 +32,7 @@ class CreateTask extends React.Component {
       resourcesList: [],
       resPersonList: [],
     };
+    console.log(this.state.startDate)
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
@@ -191,8 +195,14 @@ class CreateTask extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    let data = new FormData(event.target);
-    data = await stringifyFormData(data);
+    let data = {
+      project: this.props.project,
+      name: this.state.name,
+      description: this.state.description,
+      startDate: this.state.startDate,
+      duration: this.state.duration,
+      endDate: this.state.endDate,
+    }
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
@@ -297,40 +307,67 @@ class CreateTask extends React.Component {
                 <Form.Label>Name of task</Form.Label>
                 <Form.Control
                   type="text"
-                  id="ct_Name"
-                  name="ct_Name"
                   required
+                  value={this.state.name}
+                  onChange={(e) => {
+                    this.setState({ name: e.target.value });
+                    this.value = this.state.name;
+                  }}
                 />
               </Form.Group>
               <Form.Group>
                 <Form.Label>Description of task</Form.Label>
                 <Form.Control
                   as="textarea"
-                  name="ct_description"
-                  id="ct_description"
-                  min="0"
-                  required
+                  value={this.state.description}
+                  onChange={(e) => {
+                    this.setState({ description: e.target.value });
+                    this.value = this.state.description;
+                  }}
                 />
               </Form.Group>
               <Form.Group>
                 <Form.Label>Start date of task</Form.Label>
                 <Form.Control
                   required
-                  type="datetime-local"
-                  name="ct_startDate"
-                  value={this.state.startDate}
+                  type="date"
+                  value={this.state.startDate.substring(0,10)}
                   onChange={(e) => {
-                    console.log(e.target.value);
-                    if (this.state.endDate < e.target.value) {
+                    let startDate = this.state.startDate;
+                    startDate = `${e.target.value}T${this.state.startDate.substring(11,16)}`;
+                    if (this.state.endDate < startDate) {
                       this.setState({ 
-                        startDate: e.target.value, 
-                        endDate: e.target.value,
-                        duration: this.CalcDiff(e.target.value, e.target.value),
+                        startDate: startDate, 
+                        endDate: startDate,
+                        duration: this.CalcDiff(startDate, startDate),
                       }); 
                     } else {
                       this.setState({ 
-                        startDate: e.target.value, 
-                        duration: this.CalcDiff(e.target.value, this.state.endDate) 
+                        startDate: startDate, 
+                        duration: this.CalcDiff(startDate, this.state.endDate) 
+                      });
+                    }
+                    this.value = this.state.startDate;
+                  }}
+                />
+                <Form.Label>Start Time of task</Form.Label>
+                <Form.Control
+                  required
+                  type="time"
+                  value={this.state.startDate.substring(11,16)}
+                  onChange={(e) => {
+                    let startDate = this.state.startDate;
+                    startDate = `${this.state.startDate.substring(0,10)}T${e.target.value}`;
+                    if (this.state.endDate < startDate) {
+                      this.setState({ 
+                        startDate: startDate, 
+                        endDate: startDate,
+                        duration: this.CalcDiff(startDate, startDate),
+                      }); 
+                    } else {
+                      this.setState({ 
+                        startDate: startDate, 
+                        duration: this.CalcDiff(startDate, this.state.endDate) 
                       });
                     }
                     this.value = this.state.startDate;
@@ -338,23 +375,47 @@ class CreateTask extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>End date of task</Form.Label>
+              <Form.Label>End date of task</Form.Label>
                 <Form.Control
                   required
-                  type="datetime-local"
-                  name="ct_endDate"
-                  value={this.state.endDate}
+                  type="date"
+                  value={this.state.endDate.substring(0,10)}
                   onChange={(e) => {
-                    if (this.state.startDate > e.target.value) {
+                    let endDate = this.state.endDate;
+                    endDate = `${e.target.value}T${this.state.endDate.substring(11,16)}`;
+                    if (this.state.startDate > endDate) {
                       this.setState({ 
-                        startDate: e.target.value, 
-                        endDate: e.target.value,
-                        duration: this.CalcDiff(e.target.value, e.target.value),
+                        startDate: endDate, 
+                        endDate: endDate,
+                        duration: this.CalcDiff(endDate, endDate),
                       }); 
                     } else {
                       this.setState({ 
-                        endDate: e.target.value, 
-                        duration: this.CalcDiff(this.state.startDate, e.target.value) 
+                        endDate: endDate, 
+                        duration: this.CalcDiff(this.state.startDate, endDate) 
+                      });
+                    }
+                    this.value = this.state.endDate;
+                  }}
+                />
+                <Form.Label>End Time of task</Form.Label>
+                <Form.Control
+                  required
+                  type="time"
+                  value={this.state.endDate.substring(11,16)}
+                  onChange={(e) => {
+                    let endDate = this.state.endDate;
+                    endDate = `${this.state.endDate.substring(0,10)}T${e.target.value}`;
+                    if (this.state.startDate > endDate) {
+                      this.setState({ 
+                        startDate: endDate, 
+                        endDate: endDate,
+                        duration: this.CalcDiff(endDate, endDate),
+                      }); 
+                    } else {
+                      this.setState({ 
+                        endDate: endDate, 
+                        duration: this.CalcDiff(this.state.startDate, endDate) 
                       });
                     }
                     this.value = this.state.endDate;
@@ -514,16 +575,6 @@ class CreateTask extends React.Component {
                     })}
                   </Col>
                 </Row>
-              </Form.Group>
-              <Form.Group>
-                <input
-                  hidden
-                  type="number"
-                  id="ct_pid"
-                  name="ct_pid"
-                  value={this.state.id}
-                  onChange={() => {}}
-                />
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
