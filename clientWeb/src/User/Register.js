@@ -2,6 +2,9 @@ import React from "react";
 import { Form, Button } from "react-bootstrap";
 import $ from "jquery";
 import register from "../Images/Register.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+const eye = <FontAwesomeIcon icon={faEye} />;
 
 function stringifyFormData(fd) {
   const data = {};
@@ -23,9 +26,11 @@ export class Register extends React.Component {
       passwordError2: "",
       passwordError3: "",
       passwordError4: "",
+      hidden: true
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.toggleShow = this.toggleShow.bind(this);
   }
 
   password_validate(d) {
@@ -38,7 +43,7 @@ export class Register extends React.Component {
     /[0-9]/.test(p) === false
       ? arr.push("Must contain at least one number \n")
       : (str += "");
-    /[~`!#$%^&*+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
+      /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
       ? arr.push("Must contain at least one special character eg. #!@$ \n")
       : (str += "");
     /^.{8,22}$/.test(p) === false
@@ -61,6 +66,7 @@ export class Register extends React.Component {
     let arr = this.password_validate(x);
     if (arr.length === 0) {
       $.post("/register", JSON.parse(data), (response) => {
+        //console.log(response);
        if(response.message == "duplicate")
        {
           alert("User with this email already exists. Try with a different email.")
@@ -81,6 +87,11 @@ export class Register extends React.Component {
       this.setState({ passwordError4: arr[3] });
     }
   }
+
+  toggleShow() {
+    this.setState({ hidden: !this.state.hidden });
+  }
+
 
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
@@ -132,17 +143,29 @@ export class Register extends React.Component {
                   required
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
+              <div className="form-groupPass">
+               <label htmlFor="password">Password</label>   
+               <div className="form-line">                
                 <input
-                  type="password"
+                  type={this.state.hidden ? "password" : "text"}
                   id="password"
                   name="password"
                   value={password}
                   onChange={this.onChange}
                   required
-                />
+                />              
+                <i onClick={this.toggleShow}>{eye}</i>
+                </div>
               </div>
+              {/* <div className="pass-wrapper">
+        {" "}
+        <input
+          placeholder="Password"
+          name="password"
+          type={this.state.hidden ? "text" : "password"}
+          required        />
+        <i onClick={this.toggleShow}>{eye}</i>{" "}
+      </div> */}
               <input
                 hidden
                 type="date"
@@ -161,9 +184,9 @@ export class Register extends React.Component {
               />
               <div style={{ fontSize: 12, color: "red" }}>
                 <p>{this.state.passwordError}</p>
-                <p>{this.state.passwordError1}</p>
                 <p>{this.state.passwordError2}</p>
                 <p>{this.state.passwordError3}</p>
+                <p>{this.state.passwordError4}</p>
               </div>
             </div>
           </div>
