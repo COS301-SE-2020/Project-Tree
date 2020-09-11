@@ -49,6 +49,7 @@ class DeleteDependency extends React.Component {
       body.displayNode,
       body.displayRel
     );
+    this.HideModal();
   }
 
   render() {

@@ -93,7 +93,7 @@ class GraphPage extends React.Component {
     return { nodes: this.state.nodes, rels: this.state.links };
   }
 
-  setTaskInfo(nodes, rels, displayNode, displayRel, assignedPeople, views) {
+  setTaskInfo(nodes, rels, displayNode, displayRel, assignedPeople) {
     if (nodes !== undefined && rels !== undefined) {
       this.setState({ nodes: nodes, links: rels });
 
@@ -105,15 +105,23 @@ class GraphPage extends React.Component {
         this.toggleSidebar(displayNode, displayRel);
       }
 
-      return;
-    }
+      $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+        this.setState({ views: response.views });
+      }).fail((err) => {
+        throw Error(err);
+      });
 
-    if(views !== undefined) {
-      this.setState({views: views});
+      return;
     }
 
     $.post("/getProject", { id: this.state.project.id }, (response) => {
       this.setState({ nodes: response.tasks, links: response.rels });
+    }).fail((err) => {
+      throw Error(err);
+    });
+
+    $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+      this.setState({ views: response.views });
     }).fail((err) => {
       throw Error(err);
     });

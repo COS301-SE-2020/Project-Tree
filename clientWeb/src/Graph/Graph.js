@@ -111,12 +111,12 @@ function makeElement(node, criticalPathNodes) {
         text: `${wraptext}\n(${node.progress}%)`,
         "font-size": letterSize,
         "font-family": "monospace",
-        transform: "translate(2, 2)",
+        transform: "translate(15, 15)",
       },
       rect: {
         rx: 10,
         ry: 10,
-        transform: "translate(2, 2)",
+        transform: "translate(15, 15)",
       },
     },
   });

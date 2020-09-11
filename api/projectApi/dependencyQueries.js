@@ -30,7 +30,7 @@ function createDependency(req, res) {
 
       if(req.body.changedInfo.cd_viewId_source.length !== 0){
         if(req.body.changedInfo.cd_viewId_target.length !== 0){
-          db.getSession()
+          await db.getSession()
           .run(
             `
               MATCH (a)
@@ -49,7 +49,7 @@ function createDependency(req, res) {
           });
         }
         else{
-          db.getSession()
+          await db.getSession()
           .run(
             `
               MATCH (a)
@@ -65,7 +65,7 @@ function createDependency(req, res) {
         }
       }
       else if(req.body.changedInfo.cd_viewId_target.length !== 0){
-        db.getSession()
+        await db.getSession()
         .run(
           `
             MATCH (a)
