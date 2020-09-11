@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import image from '../Images/project_analytic_4.svg'
 
 export default class TaskOverviewComponent extends React.Component {
     createCriticalPath() {
@@ -110,7 +111,7 @@ export default class TaskOverviewComponent extends React.Component {
     }
 
     render(){
-        if(this.props.tasks === undefined || this.props.tasks.length === 0 || this.props.tasks ===null) return null;
+        // if(this.props.tasks === undefined || this.props.tasks.length === 0 || this.props.tasks ===null) return null;
         let tasks = [...this.props.tasks];
         let cpTasks = this.getCriticalPath(this.createCriticalPath());
 
@@ -124,31 +125,40 @@ export default class TaskOverviewComponent extends React.Component {
 
         return(
             <Container>
-                <Row>
-                    <Col>
-                        <h4>Task Info</h4>
+                {this.props.tasks.length === 0 ? 
+                    <Col className="text-center">
+                    No project tasks <br/>
+                    <img src={image} style={{ width: "90%", height:"8em" }} alt="Logo" />
                     </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        Tasks completed this week: {tasks.length}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        Critical path tasks completed this week: {cpTasks.length}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        Next task ending: {this.getNextTaskEnding()}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        Next task starting: {this.getNextTaskStarting()}
-                    </Col>
-                </Row>
+                :
+                <React.Fragment>
+                    <Row>
+                        <Col>
+                            <h4>Task Info</h4>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            Tasks completed this week: {tasks.length}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            Critical path tasks completed this week: {cpTasks.length}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            Next task ending: {this.getNextTaskEnding()}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            Next task starting: {this.getNextTaskStarting()}
+                        </Col>
+                    </Row>
+                </React.Fragment>
+                }
             </Container>
            
         )

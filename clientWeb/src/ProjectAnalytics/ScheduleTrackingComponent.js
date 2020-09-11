@@ -43,7 +43,7 @@ export default class ScheduleTrackingComponent extends React.Component {
                         <h4>Schedule Tracking</h4>
                         {data.length === 1 ?
                             <Col className="text-center">
-                                No ongoing tasks
+                                No ongoing tasks <br/>
                                 <img src={image} style={{ width: "90%", height:"10em" }} alt="Logo" />
                             </Col>
                             :

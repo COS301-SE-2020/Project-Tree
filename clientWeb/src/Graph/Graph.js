@@ -438,7 +438,7 @@ class Graph extends React.Component {
         </Container>
         <div
           id="paper"
-          className="overflow-hidden user-select-none m-10 border"
+          className="overflow-hidden user-select-none m-10"
         ></div>
         {this.state.createDependency ? (
           <CreateDependency

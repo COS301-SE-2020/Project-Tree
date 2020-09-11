@@ -496,7 +496,7 @@ class LegendSidebar extends React.Component {
     return (
       <React.Fragment>
         <Container
-          className="text-black text-center"
+          className="text-black text-center mb-3"
           style={{ fontSize: "20px" }}
         >
           <Row>
