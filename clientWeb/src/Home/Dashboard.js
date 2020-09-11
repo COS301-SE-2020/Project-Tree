@@ -36,7 +36,6 @@ class Dashboard extends React.Component {
     this.state.ownedProjects.forEach((project, i) => {
       $.post("/getProject", { id: project.projectInfo.id }, (response) => {
         let ownedProjects = this.state.ownedProjects;
-        console.log(response.tasks)
         ownedProjects[i].tasks = response.tasks;
         ownedProjects[i].rels = response.rels;
         this.setState({ ownedProjects: ownedProjects });
