@@ -71,7 +71,6 @@ export default class TaskOverviewComponent extends React.Component {
         })
 
         if(tasks.length === 0){
-            console.log('hello')
             return "no tasks remaining"
         } 
 
@@ -111,7 +110,6 @@ export default class TaskOverviewComponent extends React.Component {
     }
 
     render(){
-        // if(this.props.tasks === undefined || this.props.tasks.length === 0 || this.props.tasks ===null) return null;
         let tasks = [...this.props.tasks];
         let cpTasks = this.getCriticalPath(this.createCriticalPath());
 
@@ -126,10 +124,19 @@ export default class TaskOverviewComponent extends React.Component {
         return(
             <Container>
                 {this.props.tasks.length === 0 ? 
-                    <Col className="text-center">
-                    No project tasks <br/>
-                    <img src={image} style={{ width: "90%", height:"8em" }} alt="Logo" />
-                    </Col>
+                    <React.Fragment>
+                        <Row>
+                            <Col>
+                                <h4>Task Info</h4>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col className="text-center">
+                                No project tasks <br/>
+                                <img src={image} style={{ width: "90%", height:"8em" }} alt="Logo" />
+                            </Col>
+                        </Row>
+                    </React.Fragment>
                 :
                 <React.Fragment>
                     <Row>

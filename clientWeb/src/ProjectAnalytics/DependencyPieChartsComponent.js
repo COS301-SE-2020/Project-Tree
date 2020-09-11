@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Button, ProgressBar } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { Chart } from 'react-google-charts';
 import image from '../Images/project_analytic_2.svg'
 
@@ -45,7 +45,7 @@ export default class DependencyPieChartsComponent extends React.Component {
         let data = [];
         data.push(['Task', 'Number of Dependencies']);
 
-        if(this.props.rels.length === 0) return data;
+        if(this.props.rels.length === 0 || this.props.rels === undefined) return data;
 
         tasks.forEach((task)=>{
             data.push(
@@ -72,8 +72,6 @@ export default class DependencyPieChartsComponent extends React.Component {
     render(){
         let tasks = this.formatData(this.props.tasks)
         let criticalPath = this.formatData(this.createCriticalPath());
-
-        console.log(tasks)
 
         return(
             <React.Fragment>

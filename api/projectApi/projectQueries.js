@@ -284,7 +284,8 @@ async function getProjects(req, res) {
         res.send({ message: err });
       });
     res.status(200);
-    res.send({ ownedProjects, otherProjects });
+    let data = filterProjects(ownedProjects, otherProjects);
+    res.send(data);
   } else if (typeof userId == "undefined") {
     res.status(400);
     res.send({
@@ -296,6 +297,14 @@ async function getProjects(req, res) {
       message: "Invalid User",
     });
   }
+}
+
+function filterProjects(ownedProjects, otherProjects){
+  for(var x=0; x<ownedProjects.length; x++){
+    otherProjects = otherProjects.filter(item => item.id !== ownedProjects[x].id);
+  }
+
+  return {ownedProjects, otherProjects};
 }
 
 function getProjectTasks(req, res) {
