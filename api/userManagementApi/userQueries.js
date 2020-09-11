@@ -2,9 +2,14 @@ const db = require("../DB");
 const { JWT } = require("jose");
 const bcrypt = require("bcrypt");
 
-
-
 async function editUser(req, res) {
+  console.log(req.body)
+  let pfp = req.body.profilepicture;
+  if(pfp == '')
+  {
+    console.log("ssad")
+    pfp = 'https://i.ibb.co/MRpbpHN/default.png';
+  }
   let userId = await verify(req.body.token);
   if (userId != null) {
     db.getSession()
@@ -16,7 +21,8 @@ async function editUser(req, res) {
             name:"${req.body.name}",
             sname:"${req.body.sname}",
             email:"${req.body.email}",
-            birthday:"${req.body.bday}"
+            birthday:"${req.body.bday}",
+            profilepicture:"${pfp}"
           } 
           RETURN a
         `
@@ -47,7 +53,7 @@ async function editUser(req, res) {
 
 async function register(req, res) {
   //email, password, name, surname
-  let x = "storage/default.jpg";
+  let x = 'https://i.ibb.co/MRpbpHN/default.png';
   db.getSession()
     .run(
       `
@@ -58,7 +64,7 @@ async function register(req, res) {
     .then((result) => {
       if (result.records.length != 0) {
         res.status(200);
-        res.send({ message: "There already exists an email with this account. Please register with a different email." });
+        res.send({ message: "duplicate" });
       } else 
       {       
         bcrypt.hash(req.body.password, 10, (err, hash) => {
