@@ -26,7 +26,7 @@ function getProjectTasks(req, res) {
           endDate: updateProject.datetimeToString(
             record._fields[0].properties.endDate
           ),
-          duration: record._fields[0].properties.duration.low,
+          duration: parseInt(record._fields[0].properties.duration),
           timeComplete: record._fields[0].properties.timeComplete !== undefined ? updateProject.datetimeToString(
             record._fields[0].properties.timeComplete
           )
@@ -60,7 +60,7 @@ function getProjectTasks(req, res) {
               endDate: updateProject.datetimeToString(
                 record._fields[0].properties.endDate
               ),
-              duration: record._fields[0].properties.duration.low,
+              duration: parseInt(record._fields[0].properties.duration),
               relationshipType:
                 record._fields[0].properties.relationshipType,
               source: record._fields[0].start.low,

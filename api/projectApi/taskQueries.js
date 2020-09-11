@@ -13,7 +13,7 @@ function createTask(req, res) {
           name: "${req.body.changedInfo.name}", 
           startDate: datetime("${req.body.changedInfo.startDate}"), 
           endDate: datetime("${req.body.changedInfo.endDate}"),
-          duration: ${endDate.getTime() - startDate.getTime()},
+          duration: "${endDate.getTime() - startDate.getTime()}",
           description: "${req.body.changedInfo.description}", 
           projId: ${req.body.changedInfo.project.id}, 
           type: "Incomplete",
@@ -33,7 +33,7 @@ function createTask(req, res) {
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
-        duration: result.records[0]._fields[0].properties.duration.low,
+        duration: parseInt(result.records[0]._fields[0].properties.duration),
         type: result.records[0]._fields[0].properties.type,
         progress: result.records[0]._fields[0].properties.progress.low,
       };
@@ -134,7 +134,7 @@ function updateTask(req, res) { //update a task with a certain ID with specified
           name:"${req.body.changedInfo.name}",
           startDate: datetime("${req.body.changedInfo.startDate}"),
           endDate: datetime("${req.body.changedInfo.endDate}"),
-          duration: ${endDate.getTime() - startDate.getTime()},
+          duration: "${endDate.getTime() - startDate.getTime()}",
           description: "${req.body.changedInfo.description}",
           progress:${req.body.changedInfo.progress},
           type: "${req.body.changedInfo.type}",
@@ -156,7 +156,7 @@ function updateTask(req, res) { //update a task with a certain ID with specified
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
-        duration: result.records[0]._fields[0].properties.duration.low,
+        duration: parseInt(result.records[0]._fields[0].properties.duration),
       };
       for (var x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == changedTask.id) {

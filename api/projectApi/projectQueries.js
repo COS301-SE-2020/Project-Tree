@@ -323,7 +323,7 @@ function getProjectTasks(req, res) {
           endDate: up.datetimeToString(
             record._fields[0].properties.endDate
           ),
-          duration: record._fields[0].properties.duration.low,
+          duration: parseInt(record._fields[0].properties.duration),
         });
       });
       res.status(200);

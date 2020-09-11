@@ -16,7 +16,7 @@ function createDependency(req, res) {
           sEndDate: datetime("${req.body.changedInfo.sEndDate}"),
           startDate: datetime("${req.body.changedInfo.startDate}"),
           endDate: datetime("${req.body.changedInfo.endDate}"),
-          duration: ${endDate.getTime() - startDate.getTime()}
+          duration: "${endDate.getTime() - startDate.getTime()}"
         }]->(b)
         RETURN n
       `
@@ -36,7 +36,7 @@ function createDependency(req, res) {
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
-        duration: result.records[0]._fields[0].properties.duration.low,
+        duration: parseInt(result.records[0]._fields[0].properties.duration),
         relationshipType:
           result.records[0]._fields[0].properties.relationshipType,
         source: result.records[0]._fields[0].start.low,
@@ -131,7 +131,7 @@ function updateDependency(req, res) { //update a Dependency between 2 nodes with
           sEndDate: datetime("${req.body.changedInfo.sEndDate}"),
           startDate: datetime("${req.body.changedInfo.startDate}"),
           endDate: datetime("${req.body.changedInfo.endDate}"),
-          duration: ${endDate.getTime() - startDate.getTime()}
+          duration: "${endDate.getTime() - startDate.getTime()}"
         }
         RETURN r
       `
@@ -151,7 +151,7 @@ function updateDependency(req, res) { //update a Dependency between 2 nodes with
         endDate: updateProject.datetimeToString(
           result.records[0]._fields[0].properties.endDate
         ),
-        duration: result.records[0]._fields[0].properties.duration.low,
+        duration: parseInt(result.records[0]._fields[0].properties.duration),
         relationshipType:
           result.records[0]._fields[0].properties.relationshipType,
         source: result.records[0]._fields[0].start.low,
