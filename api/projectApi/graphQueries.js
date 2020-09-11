@@ -82,6 +82,33 @@ function getProjectTasks(req, res) {
     });
 }
 
+function getProjectViews(req, res) {
+  db.getSession()
+    .run(
+      `
+      MATCH (n:View)-[:VIEW_OF]->(:Task)-[:PART_OF]->(j) WHERE ID(j)=${req.body.id} RETURN n
+      `
+    )
+    .then((result) => {
+      let viewsArr = [];
+      result.records.forEach((record) => {
+        viewsArr.push({
+          id: record._fields[0].identity.low,
+          inDepArr: record._fields[0].properties.inDepArr,
+          outDepArr: record._fields[0].properties.outDepArr,
+          originalNode: record._fields[0].properties.originalNode.low
+        });
+      });
+      res.send({ views: viewsArr });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send({ message: err });
+    });
+}
+
 module.exports = {
   getProjectTasks,
+  getProjectViews,
 };

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
 import UpdateTask from "./Task/UpdateTask";
+import CloneTask from "./Task/CloneTask";
 import UpdateDependency from "./Dependency/UpdateDependency";
 import DeleteDependency from "./Dependency/DeleteDependency";
 import SendTaskNotification from "../Notifications/SendTaskNotification";
@@ -20,9 +21,13 @@ class GraphPage extends React.Component {
       dependency:null, 
       nodes:null, 
       links:null,
+      views:null,
       allUsers:null, 
       assignedProjUsers:null,
       filterOn:false,
+      viewId:null,
+      sourceView:null,
+      targetView:null
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
@@ -34,6 +39,12 @@ class GraphPage extends React.Component {
   componentDidMount() {
     $.post("/getProject", { id: this.state.project.id }, (response) => {
       this.setState({ nodes: response.tasks, links: response.rels });
+    }).fail((err) => {
+      throw Error(err);
+    });
+
+    $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+      this.setState({ views: response.views });
     }).fail((err) => {
       throw Error(err);
     });
@@ -65,6 +76,12 @@ class GraphPage extends React.Component {
       }).fail((err) => {
         throw Error(err);
       });
+
+      $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+        this.setState({ views: response.views });
+      }).fail((err) => {
+        throw Error(err);
+      });
     }
   }
 
@@ -88,10 +105,23 @@ class GraphPage extends React.Component {
         this.toggleSidebar(displayNode, displayRel);
       }
 
+      $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+        this.setState({ views: response.views });
+      }).fail((err) => {
+        throw Error(err);
+      });
+
       return;
     }
+
     $.post("/getProject", { id: this.state.project.id }, (response) => {
       this.setState({ nodes: response.tasks, links: response.rels });
+    }).fail((err) => {
+      throw Error(err);
+    });
+
+    $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+      this.setState({ views: response.views });
     }).fail((err) => {
       throw Error(err);
     });
@@ -101,7 +131,7 @@ class GraphPage extends React.Component {
     this.setState({assignedProjUsers:newPeopleList})
   }
 
-  toggleSidebar(newTaskID, newDependencyID) {
+  toggleSidebar(newTaskID, newDependencyID, viewId, sourceView, targetView) {
     var newTask = null;
     var newDependency = null;
     var x;
@@ -112,14 +142,24 @@ class GraphPage extends React.Component {
           newTask = this.state.nodes[x];
         }
       }
-      this.setState({ task: newTask, dependency: newDependency });
+      if(viewId !== undefined){
+        this.setState({ task: newTask, dependency: newDependency, viewId: viewId });
+      }
+      else{
+        this.setState({ task: newTask, dependency: newDependency, viewId: null });
+      }
     } else if (newDependencyID != null) {
       for (x = 0; x < this.state.links.length; x++) {
         if (this.state.links[x].id === newDependencyID) {
           newDependency = this.state.links[x];
         }
       }
-      this.setState({ task: newTask, dependency: newDependency });
+      if(sourceView !== undefined && targetView !== undefined) {
+        this.setState({ task: newTask, dependency: newDependency, sourceView: sourceView, targetView: targetView });
+      }
+      else {
+        this.setState({ task: newTask, dependency: newDependency, sourceView: null, targetView: null });
+      }
     } else {
       this.setState({ task: null, dependency: null });
     }
@@ -170,6 +210,7 @@ class GraphPage extends React.Component {
                   updateAssignedPeople={this.updateAssignedPeople}
                   user={this.props.user}
                   project={this.state.project}
+                  viewId={this.state.viewId}
                 />
               ) : null}
               {this.state.dependency !== null ? (
@@ -181,6 +222,8 @@ class GraphPage extends React.Component {
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
                   getProjectInfo={this.getProjectInfo}
+                  sourceView={this.state.sourceView}
+                  targetView={this.state.targetView}
                 />
               ) : null}
               {this.state.dependency===null && this.state.task===null ?
@@ -209,6 +252,7 @@ class GraphPage extends React.Component {
                   project={this.state.project}
                   nodes={this.state.nodes}
                   links={this.state.links}
+                  views={this.state.views}
                   userPermission={this.props.userPermission}
                   setTaskInfo={this.setTaskInfo}
                   toggleSidebar={this.toggleSidebar}
@@ -291,9 +335,7 @@ class TaskSidebar extends React.Component {
     let taskResources = taskUsers[2];
 
     
-    let progressColor = "success"
-    if (this.props.task.progress < 33) progressColor = "danger";
-    else if (this.props.task.progress < 66) progressColor = "warning";
+    let progressColor = "info"
 
     return (
       <React.Fragment>
@@ -309,11 +351,12 @@ class TaskSidebar extends React.Component {
                   setTaskInfo={this.props.setTaskInfo}
                   getProjectInfo={this.props.getProjectInfo}
                   toggleSidebar={this.props.toggleSidebar}
+                  viewId={this.props.viewId}
                 />
               ) : null}
             </Col>
             <Col xs={6}>
-              <h3>{this.props.task.name}</h3>
+              {this.props.viewId !== null ? <h3>{this.props.task.name}<br />(View)</h3> : <h3>{this.props.task.name}</h3>}
             </Col>
             <Col className="text-right">
               <Button
@@ -348,8 +391,8 @@ class TaskSidebar extends React.Component {
               <ProgressBar
                 variant={progressColor}
                 now={this.props.task.progress}
-                animated
-                label={`Task progress ${Math.round(this.props.task.progress)}% Complete`}
+                striped
+                label={`${Math.round(this.props.task.progress)}%`}
               />
             </Col>
           </Row>
@@ -381,6 +424,15 @@ class TaskSidebar extends React.Component {
                 taskPacMans={taskPacMans}
                 taskResPersons={taskResPersons}
                 taskResources={taskResources}
+              />
+            </Col>
+          </Row>
+          <Row className="my-2">
+            <Col xs={12} className="text-center">
+              <CloneTask
+                task={this.props.task}
+                project={this.props.project}
+                setTaskInfo={this.props.setTaskInfo}
               />
             </Col>
           </Row>
@@ -438,6 +490,8 @@ class DependencySidebar extends React.Component {
                   getProjectInfo={this.props.getProjectInfo}
                   setTaskInfo={this.props.setTaskInfo}
                   toggleSidebar={this.props.toggleSidebar}
+                  sourceView={this.props.sourceView}
+                  targetView={this.props.targetView}
                 />
               ) : null}
             </Col>

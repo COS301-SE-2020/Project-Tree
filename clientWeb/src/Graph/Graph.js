@@ -7,6 +7,7 @@ import graphlib from "graphlib";
 import CreateDependency from "./Dependency/CreateDependency";
 import { Form, Button, Container, Row, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
+import { isElement } from "react-dom/test-utils";
 
 function makeLink(edge, criticalPathLinks) {
   let strokeColor = "#000";
@@ -15,7 +16,9 @@ function makeLink(edge, criticalPathLinks) {
     id: "l" + edge.id,
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
-    connector: { name: 'smooth' },
+    connector: { name: 'rounded' },
+    router: { name: 'manhattan' },
+    // connector: { name: 'smooth' },
     attrs: {
       type: "link",
       line: { stroke: strokeColor },
@@ -90,12 +93,12 @@ function makeElement(node, criticalPathNodes) {
         text: `${wraptext}\n(${node.progress}%)`,
         "font-size": letterSize,
         "font-family": "monospace",
-        transform: "translate(2, 2)",
+        transform: "translate(15, 15)",
       },
       rect: {
         rx: 10,
         ry: 10,
-        transform: "translate(2, 2)",
+        transform: "translate(15, 15)",
       },
     },
   });
@@ -123,8 +126,48 @@ function buildGraph(nodes, rels, criticalPath) {
   return elements.concat(links);
 }
 
-let graphScale = 1;
-let paper = null;
+function createViews(allNodes, viewNodes){
+  let clonedNodes = allNodes;
+  if(viewNodes !== null){
+    for(let x = 0; x < viewNodes.length; x++){
+      for(let y = 0; y < allNodes.length; y++){
+        if(viewNodes[x].originalNode === parseInt(allNodes[y].id)){
+          let clonedNode = allNodes[y].clone();
+
+          var width = 100;
+          var height = 80;
+
+          var wraptext = joint.util.breakText(`(View) ${allNodes[y].attributes.attrs.text.text}`, {
+            width: width - 20,
+            height: height,
+          });
+
+          clonedNode.attributes.attrs.text.text = `${wraptext}`
+          clonedNode.attributes.attrs.originId = allNodes[y].id;
+          clonedNode.attributes.id = `${viewNodes[x].id}`;
+          clonedNode.id = `${viewNodes[x].id}`;
+          clonedNodes.push(clonedNode);
+        }
+
+        for(let z = 0; z < viewNodes[x].outDepArr.length; z++){
+          if(`l${viewNodes[x].outDepArr[z].low}` === allNodes[y].id){
+            allNodes[y].attributes.source = {id: `${viewNodes[x].id}`};
+          }
+        }
+
+        for(let a = 0; a < viewNodes[x].inDepArr.length; a++){
+          if(`l${viewNodes[x].inDepArr[a].low}` === allNodes[y].id){
+            allNodes[y].attributes.target = {id: `${viewNodes[x].id}`};
+          }
+        }
+      }
+    }
+  }
+  return clonedNodes;
+}
+
+var graphScale = 1;
+var paper = null;
 
 class Graph extends React.Component {
   constructor(props) {
@@ -138,6 +181,8 @@ class Graph extends React.Component {
       source: null,
       target: null,
       alert: null,
+      viewId_source: null,
+      viewId_target: null,
       displayCriticalPath: true,
     };
     this.handleClick = this.handleClick.bind(this);
@@ -171,7 +216,10 @@ class Graph extends React.Component {
       return;
     }
 
-    let new_source_targetID = parseInt(clickedNode.model.id);
+    var new_source_targetID = parseInt(clickedNode.model.id);
+    if(clickedNode.model.attributes.attrs.originId !== undefined){
+      new_source_targetID = parseInt(clickedNode.model.attributes.attrs.originId);
+    }
     this.setState({ alert: null });
 
     if (new_source_targetID === null) {
@@ -187,15 +235,23 @@ class Graph extends React.Component {
     }
 
     if (this.state.source === null) {
-      this.setState({ source: source_target });
+      if(clickedNode.model.attributes.attrs.originId !== undefined){
+        this.setState({ source: source_target, viewId_source: clickedNode.model.id});
+      }
+      else{
+        this.setState({ source: source_target });
+      }
     } else {
       if (this.state.source.id === new_source_targetID) {
         this.setState({ source: null, target: null });
       } else {
-        this.setState({ target: source_target });
-        if (
-          this.recDepCheck(this.state.target.id, this.state.source.id) === true
-        ) {
+        if(clickedNode.model.attributes.attrs.originId !== undefined){
+          this.setState({ target: source_target, viewId_target: clickedNode.model.id});
+        }
+        else{
+          this.setState({ target: source_target });
+        }
+        if (this.recDepCheck(this.state.target.id, this.state.source.id) === true) {
           this.setState({ target: null, alert: 1 });
         }
       }
@@ -203,14 +259,33 @@ class Graph extends React.Component {
   }
 
   clearDependency() {
-    this.setState({ source: null, target: null, alert: null });
+    this.setState({ source: null, target: null, alert: null, viewId_source: null, viewId_target: null });
   }
 
   handleClick(clickedNode) {
     if (clickedNode.model.attributes.attrs.type === "node") {
-      this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
+      if(clickedNode.model.attributes.attrs.originId !== undefined){
+        this.props.toggleSidebar(parseInt(clickedNode.model.attributes.attrs.originId), null, clickedNode.model.id);
+      }
+      else{
+        this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
+      }    
     } else if (clickedNode.model.attributes.attrs.type === "link") {
-      this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)));
+      console.log(this.props.views)
+      let source = parseInt(clickedNode.model.attributes.source.id);
+      let target = parseInt(clickedNode.model.attributes.target.id);
+      let sourceView = null;
+      let targetView = null;
+
+      for(let x = 0; x < this.props.views.length; x++) {
+        if(this.props.views[x].id === source){
+          sourceView = source;
+        }
+        else if(this.props.views[x].id === target){
+          targetView = target;
+        }
+      }
+      this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)), undefined, sourceView, targetView);
     }
   }
 
@@ -245,7 +320,7 @@ class Graph extends React.Component {
       el: $("#paper"),
       width: "100%",
       height: "93%",
-      gridSize: 10,
+      gridSize: 50,
       model: graph,
       linkPinning: false,
     });
@@ -289,7 +364,8 @@ class Graph extends React.Component {
       return;
     }
 
-    let cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
+    var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
+    cells = createViews(cells, this.props.views)
     this.state.graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(this.state.graph, {
       dagre: dagre,
@@ -298,7 +374,7 @@ class Graph extends React.Component {
       rankDir: "TB",
       nodeSep: 100,
       rankSep: 100,
-    });    
+    });   
   }
 
   hideModal() {
@@ -450,6 +526,8 @@ class Graph extends React.Component {
             project={this.props.project}
             source={this.state.source}
             target={this.state.target}
+            viewId_source={this.state.viewId_source}
+            viewId_target={this.state.viewId_target}
           />
         ) : null}
         {this.state.createTask ? (

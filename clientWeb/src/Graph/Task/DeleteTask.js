@@ -34,14 +34,27 @@ class DeleteTask extends React.Component {
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
 
-    const response = await fetch("/task/delete", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: projectData,
-    });
+    let response = null;
+    if(this.props.viewId !== null) {
+      response = await fetch("/task/deleteClone", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: projectData,
+      });
+    }
+    else {
+      response = await fetch("/task/delete", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: projectData,
+      });
+    }
 
     const body = await response.json();
     await this.props.setTaskInfo(
@@ -73,6 +86,13 @@ class DeleteTask extends React.Component {
                   type="number"
                   name="id"
                   value={this.state.id}
+                  onChange={() => {}}
+                />
+                <input
+                  hidden
+                  type="boolean"
+                  name="viewId"
+                  value={this.props.viewId !== null ? this.props.viewId : ""}
                   onChange={() => {}}
                 />
                 <p> Are you sure you want to delete this task?</p>
