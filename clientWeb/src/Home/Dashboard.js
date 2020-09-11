@@ -60,6 +60,7 @@ class Dashboard extends React.Component {
         let otherProjects = this.state.otherProjects;
         otherProjects[i].tasks = response.tasks;
         otherProjects[i].rels = response.rels;
+        console.log(response.rels);
         this.setState({ otherProjects: otherProjects });
       }).fail((err) => {
         throw Error(err);

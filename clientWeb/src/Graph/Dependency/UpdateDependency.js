@@ -122,15 +122,23 @@ class UpdateDependency extends React.Component {
                     dependency.relationshipType = e.target.value;
                     if (dependency.relationshipType === "ss") {
                       dependency.startDate = this.state.dependency.sStartDate;
+                      if (dependency.startDate > this.state.dependency.endDate) 
+                      dependency.endDate = dependency.startDate;
+                      
                       this.setState({ 
+                        relationshipType: e.target.value,
                         dependency: dependency,
-                        duration: this.CalcDiff(this.state.dependency.sStartDate, this.state.dependency.endDate) 
+                        duration: this.CalcDiff(dependency.startDate, dependency.endDate) 
                       });
                     } else {
-                      dependency.startDate = this.state.dependency.eStartDate;
-                      this.setState({
+                      dependency.startDate = this.state.dependency.sEndDate;
+                      if (dependency.startDate > this.state.dependency.endDate) 
+                      dependency.endDate = dependency.startDate;
+                      
+                      this.setState({ 
+                        relationshipType: e.target.value,
                         dependency: dependency,
-                        duration: this.CalcDiff(this.state.dependency.sEndDate, this.state.dependency.endDate) 
+                        duration: this.CalcDiff(dependency.startDate, dependency.endDate) 
                       });
                     }
                     this.value = this.state.dependency.relationshipType;
@@ -151,7 +159,7 @@ class UpdateDependency extends React.Component {
                 <Form.Control
                   required
                   readOnly
-                  type="datetime-local"
+                  type="text"
                   name="ud_startDate"
                   value={
                     this.state.dependency.relationshipType === "ss" ?
@@ -168,22 +176,81 @@ class UpdateDependency extends React.Component {
                 </Form.Label>
                 <Form.Control
                   required
-                  type="datetime-local"
-                  name="cd_endDate"
-                  value={this.state.dependency.endDate}
+                  type="date"
+                  value={this.state.dependency.endDate.substring(0,10)}
                   onChange={(e) => {
                     let dependency = this.state.dependency;
-                    dependency.endDate = e.target.value;
+                    dependency.endDate = `${e.target.value}T${this.state.dependency.endDate.substring(11,16)}`;
                     if (this.state.dependency.relationshipType === "ss") {
-                      this.setState({ 
-                        dependency: dependency, 
-                        duration: this.CalcDiff(this.state.dependency.sStartDate, e.target.value) 
-                      });
+                      if (dependency.endDate < this.state.dependency.sStartDate) {
+                        alert("you can not make the second task earlier then the first");
+                        dependency.endDate = this.state.dependency.sStartDate;
+                        this.setState({ 
+                          dependency: dependency, 
+                          duration: this.CalcDiff(this.state.dependency.sStartDate, this.state.dependency.sStartDate) 
+                        });
+                      } else {
+                        this.setState({ 
+                          dependency: dependency, 
+                          duration: this.CalcDiff(this.state.dependency.sStartDate, dependency.endDate) 
+                        });
+                      }
                     } else {
-                      this.setState({ 
-                        dependency: dependency, 
-                        duration: this.CalcDiff(this.state.dependency.sEndDate, e.target.value) 
-                      });
+                      if (dependency.endDate < this.state.dependency.sEndDate) {
+                        alert("you can not make the second task earlier then the first");
+                        dependency.endDate = this.state.dependency.sEndDate;
+                        this.setState({ 
+                          dependency: dependency, 
+                          duration: this.CalcDiff(this.state.dependency.sEndDate, this.state.dependency.sEndDate) 
+                        });
+                      } else {
+                        this.setState({ 
+                          dependency: dependency, 
+                          duration: this.CalcDiff(this.state.dependency.sEndDate, dependency.endDate) 
+                        });
+                      }
+                    }
+                    this.value = this.state.dependency.endDate;
+                  }}
+                />
+                <Form.Label>
+                  Start Time of Second Task
+                </Form.Label>
+                <Form.Control
+                  required
+                  type="time"
+                  value={this.state.dependency.endDate.substring(11,16)}
+                  onChange={(e) => {
+                    let dependency = this.state.dependency;
+                    dependency.endDate = `${this.state.dependency.endDate.substring(0,10)}T${e.target.value}`;
+                    if (this.state.dependency.relationshipType === "ss") {
+                      if (dependency.endDate < this.state.dependency.sStartDate) {
+                        alert("you can not make the second task earlier then the first");
+                        dependency.endDate = this.state.dependency.sStartDate;
+                        this.setState({ 
+                          dependency: dependency, 
+                          duration: this.CalcDiff(this.state.dependency.sStartDate, this.state.dependency.sStartDate) 
+                        });
+                      } else {
+                        this.setState({ 
+                          dependency: dependency, 
+                          duration: this.CalcDiff(this.state.dependency.sStartDate, dependency.endDate) 
+                        });
+                      }
+                    } else {
+                      if (dependency.endDate < this.state.dependency.sEndDate) {
+                        alert("you can not make the second task earlier then the first");
+                        dependency.endDate = this.state.dependency.sEndDate;
+                        this.setState({ 
+                          dependency: dependency, 
+                          duration: this.CalcDiff(this.state.dependency.sEndDate, this.state.dependency.sEndDate) 
+                        });
+                      } else {
+                        this.setState({ 
+                          dependency: dependency, 
+                          duration: this.CalcDiff(this.state.dependency.sEndDate, dependency.endDate) 
+                        });
+                      }
                     }
                     this.value = this.state.dependency.endDate;
                   }}

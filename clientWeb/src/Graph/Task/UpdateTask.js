@@ -458,23 +458,47 @@ class UpdateTask extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Start date</Form.Label>
+                <Form.Label>Start date of task</Form.Label>
                 <Form.Control
                   required
-                  type="datetime-local"
-                  name="ut_startDate"
-                  value={this.state.startDate}
+                  type="date"
+                  value={this.state.startDate.substring(0,10)}
                   onChange={(e) => {
-                    if (this.state.endDate < e.target.value) {
+                    let startDate = this.state.startDate;
+                    startDate = `${e.target.value}T${this.state.startDate.substring(11,16)}`;
+                    if (this.state.endDate < startDate) {
                       this.setState({ 
-                        startDate: e.target.value, 
-                        endDate: e.target.value,
-                        duration: this.CalcDiff(e.target.value, e.target.value),
+                        startDate: startDate, 
+                        endDate: startDate,
+                        duration: this.CalcDiff(startDate, startDate),
                       }); 
                     } else {
                       this.setState({ 
-                        startDate: e.target.value, 
-                        duration: this.CalcDiff(e.target.value, this.state.endDate) 
+                        startDate: startDate, 
+                        duration: this.CalcDiff(startDate, this.state.endDate) 
+                      });
+                    }
+                    this.value = this.state.startDate;
+                  }}
+                />
+                <Form.Label>Start Time of task</Form.Label>
+                <Form.Control
+                  required
+                  type="time"
+                  value={this.state.startDate.substring(11,16)}
+                  onChange={(e) => {
+                    let startDate = this.state.startDate;
+                    startDate = `${this.state.startDate.substring(0,10)}T${e.target.value}`;
+                    if (this.state.endDate < startDate) {
+                      this.setState({ 
+                        startDate: startDate, 
+                        endDate: startDate,
+                        duration: this.CalcDiff(startDate, startDate),
+                      }); 
+                    } else {
+                      this.setState({ 
+                        startDate: startDate, 
+                        duration: this.CalcDiff(startDate, this.state.endDate) 
                       });
                     }
                     this.value = this.state.startDate;
@@ -482,23 +506,47 @@ class UpdateTask extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>End Date</Form.Label>
+              <Form.Label>End date of task</Form.Label>
                 <Form.Control
                   required
-                  type="datetime-local"
-                  name="ut_endDate"
-                  value={this.state.endDate}
+                  type="date"
+                  value={this.state.endDate.substring(0,10)}
                   onChange={(e) => {
-                    if (this.state.startDate > e.target.value) {
+                    let endDate = this.state.endDate;
+                    endDate = `${e.target.value}T${this.state.endDate.substring(11,16)}`;
+                    if (this.state.startDate < endDate) {
                       this.setState({ 
-                        startDate: e.target.value, 
-                        endDate: e.target.value,
-                        duration: this.CalcDiff(e.target.value, e.target.value),
+                        startDate: endDate, 
+                        endDate: endDate,
+                        duration: this.CalcDiff(endDate, endDate),
                       }); 
                     } else {
                       this.setState({ 
-                        endDate: e.target.value, 
-                        duration: this.CalcDiff(this.state.startDate, e.target.value) 
+                        endDate: endDate, 
+                        duration: this.CalcDiff(endDate, this.state.endDate) 
+                      });
+                    }
+                    this.value = this.state.endDate;
+                  }}
+                />
+                <Form.Label>End Time of task</Form.Label>
+                <Form.Control
+                  required
+                  type="time"
+                  value={this.state.endDate.substring(11,16)}
+                  onChange={(e) => {
+                    let endDate = this.state.endDate;
+                    endDate = `${this.state.endDate.substring(0,10)}T${e.target.value}`;
+                    if (this.state.startDate < endDate) {
+                      this.setState({ 
+                        startDate: endDate, 
+                        endDate: endDate,
+                        duration: this.CalcDiff(endDate, endDate),
+                      }); 
+                    } else {
+                      this.setState({ 
+                        endDate: endDate, 
+                        duration: this.CalcDiff(endDate, this.state.endDate) 
                       });
                     }
                     this.value = this.state.endDate;
