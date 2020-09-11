@@ -244,7 +244,7 @@ class Graph extends React.Component {
     paper = new joint.dia.Paper({
       el: $("#paper"),
       width: "100%",
-      height: "85%",
+      height: "93%",
       gridSize: 10,
       model: graph,
       linkPinning: false,

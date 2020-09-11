@@ -128,11 +128,15 @@ class GraphPage extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container fluid className="m-0 p-0 h-100">
-          <Row style={{height:"100%"}}>
+        <Container fluid className="m-0 p-0" style={{height:this.props.height}}>
+          <Row>
             <Col
+              xs={3}
+              md={3}
+              lg={3}
+              xl={3}
               className="text-center border-right border-secondary bg-light "
-              style={{height:"100%", overflow:"auto"}}
+              style={{ overflowY:"auto", height:this.props.height}}
             >
               <Container>
                 <Row>

@@ -50,7 +50,9 @@ class App extends Component {
         delete: false,
         project: false,
       },
+      height: 0,
     };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.setProject = this.setProject.bind(this);
     this.toggleSideBar = this.toggleSideBar.bind(this);
     this.closeSideBar = this.closeSideBar.bind(this);
@@ -59,6 +61,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     let token = localStorage.getItem("sessionToken");
     if (token != null) {
       $.post("/project/get", { token }, (response) => {
@@ -82,6 +86,15 @@ class App extends Component {
     } else {
       if (this.rightSide) this.rightSide.classList.add("right");
     }
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+
+  updateWindowDimensions() {
+    this.setState({ height: window.innerHeight-87 + "px" });
   }
 
   setProject(proj) {
@@ -206,7 +219,13 @@ class App extends Component {
         <BrowserRouter>
           <Navbar
             bg="#96BB7C"
-            style={{ fontFamily: "Courier New", backgroundColor: "#96BB7C", position:"fixed", width: "100%", zIndex:"90"}}
+            style={{ 
+              fontFamily: "Courier New", 
+              backgroundColor: "#96BB7C", 
+              position:"fixed",
+              height: "87px",
+              width: "100%",
+              zIndex:"90"}}
           >
             <Nav className="form-inline ">
               {this.state.loggedInStatus === true ? (
@@ -238,8 +257,8 @@ class App extends Component {
               ) : null}
             </Nav>
           </Navbar>
-          <Container fluid style={{paddingTop:"88px"}}>
-            <Row style={{ height: "100%" }}>
+          <Container fluid style={{paddingTop:"87px", height:"100%"}}>
+            <Row style={{}}>
               {this.state.showSideBar !== false ? (
                 <Col
                   sm={12}
@@ -249,7 +268,7 @@ class App extends Component {
                   xs={4}
                   className="border-right border-dark"
                   style={{
-                    height: "100%",
+                    height:this.state.height,
                     backgroundColor: "#303030",
                     position: "fixed",
                     zIndex: "9",
@@ -263,7 +282,7 @@ class App extends Component {
                   />
                 </Col>
               ) : null}
-              <Col style={{ position: "absolute", height: "100%" }}>
+              <Col style={{ height:this.state.height, overflowY: "auto"}} >
                 <Switch>
                   <Route path="/home">
                     {this.state.loggedInStatus ? (
@@ -294,6 +313,7 @@ class App extends Component {
                   <Route path="/graph">
                     {this.state.project != null ? (
                       <GraphPage
+                        height={this.state.height}
                         project={this.state.project}
                         userPermission={this.state.userPermission}
                         user={this.state.user}

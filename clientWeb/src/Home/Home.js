@@ -7,6 +7,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 
 class Home extends React.Component {
   render() {
+    
     return (
       this.props.ownedProjects.length === 0 && this.props.otherProjects.length === 0 ? 
         <React.Fragment>
