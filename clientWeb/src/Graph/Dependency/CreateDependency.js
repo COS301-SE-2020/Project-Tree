@@ -32,10 +32,13 @@ class CreateDependency extends React.Component {
       sEndDate: this.props.source.endDate,
       startDate: startDate,
       endDate: this.state.target.startDate,
+      cd_viewId_source: this.props.viewId_source,
+      cd_viewId_target: this.props.viewId_target
     }
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
+
     const response = await fetch("/dependency/add", {
       method: "POST",
       headers: {

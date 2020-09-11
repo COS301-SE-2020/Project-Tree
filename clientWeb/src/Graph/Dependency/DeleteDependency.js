@@ -49,6 +49,7 @@ class DeleteDependency extends React.Component {
       body.displayNode,
       body.displayRel
     );
+    this.HideModal();
   }
 
   render() {
@@ -75,6 +76,20 @@ class DeleteDependency extends React.Component {
                   type="number"
                   name="dd_did"
                   value={this.props.dependency.id}
+                  onChange={() => {}}
+                />
+                <input
+                  hidden
+                  type="number"
+                  name="sourceView"
+                  value={this.props.sourceView !== null ? this.props.sourceView : ""}
+                  onChange={() => {}}
+                />
+                <input
+                  hidden
+                  type="number"
+                  name="targetView"
+                  value={this.props.targetView !== null ? this.props.targetView : ""}
                   onChange={() => {}}
                 />
               </Form.Group>

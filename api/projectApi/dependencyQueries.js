@@ -45,6 +45,58 @@ function createDependency(req, res) {
       let changedRel = rel;
       req.body.rels.push(changedRel);
 
+      if(req.body.changedInfo.cd_viewId_source !== null){
+        if(req.body.changedInfo.cd_viewId_target !== null){
+          await db.getSession()
+          .run(
+            `
+              MATCH (a)
+              WHERE ID(a) = ${req.body.changedInfo.cd_viewId_source}
+              SET a.outDepArr=coalesce(a.outDepArr, []) + ${changedRel.id}
+              WITH 1 as dummy
+              MATCH (b)
+              WHERE ID(b) = ${req.body.changedInfo.cd_viewId_target}
+              SET b.inDepArr=coalesce(b.inDepArr, []) + ${changedRel.id}
+            `
+          )
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send({ message: err });
+          });
+        }
+        else{
+          await db.getSession()
+          .run(
+            `
+              MATCH (a)
+              WHERE ID(a) = ${req.body.changedInfo.cd_viewId_source}
+              SET a.outDepArr=coalesce(a.outDepArr, []) + ${changedRel.id}
+            `
+          )
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send({ message: err });
+          });
+        }
+      }
+      else if(req.body.changedInfo.cd_viewId_target !== null){
+        await db.getSession()
+        .run(
+          `
+            MATCH (a)
+            WHERE ID(a) = ${req.body.changedInfo.cd_viewId_target}
+            SET a.inDepArr=coalesce(a.inDepArr, []) + ${changedRel.id}
+          `
+        )
+        .catch((err) => {
+          console.log(err);
+          res.status(400);
+          res.send({ message: err });
+        });
+      }
+
       await updateProject.updateCurDependency(
         changedRel,
         req.body.nodes,
@@ -133,10 +185,168 @@ function updateDependency(req, res) { //update a Dependency between 2 nodes with
 }
 
 function deleteDependency(req, res) {
-  db.getSession()
+  if(req.body.changedInfo.sourceView.length !== 0 && req.body.changedInfo.targetView.length === 0){
+    db.getSession()
     .run(
       `
-        MATCH (a:Task)-[r:DEPENDENCY]->(b:Task)
+        MATCH (c:View)-[:VIEW_OF]->(a:Task)-[r:DEPENDENCY]->(b:Task)
+        WHERE ID(r)=${req.body.changedInfo.dd_did}
+        SET c.outDepArr=FILTER(x IN c.outDepArr WHERE x <> ${req.body.changedInfo.dd_did})
+        DELETE r
+        RETURN *
+		  `
+    )
+    .then(async () => {
+      let rel = {};
+
+      for (let x = 0; x < req.body.rels.length; x++) {
+        if (req.body.rels[x].id == req.body.changedInfo.dd_did) {
+          rel = req.body.rels[x];
+
+          if (x == 0) {
+            req.body.rels.shift();
+          } else {
+            req.body.rels.splice(x, x);
+          }
+        }
+      }
+
+      let target;
+      req.body.nodes.forEach( node => {
+        if (node.id == rel.target) target = node;
+      });
+
+      await updateProject.updateTask(
+        target,
+        req.body.nodes,
+        req.body.rels
+      );
+      res.status(200);
+      res.send({
+        nodes: req.body.nodes,
+        rels: req.body.rels,
+        displayNode: null,
+        displayRel: null,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send({ message: err });
+    });
+  }
+  else if(req.body.changedInfo.sourceView.length === 0 && req.body.changedInfo.targetView.length !== 0){
+    db.getSession()
+    .run(
+      `
+        MATCH (a:Task)-[r:DEPENDENCY]->(b:Task)<-[:VIEW_OF]-(c:View)
+        WHERE ID(r)=${req.body.changedInfo.dd_did}
+        SET c.inDepArr=FILTER(x IN c.inDepArr WHERE x <> ${req.body.changedInfo.dd_did})
+        DELETE r
+        RETURN *
+		  `
+    )
+    .then(async () => {
+      let rel = {};
+
+      for (let x = 0; x < req.body.rels.length; x++) {
+        if (req.body.rels[x].id == req.body.changedInfo.dd_did) {
+          rel = req.body.rels[x];
+
+          if (x == 0) {
+            req.body.rels.shift();
+          } else {
+            req.body.rels.splice(x, x);
+          }
+        }
+      }
+
+      let target;
+      req.body.nodes.forEach( node => {
+        if (node.id == rel.target) target = node;
+      });
+
+      await updateProject.updateTask(
+        target,
+        req.body.nodes,
+        req.body.rels
+      );
+      res.status(200);
+      res.send({
+        nodes: req.body.nodes,
+        rels: req.body.rels,
+        displayNode: null,
+        displayRel: null,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send({ message: err });
+    });
+  }
+  else if(req.body.changedInfo.sourceView.length !== 0 && req.body.changedInfo.targetView.length !== 0){
+    db.getSession()
+    .run(
+      `
+        MATCH (c:View)-[:VIEW_OF]->(a:Task)-[r:DEPENDENCY]->(b:Task)<-[:VIEW_OF]-(d:View)
+        WHERE ID(r)=${req.body.changedInfo.dd_did}
+        SET c.outDepArr=FILTER(x IN c.outDepArr WHERE x <> ${req.body.changedInfo.dd_did})
+        WITH 1 as dummy
+        MATCH (c:View)-[:VIEW_OF]->(a:Task)-[r:DEPENDENCY]->(b:Task)<-[:VIEW_OF]-(d:View)
+        WHERE ID(r)=${req.body.changedInfo.dd_did}
+        SET d.inDepArr=FILTER(x IN d.inDepArr WHERE x <> ${req.body.changedInfo.dd_did})
+        WITH 1 as dummy
+        MATCH (c:View)-[:VIEW_OF]->(a:Task)-[r:DEPENDENCY]->(b:Task)<-[:VIEW_OF]-(d:View)
+        WHERE ID(r)=${req.body.changedInfo.dd_did}
+        DELETE r
+        RETURN *
+		  `
+    )
+    .then(async () => {
+      let rel = {};
+
+      for (let x = 0; x < req.body.rels.length; x++) {
+        if (req.body.rels[x].id == req.body.changedInfo.dd_did) {
+          rel = req.body.rels[x];
+
+          if (x == 0) {
+            req.body.rels.shift();
+          } else {
+            req.body.rels.splice(x, x);
+          }
+        }
+      }
+
+      let target;
+      req.body.nodes.forEach( node => {
+        if (node.id == rel.target) target = node;
+      });
+
+      await updateProject.updateTask(
+        target,
+        req.body.nodes,
+        req.body.rels
+      );
+      res.status(200);
+      res.send({
+        nodes: req.body.nodes,
+        rels: req.body.rels,
+        displayNode: null,
+        displayRel: null,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send({ message: err });
+    });
+  }
+  else if(req.body.changedInfo.sourceView.length === 0 && req.body.changedInfo.targetView.length === 0){
+    db.getSession()
+    .run(
+      `
+        MATCH (c:View)-[:VIEW_OF]->(a:Task)-[r:DEPENDENCY]->(b:Task)<-[:VIEW_OF]-(d:View)
         WHERE ID(r)=${req.body.changedInfo.dd_did}
         DELETE r
 		  `
@@ -179,6 +389,7 @@ function deleteDependency(req, res) {
       res.status(400);
       res.send({ message: err });
     });
+  }
 }
 
 module.exports = {
