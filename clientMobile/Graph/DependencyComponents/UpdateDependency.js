@@ -135,7 +135,7 @@ class UpdateDependencyForm extends Component {
       this.handleDateTimeSelect({}, this.state.sStartDate, {for:"start"});
     } else {
       this.setState({selectedIndex: 1, relationshipType: 'fs'});
-      this.handleDateTimeSelect({}, this.state.sEndDate, {for:"end"});
+      this.handleDateTimeSelect({}, this.state.sEndDate, {for:"start"});
     }
   }
 

@@ -54,7 +54,7 @@ class CreateDependency extends Component {
       return;
     }
 
-    if ( this.recDepCheck(this.props.targetCreateDependency, this.props.sourceCreateDependency) === true) {
+    if ( this.recDepCheck(this.props.targetCreateDependency.id, this.props.sourceCreateDependency.id) === true) {
       alert('A task cannot be directly or indirectly dependent on itself');
       this.props.setCreateDependency(null);
       return;
@@ -74,11 +74,6 @@ class CreateDependency extends Component {
         <CreateDependencyModal
           createDependencyVisibility={this.state.createDependencyVisibility}
           setCreateDependencyVisibility={this.setCreateDependencyVisibility}
-          name={
-            this.props.getName(this.state.source) +
-            '→' +
-            this.props.getName(this.state.target)
-          }
           source={this.state.source}
           target={this.state.target}
           projID={this.props.projID}
@@ -92,12 +87,12 @@ class CreateDependency extends Component {
               onPress={this.handleCreateDependency}
               style={styles.CreateDependencyBtn}>
               <Text>
-                {this.props.getName(this.props.sourceCreateDependency) +
+                {this.props.sourceCreateDependency.name +
                   '→' +
-                  (this.props.getName(this.props.targetCreateDependency) ===
+                  (this.props.targetCreateDependency ===
                   null
                     ? ''
-                    : this.props.getName(this.props.targetCreateDependency))}
+                    : this.props.targetCreateDependency.name)}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -170,11 +165,17 @@ class CreateDependencyModal extends Component {
 class CreateDependencyForm extends Component {
   constructor(props) {
     super(props);
-
+    let endDate = this.props.target.startDate;
+    if (this.props.source.startDate > endDate)
+      endDate = this.props.source.startDate;
     this.state = {
       relationshipType: "ss",
       source: this.props.source,
       target: this.props.target,
+      sStartDate: this.props.source.startDate,
+      sEndDate: this.props.source.endDate,
+      startDate: this.props.source.startDate,
+      endDate: endDate,
       selectedIndex: 0,
       error: null,
       dateTimePicker: false,
@@ -223,19 +224,22 @@ class CreateDependencyForm extends Component {
     }
   }
 
+  
   updateIndex(selectedIndex) {
     if (selectedIndex == 0) {
-      this.setState({selectedIndex: 0, dependencyRelationship: 'ss'});
+      this.setState({selectedIndex: 0, relationshipType: 'ss'});
+      this.handleDateTimeSelect({}, this.state.sStartDate, {for:"start"});
     } else {
-      this.setState({selectedIndex: 1, dependencyRelationship: 'fs'});
+      this.setState({selectedIndex: 1, relationshipType: 'fs'});
+      this.handleDateTimeSelect({}, this.state.sEndDate, {for:"start"});
     }
   }
 
   formatValidateInput() {
     let data = {
       projId: this.props.projID,
-      fid: this.props.source,
-      sid: this.props.target,
+      fid: this.props.source.id,
+      sid: this.props.target.id,
       relationshipType: this.state.relationshipType,
       sStartDate: this.state.sStartDate,
       sEndDate: this.state.sEndDate,
@@ -270,13 +274,11 @@ class CreateDependencyForm extends Component {
     this.props.setCreateDependencyVisibility(false);
     this.props.setProjectInfo(body.nodes, body.rels);
   }
-
-  checkFormData(){
-    let duration = this.state.dependencyDuration;
-    if(!(duration.toString()).trim().length){
-      this.setState({error: "Please enter a duration for your dependency"});
-      return false;
-    }
+  
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
   render() {
@@ -287,7 +289,7 @@ class CreateDependencyForm extends Component {
     return (
       <View style={{flex: 1}}>
         <View style={{flex: 1}}>
-          <Text style={styles.modalText}>{this.props.name}</Text>
+          <Text style={styles.modalText}></Text>
         </View>
         <View style={{flex: 1}}>
           <ButtonGroup
@@ -300,13 +302,63 @@ class CreateDependencyForm extends Component {
         </View>
         <View style={{flex: 1, marginBottom:10}}>
           <Form>
-            <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
-            <Item floatingLabel>
-              <Label>Duration (Days)</Label>
+          <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
+            <Item floatingLabel disabled>
+              <Label>
+              {
+                this.state.relationshipType === 'ss'?
+                  "Start Date and Time of First Task"
+                  :
+                  "End Date and Time of First Task"
+              }
+              </Label>
+              <Input value={
+                this.state.relationshipType === 'ss'?
+                  this.state.sStartDate 
+                  :
+                  this.state.sEndDate
+                } />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Start Date of Second Task</Label>
+              <Input value={this.state.endDate.substring(0, 10)} />
+              <Icon
+                type="AntDesign"
+                name="plus"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true, 
+                    dateTimeType: { 
+                      type: 'date', 
+                      for: 'end',
+                      value: this.state.endDate,
+                    }
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Start Time of Second Task</Label>
+              <Input value={this.state.endDate.substring(11, 16)} />
+              <Icon
+                type="AntDesign"
+                name="plus"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true, 
+                    dateTimeType: { 
+                      type: 'time', 
+                      for: 'end',
+                      value: this.state.endDate,
+                    }
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Duration</Label>
               <Input
-                value={this.state.dependencyDuration.toString()}
-                onEndEditing={()=>this.checkFormData("duration")}
-                onChangeText={(val) => this.setState({dependencyDuration: val})}
+                value={this.CalcDiff(this.state.startDate, this.state.endDate)}
               />
             </Item>
           </Form>
@@ -318,6 +370,16 @@ class CreateDependencyForm extends Component {
             <Text style={{color: 'white'}}>Submit</Text>
           </TouchableOpacity>
         </View>
+        {this.state.dateTimePicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={new Date(this.state.dateTimeType.value)}
+            mode={this.state.dateTimeType.type}
+            is24Hour={true}
+            display="default"
+            onChange={(event, selectedDate) => this.handleDateTimeSelect(event, selectedDate, this.state.dateTimeType)}
+          />
+        )}
       </View>
     );
   }

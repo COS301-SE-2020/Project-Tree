@@ -307,10 +307,18 @@ class GraphScreen extends Component {
         targetCreateDependency: null,
       });
     } else if (this.state.sourceCreateDependency === null) {
-      this.setState({sourceCreateDependency: id});
+      for (var x = 0; x < this.state.nodes.length; x++) {
+        if (id === this.state.nodes[x].id) {
+          this.setState({sourceCreateDependency: this.state.nodes[x]});;
+        }
+      }
     } else {
-      if (id === this.state.sourceCreateDependency) return null;
-      this.setState({targetCreateDependency: id});
+      if (id === this.state.sourceCreateDependency.id) return null;
+      for (var x = 0; x < this.state.nodes.length; x++) {
+        if (id === this.state.nodes[x].id) {
+          this.setState({targetCreateDependency: this.state.nodes[x]});;
+        }
+      }
     }
   }
 
