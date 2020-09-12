@@ -33,7 +33,7 @@ class DeleteTask extends Component {
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/task/delete',
+      'http://10.0.2.2:5000/task/delete',
       {
         method: 'POST',
         headers: {

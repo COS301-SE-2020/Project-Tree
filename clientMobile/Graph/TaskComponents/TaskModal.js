@@ -13,8 +13,8 @@ import {
 import * as Progress from 'react-native-progress';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
-import UpdateProgress from '../UpdateProgress';
 import SendTaskNotification from '../../NoticeBoard/TaskWideNotification'
+import ms from "ms";
 
 let taskPacMans = null;
 let taskResPersons = null;
@@ -101,6 +101,12 @@ class TaskModal extends Component {
     return list;
   }
 
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+  }
+
   render() {
     if (this.props.selectedTask === null || this.props.assignedProjUsers === null) return null;
 
@@ -109,9 +115,9 @@ class TaskModal extends Component {
     taskResPersons = taskUsers[1];
     taskResources = taskUsers[2];
 
-    let color = 'green';
+    /* let color = 'green';
     if (this.props.selectedTask.progress < 33) color = 'red';
-    else if (this.props.selectedTask.progress < 66) color = '#EEBB4D';
+    else if (this.props.selectedTask.progress < 66) color = '#EEBB4D'; */
 
     return (
       <React.Fragment>
@@ -128,14 +134,6 @@ class TaskModal extends Component {
           resources={taskResources}
           allUsers={this.props.allUsers}
           assignedProjUsers={this.props.assignedProjUsers}
-        />
-        <UpdateProgress
-          project={this.props.project}
-          task={this.props.selectedTask}
-          modalVisibility={this.state.displayProgressModal}
-          toggleProgressModal={this.toggleProgressModal}
-          getProjectInfo={this.props.getProjectInfo}
-          setProjectInfo={this.props.setProjectInfo}
         />
         <Modal
           animationType="fade"
@@ -169,7 +167,7 @@ class TaskModal extends Component {
                   formatText={() => {
                     return `${this.props.selectedTask.progress}%`;
                   }}
-                  color={color}
+                  color={'blue'}
                 />
                 <Text style={styles.modalText}>
                   {this.props.selectedTask.description}
@@ -180,22 +178,15 @@ class TaskModal extends Component {
                 </Text>
                 <Text style={styles.modalText}>
                   Start Date:{' '}
-                  {this.props.selectedTask.startDate.year.low +
-                    '-' +
-                    this.props.selectedTask.startDate.month.low +
-                    '-' +
-                    this.props.selectedTask.startDate.day.low}
+                  {this.props.selectedTask.startDate}
                 </Text>
                 <Text style={styles.modalText}>
                   End Date:{' '}
-                  {this.props.selectedTask.endDate.year.low +
-                    '-' +
-                    this.props.selectedTask.endDate.month.low +
-                    '-' +
-                    this.props.selectedTask.endDate.day.low}
+                  {this.props.selectedTask.endDate}
                 </Text>
                 <Text style={styles.modalText}>
-                  Duration: {this.props.selectedTask.duration} days
+                  Duration:{' '}
+                  {this.CalcDiff(this.props.selectedTask.startDate, this.props.selectedTask.endDate)}
                 </Text>
                 <Text style={styles.roleText}>Package managers:</Text>
                 {this.printUsers(taskPacMans)}
@@ -228,23 +219,6 @@ class TaskModal extends Component {
                       getProjectInfo={this.props.getProjectInfo}
                       setProjectInfo={this.props.setProjectInfo}
                     />
-                  </View>
-                :
-                  null
-                }
-
-                {this.props.userPermissions["update"] === true?
-                  <View style={{flex: 1}}>
-                    <TouchableOpacity
-                      style={styles.editButton}
-                      onPress={() => this.toggleProgressModal(false, true)}>
-                      <Icon
-                        type="Entypo"
-                        name="progress-one"
-                        style={{color: 'white', paddingBottom: 10}}>
-                        <Text>&nbsp;Update Progress</Text>
-                      </Icon>
-                    </TouchableOpacity>
                   </View>
                 :
                   null

@@ -189,7 +189,7 @@ class GraphScreen extends Component {
     }
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/getProject',
+      'http://10.0.2.2:5000/getProject',
       {
         method: 'POST',
         headers: {
@@ -207,7 +207,7 @@ class GraphScreen extends Component {
       this.setState({nodes: body.tasks, links: body.rels});
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllUsers',
+      'http://10.0.2.2:5000/people/getAllUsers',
       {
         method: 'POST',
         headers: {
@@ -224,7 +224,7 @@ class GraphScreen extends Component {
     this.setState({ allUsers: body2.users });
 
     const response3 = await fetch(
-      'http://projecttree.herokuapp.com/people/assignedProjectUsers',
+      'http://10.0.2.2:5000/people/assignedProjectUsers',
       {
         method: 'POST',
         headers: {
@@ -277,7 +277,7 @@ class GraphScreen extends Component {
 
     else{
       const response = await fetch(
-        'http://projecttree.herokuapp.com/getProject',
+        'http://10.0.2.2:5000/getProject',
         {
           method: 'POST',
           headers: {
@@ -477,7 +477,7 @@ class WebViewWrapper extends Component {
         renderLoading={this.ActivityIndicatorLoadingView}
         startInLoadingState={true}
         source={{
-          uri: 'http://projecttree.herokuapp.com/mobile',
+          uri: 'http://10.0.2.2:5000/mobile',
           method: 'POST',
           body: `nodes=${JSON.stringify(
             this.props.nodes,

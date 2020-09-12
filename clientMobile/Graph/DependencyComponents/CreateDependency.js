@@ -14,6 +14,8 @@ import {
   Input,
 } from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import ms from "ms";
 
 class CreateDependency extends Component {
   constructor(props) {
@@ -170,15 +172,55 @@ class CreateDependencyForm extends Component {
     super(props);
 
     this.state = {
-      dependencyRelationship: 'ss',
+      relationshipType: "ss",
+      source: this.props.source,
+      target: this.props.target,
       selectedIndex: 0,
-      dependencyDuration: 0,
       error: null,
+      dateTimePicker: false,
+      dateTimeType: { type: 'date', for: 'start', value: new Date() },
     };
 
+    this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formatValidateInput = this.formatValidateInput.bind(this);
     this.updateIndex = this.updateIndex.bind(this);
+  }
+  
+  handleDateTimeSelect(event, selectedDate, type) {
+    if(event.type === 'dismissed') {
+      this.setState({dateTimePicker: false});
+      return;
+    }
+    let date = new Date(selectedDate).toISOString().substring(0,16);
+    if (type.for === 'start') {
+        if (this.state.endDate < date) 
+          this.setState({
+            error: "you can not set the end before the start",
+            startDate: date, 
+            endDate: date, 
+            dateTimePicker: false
+          });
+        else
+        this.setState({
+          error: null,
+          startDate: date, 
+          dateTimePicker: false
+        });
+    } else {
+      if (this.state.startDate > date) 
+        this.setState({
+          error: "you can not set the end before the start",
+          endDate: this.state.startDate, 
+          dateTimePicker: false
+        });
+      else
+      this.setState({
+        error: null,
+        endDate: date, 
+        dateTimePicker: false
+      });
+    }
   }
 
   updateIndex(selectedIndex) {
@@ -190,14 +232,15 @@ class CreateDependencyForm extends Component {
   }
 
   formatValidateInput() {
-    if(this.checkFormData("all") === false) return null;
-
     let data = {
-      cd_fid: this.props.source,
-      cd_sid: this.props.target,
-      cd_pid: this.props.projID,
-      cd_relationshipType: this.state.dependencyRelationship,
-      cd_duration: parseInt(this.state.dependencyDuration),
+      projId: this.props.projID,
+      fid: this.props.source,
+      sid: this.props.target,
+      relationshipType: this.state.relationshipType,
+      sStartDate: this.state.sStartDate,
+      sEndDate: this.state.sEndDate,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
     };
 
     return data;
@@ -212,7 +255,7 @@ class CreateDependencyForm extends Component {
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/dependency/add',
+      'http://10.0.2.2:5000/dependency/add',
       {
         method: 'POST',
         headers: {

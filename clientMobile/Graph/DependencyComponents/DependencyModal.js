@@ -11,6 +11,7 @@ import {
 } from 'native-base';
 import DeleteDependency from './DeleteDependency';
 import UpdateDependency from './UpdateDependency';
+import ms from "ms";
 
 class DependencyModal extends Component {
   constructor(props) {
@@ -36,6 +37,12 @@ class DependencyModal extends Component {
       displayDependencyModal: dependencyModal,
       displayUpdateModal: updateModal,
     });
+  }
+
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
   render() {
@@ -84,9 +91,7 @@ class DependencyModal extends Component {
                   : 'Start→Start'}
               </Text>
               <Text style={styles.modalText}>
-                {'Duration: ' +
-                  this.props.selectedDependency.duration +
-                  ' days'}
+                {'Duration: ' + this.CalcDiff(this.props.selectedDependency.startDate, this.props.selectedDependency.endDate )}
               </Text>
               <View style={{flex: 1}}>
                 {this.props.userPermissions["update"] === true?
