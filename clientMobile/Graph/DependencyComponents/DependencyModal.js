@@ -69,14 +69,7 @@ class DependencyModal extends Component {
                 <Icon type="FontAwesome" name="close" />
               </TouchableOpacity>
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                <Text style={{fontSize: 30, color: '#184D47'}}>{name}</Text>
-                <View
-                  style={{
-                    backgroundColor: '#EEBB4D',
-                    height: 1,
-                    width: '80%',
-                    marginBottom: 10,
-                  }}></View>
+                <Text style={{fontSize: 30, color: '#184D47', textAlign:'center'}}>{name}</Text>
               </View>
               <Text style={styles.modalText}>
                 {this.props.selectedDependency.relationshipType === 'fs'
@@ -88,7 +81,7 @@ class DependencyModal extends Component {
                   this.props.selectedDependency.duration +
                   ' days'}
               </Text>
-              <View style={{flex: 1}}>
+              <View style={{flexDirection:'row'}}>
                 {this.props.userPermissions["update"] === true?
                   <View style={{flex: 1}}> 
                     <TouchableOpacity
@@ -148,7 +141,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 340,
+    height: 250,
     width: 350,
   },
   hideButton: {

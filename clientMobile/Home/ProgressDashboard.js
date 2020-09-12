@@ -160,16 +160,8 @@ class ProgressDashboard extends Component {
     let cp = this.getCPProgress();
     let pp = this.getProjectProgress();
 
-    let cpColor = null;
-    let ppColor = null;
-
-    if (cp < 33) cpColor = 'red';
-    else if (cp < 66) cpColor = '#EEBB4D';
-    else cpColor = 'green';
-
-    if (pp < 33) ppColor = 'red';
-    else if (pp < 66) ppColor = '#EEBB4D';
-    else ppColor = 'green';
+    let cpColor = '#0275d8';
+    let ppColor = '#0275d8';
 
     return (
       <View

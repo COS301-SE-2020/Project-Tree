@@ -64,7 +64,7 @@ class DeleteTask extends Component {
 
 const styles = StyleSheet.create({
   deleteButton: {
-    backgroundColor: '#184D47',
+    backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
     height: 45,

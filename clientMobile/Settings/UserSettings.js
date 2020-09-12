@@ -280,7 +280,7 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
       console.log(data)
-      const response = await fetch('http://10.0.2.2:5000/user/pass', {
+      const response = await fetch('http://projecttree.herokuapp.com/user/pass', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
