@@ -151,6 +151,7 @@ class TaskModal extends Component {
               <View style={{alignItems: 'center', marginBottom:10}}>
                 <Text style={{fontSize: 30, color: '#184D47', textAlign:'center'}}>
                   {this.props.selectedTask.name}
+                  {this.props.clonedNode !== null ? <Text>{'\n'}(View)</Text> : null}
                 </Text>
               </View>
               <ScrollView style={{height:200}}>
@@ -219,6 +220,7 @@ class TaskModal extends Component {
                     <View style={{flex: 1}}>
                       <DeleteTask
                         task={this.props.selectedTask}
+                        clonedNode={this.props.clonedNode}
                         toggleVisibility={this.toggleVisibility}
                         getProjectInfo={this.props.getProjectInfo}
                         setProjectInfo={this.props.setProjectInfo}

@@ -337,8 +337,11 @@ class GraphScreen extends Component {
     let task = null;
     let dependency = null;
     let clonedNode = null;
+    let isNumber = false;
 
-    if(clonedID !== undefined){
+    isNumber = !Number.isNaN(clonedID)
+
+    if(isNumber){
       clonedNode = clonedID;
     }
 
@@ -484,17 +487,15 @@ class WebViewWrapper extends Component {
   }
 
   handleOnMessage(event) {
-    let message = "";
-    let message2 = "";
-    if(message.length === 0){
-      message = event.nativeEvent.data;
-    }
-    else{
-      message2 = event.nativeEvent.data;
-    }
+    let message = event.nativeEvent.data;
 
     if (message[0] === 'n') {
-      this.props.displayTaskDependency(parseInt(message.substr(1)), null, parseInt(message.substr(6)));
+      message = message.split(' ');
+
+      let node = parseInt(message[0].substr(1));
+      let cloned = parseInt(message[1].substr(6));
+
+      this.props.displayTaskDependency(node, null, cloned);
     } else if (message[0] === 'l') {
       this.props.displayTaskDependency(null, parseInt(message.substr(1)));
     } else {

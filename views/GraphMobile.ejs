@@ -93,10 +93,7 @@
 
         function handleUpNodeClick(input,cloned){
 					if((performance.now()-initialDownClick) < 600){
-						window.ReactNativeWebView.postMessage('n'+input);
-						if(cloned !== undefined){
-							window.ReactNativeWebView.postMessage('cloned'+cloned);
-						}
+						window.ReactNativeWebView.postMessage('n'+input+' cloned'+cloned);
 					}
 					else{
 						window.ReactNativeWebView.postMessage('c'+input);
