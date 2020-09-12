@@ -171,6 +171,8 @@ class GraphScreen extends Component {
       assignedProjUsers:null,
       filterVisibility:false,
       filterOn:false,
+      views:null,
+      clonedNode:null,
     };
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.displayTaskDependency = this.displayTaskDependency.bind(this);
@@ -239,6 +241,23 @@ class GraphScreen extends Component {
     if (response3.status !== 200) throw Error(body3.message);
 
     this.setState({ assignedProjUsers:body3.projectUsers });
+
+    const response4 = await fetch(
+      'http://10.0.2.2:5000/getProjectViews',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: this.props.project.id}),
+      },
+    );
+
+    const body4 = await response4.json();
+    if (response4.status !== 200) throw Error(body4.message);
+
+    this.setState({ views:body4.views });
   }
 
   componentWillUnmount() {
@@ -314,9 +333,14 @@ class GraphScreen extends Component {
     }
   }
 
-  displayTaskDependency(taskID, dependencyID) {
+  displayTaskDependency(taskID, dependencyID, clonedID) {
     let task = null;
     let dependency = null;
+    let clonedNode = null;
+
+    if(clonedID !== undefined){
+      clonedNode = clonedID;
+    }
 
     if (taskID != null) {
       for (var x = 0; x < this.state.nodes.length; x++) {
@@ -332,7 +356,7 @@ class GraphScreen extends Component {
       }
     }
 
-    this.setState({selectedTask: task, selectedDependency: dependency});
+    this.setState({selectedTask: task, selectedDependency: dependency, clonedNode: clonedNode});
   }
 
   render() {
@@ -346,6 +370,7 @@ class GraphScreen extends Component {
           <WebViewWrapper
             nodes={this.state.nodes}
             links={this.state.links}
+            views={this.state.views}
             direction={this.props.direction}
             webKey={this.props.reloadKey}
             projID={this.props.project.id}
@@ -359,6 +384,7 @@ class GraphScreen extends Component {
           project={this.props.project}
           userPermissions={this.props.userPermissions}
           selectedTask={this.state.selectedTask}
+          clonedNode={this.state.clonedNode}
           displayTaskDependency={this.displayTaskDependency}
           getProjectInfo={this.getProjectInfo}
           setProjectInfo={this.setProjectInfo}
@@ -458,10 +484,17 @@ class WebViewWrapper extends Component {
   }
 
   handleOnMessage(event) {
-    let message = event.nativeEvent.data;
+    let message = "";
+    let message2 = "";
+    if(message.length === 0){
+      message = event.nativeEvent.data;
+    }
+    else{
+      message2 = event.nativeEvent.data;
+    }
 
     if (message[0] === 'n') {
-      this.props.displayTaskDependency(parseInt(message.substr(1)), null);
+      this.props.displayTaskDependency(parseInt(message.substr(1)), null, parseInt(message.substr(6)));
     } else if (message[0] === 'l') {
       this.props.displayTaskDependency(null, parseInt(message.substr(1)));
     } else {
@@ -470,14 +503,14 @@ class WebViewWrapper extends Component {
   }
 
   render() {
-    return (
+    return this.props.views !== null ? (
       <WebView
         key={this.props.webKey}
         ref={(ref) => (this.myWebView = ref)}
         renderLoading={this.ActivityIndicatorLoadingView}
         startInLoadingState={true}
         source={{
-          uri: 'http://projecttree.herokuapp.com/mobile',
+          uri: 'http://10.0.2.2:5000/mobile',
           method: 'POST',
           body: `nodes=${JSON.stringify(
             this.props.nodes,
@@ -485,10 +518,12 @@ class WebViewWrapper extends Component {
             this.props.links,
           )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
             this.props.displayCriticalPath
-          }&projId=${this.props.projID}`,
+          }&projId=${this.props.projID}&views=${JSON.stringify(this.props.views)}`,
         }}
         onMessage={(event) => this.handleOnMessage(event)}
       />
+    ):(
+      <Spinner />
     );
   }
 }

@@ -35,7 +35,10 @@
             </textarea>
             <textarea id="criticalpath">
                 <%= criticalPath %>
-            </textarea>
+						</textarea>
+						<textarea id="views">
+							<%= views %>
+						</textarea>
         </div>
         <div style="display:flex; justify-content:space-around;">
             <button class="btn" onclick="zoomIn()"><i class="fa fa-search-plus"></i></button>
@@ -72,46 +75,55 @@
         *   Detect and handle clicks on nodes and links
         */ 
         paper.on('element:pointerdown', (event) => {handleDownNodeClick()});
-        paper.on('element:pointerup', (event) => {handleUpNodeClick(event.model.id)})
+        paper.on('element:pointerup', (event) => {
+					if(event.model.attributes.attrs.originId !== undefined){
+						handleUpNodeClick(event.model.attributes.attrs.originId, event.model.id)
+					}
+					else{
+						handleUpNodeClick(event.model.id)
+					}
+				})
         paper.on('link:pointerdown', (event) => {handleLinkClick(event.model.id)});
 
         var initialDownClick = null;
         function handleDownNodeClick(){
-            nodeTouch = true;
-            initialDownClick = performance.now();
+					nodeTouch = true;
+					initialDownClick = performance.now();
         }
 
-        function handleUpNodeClick(input){
-            if((performance.now()-initialDownClick) < 600){
-                window.ReactNativeWebView.postMessage('n'+input);
-            }
-
-            else{
-                window.ReactNativeWebView.postMessage('c'+input);
-            }
+        function handleUpNodeClick(input,cloned){
+					if((performance.now()-initialDownClick) < 600){
+						window.ReactNativeWebView.postMessage('n'+input);
+						if(cloned !== undefined){
+							window.ReactNativeWebView.postMessage('cloned'+cloned);
+						}
+					}
+					else{
+						window.ReactNativeWebView.postMessage('c'+input);
+					}
         }
 
         function handleLinkClick(input){
-            nodeTouch = true;
-            window.ReactNativeWebView.postMessage('l'+input);
+					nodeTouch = true;
+					window.ReactNativeWebView.postMessage('l'+input);
         }
 
         /*
         *   Page Panning
         */
         paper.on('blank:pointerdown', (event, x, y) =>{
-            dragStartPosition = { x: x*graphScale, y: y*graphScale};
+					dragStartPosition = { x: x*graphScale, y: y*graphScale};
         });
         paper.on('blank:pointerup', ()=>{
-            dragStartPosition = null;
+					dragStartPosition = null;
         });        
         paper.on('blank:pointermove', (event, x, y)=>{
-            if (dragStartPosition){
-                paper.translate(
-                    event.clientX - dragStartPosition.x, 
-                    event.clientY - dragStartPosition.y
-                );
-            }
+					if (dragStartPosition){
+						paper.translate(
+							event.clientX - dragStartPosition.x, 
+							event.clientY - dragStartPosition.y
+						);
+					}
         });
 
         /*
@@ -119,162 +131,200 @@
         */
         var graphScale = 0.8
         function paperScale(sx, sy){
-            paper.scale(sx, sy);
+					paper.scale(sx, sy);
         };
 
         function zoomOut(){
-            graphScale -= 0.1;
-            this.paperScale(graphScale, graphScale);
+					graphScale -= 0.1;
+					this.paperScale(graphScale, graphScale);
         };
 
         function zoomIn(){
-            graphScale += 0.1;
-            this.paperScale(graphScale, graphScale);
+					graphScale += 0.1;
+					this.paperScale(graphScale, graphScale);
         }
 
         function resetZoom(){
-            graphScale = 0.8;
-            this.paperScale(graphScale, graphScale);
+					graphScale = 0.8;
+					this.paperScale(graphScale, graphScale);
         };
 
         /*
         *   Build graph by creating nodes and links
         */
-        function buildGraph(data,criticalPath) {
-            var elements = [];
-            var links = [];
+        function buildGraph(data,criticalPath,viewNodes) {
+					var elements = [];
+					var links = [];
 
-            let criticalPathLinks = [];
-            let criticalPathNodes = [];
-            if(criticalPath !== null && criticalPath.path !== null)
-                criticalPath.path.segments.forEach(element => {
-                    criticalPathNodes.push(element.start.identity.low);
-                    criticalPathLinks.push(element.relationship.identity.low);
-                    criticalPathNodes.push(element.end.identity.low);
-                });
-            
-            _.each(data.nodes, function(node) {
-            elements.push(makeElement(node,criticalPathNodes));
-            })
-            
-            _.each(data.rels, function(edge) {
-            links.push(makeLink(edge,criticalPathLinks)); 
-            })
-            return elements.concat(links);
-        }
+					let criticalPathLinks = [];
+					let criticalPathNodes = [];
+					if(criticalPath !== null && criticalPath.path !== null)
+						criticalPath.path.segments.forEach(element => {
+							criticalPathNodes.push(element.start.identity.low);
+							criticalPathLinks.push(element.relationship.identity.low);
+							criticalPathNodes.push(element.end.identity.low);
+					});
+					
+					_.each(data.nodes, function(node) {
+					elements.push(makeElement(node,criticalPathNodes));
+					})
+					
+					_.each(data.rels, function(edge) {
+					links.push(makeLink(edge,criticalPathLinks)); 
+					})
+
+					let allNodes = elements.concat(links);
+					let clonedNodes = elements.concat(links);
+					if(viewNodes !== null){
+						for(let x = 0; x < viewNodes.length; x++){
+							for(let y = 0; y < allNodes.length; y++){
+								if(viewNodes[x].originalNode === parseInt(allNodes[y].id)){
+									let clonedNode = allNodes[y].clone();
+
+									var width = 100;
+									var height = 80;
+
+									var wraptext = joint.util.breakText(`(View) ${allNodes[y].attributes.attrs.text.text}`, {
+										width: width - 20,
+										height: height,
+									});
+
+									clonedNode.attributes.attrs.text.text = `${wraptext}`
+									clonedNode.attributes.attrs.originId = allNodes[y].id;
+									clonedNode.attributes.id = `${viewNodes[x].id}`;
+									clonedNode.id = `${viewNodes[x].id}`;
+									clonedNodes.push(clonedNode);
+								}
+
+								for(let z = 0; z < viewNodes[x].outDepArr.length; z++){
+									if(`l${viewNodes[x].outDepArr[z].low}` === allNodes[y].id){
+										allNodes[y].attributes.source = {id: `${viewNodes[x].id}`};
+									}
+								}
+
+								for(let a = 0; a < viewNodes[x].inDepArr.length; a++){
+									if(`l${viewNodes[x].inDepArr[a].low}` === allNodes[y].id){
+										allNodes[y].attributes.target = {id: `${viewNodes[x].id}`};
+									}
+								}
+							}
+						}
+					}
+				return clonedNodes;
+			}
         
-        function makeLink(edge,criticalPathLinks) {
-            var strokeColor = '#000';
-            if(criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
-            return new joint.shapes.standard.Link({
-                id:edge.id,
-                source:{id:`${edge.source}`},
-                target:{id:`${edge.target}`},
-                connector:{name:'smooth'},
-                // router:{name:'manhattan'},
-                attrs: {
-                    type:'link',
-                    line: {stroke:strokeColor}
-                }
-            })
-        }
+			function makeLink(edge,criticalPathLinks) {
+				var strokeColor = '#000';
+				if(criticalPathLinks.includes(edge.id)) strokeColor = "#0275d8";
+				return new joint.shapes.standard.Link({
+					id:edge.id,
+					source:{id:`${edge.source}`},
+					target:{id:`${edge.target}`},
+					connector:{name:'smooth'},
+					// router:{name:'manhattan'},
+					attrs: {
+						type:'link',
+						line: {stroke:strokeColor}
+					}
+				})
+			}
         
-        function makeElement(node,criticalPathNodes) {
-            var letterSize = 16;
-            var width = 100
-            var height = 80
+			function makeElement(node,criticalPathNodes) {
+				var letterSize = 16;
+				var width = 100
+				var height = 80
 
-            var wraptext = joint.util.breakText(node.name, {
-                width: width-20,
-                height: height
-            });
+				var wraptext = joint.util.breakText(node.name, {
+					width: width-20,
+					height: height
+				});
 
-            var statusColor = '#77DD77'
-            if(node.type === "Incomplete"){
-                let today = new Date();
-                if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
-                    if(parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)){
-                        if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
-                            if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
-                            {
-                                if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
-                                    statusColor = '#ff6961'
-                                }
-                            }
-                        }
-                        else{
-                            statusColor = '#ff6961'
-                        }
-                    }
-                }
-                else{
-                    statusColor = '#ff6961'
-                }
-            }
-            else if(node.type === "Complete"){
-                statusColor = '#77dd77'
-            }
-            else if(node.type === "Issue"){
-                statusColor = '#ffae42'
-            }
+				var statusColor = '#77DD77'
+				if(node.type === "Incomplete"){
+					let today = new Date();
+					if(parseInt(today.getFullYear()) <= parseInt(node.endDate.year.low)){
+						if(parseInt(today.getFullYear()) === parseInt(node.endDate.year.low)){
+							if(parseInt(today.getMonth()+1)<=parseInt(node.endDate.month.low)){
+								if(parseInt(today.getMonth()+1)===parseInt(node.endDate.month.low))
+								{
+									if(parseInt(today.getDate()) > parseInt(node.endDate.day.low)){
+										statusColor = '#ff6961'
+									}
+								}
+							}
+							else{
+								statusColor = '#ff6961'
+							}
+						}
+					}
+					else{
+						statusColor = '#ff6961'
+					}
+				}
+				else if(node.type === "Complete"){
+					statusColor = '#77dd77'
+				}
+				else if(node.type === "Issue"){
+					statusColor = '#ffae42'
+				}
 
-            var borderColor = '#000';
-            if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
+				var borderColor = '#000';
+				if(criticalPathNodes.includes(node.id)) borderColor = '#0275d8';
 
-            let shadowHighlight = {
-                name: 'dropShadow',
-                args: {
-                dx: 1,
-                dy: 1,
-                blur: 2
-                }
-            }
-            if(node.highlighted !== undefined){
-                shadowHighlight = {
-                name: 'highlight',
-                args: {
-                    color: 'purple',
-                    width: 3,
-                    opacity: 0.7,
-                    blur: 5
-                }
-                }
-            }
+				let shadowHighlight = {
+					name: 'dropShadow',
+					args: {
+					dx: 1,
+					dy: 1,
+					blur: 2
+					}
+				}
+				if(node.highlighted !== undefined){
+						shadowHighlight = {
+						name: 'highlight',
+						args: {
+							color: 'purple',
+							width: 3,
+							opacity: 0.7,
+							blur: 5
+						}
+					}
+				}
 
-            return new joint.shapes.standard.Rectangle({
-                id: `${node.id}`,
-                size:{
-                    width:width,
-                    height:height
-                },
-                attrs:{
-                    type:'node',
-                    body: {
-                        stroke: borderColor,
-                        fill: {
-                            type: 'linearGradient',
-                            stops: [
-                                { offset: `${node.progress}%`, color: statusColor },
-                                { offset: `${node.progress+1}%`, color: '#fff' },
-                            ]
-                        },
-                        filter: shadowHighlight,
-                    },
-                    rect:{
-                        rx: 10, ry: 10,
-                        //magnet: true
-                        transform: 'translate(15, 15)'
-                    },
-                    text:{ 
-                        text: wraptext, 
-                        'font-size': letterSize, 
-                        'font-family': 'monospace',
-                        transform: 'translate(15, 15)'
-                    },
-                    
-                }
-            });
-        }
+				return new joint.shapes.standard.Rectangle({
+						id: `${node.id}`,
+						size:{
+							width:width,
+							height:height
+						},
+						attrs:{
+								type:'node',
+								body: {
+										stroke: borderColor,
+										fill: {
+												type: 'linearGradient',
+												stops: [
+														{ offset: `${node.progress}%`, color: statusColor },
+														{ offset: `${node.progress+1}%`, color: '#fff' },
+												]
+										},
+										filter: shadowHighlight,
+								},
+								rect:{
+										rx: 10, ry: 10,
+										//magnet: true
+										transform: 'translate(15, 15)'
+								},
+								text:{ 
+										text: wraptext, 
+										'font-size': letterSize, 
+										'font-family': 'monospace',
+										transform: 'translate(15, 15)'
+								},
+								
+						}
+				});
+			}
         
         $('#btn-layout').on('click', layout);
         
@@ -283,9 +333,10 @@
                 var dataList = eval('dataList = ' + $('#adjacency-list').val());
                 var graphDirection = eval($('#graphdirection').val());
                 var criticalPath = eval('criticalPath = ' + $('#criticalpath').val());
+                var views = eval('views = ' + $('#views').val());
             } catch (e) { alert(e); }
 
-            var cells = buildGraph(dataList,criticalPath);
+            var cells = buildGraph(dataList,criticalPath,views);
             graph.resetCells(cells);
             joint.layout.DirectedGraph.layout(graph, {
                 dagre: dagre,

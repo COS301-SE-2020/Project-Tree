@@ -13,6 +13,7 @@ import {
 import * as Progress from 'react-native-progress';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
+import CloneTask from './CloneTask';
 import UpdateProgress from '../UpdateProgress';
 import SendTaskNotification from '../../NoticeBoard/TaskWideNotification'
 
@@ -231,16 +232,11 @@ class TaskModal extends Component {
                 <View style={{flexDirection:'row'}}>
                   {this.props.userPermissions["update"] === true?
                     <View style={{flex: 1}}>
-                      <TouchableOpacity
-                        style={styles.editButton}
-                        onPress={() => this.toggleProgressModal(false, true)}>
-                        <Icon
-                          type="Entypo"
-                          name="progress-one"
-                          style={{color: 'white', paddingBottom: 10}}>
-                          <Text>&nbsp;Clone</Text>
-                        </Icon>
-                      </TouchableOpacity>
+                      <CloneTask
+                        task={this.props.selectedTask}
+                        toggleVisibility={this.toggleVisibility}
+                        project={this.props.project}
+                      />
                     </View>
                   :
                     null
