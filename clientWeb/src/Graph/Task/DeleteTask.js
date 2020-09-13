@@ -70,7 +70,7 @@ class DeleteTask extends React.Component {
       <React.Fragment>
         <Button
           className="btn-danger"
-          style={{width: "100px"}}
+          style={{width: "170px"}}
           onClick={() => {
             this.showModal();
           }}
