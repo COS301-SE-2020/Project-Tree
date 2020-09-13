@@ -92,13 +92,6 @@
   }
 }
 
-.carosal {
-  top: 18%;
-  padding-left: 50px;
-  padding-top: 118px;
-  border-radius: 60px;
-}
-
 //Login Main Container
 .login {
   -webkit-transform: scale(1);
@@ -114,8 +107,8 @@
   align-items: center;
   margin: auto;
   position: relative;
-  left: 5%;
-  top: 8%;
+  //left: 5%;
+  //top: 8%;
   z-index: 99;
   .container {
     display: flex;
@@ -125,10 +118,10 @@
     box-shadow: 0px 0px 12px 2px rgba(85, 28, 28, 0.2);
     border-radius: 30px;
     position: absolute;
-    right: 50px;
+    //right: 50px;
     z-index: 99;
     width: 100%;
-    height: 100%;
+    height: 95%;
     z-index: 99;
     padding: 17px 100px;
     transition: transform 200ms ease-in-out;
@@ -141,7 +134,7 @@
     background-color: #ad5c0f;
     width: 100%;
     position: absolute;
-    right: 50px;
+    right: 100px;
     border-radius: 40px;
     z-index: -1;
     transition: all 400ms ease-in-out;
@@ -149,10 +142,10 @@
     box-shadow: 0px 0px 12px 2px rgba(15, 15, 15, 0.281);
 
     &.right {
-      right: -30%;
+      right: -50%;
       align-items: flex-end;
       &:hover {
-        right: -35%;
+        right: -55%;
       }
     }
     &.left {

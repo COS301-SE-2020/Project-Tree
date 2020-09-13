@@ -3,6 +3,7 @@ import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstr
 import $ from "jquery";
 import loginImg from "../Images/LoginImg.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import About from "../About";
 
 
 function stringifyFormData(fd) {
@@ -94,14 +95,7 @@ export class Login extends Component {
               </Button>  
            <Row>
             <Col>
-              <Button
-                block
-                variant="dark"
-                className=".btn"
-                // MODAL FUNCTION CALL onClick={() => this.handleLogout()}
-              >  Check it out
-               <i className="fa fa-cogs" style={{ fontSize: "30px" }}></i>
-              </Button>
+              <About/>
             </Col>
             </Row>          
           </div>
