@@ -14,7 +14,22 @@ class NoticeBoard extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = { users:null };
+  }
+
+  async componentDidMount() 
+  {
+    $.post("/people/getAllUsers",
+      { token: localStorage.getItem("sessionToken") },
+      (response) => {
+       this.setState({ users: response});
+        // console.log(this.state.user)
+        // console.log(response)
+      }
+    )
+    .fail((response) => {
+      throw Error(response.message);
+    });
   }
 
   render() {
@@ -22,7 +37,11 @@ class NoticeBoard extends Component {
       return null;
     }
 
-    return <NotificationList messages={this.props.messages} />;
+    if(this.state.users === null){
+      return null;
+    }
+    
+    return <NotificationList messages={this.props.messages} users={this.state.users}/>;
   }
 }
 
@@ -31,53 +50,50 @@ class NotificationList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null, pfp: "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture", imageHash: Date.now()};
+      user: this.props.users, pfp: "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture", imageHash: Date.now()};
     this.returnRandomUser = this.returnRandomUser.bind(this);
   }
 
-  async componentDidMount() 
-  {
-    $.post("/people/getAllUsers",
-      { token: localStorage.getItem("sessionToken") },
-      (response) => {
-       this.setState({ user: response});
-        console.log(this.state.user)
-        console.log(response)
-      }
-    )
-    .fail((response) => {
-      throw Error(response.message);
-    });
-  }
+  
 
   returnRandomUser(profileId) {
-    console.log(profileId[0])
-    // console.log(this.state.user.profilePicture)
-     if(this.state.user != null)
-     {
-      if(this.state.user.users != undefined ||  this.state.user != null){
-      let messageList = this.state.user.users.map(function(users, i) {
-        if(users.id == profileId[0] && users.profilePicture != null)
-        {
-          console.log("PICTURE SUCCESS")
-          console.log(users.profilePicture)
-          let x = "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture" 
-          let hash = Date.now();
-          //this.setState({pfp: users.profilePicture})
-          return (
-           //<img src={this.state.pfp} alt="user" style={{ height: "70px", width: "70px" }} />
-            <img src={users.profilePicture} alt="user" style={{ height: "70px", width: "70px" }} />
-           //<img src={'${this.state.pfp}?${hash}'} alt="user" style={{ height: "70px", width: "70px" }} />
-            );
-        }     
-      });
+    let users = this.state.user.users;
+
+    for(var x=0; x<users.length; x++){
+      if(parseInt(users[x].id) === parseInt(profileId[0])){
+        return <img src={users[x].profilePicture} alt="user" style={{ height: "70px", width: "70px" }} />
       }
     }
-    else
-    {
-      console.log("picture not loaded")
-      //return (<img src={this.state.pfp} alt="user" style={{ height: "70px", width: "70px" }} />)
-    }
+    // console.log(profileId[0])
+    // console.log(this.state.user.profilePicture)
+    //  if(this.state.user !== null)
+    //  {
+    //   if(this.state.user.users !== undefined ||  this.state.user != null){
+      // let messageList = this.state.user.users.map(function(users, i) {
+      //   console.log('hello')
+      //   console.log(users.id)
+      //   console.log(profileId[0])
+      //   if(parseInt(users.id) === parseInt(profileId[0]))
+      //   {
+      //     // console.log("PICTURE SUCCESS")
+      //     let x = "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture" 
+      //     let hash = Date.now();
+      //     //this.setState({pfp: users.profilePicture})
+      //     let returnVal = <img src={users.profilePicture} alt="user" style={{ height: "70px", width: "70px" }} />
+      //     return (
+      //      //<img src={this.state.pfp} alt="user" style={{ height: "70px", width: "70px" }} />
+      //       returnVal
+      //      //<img src={'${this.state.pfp}?${hash}'} alt="user" style={{ height: "70px", width: "70px" }} />
+      //       );
+      //   }     
+      // });
+      // }
+    // }
+    // else
+    // {
+    //   // console.log("picture not loaded")
+    //   return (<img src={this.state.pfp} alt="user" style={{ height: "70px", width: "70px" }} />)
+    // }
     // let index = Math.round(Math.random() * (4 - 1) + 1);
     // if (index === 1){
     //   return (
@@ -201,6 +217,7 @@ class NotificationList extends React.Component {
   }
   
   render() {
+    console.log(this.props.users)
     let messages = this.sortMessages();
     let messageComponents = this.createMessageList(messages);
 
