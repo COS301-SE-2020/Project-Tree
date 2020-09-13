@@ -98,7 +98,7 @@ class UpdateDependencyForm extends Component {
       this.setState({dateTimePicker: false});
       return;
     }
-    let date = new Date(selectedDate).toISOString().substring(0,16);
+    let date = new Date(new Date(selectedDate).getTime() - new Date().getTimezoneOffset()*60*1000).toISOString().substring(0,16);
     if (type.for === 'start') {
         if (this.state.endDate < date) 
           this.setState({
@@ -181,7 +181,9 @@ class UpdateDependencyForm extends Component {
   
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
+    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
     let endDate = new Date(ed);
+    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
@@ -270,7 +272,7 @@ class UpdateDependencyForm extends Component {
         {this.state.dateTimePicker && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={new Date(this.state.dateTimeType.value)}
+            value={new Date(new Date(this.state.dateTimeType.value).getTime() + new Date().getTimezoneOffset()*60*1000)}
             mode={this.state.dateTimeType.type}
             is24Hour={true}
             display="default"

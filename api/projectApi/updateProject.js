@@ -38,7 +38,6 @@ function updateCurDependency(dependency, nodes, rels) {
 function updateTask(task, nodes, rels) {
   let maxStartDate =new Date(task.startDate);
   maxStartDate.setTime( maxStartDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-  console.log(maxStartDate);
   let predDependencies = getPredDependencies(task, rels);
   if(predDependencies != []){
     maxStartDate = new Date(0);
