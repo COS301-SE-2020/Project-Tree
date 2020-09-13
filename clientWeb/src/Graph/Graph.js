@@ -254,8 +254,22 @@ class Graph extends React.Component {
         if (this.recDepCheck(this.state.target.id, this.state.source.id) === true) {
           this.setState({ target: null, alert: 1 });
         }
+
+        else if(this.alreadyExists(this.state.target.id, this.state.source.id)){
+          this.setState({ target: null, alert: 2 });
+        }
       }
     }
+  }
+
+  alreadyExists(target, source){
+    let rels = this.props.links;
+
+    for(var x=0; x<rels.length; x++){
+      if(target === rels[x].target && source === rels[x].source) return true;
+    }
+
+    return false;
   }
 
   clearDependency() {
@@ -271,7 +285,6 @@ class Graph extends React.Component {
         this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
       }    
     } else if (clickedNode.model.attributes.attrs.type === "link") {
-      console.log(this.props.views)
       let source = parseInt(clickedNode.model.attributes.source.id);
       let target = parseInt(clickedNode.model.attributes.target.id);
       let sourceView = null;
@@ -416,10 +429,16 @@ class Graph extends React.Component {
         <Container className="text-center py-2" fluid>
           <Row>
             <Col className="alignSelfCenter">
-              {this.state.alert != null ? (
+              {this.state.alert === 1 ? (
                 <Row>
                   Please select another node that is not higher in the same
                   chain
+                </Row>
+              ) : null}
+
+              {this.state.alert === 2 ? (
+                <Row>
+                  This dependency already exists
                 </Row>
               ) : null}
               <Row>
