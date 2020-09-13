@@ -318,10 +318,10 @@ class TaskSidebar extends React.Component {
     for (let x = 0; x < people.length; x++) {
       list.push(
         <Row className="justify-content-md-center">              
-          <Col className="justify-content-md-center" sm={4} md={4}>
+          <Col className="justify-content-md-center">
          <img class="circular" src={people[x].profilePicture} alt="user" width="50" height="50"/>
          </Col>
-          <Col key={people[x].id} xs={7} className="justify-content-md-center">
+          <Col key={people[x].id} xs={8} className="text-left">
           {people[x].name}&nbsp;{people[x].surname}
           </Col>
           <Row><br /></Row>
