@@ -39,13 +39,31 @@ function makeElement(node, criticalPathNodes) {
   });
 
   let statusColor = "#77dd77";
+  let fillAmount = null;
   if (node.type === "Incomplete") {
     let today = new Date();
-    if (today > new Date(node.endDate)) statusColor = "#ff6961";
+    if (today > new Date(node.endDate)){
+      statusColor = "#ff6961";
+      fillAmount = [
+        { offset: `100%`, color: statusColor },
+      ]
+    }
+    else{
+      fillAmount = [
+        { offset: `${node.progress}%`, color: statusColor },
+        { offset: `${node.progress+1}%`, color: '#fff' },
+      ]
+    }
   } else if (node.type === "Complete") {
     statusColor = "#77dd77";
+    fillAmount = [
+      { offset: `100%`, color: statusColor },
+    ]
   } else if (node.type === "Issue") {
     statusColor = "#ffae42";
+    fillAmount = [
+      { offset: `100%`, color: statusColor },
+    ]
   }
   
   var borderColor = "#000";
@@ -80,10 +98,7 @@ function makeElement(node, criticalPathNodes) {
       body: {
         fill: {
           type: 'linearGradient',
-          stops: [
-            { offset: `${node.progress}%`, color: statusColor },
-            { offset: `${node.progress+1}%`, color: '#fff' },
-          ]
+          stops: fillAmount
         },
         filter: shadowHighlight,
         stroke: borderColor,
