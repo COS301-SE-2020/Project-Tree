@@ -8,7 +8,8 @@ async function sendNoticeBoardNotification(
   projID,
   timestamp,
   message,
-  type
+  type,
+  profileId
 ) {
   let queriesArray = [];
   let session = db.getSession();
@@ -22,7 +23,8 @@ async function sendNoticeBoardNotification(
           projID:${projID}, 
           message:'${message}',
           timestamp:datetime('${timestamp}'),
-          type:'${type}'
+          type:'${type}',
+          profileId:'${profileId}'
         })
       `
     )

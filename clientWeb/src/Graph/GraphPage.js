@@ -281,6 +281,11 @@ class TaskSidebar extends React.Component {
     let taskPacMans = [];
     let taskResPersons = [];
     let taskResources = [];
+    if(this.props.assignedProjUsers.length === null)
+    {
+      this.props.assignedProjUsers.length=0;
+      console.log("ERROR LENGTH")
+    }
 
     // Get the users that are part of the selected task
     for(let x = 0; x < this.props.assignedProjUsers.length; x++){
