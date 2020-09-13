@@ -8,9 +8,7 @@ import * as Scroll from 'react-scroll';
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    let ownedProjects = [];
-    let otherProjects = [];
-    this.props.ownedProjects.forEach((project, i) => {
+    /* this.props.ownedProjects.forEach((project, i) => {
       ownedProjects[i] = {}
       ownedProjects[i].projectInfo = project;
       ownedProjects[i].criticalPath = {};
@@ -27,12 +25,12 @@ class Dashboard extends React.Component {
     this.state = {
       ownedProjects:ownedProjects,
       otherProjects:otherProjects
-    };
+    }; */
 
     this.ProjectAnalyticList = this.ProjectAnalyticList.bind(this);
   }
 
-  componentDidMount() {
+  /* componentDidMount() {
     this.state.ownedProjects.forEach((project, i) => {
       $.post("/getProject", { id: project.projectInfo.id }, (response) => {
         let ownedProjects = this.state.ownedProjects;
@@ -59,7 +57,6 @@ class Dashboard extends React.Component {
         let otherProjects = this.state.otherProjects;
         otherProjects[i].tasks = response.tasks;
         otherProjects[i].rels = response.rels;
-        console.log(response.rels);
         this.setState({ otherProjects: otherProjects });
       }).fail((err) => {
         throw Error(err);
@@ -76,11 +73,11 @@ class Dashboard extends React.Component {
         alert("Unable to get Critical Path");
       });
     });
-  }
+  } */
 
   ProjectAnalyticList(){
     let items = []
-    this.state.ownedProjects.forEach(project => {
+    this.props.ownedProjects.forEach(project => {
       items.push(
         <Col key={project.projectInfo.id.toString()} xl={12} lg={12} className="m-2" style={{width:'100%'}}>
           <Scroll.Element name={project.projectInfo.id.toString()} className="element m-0 p-0">
@@ -90,7 +87,7 @@ class Dashboard extends React.Component {
         </Col>
       )
     });
-    this.state.otherProjects.forEach(project => {
+    this.props.otherProjects.forEach(project => {
       items.push(
         <Col key={project.projectInfo.id.toString()} xl={12} lg={12} className="m-2" style={{width:'100%'}}>
           <Scroll.Element name={project.projectInfo.id.toString()} className="element m-0 p-0">
@@ -113,14 +110,14 @@ class Dashboard extends React.Component {
 
   MakeDropdown(){
     let ownedProjects = [];
-    this.state.ownedProjects.forEach(project => {
+    this.props.ownedProjects.forEach(project => {
       ownedProjects.push(
         <Dropdown.Item key={project.projectInfo.id.toString()} onClick={()=>this.scroll(project.projectInfo.id.toString())}>{project.projectInfo.name}</Dropdown.Item>
       )
     });
 
     let otherProjects = [];
-    this.state.otherProjects.forEach(project => {
+    this.props.otherProjects.forEach(project => {
       otherProjects.push(
         <Dropdown.Item key={project.projectInfo.id.toString()} onClick={()=>this.scroll(project.projectInfo.id.toString())}>{project.projectInfo.name}</Dropdown.Item>
       )
@@ -172,7 +169,7 @@ class Dashboard extends React.Component {
                   <Scroll.Element name="calendar" className="element">
                     <h1>Calendar</h1>
                     <hr style={{ backgroundColor: "#EEBB4D", width:"50%"}} />
-                    <Calendar ownedProjects={this.state.ownedProjects} otherProjects={this.state.otherProjects}/>
+                    <Calendar ownedProjects={this.props.ownedProjects} otherProjects={this.props.otherProjects}/>
                   </Scroll.Element>
                 </Col>
               </Row>
