@@ -325,7 +325,7 @@ class HomeScreen extends Component {
                     }}>
                     <View style={{width: '15%'}}></View>
                     <View style={{width: '80%', alignItems: 'center'}}>
-                      <Text style={{fontSize: 30, color: '#184D47'}}>
+                      <Text style={{fontSize: 30, color: '#184D47', textAlign: 'center'}}>
                         {this.props.project.name}
                       </Text>
                     </View>
@@ -346,7 +346,7 @@ class HomeScreen extends Component {
               </CardItem>
               <CardItem>
                 <Body style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Text>{this.props.project.description}</Text>
+                  <Text style={{textAlign:'center'}}>{this.props.project.description}</Text>
                 </Body>
               </CardItem>
               <CardItem

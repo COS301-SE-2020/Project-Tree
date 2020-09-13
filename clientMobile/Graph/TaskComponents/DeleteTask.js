@@ -15,38 +15,73 @@ class DeleteTask extends Component {
   }
 
   deleteConfirmation() {
-    Alert.alert(
-      'Are you sure?',
-      'Are you sure you want to delete ' + this.props.task.name + '?',
-      [
-        {text: 'NO', style: 'cancel'},
-        {text: 'YES', onPress: () => this.handleSubmit()},
-      ],
-    );
+    if(this.props.clonedNode !== null){
+      Alert.alert(
+        'Are you sure?',
+        'Are you sure you want to delete the view of ' + this.props.task.name + '?',
+        [
+          {text: 'NO', style: 'cancel'},
+          {text: 'YES', onPress: () => this.handleSubmit()},
+        ],
+      );
+    }
+    else{
+      Alert.alert(
+        'Are you sure?',
+        'Are you sure you want to delete ' + this.props.task.name + '?',
+        [
+          {text: 'NO', style: 'cancel'},
+          {text: 'YES', onPress: () => this.handleSubmit()},
+        ],
+      );
+    }
   }
 
   async handleSubmit() {
-    let projectData = await this.props.getProjectInfo();
-    projectData.changedInfo = {
-      id: this.props.task.id,
-    };
-    projectData = JSON.stringify(projectData);
-
-    const response = await fetch(
-      'http://projecttree.herokuapp.com/task/delete',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+    if(this.props.clonedNode !== null){
+      const response = await fetch(
+        'http://projecttree.herokuapp.com/task/deleteClone',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            changedInfo:{
+              viewId: this.props.clonedNode
+            }
+          }),
         },
-        body: projectData,
-      },
-    );
+      );
+  
+      const body = await response.json();
+      this.props.toggleVisibility(true, false, null);
+      this.props.setProjectInfo(undefined, undefined);
+    }
+    else{
+      let projectData = await this.props.getProjectInfo();
+      projectData.changedInfo = {
+        id: this.props.task.id,
+      };
+      projectData = JSON.stringify(projectData);
 
-    const body = await response.json();
-    this.props.toggleVisibility(true, false, null);
-    this.props.setProjectInfo(body.nodes, body.rels);
+      const response = await fetch(
+        'http://projecttree.herokuapp.com/task/delete',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: projectData,
+        },
+      );
+
+      const body = await response.json();
+      this.props.toggleVisibility(true, false, null);
+      this.props.setProjectInfo(body.nodes, body.rels);
+    }
   }
 
   render() {
@@ -64,7 +99,7 @@ class DeleteTask extends Component {
 
 const styles = StyleSheet.create({
   deleteButton: {
-    backgroundColor: '#184D47',
+    backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
     height: 45,

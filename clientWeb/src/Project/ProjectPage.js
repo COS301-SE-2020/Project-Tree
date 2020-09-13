@@ -121,7 +121,6 @@ class ProjectPage extends React.Component {
             md={12}
             lg={6}
             xl={6}
-            style={{ maxHeight: "400px", overflowY: "auto" }}
           >
             {this.props.project != null && this.props.user != null ? (
               <NoticeBoard

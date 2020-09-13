@@ -181,7 +181,13 @@ class NotificationList extends React.Component {
             </h3>
           </Col>
         </Row>
-        {messageComponents}
+        <Row>
+          <Col
+            style={{ maxHeight: "325px", overflowY: "auto" }}
+          >
+            {messageComponents}
+          </Col>
+        </Row>
       </React.Fragment>
     );
   }

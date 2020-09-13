@@ -14,6 +14,8 @@ import {
   Input
 } from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import ms from "ms";
 
 class UpdateDependency extends Component {
   constructor(props) {
@@ -74,32 +76,78 @@ class UpdateDependencyForm extends Component {
     super(props);
 
     this.state = {
-      dependencyRelationship: this.props.dependency.relationshipType,
+      relationshipType: this.props.dependency.relationshipType,
+      sStartDate: this.props.dependency.sStartDate,
+      sEndDate: this.props.dependency.sEndDate,
+      startDate: this.props.dependency.startDate,
+      endDate: this.props.dependency.endDate,
       selectedIndex: this.props.dependency.relationshipType === 'ss' ? 0 : 1,
-      dependencyDuration: this.props.dependency.duration,
       error: null,
+      dateTimePicker: false,
+      dateTimeType: { type: 'date', for: 'start', value: new Date() },
     };
 
+    this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formatValidateInput = this.formatValidateInput.bind(this);
     this.updateIndex = this.updateIndex.bind(this);
   }
 
+  handleDateTimeSelect(event, selectedDate, type) {
+    if(event.type === 'dismissed') {
+      this.setState({dateTimePicker: false});
+      return;
+    }
+    let date = new Date(new Date(selectedDate).getTime() - new Date().getTimezoneOffset()*60*1000).toISOString().substring(0,16);
+    if (type.for === 'start') {
+        if (this.state.endDate < date) 
+          this.setState({
+            error: "you can not set the end before the start",
+            startDate: date, 
+            endDate: date, 
+            dateTimePicker: false
+          });
+        else
+        this.setState({
+          error: null,
+          startDate: date, 
+          dateTimePicker: false
+        });
+    } else {
+      if (this.state.startDate > date) 
+        this.setState({
+          error: "you can not set the end before the start",
+          endDate: this.state.startDate, 
+          dateTimePicker: false
+        });
+      else
+      this.setState({
+        error: null,
+        endDate: date, 
+        dateTimePicker: false
+      });
+    }
+  }
+
   updateIndex(selectedIndex) {
     if (selectedIndex == 0) {
-      this.setState({selectedIndex: 0, dependencyRelationship: 'ss'});
+      this.setState({selectedIndex: 0, relationshipType: 'ss'});
+      this.handleDateTimeSelect({}, this.state.sStartDate, {for:"start"});
     } else {
-      this.setState({selectedIndex: 1, dependencyRelationship: 'fs'});
+      this.setState({selectedIndex: 1, relationshipType: 'fs'});
+      this.handleDateTimeSelect({}, this.state.sEndDate, {for:"start"});
     }
   }
 
   formatValidateInput() {
-    if(this.checkFormData("all") === false) return null;
 
     let data = {
-      ud_did: this.props.dependency.id,
-      ud_duration: parseInt(this.state.dependencyDuration),
-      ud_relationshipType: this.state.dependencyRelationship,
+      id: this.props.dependency.id,
+      relationshipType: this.state.relationshipType,
+      sStartDate: this.state.sStartDate,
+      sEndDate: this.state.sEndDate,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
     };
 
     return data;
@@ -130,13 +178,13 @@ class UpdateDependencyForm extends Component {
     this.props.displayTaskDependency(null, null);
     this.props.setProjectInfo(body.nodes, body.rels);
   }
-
-  checkFormData(){
-    let duration = this.state.dependencyDuration;
-    if(!(duration.toString()).trim().length){
-      this.setState({error: "Please enter a duration for your dependency"});
-      return false;
-    }
+  
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    let endDate = new Date(ed);
+    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
   render() {
@@ -161,15 +209,76 @@ class UpdateDependencyForm extends Component {
         <View style={{flex: 1, marginBottom:20}}>
           <Form>
             <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
-            <Item floatingLabel>
-              <Label>Duration (Days)</Label>
+            <Item floatingLabel disabled>
+              <Label>
+              {
+                this.state.relationshipType === 'ss'?
+                  "Start Date and Time of First Task"
+                  :
+                  "End Date and Time of First Task"
+              }
+              </Label>
+              <Input value={
+                this.state.relationshipType === 'ss'?
+                  this.state.sStartDate.replace("T", " ")
+                  :
+                  this.state.sEndDate.replace("T", " ")
+                } />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Start Date of Second Task</Label>
+              <Input value={this.state.endDate.substring(0, 10)} />
+              <Icon
+                type="AntDesign"
+                name="plus"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true, 
+                    dateTimeType: { 
+                      type: 'date', 
+                      for: 'end',
+                      value: this.state.endDate,
+                    }
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Start Time of Second Task</Label>
+              <Input value={this.state.endDate.substring(11, 16)} />
+              <Icon
+                type="AntDesign"
+                name="plus"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true, 
+                    dateTimeType: { 
+                      type: 'time', 
+                      for: 'end',
+                      value: this.state.endDate,
+                    }
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Duration</Label>
               <Input
-                value={this.state.dependencyDuration.toString()}
-                onChangeText={(val) => this.setState({dependencyDuration: val})}
+                value={this.CalcDiff(this.state.startDate, this.state.endDate)}
               />
             </Item>
           </Form>
         </View>
+        {this.state.dateTimePicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={new Date(new Date(this.state.dateTimeType.value).getTime() + new Date().getTimezoneOffset()*60*1000)}
+            mode={this.state.dateTimeType.type}
+            is24Hour={true}
+            display="default"
+            onChange={(event, selectedDate) => this.handleDateTimeSelect(event, selectedDate, this.state.dateTimeType)}
+          />
+        )}
         <View style={{flex: 1}}>
           <TouchableOpacity
             style={styles.submitButton}

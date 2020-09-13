@@ -70,10 +70,10 @@ export default class GraphDrawer extends Component {
               marginBottom: 30,
             }}></View>
           <View style={{alignItems: 'center'}}>
-            <Text style={{color: 'white', fontSize: 28}}>
+            <Text style={{color: 'white', fontSize: 28, textAlign: 'center'}}>
               {this.props.project.name}
             </Text>
-            <Text style={{color: 'white', fontSize: 17}}>
+            <Text style={{color: 'white', fontSize: 17, textAlign: 'center'}}>
               {this.props.project.description}
             </Text>
             <GoToHome />
