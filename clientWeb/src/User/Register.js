@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstrap";
 import $ from "jquery";
 import register from "../Images/Register.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -191,9 +191,23 @@ export class Register extends React.Component {
             </div>
           </div>
           <div className="footer">
-            <Button type="submit" className=".btn">
-              Register
-            </Button>
+          <Row>
+            <Col>
+              <Button
+                block
+                variant="dark"
+                className=".btn"
+                // MODAL FUNCTION CALL onClick={() => this.handleLogout()}
+              >
+          <i className="fa fa-cogs" style={{ fontSize: "30px" }}></i>
+                </Button>
+            </Col>
+            <Col>
+              <Button type="submit" className=".btn">
+                Register
+              </Button>
+            </Col>
+           </Row>            
           </div>
         </Form>
       </div>

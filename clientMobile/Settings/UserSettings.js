@@ -134,6 +134,7 @@ class UserSettings extends Component {
         body: JSON.stringify({token: token}),
       });
       const body = await response.json();
+      console.log(body)
       this.setState({
         userName: body.user.name,
         sname: body.user.sname,
