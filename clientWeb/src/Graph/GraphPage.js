@@ -172,6 +172,7 @@ class GraphPage extends React.Component {
           <Row>
             <Col
               xs={3}
+              sm={3}
               md={3}
               lg={3}
               xl={3}
@@ -344,18 +345,8 @@ class TaskSidebar extends React.Component {
           style={{ fontSize: "19px", wordWrap: "break-word" }}
         >
           <Row className="text-center">
-            <Col>
-              {this.props.userPermission["delete"] === true ? (
-                <DeleteTask
-                  task={this.props.task}
-                  setTaskInfo={this.props.setTaskInfo}
-                  getProjectInfo={this.props.getProjectInfo}
-                  toggleSidebar={this.props.toggleSidebar}
-                  viewId={this.props.viewId}
-                />
-              ) : null}
-            </Col>
-            <Col xs={6}>
+            <Col></Col>
+            <Col className="text-center">
               {this.props.viewId !== null ? <h3>{this.props.task.name}<br />(View)</h3> : <h3>{this.props.task.name}</h3>}
             </Col>
             <Col className="text-right">
@@ -436,6 +427,19 @@ class TaskSidebar extends React.Component {
               />
             </Col>
           </Row>
+          <Row>
+            <Col xs={12} >
+              {this.props.userPermission["delete"] === true ? (
+                <DeleteTask
+                  task={this.props.task}
+                  setTaskInfo={this.props.setTaskInfo}
+                  getProjectInfo={this.props.getProjectInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                  viewId={this.props.viewId}
+                />
+              ) : null}
+            </Col>
+          </Row>
           <hr />
           <b>Package managers:</b>
           <br />
@@ -483,19 +487,8 @@ class DependencySidebar extends React.Component {
           style={{ fontSize: "19px" }}
         >
           <Row>
-            <Col>
-              {this.props.userPermission["delete"] === true ? (
-                <DeleteDependency
-                  dependency={this.props.dependency}
-                  getProjectInfo={this.props.getProjectInfo}
-                  setTaskInfo={this.props.setTaskInfo}
-                  toggleSidebar={this.props.toggleSidebar}
-                  sourceView={this.props.sourceView}
-                  targetView={this.props.targetView}
-                />
-              ) : null}
-            </Col>
-            <Col xs={8}>
+            <Col></Col>
+            <Col className="text-center">
               <h4>{start + "→" + end}</h4>
             </Col>
             <Col className="text-right">
@@ -534,6 +527,18 @@ class DependencySidebar extends React.Component {
                   getProjectInfo={this.props.getProjectInfo}
                   setTaskInfo={this.props.setTaskInfo}
                   toggleSidebar={this.props.toggleSidebar}
+                />
+              ) : null}
+            </Col>
+            <Col>
+              {this.props.userPermission["delete"] === true ? (
+                <DeleteDependency
+                  dependency={this.props.dependency}
+                  getProjectInfo={this.props.getProjectInfo}
+                  setTaskInfo={this.props.setTaskInfo}
+                  toggleSidebar={this.props.toggleSidebar}
+                  sourceView={this.props.sourceView}
+                  targetView={this.props.targetView}
                 />
               ) : null}
             </Col>
