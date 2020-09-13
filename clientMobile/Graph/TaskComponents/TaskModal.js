@@ -14,8 +14,8 @@ import * as Progress from 'react-native-progress';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
 import CloneTask from './CloneTask';
-import UpdateProgress from '../UpdateProgress';
 import SendTaskNotification from '../../NoticeBoard/TaskWideNotification'
+import ms from "ms";
 
 let taskPacMans = null;
 let taskResPersons = null;
@@ -102,6 +102,12 @@ class TaskModal extends Component {
     return list;
   }
 
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+  }
+
   render() {
     if (this.props.selectedTask === null || this.props.assignedProjUsers === null) return null;
 
@@ -127,14 +133,6 @@ class TaskModal extends Component {
           resources={taskResources}
           allUsers={this.props.allUsers}
           assignedProjUsers={this.props.assignedProjUsers}
-        />
-        <UpdateProgress
-          project={this.props.project}
-          task={this.props.selectedTask}
-          modalVisibility={this.state.displayProgressModal}
-          toggleProgressModal={this.toggleProgressModal}
-          getProjectInfo={this.props.getProjectInfo}
-          setProjectInfo={this.props.setProjectInfo}
         />
         <Modal
           animationType="fade"
@@ -164,22 +162,15 @@ class TaskModal extends Component {
                 </Text>
                 <Text style={styles.modalText}>
                   Start Date:{' '}
-                  {this.props.selectedTask.startDate.year.low +
-                    '-' +
-                    this.props.selectedTask.startDate.month.low +
-                    '-' +
-                    this.props.selectedTask.startDate.day.low}
+                  {this.props.selectedTask.startDate}
                 </Text>
                 <Text style={styles.modalText}>
                   End Date:{' '}
-                  {this.props.selectedTask.endDate.year.low +
-                    '-' +
-                    this.props.selectedTask.endDate.month.low +
-                    '-' +
-                    this.props.selectedTask.endDate.day.low}
+                  {this.props.selectedTask.endDate}
                 </Text>
                 <Text style={styles.modalText}>
-                  Duration: {this.props.selectedTask.duration} days
+                  Duration:{' '}
+                  {this.CalcDiff(this.props.selectedTask.startDate, this.props.selectedTask.endDate)}
                 </Text>
                 <View style={{alignItems:'center'}}>
                   <Progress.Bar

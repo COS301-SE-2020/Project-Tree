@@ -20,7 +20,7 @@ export default class ProgressDashboardWrapper extends Component {
     this._isMounted = true;
 
     var response = await fetch(
-      'http://projecttree.herokuapp.com/project/projecttasks',
+      'http://10.0.2.2:5000/project/projecttasks',
       {
         method: 'POST',
         headers: {
@@ -38,7 +38,7 @@ export default class ProgressDashboardWrapper extends Component {
     }
 
     response = await fetch(
-      'http://projecttree.herokuapp.com/project/criticalpath',
+      'http://10.0.2.2:5000/project/criticalpath',
       {
         method: 'POST',
         headers: {
@@ -60,7 +60,7 @@ export default class ProgressDashboardWrapper extends Component {
     this._isMounted = true;
 
     var response = await fetch(
-      'http://projecttree.herokuapp.com/project/projecttasks',
+      'http://10.0.2.2:5000/project/projecttasks',
       {
         method: 'POST',
         headers: {
@@ -78,7 +78,7 @@ export default class ProgressDashboardWrapper extends Component {
     }
 
     response = await fetch(
-      'http://projecttree.herokuapp.com/project/criticalpath',
+      'http://10.0.2.2:5000/project/criticalpath',
       {
         method: 'POST',
         headers: {
@@ -124,11 +124,10 @@ class ProgressDashboard extends Component {
       percentage = 0;
 
     this.props.tasks.forEach((task) => {
-        completeDur += task.progress;
+      completeDur += task.progress;
       totalDur += 100;
     });
     if (totalDur !== 0) percentage = (completeDur / totalDur) * 100;
-    else percentage = 0;
 
     return Math.round(percentage);
   }

@@ -191,7 +191,7 @@ class GraphScreen extends Component {
     }
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/getProject',
+      'http://10.0.2.2:5000/getProject',
       {
         method: 'POST',
         headers: {
@@ -209,7 +209,7 @@ class GraphScreen extends Component {
       this.setState({nodes: body.tasks, links: body.rels});
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllUsers',
+      'http://10.0.2.2:5000/people/getAllUsers',
       {
         method: 'POST',
         headers: {
@@ -226,7 +226,7 @@ class GraphScreen extends Component {
     this.setState({ allUsers: body2.users });
 
     const response3 = await fetch(
-      'http://projecttree.herokuapp.com/people/assignedProjectUsers',
+      'http://10.0.2.2:5000/people/assignedProjectUsers',
       {
         method: 'POST',
         headers: {
@@ -296,7 +296,7 @@ class GraphScreen extends Component {
 
     else{
       const response = await fetch(
-        'http://projecttree.herokuapp.com/getProject',
+        'http://10.0.2.2:5000/getProject',
         {
           method: 'POST',
           headers: {
@@ -326,10 +326,18 @@ class GraphScreen extends Component {
         targetCreateDependency: null,
       });
     } else if (this.state.sourceCreateDependency === null) {
-      this.setState({sourceCreateDependency: id});
+      for (var x = 0; x < this.state.nodes.length; x++) {
+        if (id === this.state.nodes[x].id) {
+          this.setState({sourceCreateDependency: this.state.nodes[x]});;
+        }
+      }
     } else {
-      if (id === this.state.sourceCreateDependency) return null;
-      this.setState({targetCreateDependency: id});
+      if (id === this.state.sourceCreateDependency.id) return null;
+      for (var x = 0; x < this.state.nodes.length; x++) {
+        if (id === this.state.nodes[x].id) {
+          this.setState({targetCreateDependency: this.state.nodes[x]});;
+        }
+      }
     }
   }
 
