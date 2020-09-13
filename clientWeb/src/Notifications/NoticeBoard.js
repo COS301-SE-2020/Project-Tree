@@ -6,6 +6,8 @@ import f2 from "../Images/female2.png";
 import m1 from "../Images/male1.png";
 import m2 from "../Images/male2.png";
 import $ from "jquery";
+import "./style.css";
+
 
 let global_pfp = " "
 
@@ -56,69 +58,18 @@ class NotificationList extends React.Component {
 
   
 
-  returnRandomUser(profileId) {
+  returnRandomUser(profileId, type) {
     let users = this.state.user.users;
+    if(type == "auto")
+    {
+      return <img class="circular" src={this.state.pfp} alt="user" width="70" height="70"/>
+    }
 
     for(var x=0; x<users.length; x++){
       if(parseInt(users[x].id) === parseInt(profileId[0])){
-        return <img src={users[x].profilePicture} alt="user" style={{ height: "70px", width: "70px" }} />
+        return <img class="circular" src={users[x].profilePicture} alt="user" width="70" height="70"/>
       }
     }
-    // console.log(profileId[0])
-    // console.log(this.state.user.profilePicture)
-    //  if(this.state.user !== null)
-    //  {
-    //   if(this.state.user.users !== undefined ||  this.state.user != null){
-      // let messageList = this.state.user.users.map(function(users, i) {
-      //   console.log('hello')
-      //   console.log(users.id)
-      //   console.log(profileId[0])
-      //   if(parseInt(users.id) === parseInt(profileId[0]))
-      //   {
-      //     // console.log("PICTURE SUCCESS")
-      //     let x = "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture" 
-      //     let hash = Date.now();
-      //     //this.setState({pfp: users.profilePicture})
-      //     let returnVal = <img src={users.profilePicture} alt="user" style={{ height: "70px", width: "70px" }} />
-      //     return (
-      //      //<img src={this.state.pfp} alt="user" style={{ height: "70px", width: "70px" }} />
-      //       returnVal
-      //      //<img src={'${this.state.pfp}?${hash}'} alt="user" style={{ height: "70px", width: "70px" }} />
-      //       );
-      //   }     
-      // });
-      // }
-    // }
-    // else
-    // {
-    //   // console.log("picture not loaded")
-    //   return (<img src={this.state.pfp} alt="user" style={{ height: "70px", width: "70px" }} />)
-    // }
-    // let index = Math.round(Math.random() * (4 - 1) + 1);
-    // if (index === 1){
-    //   return (
-    //     <img src={f1} alt="user" style={{ height: "70px", width: "70px" }} />
-    //   );}
-    // if (index === 2)
-    //   return (
-    //     <img src={f2} alt="user" style={{ height: "70px", width: "70px" }} />
-    //   );
-    // if (index === 3)
-    //   return (
-    //     <img src={m1} alt="user" style={{ height: "70px", width: "70px" }} />
-    //   );
-    // if (index === 4)
-    //   return (
-    //     <img src={m2} alt="user" style={{ height: "70px", width: "70px" }} />
-    //   );
-    //else
-    // return 
-    // (
-    //   <img src={global_pfp} alt="user" style={{ height: "70px", width: "70px" }} />
-    // );  
-    // return (
-    //       <img src={m2} alt="user" style={{ height: "70px", width: "70px" }} />
-    //     );
   }
 
   sortMessages() {
@@ -188,8 +139,8 @@ class NotificationList extends React.Component {
   createDailyMessageList(messages) {
     let messageList = messages.map((message, i) => (
       <Container key={i}>
-        <Row>
-          <Col>{this.returnRandomUser([message.profileId])}</Col>
+        <Row>              
+          <Col>{this.returnRandomUser([message.profileId], message.type)}</Col>       
           <Col xs={8}>
             <em>{message.type === "task" ? message.taskName : null}
             {message.type === "project" ? "Project Wide" : null}
