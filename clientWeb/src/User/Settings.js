@@ -47,15 +47,15 @@ const FileUploader = (props) => {
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: null, isloading: false};
+    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: null, isloading: false, togglePass: false};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.openEdit = this.openEdit.bind(this);
     this.closeEdit = this.closeEdit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.getB64 = this.getB64.bind(this);
     this.fileChange = this.fileChange.bind(this);
+    this.togglePass = this.togglePass.bind(this);
   }
 
   
@@ -92,29 +92,6 @@ class Settings extends React.Component {
     this.setState({ pfp: global_pfp });
   }
 
-  async getB64(file) {
-    let document = "";
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-        document = reader.result;
-    };
-    reader.onerror = function (error) {
-        console.log('Error: ', error);
-    };
-
-    return document;
-}
-
-  // async getBase64(file) {
-  //   return new Promise(function (resolve, reject) {
-  //     let reader = new FileReader();
-  //     reader.onload = function () { resolve(reader.result); };
-  //     reader.onerror = reject;
-  //     reader.readAsDataURL(file.files[0]);
-  // });
-  // }
-
   hideModal() {
     this.setState({ show: false });
   }
@@ -135,6 +112,12 @@ class Settings extends React.Component {
     });
   }
 
+  togglePass() {
+    this.setState({
+      togglePass: !this.state.togglePass,
+    });
+  }
+
   closeEdit() {
     $.post(
       "/user/get",
@@ -151,7 +134,6 @@ class Settings extends React.Component {
   async handleSubmit(event) {
     this.setState({isloading: true});
     console.log("OLD PFP", this.state.user.profilepicture)
-    console.log("PFP", )
     console.log("GLOBAL", global_pfp)
     event.preventDefault();
     let data = new FormData();
@@ -160,6 +142,7 @@ class Settings extends React.Component {
     data.append("email", this.state.user.email);
     data.append("bday", this.state.user.birthday);
     await data.append("profilepicture", this.state.pfp);
+    await data.append("oldprofile", this.state.user.profilepicture);
     data.append("token", localStorage.getItem("sessionToken"));
     data = await stringifyFormData(data);
     $.post("/user/edit", data, (response) => {
@@ -221,6 +204,26 @@ class Settings extends React.Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+            {this.state.togglePass === true ?
+            (
+              <Container>
+              <Row className="mb-2">
+              <Form.Control
+                      required
+                      type="text"
+                      name="name"
+                      value={this.state.user.name}
+                      onChange={(e) => {
+                        let usr = this.state.user;
+                        usr.name = e.target.value;
+                        this.setState({ user: usr });
+                        this.value = this.state.user.name;
+                      }}
+              />
+             </Row>
+             </Container>
+            )
+            :(
               <Container>
                 <Row className="mb-2">
                 {this.state.toggleEdit === false ?
@@ -308,8 +311,43 @@ class Settings extends React.Component {
                   )}
                 </Row>
               </Container>
+            )}
             </Modal.Body>
+            {/* {this.state.togglePass === true ? 
+            (        
             <Container>
+               <Row>
+                  <Col>
+                    <Row>
+                      <Col>
+                        <Button
+                          block
+                          variant="secondary"
+                          className="mb-2"
+                          onClick={() => {
+                            this.closeEdit();
+                          }}
+                        >
+                          <i className="fa fa-remove"> </i> Cancel
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          type="submit"
+                          block
+                          variant="secondary"
+                          className="mb-2"
+                        >
+                          <i className="fa fa-save"> </i> Save Changes{" "}
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+                </Container>
+              ):
+                ( */}
+              <Container>
               {this.state.toggleEdit === true ? (
                 <Row>
                   <Col>
@@ -354,7 +392,7 @@ class Settings extends React.Component {
                   </Row>
                 </Col>
               </Row>
-              ) : (
+              ):(
                 <Row>
                   <Col>
                     <Button
@@ -373,20 +411,25 @@ class Settings extends React.Component {
                       block
                       variant="dark"
                       className="mb-2"
-                      onClick={() => this.handleLogout()}
-                    >
+                      onClick={() => this.togglePass()}>
+                      <i className="fa fa-key"> </i> Change Password{" "}
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      block
+                      variant="dark"
+                      className="mb-2"
+                      onClick={() => this.handleLogout()}>
                       <i className="fa fa-sign-out"> </i> Logout{" "}
                     </Button>
                   </Col>
-                </Row>
-              )}
-
+                </Row>  )}                 
             </Container>
           </Form>
         </Modal>
-      </React.Fragment>
-    );
-  }
+      </React.Fragment>   
+    )}
 }
 
 export default Settings;

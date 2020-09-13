@@ -5,13 +5,33 @@ import f1 from "../Images/female1.png";
 import f2 from "../Images/female2.png";
 import m1 from "../Images/male1.png";
 import m2 from "../Images/male2.png";
+import $ from "jquery";
+import "./style.css";
+
+
+let global_pfp = " "
 
 class NoticeBoard extends Component {
   _isMounted = false;
 
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = { users:null };
+  }
+
+  async componentDidMount() 
+  {
+    $.post("/people/getAllUsers",
+      { token: localStorage.getItem("sessionToken") },
+      (response) => {
+       this.setState({ users: response});
+        // console.log(this.state.user)
+        // console.log(response)
+      }
+    )
+    .fail((response) => {
+      throw Error(response.message);
+    });
   }
 
   render() {
@@ -19,29 +39,37 @@ class NoticeBoard extends Component {
       return null;
     }
 
-    return <NotificationList messages={this.props.messages} />;
+    if(this.state.users === null){
+      return null;
+    }
+    
+    return <NotificationList messages={this.props.messages} users={this.state.users}/>;
   }
 }
 
-class NotificationList extends Component {
-  returnRandomUser() {
-    let index = Math.round(Math.random() * (4 - 1) + 1);
-    if (index === 1)
-      return (
-        <img src={f1} alt="user" style={{ height: "70px", width: "70px" }} />
-      );
-    if (index === 2)
-      return (
-        <img src={f2} alt="user" style={{ height: "70px", width: "70px" }} />
-      );
-    if (index === 3)
-      return (
-        <img src={m1} alt="user" style={{ height: "70px", width: "70px" }} />
-      );
-    if (index === 4)
-      return (
-        <img src={m2} alt="user" style={{ height: "70px", width: "70px" }} />
-      );
+class NotificationList extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: this.props.users, pfp: "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture", imageHash: Date.now()};
+    this.returnRandomUser = this.returnRandomUser.bind(this);
+  }
+
+  
+
+  returnRandomUser(profileId, type) {
+    let users = this.state.user.users;
+    if(type == "auto")
+    {
+      return <img class="circular" src={this.state.pfp} alt="user" width="70" height="70"/>
+    }
+
+    for(var x=0; x<users.length; x++){
+      if(parseInt(users[x].id) === parseInt(profileId[0])){
+        return <img class="circular" src={users[x].profilePicture} alt="user" width="70" height="70"/>
+      }
+    }
   }
 
   sortMessages() {
@@ -68,7 +96,7 @@ class NotificationList extends Component {
     if (!isEmpty(dailyMessages)) {
       messages.push(dailyMessages);
     }
-
+    //console.log(messages)
     return messages;
   }
 
@@ -105,15 +133,14 @@ class NotificationList extends Component {
         <Row>{this.createDailyMessageList(dailyMessages)}</Row>
       </Container>
     ));
-
     return messageList;
   }
 
   createDailyMessageList(messages) {
     let messageList = messages.map((message, i) => (
       <Container key={i}>
-        <Row>
-          <Col>{this.returnRandomUser()}</Col>
+        <Row>              
+          <Col>{this.returnRandomUser([message.profileId], message.type)}</Col>       
           <Col xs={8}>
             <em>{message.type === "task" ? message.taskName : null}
             {message.type === "project" ? "Project Wide" : null}
@@ -137,10 +164,11 @@ class NotificationList extends Component {
         <hr align="left" style={{ backgroundColor: "#96BB7C", width: "75%" }} />
       </Container>
     ));
-
     return messageList;
   }
+  
   render() {
+    console.log(this.props.users)
     let messages = this.sortMessages();
     let messageComponents = this.createMessageList(messages);
 

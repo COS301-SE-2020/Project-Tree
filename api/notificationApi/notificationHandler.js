@@ -28,7 +28,8 @@ async function sendNotification(req, res) {
       data.projName,
       emails,
       data.message,
-      data.type
+      data.type,
+      data.profileId
     );
   } else if (data.mode === 1) {
     let ids = getIds(data.recipients);
@@ -40,7 +41,8 @@ async function sendNotification(req, res) {
       data.projID,
       data.timestamp,
       data.message,
-      data.type
+      data.type,
+      data.profileId
     );
   } else {
     let emails = getEmails(data.recipients);
@@ -50,7 +52,8 @@ async function sendNotification(req, res) {
       data.projName,
       emails,
       data.message,
-      data.type
+      data.type,
+      data.profileId
     );
 
     let ids = getIds(data.recipients);
@@ -62,7 +65,8 @@ async function sendNotification(req, res) {
       data.projID,
       data.timestamp,
       data.message,
-      data.type
+      data.type,
+      data.profileId
     );
   }
 
@@ -97,6 +101,7 @@ async function retrieveNotifications(req, res) {
           message: record._fields[0].properties.message,
           timestamp: record._fields[0].properties.timestamp,
           type: record._fields[0].properties.type,
+          profileId: record._fields[0].properties.profileId,
         });
       });
       res.status(200);
