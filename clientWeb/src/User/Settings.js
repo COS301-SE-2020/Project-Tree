@@ -140,7 +140,7 @@ class Settings extends React.Component {
       "/user/get",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
-        this.setState({ toggleEdit: false, user: response.user });
+        this.setState({ toggleEdit: false, user: response.user, pfp:null });
       }
     )
     .fail((response) => {
@@ -165,7 +165,7 @@ class Settings extends React.Component {
     $.post("/user/edit", data, (response) => {
       this.setState({ user: response.user, prevUser: response.user });
       this.closeEdit();
-      this.setState({isloading: false});
+      this.setState({isloading: false, pfp:null});
     }).fail(() => {
       alert("Unable to update user preferences");
     });
@@ -188,6 +188,7 @@ class Settings extends React.Component {
           show={this.state.show}
           onHide={() => {
             this.hideModal();
+            this.setState({pfp:null})
           }}
         >
           <Form onSubmit={this.handleSubmit} type="multipart/form-data">
