@@ -92,17 +92,20 @@ class TaskInfo extends React.Component {
               }
               break;
             case "Issue":
-                if (el.type === "Issue") {
-                  list.push(el);
-                }
-                break;
-            default:
+              if (el.type === "Issue") {
+                list.push(el);
+              }
+              break;
+            case "Incomplete":
               if (el.type === "Incomplete") {
                 list.push(el);
               }
               if (el.type === "Issue") {
                 list.push(el);
               }
+              break;
+            default:
+              list.push(el);
               break;
           }
         });
@@ -217,6 +220,7 @@ class TaskInfo extends React.Component {
               <option value="Complete">Complete tasks</option>
               <option value="Issue">Issue Tasks</option>
               <option value="Late">Late Tasks</option>
+              <option value="All">All Tasks</option>
             </Form.Control>
           </Row>
           <Row
