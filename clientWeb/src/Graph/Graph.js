@@ -39,13 +39,31 @@ function makeElement(node, criticalPathNodes) {
   });
 
   let statusColor = "#77dd77";
+  let fillAmount = null;
   if (node.type === "Incomplete") {
     let today = new Date();
-    if (today > new Date(node.endDate)) statusColor = "#ff6961";
+    if (today > new Date(node.endDate)){
+      statusColor = "#ff6961";
+      fillAmount = [
+        { offset: `100%`, color: statusColor },
+      ]
+    }
+    else{
+      fillAmount = [
+        { offset: `${node.progress}%`, color: statusColor },
+        { offset: `${node.progress+1}%`, color: '#fff' },
+      ]
+    }
   } else if (node.type === "Complete") {
     statusColor = "#77dd77";
+    fillAmount = [
+      { offset: `100%`, color: statusColor },
+    ]
   } else if (node.type === "Issue") {
     statusColor = "#ffae42";
+    fillAmount = [
+      { offset: `100%`, color: statusColor },
+    ]
   }
   
   var borderColor = "#000";
@@ -80,10 +98,7 @@ function makeElement(node, criticalPathNodes) {
       body: {
         fill: {
           type: 'linearGradient',
-          stops: [
-            { offset: `${node.progress}%`, color: statusColor },
-            { offset: `${node.progress+1}%`, color: '#fff' },
-          ]
+          stops: fillAmount
         },
         filter: shadowHighlight,
         stroke: borderColor,
@@ -283,7 +298,7 @@ class Graph extends React.Component {
       }
       else{
         this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
-      }    
+      }
     } else if (clickedNode.model.attributes.attrs.type === "link") {
       let source = parseInt(clickedNode.model.attributes.source.id);
       let target = parseInt(clickedNode.model.attributes.target.id);

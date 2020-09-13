@@ -13,8 +13,9 @@ import {
 import * as Progress from 'react-native-progress';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
-import UpdateProgress from '../UpdateProgress';
+import CloneTask from './CloneTask';
 import SendTaskNotification from '../../NoticeBoard/TaskWideNotification'
+import ms from "ms";
 
 let taskPacMans = null;
 let taskResPersons = null;
@@ -101,6 +102,12 @@ class TaskModal extends Component {
     return list;
   }
 
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+  }
+
   render() {
     if (this.props.selectedTask === null || this.props.assignedProjUsers === null) return null;
 
@@ -109,9 +116,7 @@ class TaskModal extends Component {
     taskResPersons = taskUsers[1];
     taskResources = taskUsers[2];
 
-    let color = 'green';
-    if (this.props.selectedTask.progress < 33) color = 'red';
-    else if (this.props.selectedTask.progress < 66) color = '#EEBB4D';
+    let color = '#0275d8';
 
     return (
       <React.Fragment>
@@ -129,14 +134,6 @@ class TaskModal extends Component {
           allUsers={this.props.allUsers}
           assignedProjUsers={this.props.assignedProjUsers}
         />
-        <UpdateProgress
-          project={this.props.project}
-          task={this.props.selectedTask}
-          modalVisibility={this.state.displayProgressModal}
-          toggleProgressModal={this.toggleProgressModal}
-          getProjectInfo={this.props.getProjectInfo}
-          setProjectInfo={this.props.setProjectInfo}
-        />
         <Modal
           animationType="fade"
           transparent={true}
@@ -149,28 +146,13 @@ class TaskModal extends Component {
                 onPress={() => this.props.displayTaskDependency(null, null)}>
                 <Icon type="FontAwesome" name="close" />
               </TouchableOpacity>
-              <View style={{alignItems: 'center'}}>
-                <Text style={{fontSize: 30, color: '#184D47'}}>
+              <View style={{alignItems: 'center', marginBottom:10}}>
+                <Text style={{fontSize: 30, color: '#184D47', textAlign:'center'}}>
                   {this.props.selectedTask.name}
+                  {this.props.clonedNode !== null ? <Text>{'\n'}(View)</Text> : null}
                 </Text>
-                <View
-                  style={{
-                    backgroundColor: '#EEBB4D',
-                    height: 1,
-                    width: '60%',
-                    marginBottom: 10,
-                  }}></View>
               </View>
               <ScrollView style={{height:200}}>
-                <Progress.Bar
-                  progress={this.props.selectedTask.progress/100}
-                  
-                  showsText={true}
-                  formatText={() => {
-                    return `${this.props.selectedTask.progress}%`;
-                  }}
-                  color={color}
-                />
                 <Text style={styles.modalText}>
                   {this.props.selectedTask.description}
                 </Text>
@@ -180,23 +162,27 @@ class TaskModal extends Component {
                 </Text>
                 <Text style={styles.modalText}>
                   Start Date:{' '}
-                  {this.props.selectedTask.startDate.year.low +
-                    '-' +
-                    this.props.selectedTask.startDate.month.low +
-                    '-' +
-                    this.props.selectedTask.startDate.day.low}
+                  {this.props.selectedTask.startDate}
                 </Text>
                 <Text style={styles.modalText}>
                   End Date:{' '}
-                  {this.props.selectedTask.endDate.year.low +
-                    '-' +
-                    this.props.selectedTask.endDate.month.low +
-                    '-' +
-                    this.props.selectedTask.endDate.day.low}
+                  {this.props.selectedTask.endDate}
                 </Text>
                 <Text style={styles.modalText}>
-                  Duration: {this.props.selectedTask.duration} days
+                  Duration:{' '}
+                  {this.CalcDiff(this.props.selectedTask.startDate, this.props.selectedTask.endDate)}
                 </Text>
+                <View style={{alignItems:'center'}}>
+                  <Progress.Bar
+                    progress={this.props.selectedTask.progress/100}
+                    
+                    showsText={true}
+                    formatText={() => {
+                      return `${this.props.selectedTask.progress}%`;
+                    }}
+                    color={color}
+                  />
+                </View>
                 <Text style={styles.roleText}>Package managers:</Text>
                 {this.printUsers(taskPacMans)}
                 <Text style={styles.roleText}>Responsible persons:</Text>
@@ -205,60 +191,61 @@ class TaskModal extends Component {
                 {this.printUsers(taskResources)}
               </ScrollView>
               
-              <View style={{flex: 1}}>
-                {this.props.userPermissions["update"] === true?
-                  <View style={{flex: 1}}>
-                    <TouchableOpacity
-                      style={styles.editButton}
-                      onPress={() => this.toggleVisibility(false, true)}>
-                      <Icon type="AntDesign" name="edit" style={{color: 'white'}}>
-                        <Text>&nbsp;Edit</Text>
-                      </Icon>
-                    </TouchableOpacity>
-                  </View>
-                :
-                  null
-                }
+              <View>
+                <View style={{flexDirection:'row'}}>
+                  {this.props.userPermissions["update"] === true?
+                    <View style={{flex: 1}}>
+                      <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={() => this.toggleVisibility(false, true)}>
+                        <Icon type="AntDesign" name="edit" style={{color: 'white'}}>
+                          <Text>&nbsp;Edit</Text>
+                        </Icon>
+                      </TouchableOpacity>
+                    </View>
+                  :
+                    null
+                  }
 
-                {this.props.userPermissions["delete"] === true?
+                  {this.props.userPermissions["delete"] === true?
+                    <View style={{flex: 1}}>
+                      <DeleteTask
+                        task={this.props.selectedTask}
+                        clonedNode={this.props.clonedNode}
+                        toggleVisibility={this.toggleVisibility}
+                        getProjectInfo={this.props.getProjectInfo}
+                        setProjectInfo={this.props.setProjectInfo}
+                      />
+                    </View>
+                  :
+                    null
+                  }
+                </View>
+                
+                <View style={{flexDirection:'row'}}>
+                  {this.props.userPermissions["update"] === true?
+                    <View style={{flex: 1}}>
+                      <CloneTask
+                        task={this.props.selectedTask}
+                        toggleVisibility={this.toggleVisibility}
+                        project={this.props.project}
+                        setProjectInfo={this.props.setProjectInfo}
+                      />
+                    </View>
+                  :
+                    null
+                  }
                   <View style={{flex: 1}}>
-                    <DeleteTask
+                    <SendTaskNotification
+                      project={this.props.project}
+                      user={this.props.user}
                       task={this.props.selectedTask}
-                      toggleVisibility={this.toggleVisibility}
-                      getProjectInfo={this.props.getProjectInfo}
-                      setProjectInfo={this.props.setProjectInfo}
+                      user={this.props.user}
+                      taskPacMans={taskPacMans}
+                      taskResPersons={taskResPersons}
+                      taskResources={taskResources}
                     />
                   </View>
-                :
-                  null
-                }
-
-                {this.props.userPermissions["update"] === true?
-                  <View style={{flex: 1}}>
-                    <TouchableOpacity
-                      style={styles.editButton}
-                      onPress={() => this.toggleProgressModal(false, true)}>
-                      <Icon
-                        type="Entypo"
-                        name="progress-one"
-                        style={{color: 'white', paddingBottom: 10}}>
-                        <Text>&nbsp;Update Progress</Text>
-                      </Icon>
-                    </TouchableOpacity>
-                  </View>
-                :
-                  null
-                }
-                <View style={{flex: 1}}>
-                  <SendTaskNotification
-                    project={this.props.project}
-                    user={this.props.user}
-                    task={this.props.selectedTask}
-                    user={this.props.user}
-                    taskPacMans={taskPacMans}
-                    taskResPersons={taskResPersons}
-                    taskResources={taskResources}
-                  />
                 </View>
               </View>
             </View>
