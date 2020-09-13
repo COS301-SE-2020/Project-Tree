@@ -115,8 +115,8 @@ class ProjectPage extends React.Component {
           <Col 
             sm={12}
             md={12}
-            lg={6}
-            xl={6}
+            lg={8}
+            xl={8}
           >
             <ProjectInfo
               project={this.props.project}
@@ -131,9 +131,8 @@ class ProjectPage extends React.Component {
           <Col
             sm={12}
             md={12}
-            lg={6}
-            xl={6}
-            style={{ maxHeight: "400px", overflowY: "auto" }}
+            lg={4}
+            xl={4}
           >
             {this.props.project != null && this.props.user != null ? (
               <NoticeBoard

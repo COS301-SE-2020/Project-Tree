@@ -112,7 +112,7 @@ class UpdateTaskForm extends Component {
       this.setState({dateTimePicker: false});
       return;
     }
-    let date = new Date(selectedDate).toISOString().substring(0,16);
+    let date = new Date(new Date(selectedDate).getTime() - new Date().getTimezoneOffset()*60*1000).toISOString().substring(0,16);
     if (type.for === 'start') {
         if (this.state.endDate < date) 
           this.setState({
@@ -371,7 +371,7 @@ class UpdateTaskForm extends Component {
     projectData.changedInfo = input;
 
     const response = await fetch(
-      'http://10.0.2.2:5000/task/update',
+      'http://projecttree.herokuapp.com/task/update',
       {
         method: 'POST',
         headers: {
@@ -385,10 +385,10 @@ class UpdateTaskForm extends Component {
     const body = await response.json();
 
     let timestamp = new Date();
-    timestamp.setHours(timestamp.getHours() + 2);
+    timestamp.setTime(timestamp.getTime() - new Date().getTimezoneOffset()*60*1000);
     timestamp = timestamp.toISOString();
 
-    await fetch("http://10.0.2.2:5000/people/updateAssignedPeople", {
+    await fetch("http://projecttree.herokuapp.com/people/updateAssignedPeople", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -448,7 +448,9 @@ class UpdateTaskForm extends Component {
 
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
+    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
     let endDate = new Date(ed);
+    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
@@ -733,7 +735,7 @@ class UpdateTaskForm extends Component {
           {this.state.dateTimePicker && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={new Date(this.state.dateTimeType.value)}
+              value={new Date(new Date(this.state.dateTimeType.value).getTime() + new Date().getTimezoneOffset()*60*1000)}
               mode={this.state.dateTimeType.type}
               is24Hour={true}
               display="default"

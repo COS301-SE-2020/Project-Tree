@@ -10,7 +10,6 @@ import $ from "jquery";
 import logo from "./Images/Logo.png";
 import { Login, Register } from "./User/index";
 import Settings from "./User/Settings";
-import About from "./About";
 
 function RightSide(props) {
   window.onload = () => {
@@ -22,7 +21,7 @@ function RightSide(props) {
 
   return (
     <div
-      className="right-side"
+      className="wing"
       ref={props.containerRef}
       onClick={props.onClick}
     >
@@ -411,9 +410,9 @@ class App extends Component {
                       ) : (
                         <Redirect to="/home" />
                       )
-                    ) : (
-                      <div className="row">
-                        <div className="column left" style={{ backgroundColor: "white" }}>
+                      ) : (
+                        <div class="screenC">
+                       {/* <div className="column left" style={{ backgroundColor: "white" }}> */}
                           <div className="login">
                             <div
                               className="container"
@@ -439,12 +438,6 @@ class App extends Component {
                               onClick={this.changeState.bind(this)}
                             />
                           </div>
-                        </div>
-                        <div className="column right" style={{ backgroundColor: "white" }}>
-                          <div className="carosal">
-                            <About />
-                          </div>
-                        </div>
                       </div>
                     )}
                   </Route>

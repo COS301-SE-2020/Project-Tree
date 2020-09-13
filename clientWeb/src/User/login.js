@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstrap";
 import $ from "jquery";
 import loginImg from "../Images/LoginImg.svg";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 
 function stringifyFormData(fd) {
   const data = {};
@@ -86,10 +88,22 @@ export class Login extends Component {
                 value={"webToken"}
                 onChange={() => {}}
          />
-          <div className="footer">
-            <Button type="submit" className="btn">
-              Login
-            </Button>
+        <div className="footer">
+              <Button type="submit" className=".btn">
+                Login
+              </Button>  
+           <Row>
+            <Col>
+              <Button
+                block
+                variant="dark"
+                className=".btn"
+                // MODAL FUNCTION CALL onClick={() => this.handleLogout()}
+              >  Check it out
+               <i className="fa fa-cogs" style={{ fontSize: "30px" }}></i>
+              </Button>
+            </Col>
+            </Row>          
           </div>
         </Form>
       </div>

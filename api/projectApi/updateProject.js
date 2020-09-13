@@ -37,11 +37,14 @@ function updateCurDependency(dependency, nodes, rels) {
 
 function updateTask(task, nodes, rels) {
   let maxStartDate =new Date(task.startDate);
+  maxStartDate.setTime( maxStartDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
   let predDependencies = getPredDependencies(task, rels);
   if(predDependencies != []){
     maxStartDate = new Date(0);
+    maxStartDate.setTime( maxStartDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
     predDependencies.forEach(dep => {
       let endDate = new Date(dep.endDate)
+      endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
       if (endDate > maxStartDate) maxStartDate = endDate;
     });
   }
@@ -79,6 +82,7 @@ function updateDependency(dependency, nodes, rels) {
     dependency.startDate = source.startDate;
   else dependency.startDate = source.endDate;
   let startDate = new Date(dependency.startDate);
+  startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
   dependency.endDate =  new Date(startDate.getTime() + dependency.duration).toISOString().substring(0, 16);
 
   db.getSession()
