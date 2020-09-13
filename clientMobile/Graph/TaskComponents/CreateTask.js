@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import {
   Icon,
@@ -420,228 +420,230 @@ class CreateTaskForm extends Component {
     }
 
     return (
-      <ScrollView style={{height:650}}>
-        <Form>
-          <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
-          <Item floatingLabel>
-            <Label>Name of Task</Label>
-            <Input 
-              onChangeText={(val) => this.setState({name: val})}
-              onEndEditing={()=>this.checkFormData("name")} 
-            />
-          </Item>
-          <Item floatingLabel>
-            <Label>Description of Task</Label>
-            <Input
-              onChangeText={(val) => this.setState({description: val})}
-            />
-          </Item>
-          <Item floatingLabel disabled>
-            <Label>Start Date</Label>
-            <Input value={this.state.startDate.substring(0, 10)} />
-            <Icon
-              type="AntDesign"
-              name="plus"
-              onPress={() => {
-                this.setState({
-                  dateTimePicker: true, 
-                  dateTimeType: { 
-                    type: 'date', 
-                    for: 'start',
-                    value: this.state.startDate,
-                  }
-                });
-              }}
-            />
-          </Item>
-          <Item floatingLabel disabled>
-            <Label>Start Time</Label>
-            <Input value={this.state.startDate.substring(11, 16)} />
-            <Icon
-              type="AntDesign"
-              name="plus"
-              onPress={() => {
-                this.setState({
-                  dateTimePicker: true, 
-                  dateTimeType: { 
-                    type: 'time', 
-                    for: 'start',
-                    value: this.state.startDate,
-                  }
-                });
-              }}
-            />
-          </Item>
-          <Item floatingLabel disabled>
-            <Label>End Date</Label>
-            <Input value={this.state.endDate.substring(0, 10)} />
-            <Icon
-              type="AntDesign"
-              name="plus"
-              onPress={() => {
-                this.setState({
-                  dateTimePicker: true, 
-                  dateTimeType: { 
-                    type: 'date', 
-                    for: 'end',
-                    value: this.state.endDate,
-                  }
-                });
-              }}
-            />
-          </Item>
-          <Item floatingLabel disabled>
-            <Label>End Time</Label>
-            <Input value={this.state.endDate.substring(11, 16)} />
-            <Icon
-              type="AntDesign"
-              name="plus"
-              onPress={() => {
-                this.setState({
-                  dateTimePicker: true, 
-                  dateTimeType: { 
-                    type: 'time', 
-                    for: 'end',
-                    value: this.state.endDate,
-                  }
-                });
-              }}
-            />
-          </Item>
-          <Item floatingLabel disabled>
-            <Label>Duration</Label>
-            <Input
-              value={this.CalcDiff(this.state.startDate, this.state.endDate)}
-            />
-          </Item>
-          <Item floatingLabel>
-            <Label>Package Manager</Label>
-            <Input
-              value={this.state.pacManSearchTerm}
-              onChangeText={(val) => this.updateSearch(val, 0)}
-            />
-          </Item>
-          <View style={{flexDirection: 'row', flex:1}}>
-            {this.state.pacManSearchTerm.length >= 2 ? (
+      <React.Fragment>
+        <ScrollView style={{height:650}}>
+          <Form>
+            <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
+              <Item floatingLabel>
+                <Label>Name of Task</Label>
+                <Input 
+                  onChangeText={(val) => this.setState({name: val})}
+                  onEndEditing={()=>this.checkFormData("name")} 
+                />
+              </Item>
+            <Item floatingLabel>
+              <Label>Description of Task</Label>
+              <Input
+                onChangeText={(val) => this.setState({description: val})}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Start Date</Label>
+              <Input value={this.state.startDate.substring(0, 10)} />
+              <Icon
+                type="AntDesign"
+                name="plus"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true, 
+                    dateTimeType: { 
+                      type: 'date', 
+                      for: 'start',
+                      value: this.state.startDate,
+                    }
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Start Time</Label>
+              <Input value={this.state.startDate.substring(11, 16)} />
+              <Icon
+                type="AntDesign"
+                name="plus"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true, 
+                    dateTimeType: { 
+                      type: 'time', 
+                      for: 'start',
+                      value: this.state.startDate,
+                    }
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>End Date</Label>
+              <Input value={this.state.endDate.substring(0, 10)} />
+              <Icon
+                type="AntDesign"
+                name="plus"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true, 
+                    dateTimeType: { 
+                      type: 'date', 
+                      for: 'end',
+                      value: this.state.endDate,
+                    }
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>End Time</Label>
+              <Input value={this.state.endDate.substring(11, 16)} />
+              <Icon
+                type="AntDesign"
+                name="plus"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true, 
+                    dateTimeType: { 
+                      type: 'time', 
+                      for: 'end',
+                      value: this.state.endDate,
+                    }
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Duration</Label>
+              <Input
+                value={this.CalcDiff(this.state.startDate, this.state.endDate)}
+              />
+            </Item>
+            <Item floatingLabel>
+              <Label>Package Manager</Label>
+              <Input
+                value={this.state.pacManSearchTerm}
+                onChangeText={(val) => this.updateSearch(val, 0)}
+              />
+            </Item>
+            <View style={{flexDirection: 'row', flex:1}}>
+              {this.state.pacManSearchTerm.length >= 2 ? (
+                <View style={{flex:0.5}}>
+                  {filteredPacMan.map((person) => {
+                    return (
+                      <TouchableOpacity
+                        type="button"
+                        onPress={() => this.addPacMan(person)}
+                        key={person.id}
+                        style={styles.peopleButtons}
+                      >
+                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              ) : <View style={{flex:0.5}}></View>}
               <View style={{flex:0.5}}>
-                {filteredPacMan.map((person) => {
+                {this.state.pacManList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
-                      onPress={() => this.addPacMan(person)}
+                      onPress={() => this.removeAssignedPerson(person, 0)}
                       key={person.id}
-                      style={styles.peopleButtons}
+                      style={styles.selectedPeopleButtons}
                     >
-                      <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                      <Text>{person.name}&nbsp;{person.surname}</Text>
                     </TouchableOpacity>
                   );
                 })}
               </View>
-            ) : <View style={{flex:0.5}}></View>}
-            <View style={{flex:0.5}}>
-              {this.state.pacManList.map((person) => {
-                return (
-                  <TouchableOpacity
-                    type="button"
-                    onPress={() => this.removeAssignedPerson(person, 0)}
-                    key={person.id}
-                    style={styles.selectedPeopleButtons}
-                  >
-                    <Text>{person.name}&nbsp;{person.surname}</Text>
-                  </TouchableOpacity>
-                );
-              })}
             </View>
-          </View>
-          <Item floatingLabel>
-            <Label>Responsible Person</Label>
-            <Input
-              value={this.state.resPersonSearchTerm}
-              onChangeText={(val) => this.updateSearch(val, 1)}
-            />
-          </Item>
-          <View style={{flexDirection: 'row', flex:1}}>
-            {this.state.resPersonSearchTerm.length >= 2 ? (
+            <Item floatingLabel>
+              <Label>Responsible Person</Label>
+              <Input
+                value={this.state.resPersonSearchTerm}
+                onChangeText={(val) => this.updateSearch(val, 1)}
+              />
+            </Item>
+            <View style={{flexDirection: 'row', flex:1}}>
+              {this.state.resPersonSearchTerm.length >= 2 ? (
+                <View style={{flex:0.5}}>
+                  {filteredResPerson.map((person) => {
+                    return (
+                      <TouchableOpacity
+                        type="button"
+                        onPress={() => this.addResPerson(person)}
+                        key={person.id}
+                        style={styles.peopleButtons}
+                      >
+                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              ) : <View style={{flex:0.5}}></View>}
               <View style={{flex:0.5}}>
-                {filteredResPerson.map((person) => {
+                {this.state.resPersonList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
-                      onPress={() => this.addResPerson(person)}
+                      onPress={() => this.removeAssignedPerson(person, 1)}
                       key={person.id}
-                      style={styles.peopleButtons}
+                      style={styles.selectedPeopleButtons}
                     >
-                      <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                      <Text>{person.name}&nbsp;{person.surname}</Text>
                     </TouchableOpacity>
                   );
                 })}
               </View>
-            ) : <View style={{flex:0.5}}></View>}
-            <View style={{flex:0.5}}>
-              {this.state.resPersonList.map((person) => {
-                return (
-                  <TouchableOpacity
-                    type="button"
-                    onPress={() => this.removeAssignedPerson(person, 1)}
-                    key={person.id}
-                    style={styles.selectedPeopleButtons}
-                  >
-                    <Text>{person.name}&nbsp;{person.surname}</Text>
-                  </TouchableOpacity>
-                );
-              })}
             </View>
-          </View>
-          <Item floatingLabel>
-            <Label>Resource(s)</Label>
-            <Input
-              value={this.state.resourcesSearchTerm}
-              onChangeText={(val) => this.updateSearch(val, 2)}
-            />
-          </Item>
-          <View style={{flexDirection: 'row', flex:1}}>
-            {this.state.resourcesSearchTerm.length >= 2 ? (
+            <Item floatingLabel>
+              <Label>Resource(s)</Label>
+              <Input
+                value={this.state.resourcesSearchTerm}
+                onChangeText={(val) => this.updateSearch(val, 2)}
+              />
+            </Item>
+            <View style={{flexDirection: 'row', flex:1}}>
+              {this.state.resourcesSearchTerm.length >= 2 ? (
+                <View style={{flex:0.5}}>
+                  {filteredResources.map((person) => {
+                    return (
+                      <TouchableOpacity
+                        type="button"
+                        onPress={() => this.addResource(person)}
+                        key={person.id}
+                        style={styles.peopleButtons}
+                      >
+                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              ) : <View style={{flex:0.5}}></View>}
               <View style={{flex:0.5}}>
-                {filteredResources.map((person) => {
+                {this.state.resourcesList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
-                      onPress={() => this.addResource(person)}
+                      onPress={() => this.removeAssignedPerson(person, 2)}
                       key={person.id}
-                      style={styles.peopleButtons}
+                      style={styles.selectedPeopleButtons}
                     >
-                      <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                      <Text>{person.name}&nbsp;{person.surname}</Text>
                     </TouchableOpacity>
                   );
                 })}
               </View>
-            ) : <View style={{flex:0.5}}></View>}
-            <View style={{flex:0.5}}>
-              {this.state.resourcesList.map((person) => {
-                return (
-                  <TouchableOpacity
-                    type="button"
-                    onPress={() => this.removeAssignedPerson(person, 2)}
-                    key={person.id}
-                    style={styles.selectedPeopleButtons}
-                  >
-                    <Text>{person.name}&nbsp;{person.surname}</Text>
-                  </TouchableOpacity>
-                );
-              })}
             </View>
-          </View>
-        </Form>
-        {this.state.dateTimePicker && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={new Date(this.state.dateTimeType.value)}
-            mode={this.state.dateTimeType.type}
-            is24Hour={true}
-            display="default"
-            onChange={(event, selectedDate) => this.handleDateTimeSelect(event, selectedDate, this.state.dateTimeType)}
-          />
-        )}
+          </Form>
+          {this.state.dateTimePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={new Date(this.state.dateTimeType.value)}
+              mode={this.state.dateTimeType.type}
+              is24Hour={true}
+              display="default"
+              onChange={(event, selectedDate) => this.handleDateTimeSelect(event, selectedDate, this.state.dateTimeType)}
+            />
+          )}
+        </ScrollView>
         <View styles={{padding: 10}}>
           <TouchableOpacity
             style={styles.submitButton}
@@ -649,7 +651,7 @@ class CreateTaskForm extends Component {
             <Text style={{color: 'white'}}>Submit</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+     </React.Fragment>
     );
   }
 }
@@ -677,7 +679,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height:800,
+    height:'100%',
     width: 350,
   },
   openButton: {
