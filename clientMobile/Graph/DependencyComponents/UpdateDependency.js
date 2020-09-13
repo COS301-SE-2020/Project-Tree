@@ -206,7 +206,7 @@ class UpdateDependencyForm extends Component {
             selectedButtonStyle={{backgroundColor: '#EEBB4D'}}
           />
         </View>
-        <View style={{flex: 1, marginBottom:20}}>
+        <View style={{flex: 6, marginBottom:20}}>
           <Form>
             <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
             <Item floatingLabel disabled>
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 410,
+    height: 600,
     width: 350,
   },
   hideButton: {

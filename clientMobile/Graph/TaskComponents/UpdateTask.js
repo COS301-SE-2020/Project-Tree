@@ -787,6 +787,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginRight: 10,
     marginTop: 10,
+    marginBottom: 20
   },
   submitButton: {
     backgroundColor: '#184D47',

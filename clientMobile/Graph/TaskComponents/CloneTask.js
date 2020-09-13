@@ -52,7 +52,7 @@ class CloneTask extends Component {
             <Icon
                 type="FontAwesome"
                 name="clone"
-                style={{color: 'white', paddingBottom: 10}}>
+                style={{color: 'white'}}>
                 <Text>&nbsp;Clone</Text>
             </Icon>
         </TouchableOpacity>
