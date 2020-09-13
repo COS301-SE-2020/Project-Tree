@@ -17,15 +17,26 @@ class ProjectPage extends React.Component {
       messages: null,
     };
 
-    this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(
-      this
+    this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(this
     );
   }
 
-  updateNoticeBoardRefreshKey() {
-    this.setState({
-      noticeBoardRefreshKey: this.state.noticeBoardRefreshKey + 1,
+  async updateNoticeBoardRefreshKey() {
+    let data = {
+      projID: this.props.project.id,
+      userID: this.props.user.id,
+    };
+
+    data = JSON.stringify(data);
+    await new Promise(r => setTimeout(r, 2000));
+
+    $.post("/retrieveNotifications", JSON.parse(data), (response) => {
+      this.setState({ messages: response.notifications });
+    }).fail(() => {
+      alert("Unable to fetch notifications");
     });
+
+    console.log('hi')
   }
 
   componentDidMount() {
@@ -97,14 +108,15 @@ class ProjectPage extends React.Component {
   }
 
   render() {
+    console.log(this.state.messages)
     return (
       <Container fluid>
         <Row className="my-1">
           <Col 
             sm={12}
             md={12}
-            lg={6}
-            xl={6}
+            lg={8}
+            xl={8}
           >
             <ProjectInfo
               project={this.props.project}
@@ -119,8 +131,8 @@ class ProjectPage extends React.Component {
           <Col
             sm={12}
             md={12}
-            lg={6}
-            xl={6}
+            lg={4}
+            xl={4}
           >
             {this.props.project != null && this.props.user != null ? (
               <NoticeBoard

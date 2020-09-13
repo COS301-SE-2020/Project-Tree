@@ -87,9 +87,8 @@ class NoticeBoardScreen extends Component {
     };
 
     data = JSON.stringify(data);
-    console.log(data)
     const response = await fetch(
-      'http://10.0.2.2:5000/retrieveNotifications',
+      'http://projecttree.herokuapp.com/retrieveNotifications',
       {
         method: 'POST',
         headers: {
@@ -100,7 +99,6 @@ class NoticeBoardScreen extends Component {
       },
     );
     const body = await response.json();
-     // console.log(body)
     if (this._isMounted === true) this.setState({messages: body.notifications});
   }
 
@@ -235,14 +233,18 @@ class NotificationList extends Component {
       <View
         key={i}
         style={{paddingTop: 10, paddingBottom: 10, flexDirection: 'row'}}>
-        <View>{this.returnRandomUser()}</View>
+        <View style={{width:'25%', alignItems:'center'}}>
+          {this.returnRandomUser()}
+          <Text style={{textAlign:'center'}}>
+            {message.fromName}
+          </Text>
+        </View>
         <View style={{paddingLeft: 5, marginRight: 50}}>
           <Text>
             <Text style={{fontWeight: 'bold'}}>
-              {message.fromName}
-              {message.type === 'project' ? ' - ' + 'Project Wide' : null}
-              {message.type === 'task' ? ' - ' + message.taskName : null}
-              {message.type === 'auto' ? ' - Auto' : null}{' '}
+              {message.type === 'project' ? 'Project Wide' : null}
+              {message.type === 'task' ? message.taskName : null}
+              {message.type === 'auto' ? 'Auto' : null}{' '}
             </Text>
             <Text style={{color: 'grey'}}>
               {message.timestamp.hour.low < 10
@@ -258,7 +260,7 @@ class NotificationList extends Component {
             style={{
               backgroundColor: '#96BB7C',
               height: 1,
-              width: '100%',
+              width: 200,
             }}></View>
           <Text style={{paddingTop: 15, fontSize: 17}}>{message.message}</Text>
         </View>

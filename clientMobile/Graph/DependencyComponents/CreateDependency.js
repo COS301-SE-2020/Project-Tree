@@ -332,7 +332,7 @@ class CreateDependencyForm extends Component {
             selectedButtonStyle={{backgroundColor: '#EEBB4D'}}
           />
         </View>
-        <View style={{flex: 1, marginBottom:10}}>
+        <View style={{flex: 6, marginBottom:10}}>
           <Form>
           <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
             <Item floatingLabel disabled>
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 400,
+    height: 500,
     width: 350,
   },
   hideButton: {

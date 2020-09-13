@@ -10,7 +10,6 @@ import $ from "jquery";
 import logo from "./Images/Logo.png";
 import { Login, Register } from "./User/index";
 import Settings from "./User/Settings";
-import About from "./About";
 
 function RightSide(props) {
   window.onload = () => {
@@ -440,12 +439,6 @@ class App extends Component {
                             />
                           </div>
                       </div>
-                        /* <div className="column right" style={{ backgroundColor: "white" }}>
-                          <div className="carosal">
-                            <About />
-                          </div>
-                        </div> */
-                     //</Col>/ </div>
                     )}
                   </Route>
                 </Switch>

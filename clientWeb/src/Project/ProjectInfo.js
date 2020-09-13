@@ -12,26 +12,43 @@ class ProjectInfo extends React.Component {
       <React.Fragment>
         <Container className="block-example border rounded border-secondary">
           <Row className="align-items-center bg-secondary py-2">
-            <Col className="text-center">
-              {this.props.userPermission["project"] === true ? (
-                <DeleteProject
-                  project={this.props.project}
-                  setProject={(project) => {
-                    this.props.setProject(project);
-                  }}
-                />
-              ) : null}
+            <Col>
+              <Row>
+                <Col
+                  sm={12}
+                  md={12}
+                  lg={12}
+                  xl={6}
+                  className="text-center my-1"
+                >
+                  {this.props.userPermission["project"] === true ? (
+                    <DeleteProject
+                      project={this.props.project}
+                      setProject={(project) => {
+                        this.props.setProject(project);
+                      }}
+                    />
+                  ) : null}
+                </Col>
+                <Col 
+                  sm={12}
+                  md={12}
+                  lg={12}
+                  xl={6}
+                  className="text-center my-1"
+                >
+                  {this.props.userPermission["project"] === true ? (
+                    <UpdateProject
+                      project={this.props.project}
+                      setProject={(project) => {
+                        this.props.setProject(project);
+                      }}
+                    />
+                  ) : null}
+                </Col>
+              </Row>
             </Col>
-            <Col className="text-center">
-              {this.props.userPermission["project"] === true ? (
-                <UpdateProject
-                  project={this.props.project}
-                  setProject={(project) => {
-                    this.props.setProject(project);
-                  }}
-                />
-              ) : null}
-            </Col>
+            
             <Col
               className="text-white text-center"
               style={{ fontSize: "22px" }}
@@ -39,25 +56,42 @@ class ProjectInfo extends React.Component {
             >
               {this.props.project.name}
             </Col>
-            <Col className="text-center">
-              <Link to="/graph">
-                <Button
-                  variant="warning"
-                  style={{width: "100px"}}
+            <Col>
+              <Row>
+                <Col
+                  sm={12}
+                  md={12}
+                  lg={12}
+                  xl={6}
+                  className="text-center my-1"
                 >
-                  <i className="fa fa-line-chart"></i> Graph{" "}
-                </Button>
-              </Link>
+                  <Link to="/graph">
+                    <Button
+                      variant="warning"
+                      style={{width: "100px"}}
+                    >
+                      <i className="fa fa-line-chart"></i> Graph{" "}
+                    </Button>
+                  </Link>
+                </Col>
+                <Col
+                  sm={12}
+                  md={12}
+                  lg={12}
+                  xl={6}
+                  className="text-center my-1"
+                >
+                  <SendProjectNotification
+                    project={this.props.project}
+                    user={this.props.user}
+                    updateNoticeBoardRefreshKey={
+                      this.props.updateNoticeBoardRefreshKey
+                    }
+                  />
+                </Col>
+              </Row>
             </Col>
-            <Col className="text-center">
-              <SendProjectNotification
-                project={this.props.project}
-                user={this.props.user}
-                updateNoticeBoardRefreshKey={
-                  this.props.updateNoticeBoardRefreshKey
-                }
-              />
-            </Col>
+            
           </Row>
           <Row className="align-items-center py-2">
             <Col

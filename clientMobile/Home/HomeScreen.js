@@ -42,7 +42,7 @@ function GoToTree() {
       onPress={() => {
         navigation.navigate('Project Tree');
       }}>
-      <Icon type="FontAwesome" name="eye" style={{color: 'white'}}></Icon>
+      <Icon type="FontAwesome" name="line-chart" style={{color: 'white'}}></Icon>
     </TouchableOpacity>
   );
 }
