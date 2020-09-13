@@ -146,17 +146,28 @@ class Dashboard extends React.Component {
           <Row>
             <Col>
             </Col>
-            <Col></Col>
             <Col xl={4} xs={3} className="text-center">
               <h1 style={{fontWeight: "bold"}}>Project Dashboard</h1>
             </Col>
-            <Col >
-              {this.MakeDropdown()}
-            </Col>
             <Col>
-              <Button variant="warning" onClick={()=>this.scroll("calendar")}>
-                Jump To Calendar
-              </Button>
+              <Row>
+                <Col 
+                  sm={12}
+                  xl={6}
+                  className="text-center p-1"
+                >
+                  {this.MakeDropdown()}
+                </Col>
+                <Col
+                  sm={12}
+                  xl={6}
+                  className="text-center p-1"
+                >
+                  <Button variant="warning" onClick={()=>this.scroll("calendar")}>
+                    Jump To Calendar
+                  </Button>
+                </Col>
+              </Row>
             </Col>
           </Row>
           <Row>
