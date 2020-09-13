@@ -31,7 +31,7 @@ const FileUploader = (props) => {
 
   return (
     <React.Fragment>
-      <Button variant="dark" onClick={()=>handleOnClickUpload()}>Upload File</Button>
+      <Button variant="dark" className="mb-1" onClick={()=>handleOnClickUpload()}>Upload File</Button>
       <input 
         type="file" 
         id="input_img" 
@@ -140,7 +140,7 @@ class Settings extends React.Component {
       "/user/get",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
-        this.setState({ toggleEdit: false, user: response.user });
+        this.setState({ toggleEdit: false, user: response.user, pfp:null });
       }
     )
     .fail((response) => {
@@ -165,7 +165,7 @@ class Settings extends React.Component {
     $.post("/user/edit", data, (response) => {
       this.setState({ user: response.user, prevUser: response.user });
       this.closeEdit();
-      this.setState({isloading: false});
+      this.setState({isloading: false, pfp:null});
     }).fail(() => {
       alert("Unable to update user preferences");
     });
@@ -188,6 +188,7 @@ class Settings extends React.Component {
           show={this.state.show}
           onHide={() => {
             this.hideModal();
+            this.setState({pfp:null})
           }}
         >
           <Form onSubmit={this.handleSubmit} type="multipart/form-data">
@@ -212,7 +213,7 @@ class Settings extends React.Component {
                       </Col>
                     </Row>
                     <Row>
-                      {this.state.pfp !== null ? <Col>Save changes to save photo! </Col>: null}
+                      {this.state.pfp !== null ? <Col style={{fontSize: "18px"}}> Save changes to save photo! </Col>: null}
                     </Row>
                   </React.Fragment>
                  
