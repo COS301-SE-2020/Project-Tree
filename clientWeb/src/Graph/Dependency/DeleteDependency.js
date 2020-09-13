@@ -59,7 +59,7 @@ class DeleteDependency extends React.Component {
           className="btn-danger"
           style={{width: "100px"}}
           onClick={() => {
-            this.showModal();
+            this.ShowModal();
           }}
         >
           <i className="fa fa-trash"></i> Delete{" "}

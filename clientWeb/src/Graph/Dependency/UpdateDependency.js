@@ -150,7 +150,7 @@ class UpdateDependency extends React.Component {
               </Form.Group>
               <Form.Group>
                 <Form.Label>
-                  {this.state.relationshipType === "ss" ? 
+                  {this.state.dependency.relationshipType === "ss" ? 
                     "Start Date of first Task"
                   :
                     "End Date of first Task"
@@ -163,9 +163,9 @@ class UpdateDependency extends React.Component {
                   name="ud_startDate"
                   value={
                     this.state.dependency.relationshipType === "ss" ?
-                    this.state.dependency.sStartDate
+                    this.state.dependency.sStartDate.replace("T", " ")
                   :
-                    this.state.dependency.sEndDate
+                    this.state.dependency.sEndDate.replace("T", " ")
                   }
                   onChange={() => {}}
                 />

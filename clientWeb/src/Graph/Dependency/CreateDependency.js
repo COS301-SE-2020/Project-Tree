@@ -143,9 +143,9 @@ class CreateDependency extends React.Component {
                   name="cd_startDate"
                   value={
                   this.state.relationshipType === "ss" ?
-                    this.props.source.startDate
+                    this.props.source.startDate.replace("T", " ")
                   :
-                    this.props.source.endDate
+                    this.props.source.endDate.replace("T", " ")
                   }
                   onChange={() => {}}
                 />
@@ -179,7 +179,7 @@ class CreateDependency extends React.Component {
                     } else {
                       if (target.startDate < this.props.source.endDate) {
                         alert("you can not make the second task earlier then the first");
-                        target.endDate = this.props.source.endDate;
+                        target.startDate = this.props.source.endDate;
                         this.setState({ 
                           target: target, 
                           duration: this.CalcDiff(this.props.source.endDate, this.props.source.endDate) 
@@ -223,7 +223,7 @@ class CreateDependency extends React.Component {
                     } else {
                       if (target.startDate < this.props.source.endDate) {
                         alert("you can not make the second task earlier then the first");
-                        target.endDate = this.props.source.endDate;
+                        target.startDate = this.props.source.endDate;
                         this.setState({ 
                           target: target, 
                           duration: this.CalcDiff(this.props.source.endDate, this.props.source.endDate) 
