@@ -89,7 +89,7 @@ class UpdateDependency extends React.Component {
               closeButton
               style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
-              <Modal.Title>Update Dependencies</Modal.Title>
+              <Modal.Title>Edit Dependencies</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <input

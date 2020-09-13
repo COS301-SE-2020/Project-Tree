@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Table, Modal, Button, Spinner } from "react-bootstrap";
+import { Form, Table, Modal, Button, Spinner, OverlayTrigger, Tooltip } from "react-bootstrap";
 import $ from "jquery";
 
 function stringifyFormData(fd) {
@@ -136,9 +136,9 @@ class UpdateProject extends React.Component {
                   </tr>
                   <tr>
                     <td></td>
-                    <td className="text-center">Create</td>
-                    <td className="text-center">Delete</td>
-                    <td className="text-center">Update</td>
+                    <td className="text-center">Create <OverlayTrigger overlay={<Tooltip>Users assigned to the project can create tasks for the project</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
+                    <td className="text-center">Delete <OverlayTrigger overlay={<Tooltip>Users assigned to the project can delete the project and its tasks</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
+                    <td className="text-center">Edit <OverlayTrigger overlay={<Tooltip>Users assigned to the project can edit the project information and its task's information</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
                   </tr>
                 </thead>
                 <tbody>
