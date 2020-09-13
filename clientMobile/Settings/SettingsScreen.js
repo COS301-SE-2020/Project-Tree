@@ -189,7 +189,8 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     borderRadius: 50,
-    borderColor: '#F44336',
+    //borderWidth:2,
+    borderColor: 'white',
     marginBottom: 10
   },
 });

@@ -40,10 +40,10 @@ export class Login extends Component {
         console.log("LOGGED IN")
         localStorage.setItem("sessionToken", response.sessionToken);
         this.props.handleLogin(response);
-      } else alert("Unable to Log");
+      } else alert("Email or Password is incorrect");
     })
     .fail(() => {
-      alert("Unable to login");
+      alert("Email or Password is incorrect.");
     })
     event.preventDefault();
   }

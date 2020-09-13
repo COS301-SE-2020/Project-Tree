@@ -2,6 +2,10 @@ import React from "react";
 import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstrap";
 import $ from "jquery";
 import "./style.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+const eye = <FontAwesomeIcon icon={faEye} />;
+
 
 let global_pfp = "";
 function stringifyFormData(fd) {
@@ -47,7 +51,20 @@ const FileUploader = (props) => {
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: null, isloading: false, togglePass: false};
+    this.state = { 
+      show: false, 
+      toggleEdit: false, 
+      user: this.props.user, 
+      pfp: null, 
+      isloading: false, 
+      togglePass: false,
+      password: "",
+      secureTextEntry: true,
+      confirm_secureTextEntry: true,
+      confirmPassword: "",  
+      hidden: true,
+      
+    };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -56,6 +73,9 @@ class Settings extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileChange = this.fileChange.bind(this);
     this.togglePass = this.togglePass.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handlePass = this.handlePass.bind(this);
+    this.toggleShow = this.toggleShow.bind(this);
   }
 
   
@@ -65,6 +85,12 @@ class Settings extends React.Component {
       this.setState({ user: this.props.user });
     }
   }
+
+  
+  toggleShow() {
+    this.setState({ hidden: !this.state.hidden });
+  }
+
 
   showModal() {
     this.setState({ show: true });
@@ -96,6 +122,39 @@ class Settings extends React.Component {
     this.setState({ show: false });
   }
 
+  handlePasswordChange(val) {
+    this.setState({
+      password: val,
+    //  isValidPassword: true,
+})}
+
+handleNewPasswordChange(val) {
+
+  this.setState({
+      confirmPassword: val,
+    //  isValidPassword: true,
+})
+
+  // let arr = this.password_validate(val);
+  // this.setState({
+  //   passwordError: arr[0],
+  //   passwordError2: arr[1], 
+  //   passwordError3: arr[2],
+  //   passwordError4: arr[3],
+  //   isValidPassword: false
+  // })
+  // if(arr[0]== "✓" && arr[1]== "✓" && arr[2]== "✓" && arr[3]== "✓")
+  // {
+  //   this.setState({
+  //     newPass: val,
+  //     confirmNewPass: true,
+  //   });
+  // } else {
+  //   this.setState({
+  //     confirmNewPass: true,
+  //   });    }
+}
+
   handleLogout() {
     localStorage.clear();
     this.setState({
@@ -123,6 +182,7 @@ class Settings extends React.Component {
       "/user/get",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
+        console.log(response)
         this.setState({ toggleEdit: false, user: response.user, pfp:null });
       }
     )
@@ -130,6 +190,46 @@ class Settings extends React.Component {
       throw Error(response.message);
     });
   }
+
+  async handlePass(oldPass, newPass) 
+  {
+    this.setState({isloading: true});
+    if (oldPass.trim().length < 1) {
+      alert('Please enter your password you wish to change');
+      return;
+    }
+
+    if (newPass.trim().length < 1) {
+      alert('Please ensure all password criteria are met');
+      return;
+    }
+
+    let data = {
+      token: localStorage.getItem("sessionToken"),
+      testPass: oldPass,
+      newPass: newPass
+    };
+    data = JSON.stringify(data);
+    console.log(data)
+    $.post("/user/pass", JSON.parse(data), (response) => {
+      console.log(response)
+      if(response.message === "wrong")
+      {
+        alert('Password entered does not match password registered with this account.');
+      }
+      else if(response.message === "success")
+      {
+        alert("Success")
+        this.togglePass();
+        this.setState({isloading: false, pfp:null});
+      }
+    
+    
+    }) .fail(() => {
+      alert("Unable to change password");
+    })
+  }
+
 
   async handleSubmit(event) {
     this.setState({isloading: true});
@@ -208,18 +308,38 @@ class Settings extends React.Component {
             (
               <Container>
               <Row className="mb-2">
-              <Form.Control
-                      required
-                      type="text"
-                      name="name"
-                      value={this.state.user.name}
-                      onChange={(e) => {
-                        let usr = this.state.user;
-                        usr.name = e.target.value;
-                        this.setState({ user: usr });
-                        this.value = this.state.user.name;
-                      }}
-              />
+                {this.state.toggleEdit === false ?
+                    "Current Password: " :
+                    "Current Password*: "}
+                <Form.Control
+                        required
+                        type={this.state.hidden ? "password" : "text"}
+                        id="password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={(e) => {
+                          this.setState({ password: e.target.value })
+                          this.value = this.state.password;
+                        }}
+                        required/><i onClick={this.toggleShow}>{eye}</i>
+             </Row>
+             <Row className="mb-2">
+             {this.state.toggleEdit === false ?
+                    "New Password: " :
+                    "New Password*: "}
+                <Form.Control
+                        required
+                        type={this.state.hidden ? "password" : "text"}
+                        id="newPass"
+                        name="newPass"
+                        value={this.state.confirmPassword}
+                        onChange={(e) => {
+                          this.setState({ confirmPassword: e.target.value })
+                          this.value = this.state.confirmPassword;
+                          console.log(this.state.confirmPassword)
+                        }}
+                        required
+                /><i onClick={this.toggleShow}>{eye}</i>
              </Row>
              </Container>
             )
@@ -307,8 +427,8 @@ class Settings extends React.Component {
                         this.setState({ user: usr });
                         this.value = this.state.user.birthday;
                       }}
-                    />
-                  )}
+                    />                      
+                  )}                    
                 </Row>
               </Container>
             )}
@@ -347,6 +467,38 @@ class Settings extends React.Component {
                 </Container>
               ):
                 ( */}
+
+              {this.state.togglePass === true ?
+               (
+              <Container>
+                <Row>
+               <Col>
+                <Button
+                  block
+                  variant="secondary"
+                  className="mb-2"
+                  onClick={() => {
+                    this.handlePass(this.state.password, this.state.confirmPassword);
+                  }}
+                >
+                  <i className="fa fa-edit"> </i> Submit
+                </Button>
+              </Col>
+              <Col>
+              <Button
+              block
+              variant="secondary"
+              className="mb-2"
+              onClick={() => {
+                this.togglePass();
+              }}>
+              <i className="fa fa-remove"> </i> Cancel {" "}
+            </Button>
+            </Col>
+            </Row>
+            </Container>
+
+              ):(
               <Container>
               {this.state.toggleEdit === true ? (
                 <Row>
@@ -426,7 +578,7 @@ class Settings extends React.Component {
                   </Col>
                 </Row>  )}                 
             </Container>
-          </Form>
+          )}</Form>
         </Modal>
       </React.Fragment>   
     )}
