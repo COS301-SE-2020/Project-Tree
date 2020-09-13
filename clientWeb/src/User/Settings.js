@@ -30,10 +30,32 @@ function getBase64(file, onLoadCallback) {
   };
 }
 
+const FileUploader = (props) => {
+  const hiddenFileInput = React.useRef(null);
+  
+  const handleOnClickUpload = event => {
+    hiddenFileInput.current.click();
+  };
+
+  return (
+    <React.Fragment>
+      <Button onClick={()=>handleOnClickUpload()}>Upload File</Button>
+      <input 
+        type="file" 
+        id="input_img" 
+        onChange={(e) => { props.fileChange(e) }} 
+        accept="image/x-png,image/gif,image/jpeg" 
+        style={{display: 'none'}}
+        ref={hiddenFileInput}
+      />
+    </React.Fragment>
+  );
+};
+
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: ""};
+    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: null};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -43,6 +65,8 @@ class Settings extends React.Component {
     this.getB64 = this.getB64.bind(this);
     this.fileChange = this.fileChange.bind(this);
   }
+
+  
 
   componentDidUpdate(prevProps) {
     if (this.props.user !== prevProps.user) {
@@ -188,7 +212,10 @@ class Settings extends React.Component {
                 {this.state.toggleEdit === false ? (
                   "       " + this.state.user.name + " " + this.state.user.sname
                 ) : (
-                  <input type="file" id="input_img" onChange={(e) => { this.fileChange(e) }} accept="image/x-png,image/gif,image/jpeg" />
+                  <Row>
+                    <FileUploader fileChange={this.fileChange} />
+                    {this.state.pfp !== null ? <p>Save changes to save photo!</p> : null}
+                  </Row>
                 )}
               </Modal.Title>
             </Modal.Header>
