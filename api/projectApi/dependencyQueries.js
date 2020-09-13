@@ -346,7 +346,7 @@ function deleteDependency(req, res) {
     db.getSession()
     .run(
       `
-        MATCH (c:View)-[:VIEW_OF]->(a:Task)-[r:DEPENDENCY]->(b:Task)<-[:VIEW_OF]-(d:View)
+        MATCH (a:Task)-[r:DEPENDENCY]->(b:Task)
         WHERE ID(r)=${req.body.changedInfo.dd_did}
         DELETE r
 		  `

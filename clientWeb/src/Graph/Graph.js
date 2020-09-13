@@ -440,6 +440,7 @@ class Graph extends React.Component {
                       variant={color}
                       block
                       size="sm"
+                      disabled={this.state.target === null}
                     >
                       {dependency}
                     </Button>

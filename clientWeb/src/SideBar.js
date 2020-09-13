@@ -14,7 +14,7 @@ class SideBar extends React.Component {
           noGutters
           className="m-1"
           style={{ width: "100%" }}
-          key={project.id}
+          key={project.projectInfo.id}
         >
           <Col>
             <Container
@@ -27,7 +27,7 @@ class SideBar extends React.Component {
               }}
             >
               <Row className="align-items-center py-2">
-                <Col className="text-center">{project.name}</Col>
+                <Col className="text-center">{project.projectInfo.name}</Col>
               </Row>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
@@ -41,7 +41,7 @@ class SideBar extends React.Component {
                         width: "100px"
                       }}
                       onClick={() => {
-                        this.props.setProject(project);
+                        this.props.setProject(project.projectInfo);
                         this.props.closeSideBar(true);
                       }}
                     >
@@ -60,7 +60,7 @@ class SideBar extends React.Component {
                         fontSize: "15px",
                       }}
                       onClick={() => {
-                        this.props.setProject(project);
+                        this.props.setProject(project.projectInfo);
                         this.props.closeSideBar(true);
                       }}
                     >
@@ -70,7 +70,7 @@ class SideBar extends React.Component {
                 </Col>
                 <Col className="text-center">
                   <DeleteProject
-                    project={project}
+                    project={project.projectInfo}
                     setProject={(project) => {
                       this.props.setProject(project);
                     }}
@@ -93,7 +93,7 @@ class SideBar extends React.Component {
           noGutters
           className="m-1"
           style={{ width: "100%" }}
-          key={project.id}
+          key={project.projectInfo.id}
         >
           <Col>
             <Container
@@ -106,7 +106,7 @@ class SideBar extends React.Component {
               }}
             >
               <Row className="align-items-center py-2">
-                <Col className="text-center">{project.name}</Col>
+                <Col className="text-center">{project.projectInfo.name}</Col>
               </Row>
               <Row className="align-items-center py-2">
                 <Col className="text-center">
@@ -121,7 +121,7 @@ class SideBar extends React.Component {
                         width: "90px"
                       }}
                       onClick={() => {
-                        this.props.setProject(project);
+                        this.props.setProject(project.projectInfo);
                         this.props.closeSideBar(true);
                       }}
                     >
@@ -140,7 +140,7 @@ class SideBar extends React.Component {
                         fontSize: "15px",
                       }}
                       onClick={() => {
-                        this.props.setProject(project);
+                        this.props.setProject(project.projectInfo);
                         this.props.closeSideBar(true);
                       }}
                     >

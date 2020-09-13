@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button, Col, Row, Container, Form } from "react-bootstrap";
+import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstrap";
 import $ from "jquery";
 import "./style.scss";
 
@@ -10,14 +10,6 @@ function stringifyFormData(fd) {
     data[key] = fd.get(key);
   }
   return data;
-}
-
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
 }
 
 
@@ -55,7 +47,7 @@ const FileUploader = (props) => {
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: null};
+    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: null, isloading: false};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -131,7 +123,7 @@ class Settings extends React.Component {
     localStorage.clear();
     this.setState({
       loggedInStatus: false,
-      user: {},
+      //user: {},
     });
     this._isMounted = false;
     window.location.reload(false);
@@ -157,7 +149,7 @@ class Settings extends React.Component {
   }
 
   async handleSubmit(event) {
-    sleep(6500);
+    this.setState({isloading: true});
     console.log("OLD PFP", this.state.user.profilepicture)
     console.log("PFP", )
     console.log("GLOBAL", global_pfp)
@@ -173,6 +165,7 @@ class Settings extends React.Component {
     $.post("/user/edit", data, (response) => {
       this.setState({ user: response.user, prevUser: response.user });
       this.closeEdit();
+      this.setState({isloading: false});
     }).fail(() => {
       alert("Unable to update user preferences");
     });
@@ -326,13 +319,16 @@ class Settings extends React.Component {
                         </Button>
                       </Col>
                       <Col>
-                        <Button
-                          type="submit"
-                          block
-                          variant="secondary"
-                          className="mb-2"
+                        <Button type="submit" variant="secondary"
+                        disabled={this.state.isloading} className="mb-2" block
                         >
-                          <i className="fa fa-save"> </i> Save Changes{" "}
+                          {this.state.isloading ? 
+                            <Spinner
+                              animation="border"
+                              variant="success"
+                              size="sm"
+                            ></Spinner> 
+                          : <React.Fragment><i className="fa fa-save"> </i> {"Save Changes"} </React.Fragment>} 
                         </Button>
                       </Col>
                     </Row>

@@ -367,10 +367,10 @@ class TaskSidebar extends React.Component {
             </Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">Start Date: {this.props.task.startDate}</Col>
+            <Col className="text-center">Start Date: {this.props.task.startDate.replace("T", " ")}</Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">End Date: {this.props.task.endDate}</Col>
+            <Col className="text-center">End Date: {this.props.task.endDate.replace("T", " ")}</Col>
           </Row>
           <Row className="text-center p-1">
             <Col className="text-center">
@@ -510,10 +510,10 @@ class DependencySidebar extends React.Component {
             <Col></Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">Start Date: {this.props.dependency.startDate}</Col>
+            <Col className="text-center">Start Date: {this.props.dependency.startDate.replace("T", " ")}</Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">End Date: {this.props.dependency.endDate}</Col>
+            <Col className="text-center">End Date: {this.props.dependency.endDate.replace("T", " ")}</Col>
           </Row>
           <Row className="text-center p-1">
             <Col className="text-center">Duration: {this.CalcDiff(this.props.dependency.startDate, this.props.dependency.endDate)}</Col>

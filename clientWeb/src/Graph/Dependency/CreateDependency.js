@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, Spinner } from "react-bootstrap";
 import ms from "ms";
 
 class CreateDependency extends React.Component {
@@ -17,13 +17,14 @@ class CreateDependency extends React.Component {
       relationshipType: "ss",
       target: target,
       duration: duration,
+      isloading: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async handleSubmit(event) {
     event.preventDefault();
-
+    this.setState({isloading: true});
     let startDate;
     if (this.state.relationshipType === "ss") {
       startDate = this.props.source.startDate;
@@ -63,6 +64,7 @@ class CreateDependency extends React.Component {
       body.displayRel
     );
     this.props.closeModal();
+    this.setState({isloading: false});
     this.props.clearDependency();
   }
   
@@ -143,9 +145,9 @@ class CreateDependency extends React.Component {
                   name="cd_startDate"
                   value={
                   this.state.relationshipType === "ss" ?
-                    this.props.source.startDate
+                    this.props.source.startDate.replace("T", " ")
                   :
-                    this.props.source.endDate
+                    this.props.source.endDate.replace("T", " ")
                   }
                   onChange={() => {}}
                 />
@@ -179,7 +181,7 @@ class CreateDependency extends React.Component {
                     } else {
                       if (target.startDate < this.props.source.endDate) {
                         alert("you can not make the second task earlier then the first");
-                        target.endDate = this.props.source.endDate;
+                        target.startDate = this.props.source.endDate;
                         this.setState({ 
                           target: target, 
                           duration: this.CalcDiff(this.props.source.endDate, this.props.source.endDate) 
@@ -223,7 +225,7 @@ class CreateDependency extends React.Component {
                     } else {
                       if (target.startDate < this.props.source.endDate) {
                         alert("you can not make the second task earlier then the first");
-                        target.endDate = this.props.source.endDate;
+                        target.startDate = this.props.source.endDate;
                         this.setState({ 
                           target: target, 
                           duration: this.CalcDiff(this.props.source.endDate, this.props.source.endDate) 
@@ -257,8 +259,16 @@ class CreateDependency extends React.Component {
               <Button variant="secondary" onClick={this.props.closeModal}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark">
-                Create 
+              <Button type="submit" variant="dark" style={{width: "100px"}}
+              disabled={this.state.isloading}
+              >
+                {this.state.isloading ? 
+                  <Spinner
+                    animation="border"
+                    variant="success"
+                    size="sm"
+                  ></Spinner> 
+                : "Create" } 
               </Button>
             </Modal.Footer>
           </Form>

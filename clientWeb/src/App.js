@@ -66,9 +66,70 @@ class App extends Component {
     let token = localStorage.getItem("sessionToken");
     if (token != null) {
       $.post("/project/get", { token }, (response) => {
+        let ownedProjects = [];
+
+        response.ownedProjects.forEach(async (project, i) => {
+          ownedProjects[i] = {}
+          ownedProjects[i].projectInfo = project;
+          ownedProjects[i].criticalPath = {};
+          ownedProjects[i].tasks = [];
+          ownedProjects[i].rels = [];
+        });
+        let otherProjects = [];
+        response.otherProjects.forEach((project, i) => {
+          otherProjects[i] = {}
+          otherProjects[i].projectInfo = project;
+          otherProjects[i].criticalPath = {};
+          otherProjects[i].tasks = [];
+          otherProjects[i].rels = [];
+        });
         this.setState({
-          ownedProjects: response.ownedProjects,
-          otherProjects: response.otherProjects,
+          ownedProjects: ownedProjects,
+          otherProjects: otherProjects,
+        });
+
+        this.state.ownedProjects.forEach((project, i) => {
+          $.post("/getProject", { id: project.projectInfo.id }, (response) => {
+            let ownedProjects = this.state.ownedProjects;
+            ownedProjects[i].tasks = response.tasks;
+            ownedProjects[i].rels = response.rels;
+            this.setState({ ownedProjects: ownedProjects });
+          }).fail((err) => {
+            throw Error(err);
+          });
+          $.post(
+            "/project/criticalpath",
+            { projId: project.projectInfo.id },
+            (response) => {
+              let ownedProjects = this.state.ownedProjects;
+              ownedProjects[i].criticalPath = response;
+              this.setState({ ownedProjects: ownedProjects });
+            }
+          ).fail(() => {
+            alert("Unable to get Critical Path");
+          });
+        });
+
+        this.state.otherProjects.forEach((project, i) => {
+          $.post("/getProject", { id: project.projectInfo.id }, (response) => {
+            let otherProjects = this.state.otherProjects;
+            otherProjects[i].tasks = response.tasks;
+            otherProjects[i].rels = response.rels;
+            this.setState({ otherProjects: otherProjects });
+          }).fail((err) => {
+            throw Error(err);
+          });
+          $.post(
+            "/project/criticalpath",
+            { projId: project.projectInfo.id },
+            (response) => {
+              let otherProjects = this.state.otherProjects;
+              otherProjects[i].criticalPath = response;
+              this.setState({ otherProjects: otherProjects });
+            }
+          ).fail(() => {
+            alert("Unable to get Critical Path");
+          });
         });
       }).fail((response) => {
         localStorage.removeItem("sessionToken");
@@ -109,7 +170,7 @@ class App extends Component {
     if (proj.delete != null) {
       let ownedProjects = [];
       for (let i = 0; i < this.state.ownedProjects.length; i++) {
-        if (this.state.ownedProjects[i].id !== proj.delete)
+        if (this.state.ownedProjects[i].projectInfo.id !== proj.delete)
           ownedProjects.push(this.state.ownedProjects[i]);
       }
       this.setState({
@@ -123,12 +184,22 @@ class App extends Component {
         },
       });
     } else {
-      if (
-        !this.state.ownedProjects.includes(proj) &&
-        !this.state.otherProjects.includes(proj)
-      ) {
+      let owned = false;
+      this.state.ownedProjects.forEach(project => {
+        if (project.projectInfo.id === proj.id) owned = true;
+      });
+      let other = false;
+      this.state.otherProjects.forEach(project => {
+        if (project.projectInfo.id === proj.id) other = true;
+      });
+      if ( !owned && !other) {
         let ownedProjects = this.state.ownedProjects;
-        ownedProjects.push(proj);
+        let project = {};
+        project.projectInfo = proj;
+        project.criticalPath = {};
+        project.tasks = [];
+        project.rels = [];
+        ownedProjects.push(project);
         this.setState({ ownedProjects: ownedProjects });
       }
       this.setState({ project: proj });
