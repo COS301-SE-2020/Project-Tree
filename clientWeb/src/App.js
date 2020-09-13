@@ -123,10 +123,15 @@ class App extends Component {
         },
       });
     } else {
-      if (
-        !this.state.ownedProjects.includes(proj) &&
-        !this.state.otherProjects.includes(proj)
-      ) {
+      let owned = false;
+      this.state.ownedProjects.forEach(project => {
+        if (project.id === proj.id) owned = true;
+      });
+      let other = false;
+      this.state.otherProjects.forEach(project => {
+        if (project.id === proj.id) other = true;
+      });
+      if ( !owned && !other) {
         let ownedProjects = this.state.ownedProjects;
         ownedProjects.push(proj);
         this.setState({ ownedProjects: ownedProjects });
