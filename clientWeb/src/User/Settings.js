@@ -96,7 +96,6 @@ class Settings extends React.Component {
   }
 
   handleLogout() {
-    this.setState({isloading: true});
     localStorage.clear();
     this.setState({
       loggedInStatus: false,
@@ -308,16 +307,13 @@ class Settings extends React.Component {
                     </Row>
                     <Row>
                       <Col>
-                        <Button type="submit" variant="dark"
-                        disabled={this.state.isloading} className="mb-2" block onClick={() => this.handleLogout()}
+                        <Button
+                          block
+                          variant="dark"
+                          className="mb-2"
+                          onClick={() => this.handleLogout()}
                         >
-                          {this.state.isloading ? 
-                            <Spinner
-                              animation="border"
-                              variant="success"
-                              size="sm"
-                            ></Spinner> 
-                          : <React.Fragment><i className="fa fa-save"> </i> {"Logout"} </React.Fragment>} 
+                          <i className="fa fa-sign-out"> </i> Logout{" "}
                         </Button>
                       </Col>
                   </Row>
