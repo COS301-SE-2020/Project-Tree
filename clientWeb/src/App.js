@@ -440,11 +440,9 @@ class App extends Component {
                             />
                           </div>
                         </div>
-                        <div className="column right" style={{ backgroundColor: "white" }}>
-                          <div className="carosal">
+                          <div >
                             <About />
                           </div>
-                        </div>
                       </div>
                     )}
                   </Route>
