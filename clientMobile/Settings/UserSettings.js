@@ -125,7 +125,7 @@ class UserSettings extends Component {
     await AsyncStorage.getItem('sessionToken').then(async (value) => {
       token = JSON.parse(value);
       this.setState({token: token});
-      const response = await fetch('http://projecttree.herokuapp.com/user/get', {
+      const response = await fetch('http://10.0.2.2:5000/user/get', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -280,7 +280,7 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
       console.log(data)
-      const response = await fetch('http://10.0.2.2:5000/user/pass', {
+      const response = await fetch('http://projecttree.herokuapp.com/user/pass', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -330,7 +330,7 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
 
-      const response = await fetch('http://projecttree.herokuapp.com/user/edit', {
+      const response = await fetch('http://10.0.2.2:5000/user/edit', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -436,8 +436,8 @@ class UserSettings extends Component {
                 </Animatable.View>
               ) : null}
             </View>
-            <Text style={[styleUser.text_footer, {marginTop: 35}]}>Date of Birth</Text>
-            <View>
+            {/* <Text style={[styleUser.text_footer, {marginTop: 35}]}>Date of Birth</Text> */}
+            {/* <View>
             <Form>
               <Item floatingLabel disabled>
               <Input value={this.state.startDate.toISOString().substr(0, 10)} editable={false} />
@@ -456,7 +456,7 @@ class UserSettings extends Component {
                 />
               </Item>
             </Form>
-            </View>
+            </View> */}
             <Modal
               animationType="fade"
               transperant={true}

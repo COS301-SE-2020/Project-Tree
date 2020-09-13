@@ -72,7 +72,9 @@ export default class SendTaskWideNotificationWrapper extends Component {
           <Icon
             type="AntDesign"
             name="notification"
-            style={{color: 'white'}}></Icon>
+            style={{color: 'white'}}>
+            <Text>&nbsp;Notify</Text>
+          </Icon>
         </TouchableHighlight>
         <SendNotificationModal
           project={this.props.project}
@@ -87,6 +89,17 @@ export default class SendTaskWideNotificationWrapper extends Component {
     );
   }
 }
+
+{/* <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={() => this.toggleProgressModal(false, true)}>
+                        <Icon
+                          type="Entypo"
+                          name="progress-one"
+                          style={{color: 'white', paddingBottom: 10}}>
+                          <Text>&nbsp;Clone</Text>
+                        </Icon>
+                      </TouchableOpacity> */}
 
 class SendNotificationModal extends Component {
   constructor(props) {
@@ -327,7 +340,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 45,
-    width: '25%',
     borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: {
@@ -337,5 +349,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 1,
+    margin: 3,
   },
 });

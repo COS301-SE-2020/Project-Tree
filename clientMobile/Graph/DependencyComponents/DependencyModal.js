@@ -11,6 +11,7 @@ import {
 } from 'native-base';
 import DeleteDependency from './DeleteDependency';
 import UpdateDependency from './UpdateDependency';
+import ms from "ms";
 
 class DependencyModal extends Component {
   constructor(props) {
@@ -36,6 +37,12 @@ class DependencyModal extends Component {
       displayDependencyModal: dependencyModal,
       displayUpdateModal: updateModal,
     });
+  }
+
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    let endDate = new Date(ed);
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
   render() {
@@ -69,14 +76,7 @@ class DependencyModal extends Component {
                 <Icon type="FontAwesome" name="close" />
               </TouchableOpacity>
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                <Text style={{fontSize: 30, color: '#184D47'}}>{name}</Text>
-                <View
-                  style={{
-                    backgroundColor: '#EEBB4D',
-                    height: 1,
-                    width: '80%',
-                    marginBottom: 10,
-                  }}></View>
+                <Text style={{fontSize: 30, color: '#184D47', textAlign:'center'}}>{name}</Text>
               </View>
               <Text style={styles.modalText}>
                 {this.props.selectedDependency.relationshipType === 'fs'
@@ -84,11 +84,9 @@ class DependencyModal extends Component {
                   : 'Start→Start'}
               </Text>
               <Text style={styles.modalText}>
-                {'Duration: ' +
-                  this.props.selectedDependency.duration +
-                  ' days'}
+                {'Duration: ' + this.CalcDiff(this.props.selectedDependency.startDate, this.props.selectedDependency.endDate )}
               </Text>
-              <View style={{flex: 1}}>
+              <View style={{flexDirection:'row'}}>
                 {this.props.userPermissions["update"] === true?
                   <View style={{flex: 1}}> 
                     <TouchableOpacity
@@ -107,6 +105,8 @@ class DependencyModal extends Component {
                   <View style={{flex: 1}}> 
                     <DeleteDependency
                       dependency={this.props.selectedDependency}
+                      sourceViewId={this.props.sourceViewId}
+                      targetViewId={this.props.targetViewId}
                       toggleVisibility={this.toggleVisibility}
                       getProjectInfo={this.props.getProjectInfo}
                       setProjectInfo={this.props.setProjectInfo}
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 340,
+    height: 250,
     width: 350,
   },
   hideButton: {

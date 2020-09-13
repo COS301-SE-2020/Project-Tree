@@ -47,6 +47,7 @@ app.post("/user/checkpermission", um.checkPermission);
 app.post("/mobile", async (req, res) => {
   taskArr = req.body.nodes;
   relArr = req.body.links;
+  views = req.body.views;
   direction = req.body.graphDir;
 
   let criticalPath = null;
@@ -82,6 +83,7 @@ app.post("/mobile", async (req, res) => {
   res.render("GraphMobile", {
     tasks: taskArr,
     rels: relArr,
+    views: views,
     graphDirection: direction,
     criticalPath: JSON.stringify(criticalPath),
   });
