@@ -105,6 +105,8 @@ class DependencyModal extends Component {
                   <View style={{flex: 1}}> 
                     <DeleteDependency
                       dependency={this.props.selectedDependency}
+                      sourceViewId={this.props.sourceViewId}
+                      targetViewId={this.props.targetViewId}
                       toggleVisibility={this.toggleVisibility}
                       getProjectInfo={this.props.getProjectInfo}
                       setProjectInfo={this.props.setProjectInfo}

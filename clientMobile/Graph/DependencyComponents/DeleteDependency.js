@@ -27,8 +27,14 @@ class DeleteDependency extends Component {
 
   async handleSubmit() {
     let projectData = await this.props.getProjectInfo();
+    let sourceViewId=this.props.sourceViewId
+    let targetViewId=this.props.targetViewId
+    if(sourceViewId === null) sourceViewId=''
+    if(targetViewId === null) targetViewId=''
     projectData.changedInfo = {
       dd_did: this.props.dependency.id,
+      sourceView: sourceViewId,
+      targetView: targetViewId
     };
     projectData = JSON.stringify(projectData);
 
