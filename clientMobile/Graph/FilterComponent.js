@@ -112,7 +112,7 @@ class FilterComponent extends React.Component{
 
         else if(this.state.filterTaskOption === "taskIncomplete"){
             tasks = tasks.filter((task)=>{
-                return task.type === "Incomplete"
+                return task.type === "Incomplete" || task.type === "Issue"
             })
         }
 
@@ -151,7 +151,7 @@ class FilterComponent extends React.Component{
 
         else if(this.state.filterTaskOption === "taskIncomplete"){
             tempTasks = tempTasks.filter((task)=>{
-                return task.type === "Incomplete"
+                return task.type === "Incomplete" || task.type === "Issue"
             })
         }
 
@@ -393,6 +393,7 @@ class FilterComponent extends React.Component{
                             filterTaskOption={this.state.filterTaskOption} 
                             nodes={this.props.nodes}
                             setSearchValue={this.setSearchValue}
+                            onFocus={this.state.onFocus}
                         />
                     }
                 </View>
@@ -615,9 +616,11 @@ class Searchbar extends React.Component{
                         value={this.state.searchTerm}
                         placeholder="Enter the name or id of task"
                     />
-                    <ScrollView>
-                        {this.state.searchTerm.length > 1 ? this.getSuggestions(this.state.suggestions) : null}
-                    </ScrollView>
+                    {this.props.onFocus ?
+                        <ScrollView>
+                            {this.state.searchTerm.length > 1 ? this.getSuggestions(this.state.suggestions) : null}
+                        </ScrollView>
+                    :null}
                 </View>
             )
                 
@@ -632,9 +635,11 @@ class Searchbar extends React.Component{
                         value={this.state.searchTerm}
                         placeholder="Enter the name of a person"
                     />
-                   <ScrollView>
-                        {this.state.searchTerm.length > 1 ? this.getSuggestions(this.state.suggestions) : null}
-                    </ScrollView>
+                    {this.props.onFocus ?
+                        <ScrollView>
+                            {this.state.searchTerm.length > 1 ? this.getSuggestions(this.state.suggestions) : null}
+                        </ScrollView>
+                    :null}
                 </View>
             )
         }
