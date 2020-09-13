@@ -162,11 +162,11 @@ class TaskModal extends Component {
                 </Text>
                 <Text style={styles.modalText}>
                   Start Date:{' '}
-                  {this.props.selectedTask.startDate}
+                  {this.props.selectedTask.startDate.replace("T", " ")}
                 </Text>
                 <Text style={styles.modalText}>
                   End Date:{' '}
-                  {this.props.selectedTask.endDate}
+                  {this.props.selectedTask.endDate.replace("T", " ")}
                 </Text>
                 <Text style={styles.modalText}>
                   Duration:{' '}

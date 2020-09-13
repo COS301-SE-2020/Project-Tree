@@ -218,9 +218,9 @@ class UpdateDependencyForm extends Component {
               </Label>
               <Input value={
                 this.state.relationshipType === 'ss'?
-                  this.state.sStartDate 
+                  this.state.sStartDate.replace("T", " ")
                   :
-                  this.state.sEndDate
+                  this.state.sEndDate.replace("T", " ")
                 } />
             </Item>
             <Item floatingLabel disabled>
