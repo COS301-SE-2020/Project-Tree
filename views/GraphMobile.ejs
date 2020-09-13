@@ -59,7 +59,8 @@
     <script type="text/javascript">
         var dragStartPosition
         var nodeTouch = false;
-        var count = 0;
+				var count = 0;
+				var globalCells = null;
 
         var graph = new joint.dia.Graph();
         var paper = new joint.dia.Paper({
@@ -83,7 +84,7 @@
 						handleUpNodeClick(event.model.id)
 					}
 				})
-        paper.on('link:pointerdown', (event) => {handleLinkClick(event.model.id)});
+        paper.on('link:pointerdown', (event) => {handleLinkClick(event.model)});
 
         var initialDownClick = null;
         function handleDownNodeClick(){
@@ -96,13 +97,28 @@
 						window.ReactNativeWebView.postMessage('n'+input+' cloned'+cloned);
 					}
 					else{
-						window.ReactNativeWebView.postMessage('c'+input);
+						window.ReactNativeWebView.postMessage('c'+input+' cloned'+cloned);
 					}
         }
 
         function handleLinkClick(input){
+					var views = eval('views = ' + $('#views').val());
+					let source = parseInt(input.attributes.source.id);
+      		let target = parseInt(input.attributes.target.id);
+					let sourceView = null;
+					let targetView = null;
+
+					for(let x = 0; x < views.length; x++) {
+						if(views[x].id === source){
+							sourceView = source;
+						}
+						else if(views[x].id === target){
+							targetView = target;
+						}
+					}
+
 					nodeTouch = true;
-					window.ReactNativeWebView.postMessage('l'+input);
+					window.ReactNativeWebView.postMessage('l'+input.id+' sourceView'+sourceView+' targetView'+targetView);
         }
 
         /*
@@ -194,13 +210,13 @@
 								}
 
 								for(let z = 0; z < viewNodes[x].outDepArr.length; z++){
-									if(`l${viewNodes[x].outDepArr[z].low}` === allNodes[y].id){
+									if(viewNodes[x].outDepArr[z].low === allNodes[y].id){
 										allNodes[y].attributes.source = {id: `${viewNodes[x].id}`};
 									}
 								}
 
 								for(let a = 0; a < viewNodes[x].inDepArr.length; a++){
-									if(`l${viewNodes[x].inDepArr[a].low}` === allNodes[y].id){
+									if(viewNodes[x].inDepArr[a].low === allNodes[y].id){
 										allNodes[y].attributes.target = {id: `${viewNodes[x].id}`};
 									}
 								}
@@ -316,7 +332,8 @@
                 var views = eval('views = ' + $('#views').val());
             } catch (e) { alert(e); }
 
-            var cells = buildGraph(dataList,criticalPath,views);
+						var cells = buildGraph(dataList,criticalPath,views);
+						globalCells = cells;
             graph.resetCells(cells);
             joint.layout.DirectedGraph.layout(graph, {
                 dagre: dagre,

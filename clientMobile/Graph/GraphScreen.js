@@ -173,6 +173,10 @@ class GraphScreen extends Component {
       filterOn:false,
       views:null,
       clonedNode:null,
+      source_viewId:null,
+      target_viewId:null,
+      delDep_sourceViewId:null,
+      delDep_targetViewId:null,
     };
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.displayTaskDependency = this.displayTaskDependency.bind(this);
@@ -312,10 +316,35 @@ class GraphScreen extends Component {
       this.setState({nodes: body.tasks, links: body.rels});
     }
 
+    const response2 = await fetch(
+      'http://10.0.2.2:5000/getProjectViews',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: this.props.project.id}),
+      },
+    );
+
+    const body2 = await response2.json();
+    if (response2.status !== 200) throw Error(body2.message);
+
+    this.setState({ views:body2.views });
+
     this.props.reload();
   }
 
-  setCreateDependency(id) {
+  setCreateDependency(id,cloned) {
+    let clonedNode = null;
+    let isNumber = false;
+
+    isNumber = !Number.isNaN(cloned)
+    if(isNumber){
+      clonedNode = cloned;
+    }
+
     if ( this.props.userPermissions["create"] === false) {
       alert("You do not have permissions to create any dependencies.");
       return;
@@ -328,29 +357,43 @@ class GraphScreen extends Component {
     } else if (this.state.sourceCreateDependency === null) {
       for (var x = 0; x < this.state.nodes.length; x++) {
         if (id === this.state.nodes[x].id) {
-          this.setState({sourceCreateDependency: this.state.nodes[x]});;
+          this.setState({sourceCreateDependency: this.state.nodes[x], source_viewId:clonedNode});
         }
       }
     } else {
       if (id === this.state.sourceCreateDependency.id) return null;
       for (var x = 0; x < this.state.nodes.length; x++) {
         if (id === this.state.nodes[x].id) {
-          this.setState({targetCreateDependency: this.state.nodes[x]});;
+          this.setState({targetCreateDependency: this.state.nodes[x], target_viewId:clonedNode});
         }
       }
     }
   }
 
-  displayTaskDependency(taskID, dependencyID, clonedID) {
+  displayTaskDependency(taskID, dependencyID, clonedID, sourceView, targetView) {
     let task = null;
     let dependency = null;
     let clonedNode = null;
+    let sourceViewId = null;
+    let targetViewId = null;
     let isNumber = false;
 
     isNumber = !Number.isNaN(clonedID)
-
     if(isNumber){
       clonedNode = clonedID;
+      isNumber = false;
+    }
+
+    isNumber = !Number.isNaN(sourceView)
+    if(isNumber){
+      sourceViewId = sourceView;
+      isNumber = false;
+    }
+
+    isNumber = !Number.isNaN(targetView)
+    if(isNumber){
+      targetViewId = targetView;
+      isNumber = false;
     }
 
     if (taskID != null) {
@@ -367,7 +410,7 @@ class GraphScreen extends Component {
       }
     }
 
-    this.setState({selectedTask: task, selectedDependency: dependency, clonedNode: clonedNode});
+    this.setState({selectedTask: task, selectedDependency: dependency, clonedNode: clonedNode, delDep_sourceViewId: sourceViewId, delDep_targetViewId: targetViewId});
   }
 
   render() {
@@ -407,6 +450,8 @@ class GraphScreen extends Component {
           project={this.props.project}
           userPermissions={this.props.userPermissions}
           selectedDependency={this.state.selectedDependency}
+          sourceViewId={this.state.delDep_sourceViewId}
+          targetViewId={this.state.delDep_targetViewId}
           displayTaskDependency={this.displayTaskDependency}
           getProjectInfo={this.getProjectInfo}
           setProjectInfo={this.setProjectInfo}
@@ -461,6 +506,8 @@ class GraphScreen extends Component {
           <CreateDependency
             sourceCreateDependency={this.state.sourceCreateDependency}
             targetCreateDependency={this.state.targetCreateDependency}
+            source_viewId={this.state.source_viewId}
+            target_viewId={this.state.target_viewId}
             setCreateDependency={this.setCreateDependency}
             getName={this.getName}
             projID={this.props.project.id}
@@ -503,11 +550,22 @@ class WebViewWrapper extends Component {
       let node = parseInt(message[0].substr(1));
       let cloned = parseInt(message[1].substr(6));
 
-      this.props.displayTaskDependency(node, null, cloned);
+      this.props.displayTaskDependency(node, null, cloned, NaN, NaN);
     } else if (message[0] === 'l') {
-      this.props.displayTaskDependency(null, parseInt(message.substr(1)));
+      message = message.split(' ');
+
+      let node = parseInt(message[0].substr(1));
+      let sourceView = parseInt(message[1].substr(10));
+      let targetView = parseInt(message[2].substr(10));
+
+      this.props.displayTaskDependency(null, node, null, sourceView, targetView);
     } else {
-      this.props.setCreateDependency(parseInt(message.substr(1)));
+      message = message.split(' ');
+
+      let node = parseInt(message[0].substr(1));
+      let cloned = parseInt(message[1].substr(6));
+
+      this.props.setCreateDependency(node,cloned);
     }
   }
 

@@ -39,9 +39,6 @@ class DeleteTask extends Component {
 
   async handleSubmit() {
     if(this.props.clonedNode !== null){
-      let changedInfo={
-        changedInfo:{viewId: this.props.clonedNode}
-      }
       const response = await fetch(
         'http://10.0.2.2:5000/task/deleteClone',
         {
@@ -60,6 +57,7 @@ class DeleteTask extends Component {
   
       const body = await response.json();
       this.props.toggleVisibility(true, false, null);
+      this.props.setProjectInfo(undefined, undefined);
     }
     else{
       let projectData = await this.props.getProjectInfo();

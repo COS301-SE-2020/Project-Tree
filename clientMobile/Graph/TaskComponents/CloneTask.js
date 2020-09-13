@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import {Icon} from 'native-base';
 
-class DeleteTask extends Component {
+class CloneTask extends Component {
   constructor(props) {
     super(props);
     this.cloneConfirmation = this.cloneConfirmation.bind(this);
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeleteTask;
+export default CloneTask;

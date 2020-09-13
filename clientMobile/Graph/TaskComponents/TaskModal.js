@@ -229,6 +229,7 @@ class TaskModal extends Component {
                         task={this.props.selectedTask}
                         toggleVisibility={this.toggleVisibility}
                         project={this.props.project}
+                        setProjectInfo={this.props.setProjectInfo}
                       />
                     </View>
                   :

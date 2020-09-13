@@ -24,6 +24,8 @@ class CreateDependency extends Component {
       createDependencyVisibility: false,
       source: null,
       target: null,
+      source_viewId: null,
+      target_viewId: null
     };
     this.setCreateDependencyVisibility = this.setCreateDependencyVisibility.bind(
       this,
@@ -63,6 +65,8 @@ class CreateDependency extends Component {
     this.setState({
       source: this.props.sourceCreateDependency,
       target: this.props.targetCreateDependency,
+      source_viewId: this.props.source_viewId,
+      target_viewId: this.props.target_viewId
     });
     this.setCreateDependencyVisibility(true);
     this.props.setCreateDependency(null);
@@ -76,6 +80,8 @@ class CreateDependency extends Component {
           setCreateDependencyVisibility={this.setCreateDependencyVisibility}
           source={this.state.source}
           target={this.state.target}
+          source_viewId={this.state.source_viewId}
+          target_viewId={this.state.target_viewId}
           projID={this.props.projID}
           getProjectInfo={this.props.getProjectInfo}
           setProjectInfo={this.props.setProjectInfo}
@@ -152,6 +158,8 @@ class CreateDependencyModal extends Component {
                 name={this.props.name}
                 source={this.props.source}
                 target={this.props.target}
+                source_viewId={this.props.source_viewId}
+                target_viewId={this.props.target_viewId}
                 projID={this.props.projID}
               />
             </View>
@@ -172,6 +180,8 @@ class CreateDependencyForm extends Component {
       relationshipType: "ss",
       source: this.props.source,
       target: this.props.target,
+      source_viewId:this.props.source_viewId,
+      target_viewId:this.props.target_viewId,
       sStartDate: this.props.source.startDate,
       sEndDate: this.props.source.endDate,
       startDate: this.props.source.startDate,
@@ -197,7 +207,7 @@ class CreateDependencyForm extends Component {
     if (type.for === 'start') {
         if (this.state.endDate < date) 
           this.setState({
-            error: "you can not set the end before the start",
+            error: "You can not set the end before the start",
             startDate: date, 
             endDate: date, 
             dateTimePicker: false
@@ -211,7 +221,7 @@ class CreateDependencyForm extends Component {
     } else {
       if (this.state.startDate > date) 
         this.setState({
-          error: "you can not set the end before the start",
+          error: "You can not set the end before the start",
           endDate: this.state.startDate, 
           dateTimePicker: false
         });
@@ -240,6 +250,8 @@ class CreateDependencyForm extends Component {
       projId: this.props.projID,
       fid: this.props.source.id,
       sid: this.props.target.id,
+      cd_viewId_source: this.props.source_viewId,
+      cd_viewId_target: this.props.target_viewId,
       relationshipType: this.state.relationshipType,
       sStartDate: this.state.sStartDate,
       sEndDate: this.state.sEndDate,
