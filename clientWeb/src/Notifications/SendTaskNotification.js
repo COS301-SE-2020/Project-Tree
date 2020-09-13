@@ -34,9 +34,10 @@ class SendTaskNotification extends React.Component {
     let timestamp = new Date();
     timestamp.setHours(timestamp.getHours() + 2);
     timestamp = timestamp.toISOString();
-
+    console.log("TASK:  ", this.props.user.id)
     let data = {
       type: "task", //personal, task, project, auto
+      profileId: this.props.user.id,
       fromName: this.props.user.name + " " + this.props.user.sname,
       recipients: JSON.stringify(this.state.notificationRec),
       timestamp: timestamp,

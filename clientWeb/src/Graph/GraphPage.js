@@ -11,6 +11,8 @@ import SendTaskNotification from "../Notifications/SendTaskNotification";
 import FilterComponent from "./FilterComponent";
 import $ from "jquery";
 import ms from "ms";
+import "./style.scss";
+
 
 class GraphPage extends React.Component {
   constructor(props) {
@@ -312,12 +314,19 @@ class TaskSidebar extends React.Component {
   }
 
   printUsers(people) {
+    console.log(people)
     let list = [];
     for (let x = 0; x < people.length; x++) {
       list.push(
-        <p key={people[x].id}>
+        <Row className="justify-content-md-center">              
+          <Col className="justify-content-md-center">
+         <img class="circular" src={people[x].profilePicture} alt="user" width="50" height="50"/>
+         </Col>
+          <Col key={people[x].id} xs={8} className="text-left">
           {people[x].name}&nbsp;{people[x].surname}
-        </p>
+          </Col>
+          <Row><br /></Row>
+        </Row>
       );
     }
     return list;
@@ -445,14 +454,17 @@ class TaskSidebar extends React.Component {
           <br />
           <br />
           {this.printUsers(taskPacMans)}
-          <b>Responsible persons:</b>
           <br />
+          <b>Responsible persons:</b>
+          <br />          
           <br />
           {this.printUsers(taskResPersons)}
+          <br />       
           <b>Resources:</b>
-          <br />
-          <br />
+          <br /> 
+          <br />   
           {this.printUsers(taskResources)}
+          <br />
         </Container>
       </React.Fragment>
     );

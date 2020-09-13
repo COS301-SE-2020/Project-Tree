@@ -70,7 +70,9 @@ class CreateDependency extends React.Component {
   
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
+    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
     let endDate = new Date(ed);
+    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 

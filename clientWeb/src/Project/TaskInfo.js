@@ -57,7 +57,7 @@ class TaskInfo extends React.Component {
         });
       });
     } else {
-      list.push("no critical path to Display");
+      list.push("No Critical Path to display");
     }
     return list;
   }
@@ -72,12 +72,12 @@ class TaskInfo extends React.Component {
         }
       });
     }
-    if (list.length === 0) list.push("no late tasks to display");
+    if (list.length === 0) list.push("No Late tasks to display");
     return list;
   }
 
   createTaskList() {
-    let list = [`no ${this.state.taskType} tasks to display`];
+    let list = [`No ${this.state.taskType} tasks to display`];
     if (this.props.tasks.length !== 0 && this.props.criticalPath !== null) {
       if (this.state.taskType === "CriticalPath")
         list = this.createCriticalPath();
@@ -110,11 +110,11 @@ class TaskInfo extends React.Component {
           }
         });
         if (list.length === 0)
-          return [`no ${this.state.taskType} tasks to display`];
+          return [`No ${this.state.taskType} tasks to display`];
       }
       if (
-        list[0] === "no critical path to Display" ||
-        list[0] === "no late tasks to display"
+        list[0] === "No Critical Path to Display" ||
+        list[0] === "No Late tasks to display"
       ) {
         return list[0];
       } else {

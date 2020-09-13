@@ -7,8 +7,8 @@ async function editUser(req, res) {
   let pfp = req.body.profilepicture;
   if(pfp == '')
   {
-    console.log("ssad")
-    pfp = 'https://i.ibb.co/MRpbpHN/default.png';
+    console.log("no profile picture change")
+    pfp = req.body.oldprofile;
   }
   let userId = await verify(req.body.token);
   if (userId != null) {
