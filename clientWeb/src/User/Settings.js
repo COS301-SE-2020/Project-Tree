@@ -31,7 +31,7 @@ const FileUploader = (props) => {
 
   return (
     <React.Fragment>
-      <Button onClick={()=>handleOnClickUpload()}>Upload File</Button>
+      <Button variant="dark" onClick={()=>handleOnClickUpload()}>Upload File</Button>
       <input 
         type="file" 
         id="input_img" 
@@ -205,10 +205,17 @@ class Settings extends React.Component {
                 {this.state.toggleEdit === false ? (
                   "       " + this.state.user.name + " " + this.state.user.sname
                 ) : (
-                  <Row>
-                    <FileUploader fileChange={this.fileChange} />
-                    {this.state.pfp !== null ? <p>Save changes to save photo!</p> : null}
-                  </Row>
+                  <React.Fragment>
+                    <Row>
+                      <Col>
+                        <FileUploader fileChange={this.fileChange} />
+                      </Col>
+                    </Row>
+                    <Row>
+                      {this.state.pfp !== null ? <Col>Save changes to save photo! </Col>: null}
+                    </Row>
+                  </React.Fragment>
+                 
                 )}
               </Modal.Title>
             </Modal.Header>
