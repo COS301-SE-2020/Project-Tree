@@ -1,5 +1,5 @@
 import React from "react";
-import {View, TouchableHighlight, Text, StyleSheet, TextInput, Modal, TouchableOpacity} from 'react-native';
+import {View, TouchableHighlight, Text, StyleSheet, TextInput, Modal, TouchableOpacity, Keyboard} from 'react-native';
 import {Icon} from 'native-base'
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -25,13 +25,15 @@ export default class FilterModal extends React.Component{
                             <Text style={{fontSize: 25, color: '#184D47'}}>
                                 Search Tasks
                             </Text>
-                        <View
-                            style={{
-                            backgroundColor: '#EEBB4D',
-                            height: 1,
-                            width: '80%',
-                            marginBottom: 10,
-                            }}></View>
+                            <View
+                                style={{
+                                backgroundColor: '#EEBB4D',
+                                height: 1,
+                                width: '80%',
+                                marginBottom: 10,
+                                }}
+                            >
+                            </View>
                         </View>
 
                         <View style={{flex: 9}}>
@@ -56,7 +58,7 @@ export default class FilterModal extends React.Component{
 class FilterComponent extends React.Component{
     constructor(props){
         super(props);
-        this.state = {filterMode: "highlight", filterTaskOption: "taskAll", filterPeopleOption: null, searchValue: null, error:false}
+        this.state = {filterMode: "highlight", filterTaskOption: "taskAll", filterPeopleOption: null, searchValue: null, error:false, onFocus:false, showingSuggestions:false}
         this.setSearchValue = this.setSearchValue.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.filterTasks = this.filterTasks.bind(this);
@@ -64,10 +66,21 @@ class FilterComponent extends React.Component{
         this.filterPeople = this.filterPeople.bind(this);
         this.highlightPeople = this.highlightPeople.bind(this);
         this.quickSearch = this.quickSearch.bind(this);
+        this.keyboardDidShow = this.keyboardDidShow.bind(this);
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+        this.setOnFocus = this.setOnFocus.bind(this)
+    }
+    
+    keyboardDidShow(){
+        this.setState({onFocus:true})
+    }
+
+    setOnFocus(value){
+        this.setState({onFocus:value});
     }
 
     setSearchValue(value){
-        this.setState({searchValue:value, error:false});
+        this.setState({searchValue:value, error:false, onFocus:false});
     }
 
     checkDependency(tasks, dependency){
@@ -99,7 +112,7 @@ class FilterComponent extends React.Component{
 
         else if(this.state.filterTaskOption === "taskIncomplete"){
             tasks = tasks.filter((task)=>{
-                return task.type === "Incomplete"
+                return task.type === "Incomplete" || task.type === "Issue"
             })
         }
 
@@ -138,7 +151,7 @@ class FilterComponent extends React.Component{
 
         else if(this.state.filterTaskOption === "taskIncomplete"){
             tempTasks = tempTasks.filter((task)=>{
-                return task.type === "Incomplete"
+                return task.type === "Incomplete" || task.type === "Issue"
             })
         }
 
@@ -321,150 +334,181 @@ class FilterComponent extends React.Component{
     }
 
     render(){
-        return(
-            <View style={{paddingBottom:100, alignItems:'center'}}>
-                <View style={{flexDirection:'row'}}>
-                    <TouchableHighlight 
-                        style={styles.SelectedButtonStyle}
-                        onPress={()=>this.quickSearch("filter")}
-                    >
-                        <Text style={styles.SelectedTextStyle}>
-                            Filter my tasks
-                        </Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight
-                        style={styles.SelectedButtonStyle}
-                        onPress={()=>this.quickSearch("higlight")}
-                    >
-                        <Text style={styles.SelectedTextStyle}>
-                            Highlight my tasks
-                        </Text>
-                    </TouchableHighlight>
-                </View>
-                <View style={{flexDirection:'row'}}>
-                    <TouchableHighlight 
-                        style={this.state.filterMode==='filter'? styles.SelectedButtonStyle : styles.ButtonStyle}
-                        onPress={()=>this.setState({filterMode:'filter', error:false})}
-                    >
-                        <Text style={this.state.filterMode==='filter'? styles.SelectedTextStyle : styles.TextStyle}>
-                            Filter
-                        </Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight
-                        style={this.state.filterMode==='highlight'? styles.SelectedButtonStyle : styles.ButtonStyle}
-                        onPress={()=>this.setState({filterMode:'highlight', error:false})}
-                    >
-                        <Text style={this.state.filterMode==='highlight'? styles.SelectedTextStyle : styles.TextStyle}>
-                            Highlight
-                        </Text>
-                    </TouchableHighlight>
-                </View>
-                <View style={{flexDirection:'row'}}>
-                    <View>
-                        <TouchableHighlight 
-                            style={this.state.filterTaskOption==='taskAll' ? styles.SelectedButtonStyle : styles.ButtonStyle}
-                            onPress={()=>this.setState({filterTaskOption:'taskAll', filterPeopleOption:null, error:false})}
-                        >
-                            <Text style={this.state.filterTaskOption==='taskAll' ? styles.SelectedTextStyle : styles.TextStyle}>
-                                All
-                            </Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight 
-                            style={this.state.filterTaskOption==='taskComplete' ? styles.SelectedButtonStyle : styles.ButtonStyle}
-                            onPress={()=>this.setState({filterTaskOption:'taskComplete', filterPeopleOption:null, error:false})}
-                        >
-                            <Text style={this.state.filterTaskOption==='taskComplete' ? styles.SelectedTextStyle : styles.TextStyle}>
-                                Complete
-                            </Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight 
-                            style={this.state.filterTaskOption==='taskIncomplete' ? styles.SelectedButtonStyle : styles.ButtonStyle}
-                            onPress={()=>this.setState({filterTaskOption:'taskIncomplete', filterPeopleOption:null, error:false})}
-                        >
-                            <Text style={this.state.filterTaskOption==='taskIncomplete' ? styles.SelectedTextStyle : styles.TextStyle}>
-                                Incomplete
-                            </Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight 
-                            style={this.state.filterTaskOption==='taskIssue' ? styles.SelectedButtonStyle : styles.ButtonStyle}
-                            onPress={()=>this.setState({filterTaskOption:'taskIssue', filterPeopleOption:null, error:false})}
-                        >
-                            <Text style={this.state.filterTaskOption==='taskIssue' ? styles.SelectedTextStyle : styles.TextStyle}>
-                                Issues
-                            </Text>
-                        </TouchableHighlight>
-                    </View>
 
-                    <View>
-                        <TouchableHighlight 
-                            style={this.state.filterPeopleOption==='peopleAll' ? styles.SelectedButtonStyle : styles.ButtonStyle}
-                            onPress={()=>this.setState({filterTaskOption:null, filterPeopleOption:'peopleAll', error:false})}
-                        >
-                            <Text style={this.state.filterPeopleOption==='peopleAll' ? styles.SelectedTextStyle : styles.TextStyle}>
-                                All
-                            </Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight 
-                            style={this.state.filterPeopleOption==='peoplePackMan' ? styles.SelectedButtonStyle : styles.ButtonStyle}
-                            onPress={()=>this.setState({filterTaskOption:null, filterPeopleOption:'peoplePackMan', error:false})}
-                        >
-                            <Text style={this.state.filterPeopleOption==='peoplePackMan' ? styles.SelectedTextStyle : styles.TextStyle}>
-                               Package Manager 
-                            </Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight 
-                            style={this.state.filterPeopleOption==='peopleResPer' ? styles.SelectedButtonStyle : styles.ButtonStyle}
-                            onPress={()=>this.setState({filterTaskOption:null, filterPeopleOption:'peopleResPer', error:false})}
-                        >
-                            <Text style={this.state.filterPeopleOption==='peopleResPer' ? styles.SelectedTextStyle : styles.TextStyle}>
-                                Responsible Person
-                            </Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight 
-                            style={this.state.filterPeopleOption==='peopleResources' ? styles.SelectedButtonStyle : styles.ButtonStyle}
-                            onPress={()=>this.setState({filterTaskOption:null, filterPeopleOption:'peopleResources', error:false})}
-                        >
-                            <Text style={this.state.filterPeopleOption==='peopleResources' ? styles.SelectedTextStyle : styles.TextStyle}>
-                                Resources
-                            </Text>
-                        </TouchableHighlight>
-                    </View>
-                </View>
-                <View style={{flexDirection:'row'}}>
-                        <View>
-                            <Searchbar 
-                                users={this.props.users} 
-                                filterTaskOption={this.state.filterTaskOption} 
-                                nodes={this.props.nodes}
-                                setSearchValue={this.setSearchValue}
-                            />
-                        </View>
-                        <View>
-                            {this.state.searchValue !== null ?
+        let searchFlex = this.state.onFocus ? 4 : 1;
+        return(
+            <View style={{alignItems:'center', flex:1 }}>
+                {this.state.onFocus === false?
+                    <View style={{ flex:1, width:'100%'}}>
+                        <View style={{flexDirection:'row'}}>
+                            <View style={{flex:1, alignItems:'center'}}>
                                 <TouchableHighlight 
-                                    style={styles.SelectedButtonStyle}
-                                    onPress={()=>this.setState({searchValue: null})}
+                                    style={this.state.filterMode==='filter'? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                    onPress={()=>this.setState({filterMode:'filter', error:false})}
                                 >
-                                    <Text style={styles.SelectedTextStyle}>
-                                        {this.state.searchValue.name}
+                                    <Text style={this.state.filterMode==='filter'? styles.SelectedTextStyle : styles.TextStyle}>
+                                        Filter
                                     </Text>
                                 </TouchableHighlight>
-                            :
-                            null
-                            }
+                            </View>
+
+                            <View style={{flex:1, alignItems:'center'}}>
+                                <TouchableHighlight
+                                    style={this.state.filterMode==='highlight'? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                    onPress={()=>this.setState({filterMode:'highlight', error:false})}
+                                >
+                                    <Text style={this.state.filterMode==='highlight'? styles.SelectedTextStyle : styles.TextStyle}>
+                                        Highlight
+                                    </Text>
+                                </TouchableHighlight>
+                            </View>
                         </View>
+                        <View
+                            style={{
+                            backgroundColor: '#184D47',
+                            height: 1,
+                            width: '70%',
+                            marginBottom: 10,
+                            alignSelf:'center'
+                            }}
+                        >
+                        </View>
+                    </View>
+                :null
+                }
+
+                <View style={{flex:searchFlex, width:'100%', alignItems:'center'}}>
+                    {this.state.searchValue !== null ?
+                        <TouchableHighlight 
+                            style={[styles.SelectedButtonStyle, {alignSelf:'center'}]}
+                            onPress={()=>this.setState({searchValue: null})}
+                        >
+                            <Text style={styles.SelectedTextStyle}>
+                                {this.state.searchValue.name}
+                            </Text>
+                        </TouchableHighlight>
+                    :  
+                        <Searchbar 
+                            users={this.props.users} 
+                            filterTaskOption={this.state.filterTaskOption} 
+                            nodes={this.props.nodes}
+                            setSearchValue={this.setSearchValue}
+                            onFocus={this.state.onFocus}
+                        />
+                    }
                 </View>
-                <View>
-                    {this.state.error? <Text>Nothing matches your search</Text> : null}
-                    <TouchableHighlight 
-                        style={styles.SelectedButtonStyle}
-                        onPress={()=>this.handleSearch()}
-                    >
-                        <Text style={styles.SelectedTextStyle}>
-                            Go!
-                        </Text>
-                    </TouchableHighlight>
-                </View>
+
+                {this.state.onFocus === false ?
+                    <React.Fragment>
+                        <View style={{ flex:4, width:'100%', alignItems:'center'}}>
+                            <View style={{flexDirection:'row'}}>
+                                <View>
+                                    <Text style={{textAlign:'center'}}>Task Options</Text>
+                                    <TouchableHighlight 
+                                        style={this.state.filterTaskOption==='taskAll' ? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                        onPress={()=>this.setState({filterTaskOption:'taskAll', filterPeopleOption:null, error:false})}
+                                    >
+                                        <Text style={this.state.filterTaskOption==='taskAll' ? styles.SelectedTextStyle : styles.TextStyle}>
+                                            All
+                                        </Text>
+                                    </TouchableHighlight>
+                                    <TouchableHighlight 
+                                        style={this.state.filterTaskOption==='taskComplete' ? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                        onPress={()=>this.setState({filterTaskOption:'taskComplete', filterPeopleOption:null, error:false})}
+                                    >
+                                        <Text style={this.state.filterTaskOption==='taskComplete' ? styles.SelectedTextStyle : styles.TextStyle}>
+                                            Complete
+                                        </Text>
+                                    </TouchableHighlight>
+                                    <TouchableHighlight 
+                                        style={this.state.filterTaskOption==='taskIncomplete' ? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                        onPress={()=>this.setState({filterTaskOption:'taskIncomplete', filterPeopleOption:null, error:false})}
+                                    >
+                                        <Text style={this.state.filterTaskOption==='taskIncomplete' ? styles.SelectedTextStyle : styles.TextStyle}>
+                                            Incomplete
+                                        </Text>
+                                    </TouchableHighlight>
+                                    <TouchableHighlight 
+                                        style={this.state.filterTaskOption==='taskIssue' ? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                        onPress={()=>this.setState({filterTaskOption:'taskIssue', filterPeopleOption:null, error:false})}
+                                    >
+                                        <Text style={this.state.filterTaskOption==='taskIssue' ? styles.SelectedTextStyle : styles.TextStyle}>
+                                            Issues
+                                        </Text>
+                                    </TouchableHighlight>
+                                </View>
+
+                                <View>
+                                    <Text style={{textAlign:'center'}}>People Options</Text>
+                                    <TouchableHighlight 
+                                        style={this.state.filterPeopleOption==='peopleAll' ? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                        onPress={()=>this.setState({filterTaskOption:null, filterPeopleOption:'peopleAll', error:false})}
+                                    >
+                                        <Text style={this.state.filterPeopleOption==='peopleAll' ? styles.SelectedTextStyle : styles.TextStyle}>
+                                            All
+                                        </Text>
+                                    </TouchableHighlight>
+                                    <TouchableHighlight 
+                                        style={this.state.filterPeopleOption==='peoplePackMan' ? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                        onPress={()=>this.setState({filterTaskOption:null, filterPeopleOption:'peoplePackMan', error:false})}
+                                    >
+                                        <Text style={this.state.filterPeopleOption==='peoplePackMan' ? styles.SelectedTextStyle : styles.TextStyle}>
+                                        Package Manager 
+                                        </Text>
+                                    </TouchableHighlight>
+                                    <TouchableHighlight 
+                                        style={this.state.filterPeopleOption==='peopleResPer' ? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                        onPress={()=>this.setState({filterTaskOption:null, filterPeopleOption:'peopleResPer', error:false})}
+                                    >
+                                        <Text style={this.state.filterPeopleOption==='peopleResPer' ? styles.SelectedTextStyle : styles.TextStyle}>
+                                            Responsible Person
+                                        </Text>
+                                    </TouchableHighlight>
+                                    <TouchableHighlight 
+                                        style={this.state.filterPeopleOption==='peopleResources' ? styles.SelectedButtonStyle : styles.ButtonStyle}
+                                        onPress={()=>this.setState({filterTaskOption:null, filterPeopleOption:'peopleResources', error:false})}
+                                    >
+                                        <Text style={this.state.filterPeopleOption==='peopleResources' ? styles.SelectedTextStyle : styles.TextStyle}>
+                                            Resources
+                                        </Text>
+                                    </TouchableHighlight>
+                                </View>
+                            </View>  
+                        </View>
+                        <View style={{ flex:1, width:'100%', alignItems:'center'}}>
+                            <View>
+                                <TouchableHighlight 
+                                    style={styles.SelectedButtonStyle}
+                                    onPress={()=>this.handleSearch()}
+                                >
+                                    <Text style={styles.SelectedTextStyle}>
+                                        Go!
+                                    </Text>
+                                </TouchableHighlight>
+                            </View>
+                            {this.state.error? <Text style={{textAlign:'center', color:'red'}}>Nothing matches your search</Text> : null}
+                        </View>
+                    </React.Fragment>
+                    :
+                    null
+                }
+                {this.state.onFocus ? 
+                    <View style={{ flex:1, width:'100%', alignItems:'center'}}> 
+                        <TouchableHighlight 
+                            style={styles.SelectedButtonStyle}
+                            onPress={()=>{
+                                this.setState({onFocus:false})
+                                Keyboard.dismiss();
+                            }}
+                        >
+                            <Text style={styles.SelectedTextStyle}>
+                                Cancel
+                            </Text>
+                        </TouchableHighlight>
+                    </View>
+                    :
+                    null
+                }
             </View>
         )
     }
@@ -544,18 +588,19 @@ class Searchbar extends React.Component{
     getSuggestions(suggestions){
         let suggestionComponents = suggestions.map((suggestion) => {
             return (
-              <TouchableOpacity
-                type="button"
-                onPress={()=>this.setSearch(suggestion)}
-                key={suggestion.id}
-                style={styles.ButtonStyle}
-              >
-                {this.props.filterTaskOption !== null ?
-                    <Text style={styles.TextStyle}>{suggestion.name}&nbsp;{suggestion.id}</Text>
-                    :
-                    <Text style={styles.TextStyle}>{suggestion.name}&nbsp;{suggestion.surname}</Text>
-                }
-              </TouchableOpacity>
+                <View style={{alignItems:"center"}} key={suggestion.id}>
+                    <TouchableOpacity
+                        type="button"
+                        onPress={()=>this.setSearch(suggestion)}
+                        style={styles.ButtonStyle}
+                    >
+                        {this.props.filterTaskOption !== null ?
+                            <Text style={styles.TextStyle}>{suggestion.name}&nbsp;{suggestion.id}</Text>
+                            :
+                            <Text style={styles.TextStyle}>{suggestion.name}&nbsp;{suggestion.surname}</Text>
+                        }
+                    </TouchableOpacity>
+                </View>
         )});
 
         return suggestionComponents
@@ -564,18 +609,18 @@ class Searchbar extends React.Component{
     render() {
         if(this.props.filterTaskOption !== null){
             return(
-                <View>
+                <View style={{marginTop:10}}>
                     <TextInput
-                        style={{ height: 40, borderColor: 'black', borderWidth: 1 }}
+                        style={{height: 40, borderColor: 'gray', borderWidth: 1, width:200, borderRadius:5 }}
                         onChangeText={value=>this.updateSearch(value, 'tasks')}
                         value={this.state.searchTerm}
                         placeholder="Enter the name or id of task"
-                        backgroundColor="grey"
-                        style={{width:200, marginTop:10}}
                     />
-                    <ScrollView>
-                        {this.state.searchTerm.length > 1 ? this.getSuggestions(this.state.suggestions) : null}
-                    </ScrollView>
+                    {this.props.onFocus ?
+                        <ScrollView>
+                            {this.state.searchTerm.length > 1 ? this.getSuggestions(this.state.suggestions) : null}
+                        </ScrollView>
+                    :null}
                 </View>
             )
                 
@@ -585,16 +630,16 @@ class Searchbar extends React.Component{
             return(
                 <View>
                     <TextInput
-                        style={{ height: 40, borderColor: 'black', borderWidth: 1 }}
+                        style={{height: 40, borderColor: 'gray', borderWidth: 1, width:200, borderRadius:5}}
                         onChangeText={value=>this.updateSearch(value, 'people')}
                         value={this.state.searchTerm}
                         placeholder="Enter the name of a person"
-                        backgroundColor="grey"
-                        style={{width:200, marginTop:10}}
                     />
-                   <ScrollView>
-                        {this.state.searchTerm.length > 1 ? this.getSuggestions(this.state.suggestions) : null}
-                    </ScrollView>
+                    {this.props.onFocus ?
+                        <ScrollView>
+                            {this.state.searchTerm.length > 1 ? this.getSuggestions(this.state.suggestions) : null}
+                        </ScrollView>
+                    :null}
                 </View>
             )
         }
@@ -607,7 +652,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       height: 45,
-      width:150,
+      width:120,
       borderRadius: 5,
       shadowColor: '#000',
       shadowOffset: {
@@ -626,7 +671,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: 45,
-        width:150,
+        width:120,
         borderRadius: 5,
         shadowColor: '#000',
         shadowOffset: {
@@ -639,10 +684,12 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     SelectedTextStyle: {
-        color:'white'
+        color:'white',
+        textAlign:'center'
     },
     TextStyle: {
         color:'#184D47',
+        textAlign:'center'
     },
     centeredView: {
       position: 'absolute',
@@ -667,7 +714,7 @@ const styles = StyleSheet.create({
       shadowRadius: 3.84,
       elevation: 5,
       height: '100%',
-      width: 400,
+      width: '100%',
     },
     hideButton: {
       flex: 0.5,
@@ -732,3 +779,22 @@ const styles = StyleSheet.create({
     row: {height: 40},
     text: {margin: 6, textAlign: 'center'},
 });
+
+{/* <View style={{flexDirection:'row'}}>
+    <TouchableHighlight 
+        style={styles.SelectedButtonStyle}
+        onPress={()=>this.quickSearch("filter")}
+    >
+        <Text style={styles.SelectedTextStyle}>
+            Filter my tasks
+        </Text>
+    </TouchableHighlight>
+    <TouchableHighlight
+        style={styles.SelectedButtonStyle}
+        onPress={()=>this.quickSearch("higlight")}
+    >
+        <Text style={styles.SelectedTextStyle}>
+            Highlight my tasks
+        </Text>
+    </TouchableHighlight>
+</View> */}

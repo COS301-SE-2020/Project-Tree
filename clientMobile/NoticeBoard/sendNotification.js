@@ -25,7 +25,7 @@ async function sendNotification(
   data = JSON.stringify(data);
 
   const response = await fetch(
-    'http://projecttree.herokuapp.com/sendNotification',
+    'http://10.0.2.2:5000/sendNotification',
     {
       method: 'POST',
       headers: {

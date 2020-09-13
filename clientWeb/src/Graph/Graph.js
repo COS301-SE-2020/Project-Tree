@@ -283,7 +283,7 @@ class Graph extends React.Component {
       }
       else{
         this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
-      }    
+      }
     } else if (clickedNode.model.attributes.attrs.type === "link") {
       let source = parseInt(clickedNode.model.attributes.source.id);
       let target = parseInt(clickedNode.model.attributes.target.id);

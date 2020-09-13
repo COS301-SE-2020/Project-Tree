@@ -130,7 +130,7 @@ class UpdateProjectForm extends Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/project/update',
+      'http://10.0.2.2:5000/project/update',
       {
         method: 'POST',
         headers: {
