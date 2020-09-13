@@ -1,11 +1,12 @@
 import React from "react";
-import {Form, Modal, Button, Row, Col } from "react-bootstrap";
+import {Form, Modal, Button, Row, Col, Spinner } from "react-bootstrap";
 
 class CloneTask extends React.Component {
   constructor(props) {
 		super(props);
 		this.state = {
-			show: false
+			show: false, 
+			isloading: false,
 		}
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
@@ -21,6 +22,7 @@ class CloneTask extends React.Component {
 	}
 	
 	async handleSubmit() {
+		this.setState({isloading: true});
 		await fetch("/task/createClone", {
       method: "POST",
       headers: {
@@ -50,7 +52,7 @@ class CloneTask extends React.Component {
 			body.views
     );
 		
-    this.setState({ show: false });
+    this.setState({ show: false, isloading: false });
   }
 	
   render() {
@@ -75,8 +77,16 @@ class CloneTask extends React.Component {
 						<Button variant="dark" onClick={this.HideModal}>
 							Close 
 						</Button>
-						<Button variant="secondary" onClick={this.handleSubmit}>
-							Create 
+						<Button type="submit" variant="dark" style={{width: "100px"}}
+						disabled={this.state.isloading} onClick={this.handleSubmit}
+						>
+							{this.state.isloading ? 
+							<Spinner
+								animation="border"
+								variant="success"
+								size="sm"
+							></Spinner> 
+							: "Create" } 
 						</Button>
 					</Modal.Footer>
         </Modal>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, Spinner } from "react-bootstrap";
 import ms from "ms";
 
 class UpdateDependency extends React.Component {
@@ -16,6 +16,7 @@ class UpdateDependency extends React.Component {
       pid: this.props.project.id,
       dependency: JSON.parse(JSON.stringify(this.props.dependency)),
       duration: duration,
+      isloading: false,
     };
 
     this.ShowModal = this.ShowModal.bind(this);
@@ -48,6 +49,7 @@ class UpdateDependency extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
+    this.setState({isloading: true});
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = this.state.dependency;
     projectData = JSON.stringify(projectData);
@@ -66,7 +68,7 @@ class UpdateDependency extends React.Component {
       body.displayNode,
       body.displayRel
     );
-    this.setState({ Show: false });
+    this.setState({ Show: false, isloading: false });
   }
   
   CalcDiff(sd, ed) {
@@ -87,7 +89,7 @@ class UpdateDependency extends React.Component {
               closeButton
               style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
-              <Modal.Title>Update Dependencies</Modal.Title>
+              <Modal.Title>Edit Dependencies</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <input
@@ -273,8 +275,16 @@ class UpdateDependency extends React.Component {
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark">
-                Save
+              <Button type="submit" variant="dark" style={{width: "100px"}}
+              disabled={this.state.isloading}
+              >
+                {this.state.isloading ? 
+                  <Spinner
+                    animation="border"
+                    variant="success"
+                    size="sm"
+                  ></Spinner> 
+                : "Save" } 
               </Button>
             </Modal.Footer>
           </Form>

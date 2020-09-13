@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, Spinner } from "react-bootstrap";
 import $ from "jquery";
 
 class DeleteProject extends React.Component {
@@ -7,6 +7,7 @@ class DeleteProject extends React.Component {
     super(props);
     this.state = {
       show: false,
+      isloading: false
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
@@ -18,11 +19,12 @@ class DeleteProject extends React.Component {
   }
 
   hideModal() {
-    this.setState({ show: false });
+    this.setState({ show: false, isloading: false });
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({isloading: true});
     let data = {};
     data.project = this.props.project;
     data.token = localStorage.getItem("sessionToken");
@@ -80,8 +82,16 @@ class DeleteProject extends React.Component {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="dark">
-                Delete 
+              <Button type="submit" variant="dark" style={{width: "100px"}}
+              disabled={this.state.isloading}
+              >
+                {this.state.isloading ? 
+                  <Spinner
+                    animation="border"
+                    variant="success"
+                    size="sm"
+                  ></Spinner> 
+                : "Delete" } 
               </Button>
             </Modal.Footer>
           </Form>
