@@ -54,7 +54,7 @@ export default class FilterComponent extends React.Component{
 
         else if(this.state.filterTaskOption === "taskIncomplete"){
             tasks = tasks.filter((task)=>{
-                return task.type === "Incomplete"
+                return task.type === "Incomplete" || task.type === "Issue"
             })
         }
 
@@ -92,7 +92,7 @@ export default class FilterComponent extends React.Component{
 
         else if(this.state.filterTaskOption === "taskIncomplete"){
             tempTasks = tempTasks.filter((task)=>{
-                return task.type === "Incomplete"
+                return task.type === "Incomplete" || task.type === "Issue"
             })
         }
 

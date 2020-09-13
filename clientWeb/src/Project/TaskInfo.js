@@ -164,8 +164,8 @@ class TaskInfo extends React.Component {
                 <Col className="text-center">End:</Col>
               </Row>
               <Row>
-                <Col className="text-center">{el.startDate}</Col>
-                <Col className="text-center">{el.endDate}</Col>
+                <Col className="text-center">{el.startDate.replace("T", " ")}</Col>
+                <Col className="text-center">{el.endDate.replace("T", " ")}</Col>
               </Row>
               <Row>
                 <Col className="text-center">Duration: {this.CalcDiff(el.startDate, el.endDate)}</Col>

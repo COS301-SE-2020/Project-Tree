@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button, Col, Row, Container, Form } from "react-bootstrap";
+import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstrap";
 import $ from "jquery";
 import "./style.scss";
 
@@ -12,14 +12,6 @@ function stringifyFormData(fd) {
   return data;
 }
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
 
 function getBase64(file, onLoadCallback) {
   var reader = new FileReader();
@@ -30,10 +22,32 @@ function getBase64(file, onLoadCallback) {
   };
 }
 
+const FileUploader = (props) => {
+  const hiddenFileInput = React.useRef(null);
+  
+  const handleOnClickUpload = event => {
+    hiddenFileInput.current.click();
+  };
+
+  return (
+    <React.Fragment>
+      <Button onClick={()=>handleOnClickUpload()}>Upload File</Button>
+      <input 
+        type="file" 
+        id="input_img" 
+        onChange={(e) => { props.fileChange(e) }} 
+        accept="image/x-png,image/gif,image/jpeg" 
+        style={{display: 'none'}}
+        ref={hiddenFileInput}
+      />
+    </React.Fragment>
+  );
+};
+
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: "", togglePass: false};
+    this.state = { show: false, toggleEdit: false, user: this.props.user, pfp: null, isloading: false, togglePass: false};
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -43,6 +57,8 @@ class Settings extends React.Component {
     this.fileChange = this.fileChange.bind(this);
     this.togglePass = this.togglePass.bind(this);
   }
+
+  
 
   componentDidUpdate(prevProps) {
     if (this.props.user !== prevProps.user) {
@@ -84,7 +100,7 @@ class Settings extends React.Component {
     localStorage.clear();
     this.setState({
       loggedInStatus: false,
-      user: {},
+      //user: {},
     });
     this._isMounted = false;
     window.location.reload(false);
@@ -116,7 +132,7 @@ class Settings extends React.Component {
   }
 
   async handleSubmit(event) {
-    sleep(6500);
+    this.setState({isloading: true});
     console.log("OLD PFP", this.state.user.profilepicture)
     console.log("GLOBAL", global_pfp)
     event.preventDefault();
@@ -132,6 +148,7 @@ class Settings extends React.Component {
     $.post("/user/edit", data, (response) => {
       this.setState({ user: response.user, prevUser: response.user });
       this.closeEdit();
+      this.setState({isloading: false});
     }).fail(() => {
       alert("Unable to update user preferences");
     });
@@ -171,7 +188,10 @@ class Settings extends React.Component {
                 {this.state.toggleEdit === false ? (
                   "       " + this.state.user.name + " " + this.state.user.sname
                 ) : (
-                  <input type="file" id="input_img" onChange={(e) => { this.fileChange(e) }} accept="image/x-png,image/gif,image/jpeg" />
+                  <Row>
+                    <FileUploader fileChange={this.fileChange} />
+                    {this.state.pfp !== null ? <p>Save changes to save photo!</p> : null}
+                  </Row>
                 )}
               </Modal.Title>
             </Modal.Header>
@@ -337,13 +357,16 @@ class Settings extends React.Component {
                         </Button>
                       </Col>
                       <Col>
-                        <Button
-                          type="submit"
-                          block
-                          variant="secondary"
-                          className="mb-2"
+                        <Button type="submit" variant="secondary"
+                        disabled={this.state.isloading} className="mb-2" block
                         >
-                          <i className="fa fa-save"> </i> Save Changes{" "}
+                          {this.state.isloading ? 
+                            <Spinner
+                              animation="border"
+                              variant="success"
+                              size="sm"
+                            ></Spinner> 
+                          : <React.Fragment><i className="fa fa-save"> </i> {"Save Changes"} </React.Fragment>} 
                         </Button>
                       </Col>
                     </Row>
