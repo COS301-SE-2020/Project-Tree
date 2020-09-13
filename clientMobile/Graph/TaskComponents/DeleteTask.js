@@ -40,7 +40,7 @@ class DeleteTask extends Component {
   async handleSubmit() {
     if(this.props.clonedNode !== null){
       const response = await fetch(
-        'http://10.0.2.2:5000/task/deleteClone',
+        'http://projecttree.herokuapp.com/task/deleteClone',
         {
           method: 'POST',
           headers: {
@@ -67,7 +67,7 @@ class DeleteTask extends Component {
       projectData = JSON.stringify(projectData);
 
       const response = await fetch(
-        'http://10.0.2.2:5000/task/delete',
+        'http://projecttree.herokuapp.com/task/delete',
         {
           method: 'POST',
           headers: {

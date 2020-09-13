@@ -181,7 +181,7 @@ class CreateTaskForm extends Component {
     projectData.changedInfo = input;
     projectData = JSON.stringify(projectData);
 
-    const response = await fetch('http://10.0.2.2:5000/task/add', {
+    const response = await fetch('http://projecttree.herokuapp.com/task/add', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -199,7 +199,7 @@ class CreateTaskForm extends Component {
     timestamp.setTime(timestamp.getTime() - new Date().getTimezoneOffset()*60*1000);
     timestamp = timestamp.toISOString();
 
-    await fetch("http://10.0.2.2:5000/people/assignPeople", {
+    await fetch("http://projecttree.herokuapp.com/people/assignPeople", {
       method: "POST",
       headers: {
         Accept: "application/json",
