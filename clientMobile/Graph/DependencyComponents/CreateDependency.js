@@ -48,6 +48,16 @@ class CreateDependency extends Component {
     return false;
   }
 
+  alreadyExists(target, source){
+    let rels = this.props.links;
+
+    for(var x=0; x<rels.length; x++){
+      if(target === rels[x].target && source === rels[x].source) return true;
+    }
+
+    return false;
+  }
+
   handleCreateDependency() {
     if (
       this.props.sourceCreateDependency === null ||
@@ -61,6 +71,14 @@ class CreateDependency extends Component {
       this.props.setCreateDependency(null);
       return;
     }
+
+    if(this.alreadyExists(this.props.targetCreateDependency.id, this.props.sourceCreateDependency.id)){
+      alert('A dependency between these nodes already exists');
+      this.props.setCreateDependency(null);
+      return;
+    }
+
+    
 
     this.setState({
       source: this.props.sourceCreateDependency,

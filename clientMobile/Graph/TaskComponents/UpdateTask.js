@@ -147,6 +147,11 @@ class UpdateTaskForm extends Component {
   formatValidateInput() {
     if(this.checkFormData("all") === false) return null;
 
+    let type = "Incomplete"
+    if (this.state.issue === true) type = "Issue";
+    if (parseInt(this.state.progress) === 100) type = "Complete";
+
+
     let data = {
       id: this.props.task.id,
       name: this.state.name,
@@ -154,7 +159,7 @@ class UpdateTaskForm extends Component {
       endDate: this.state.endDate,
       description: this.state.description,
       progress: this.state.progress,
-      type: this.state.type,
+      type: type,
     };
 
     return data;
