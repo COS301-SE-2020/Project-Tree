@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Modal, Button, Row, Col, InputGroup } from "react-bootstrap";
+import {Form, Modal, Button, Row, Col, InputGroup, Spinner } from "react-bootstrap";
 import ms from "ms";
 
 function stringifyFormData(fd) {
@@ -32,6 +32,7 @@ class UpdateTask extends React.Component {
       pacManList: [...this.props.pacMans],
       resourcesList: [...this.props.resources],
       resPersonList: [...this.props.resPersons],
+      isloading: false,
     };
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
@@ -138,7 +139,7 @@ class UpdateTask extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    
+    this.setState({isloading: true});
     let type = "Incomplete"
     if (this.state.issue === true) type = "Issue";
     if (parseInt(this.state.progress) === 100) type = "Complete";
@@ -227,7 +228,7 @@ class UpdateTask extends React.Component {
       this.state.people.push(this.state.resourcesList[x]);
     }
 
-    this.setState({ Show: false });
+    this.setState({ Show: false, isloading: false });
   }
 
   updateSearch(event, mode) {
@@ -764,8 +765,16 @@ class UpdateTask extends React.Component {
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark">
-                Save
+              <Button type="submit" variant="dark" style={{width: "100px"}}
+              disabled={this.state.isloading}
+              >
+                {this.state.isloading ? 
+                  <Spinner
+                    animation="border"
+                    variant="success"
+                    size="sm"
+                  ></Spinner> 
+                : "Save" } 
               </Button>
             </Modal.Footer>
           </Form>

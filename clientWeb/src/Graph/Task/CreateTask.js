@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button, Row, Col } from "react-bootstrap";
+import { Form, Modal, Button, Row, Col, Spinner } from "react-bootstrap";
 import "./AssigningPeople.css";
 import ms from "ms";
 
@@ -31,6 +31,7 @@ class CreateTask extends React.Component {
       pacManList: [],
       resourcesList: [],
       resPersonList: [],
+      isloading: false, 
     };
     console.log(this.state.startDate)
     this.hideModal = this.hideModal.bind(this);
@@ -54,7 +55,7 @@ class CreateTask extends React.Component {
       this.state.people.push(this.state.resourcesList[x]);
     }
 
-    this.setState({ Show: false });
+    this.setState({ Show: false, isloading: false  });
     this.props.hideModal();
   }
 
@@ -195,6 +196,7 @@ class CreateTask extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
+    this.setState({isloading: true});
     let data = {
       project: this.props.project,
       name: this.state.name,
@@ -583,8 +585,16 @@ class CreateTask extends React.Component {
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark">
-                Create
+              <Button type="submit" variant="dark" style={{width: "100px"}}
+              disabled={this.state.isloading}
+              >
+                {this.state.isloading ? 
+                  <Spinner
+                    animation="border"
+                    variant="success"
+                    size="sm"
+                  ></Spinner> 
+                : "Create" } 
               </Button>
             </Modal.Footer>
           </Form>
