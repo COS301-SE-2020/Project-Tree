@@ -4,6 +4,7 @@ import $ from "jquery";
 import register from "../Images/Register.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import About from "../About";
 const eye = <FontAwesomeIcon icon={faEye} />;
 
 function stringifyFormData(fd) {
@@ -193,21 +194,16 @@ export class Register extends React.Component {
           <div className="footer">
           <Row>
             <Col>
-              <Button
-                block
-                variant="dark"
-                className=".btn"
-                // MODAL FUNCTION CALL onClick={() => this.handleLogout()}
-              >
-          <i className="fa fa-cogs" style={{ fontSize: "30px" }}></i>
-                </Button>
-            </Col>
-            <Col>
               <Button type="submit" className=".btn">
                 Register
               </Button>
             </Col>
-           </Row>            
+           </Row>  
+          <Row>
+            <Col>
+              <About/>
+            </Col>
+          </Row>          
           </div>
         </Form>
       </div>
