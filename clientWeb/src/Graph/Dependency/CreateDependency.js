@@ -163,6 +163,7 @@ class CreateDependency extends React.Component {
                   type="date"
                   value={this.state.target.startDate.substring(0,10)}
                   onChange={(e) => {
+                    if(isNaN(Date.parse(e.target.value))) return;
                     let target = this.state.target;
                     target.startDate = `${e.target.value}T${this.state.target.startDate.substring(11,16)}`;
                     if (this.state.relationshipType === "ss") {
@@ -207,6 +208,7 @@ class CreateDependency extends React.Component {
                   type="time"
                   value={this.state.target.startDate.substring(11,16)}
                   onChange={(e) => {
+                    if(isNaN(Date.parse(e.target.value))) return;
                     let target = this.state.target;
                     target.startDate = `${this.state.target.startDate.substring(0,10)}T${e.target.value}`;
                     if (this.state.relationshipType === "ss") {
