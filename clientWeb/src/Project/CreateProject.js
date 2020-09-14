@@ -103,9 +103,9 @@ class CreateProject extends React.Component {
                   </tr>
                   <tr>
                     <td></td>
-                    <td className="text-center">Create <OverlayTrigger overlay={<Tooltip>Users assigned to the project can create tasks for the project</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
-                    <td className="text-center">Delete <OverlayTrigger overlay={<Tooltip>Users assigned to the project can delete the project and its tasks</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
-                    <td className="text-center">Edit <OverlayTrigger overlay={<Tooltip>Users assigned to the project can edit the project information and its task's information</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
+                    <td className="text-center">Create <OverlayTrigger overlay={<Tooltip>Users assigned to the project can create tasks and dependencies for the project</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
+                    <td className="text-center">Delete <OverlayTrigger overlay={<Tooltip>Users assigned to the project can delete and it's tasks and dependencies</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
+                    <td className="text-center">Edit <OverlayTrigger overlay={<Tooltip>Users assigned to the project can edit it's task's and dependency information </Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
                   </tr>
                 </thead>
                 <tbody>

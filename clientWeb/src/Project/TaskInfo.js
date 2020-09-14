@@ -7,7 +7,7 @@ class TaskInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      taskType: "Critical Path",
+      taskType: "All",
     };
   }
 
@@ -147,7 +147,7 @@ class TaskInfo extends React.Component {
                 fontFamily: "Courier New",
                 fontSize: "18px",
                 maxWidth: "300px",
-                minWidth: "250px",
+                minWidth: "280px",
                 fontWeight: "bold",
               }}
               className="rounded border border-dark mr-2 align-items-center"
@@ -215,12 +215,12 @@ class TaskInfo extends React.Component {
                 this.value = this.state.taskType;
               }}
             >
+              <option value="All">All Tasks</option>
               <option value="Critical Path">Critical Path Tasks</option>
               <option value="Incomplete">Incomplete tasks</option>
               <option value="Complete">Complete tasks</option>
               <option value="Issue">Issue Tasks</option>
               <option value="Late">Late Tasks</option>
-              <option value="All">All Tasks</option>
             </Form.Control>
           </Row>
           <Row
