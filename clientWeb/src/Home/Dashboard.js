@@ -81,7 +81,7 @@ class Dashboard extends React.Component {
       items.push(
         <Col key={project.projectInfo.id.toString()} xl={12} lg={12} className="m-2" style={{width:'100%'}}>
           <Scroll.Element name={project.projectInfo.id.toString()} className="element m-0 p-0">
-            <ProjectAnalytic project={project} displayProjectName={true} setProject={this.props.setProject}/>
+            <ProjectAnalytic project={project} displayProjectName={true} setProject={this.props.setProject} owned={true}/>
             <hr style={{ backgroundColor: "#EEBB4D",  height:"4px"  }} />
           </Scroll.Element>
         </Col>

@@ -49,9 +49,13 @@ export default class ProjectInfoComponent extends React.Component{
                             </Button>
                         </Link>
                     </Col>
-                    <Col className="text-center">
-                        <DeleteProject setProject={this.props.setProject} project={this.props.project.projectInfo}/>
-                    </Col>
+                    {this.props.owned !== undefined ?
+                        <Col className="text-center">
+                            <DeleteProject setProject={this.props.setProject} project={this.props.project.projectInfo}/>
+                        </Col>
+                    :
+                        null
+                    }
                 </Row>
             </Container>
         )
