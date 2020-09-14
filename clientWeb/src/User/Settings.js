@@ -307,11 +307,12 @@ handleNewPasswordChange(val) {
             {this.state.togglePass === true ?
             (
               <Container>
-              <Row className="mb-2">
-                {this.state.toggleEdit === false ?
+              <Row className="mb-2 align-items-center">
+                <Col xs={5} >{this.state.toggleEdit === false ?
                     "Current Password: " :
                     "Current Password*: "}
-                <Form.Control
+                </Col>
+                <Col ><Form.Control
                         required
                         type={this.state.hidden ? "password" : "text"}
                         id="password"
@@ -321,13 +322,17 @@ handleNewPasswordChange(val) {
                           this.setState({ password: e.target.value })
                           this.value = this.state.password;
                         }}
-                        required/><i onClick={this.toggleShow}>{eye}</i>
+                        required/>
+                </Col>
+                <Col xs={1} ><i onClick={this.toggleShow}>{eye}</i></Col>
+                
              </Row>
-             <Row className="mb-2">
-             {this.state.toggleEdit === false ?
+             <Row className="mb-2 align-items-center">
+             <Col xs={5} >{this.state.toggleEdit === false ?
                     "New Password: " :
                     "New Password*: "}
-                <Form.Control
+             </Col>
+                <Col ><Form.Control
                         required
                         type={this.state.hidden ? "password" : "text"}
                         id="newPass"
@@ -339,7 +344,8 @@ handleNewPasswordChange(val) {
                           console.log(this.state.confirmPassword)
                         }}
                         required
-                /><i onClick={this.toggleShow}>{eye}</i>
+                /></Col>
+                <Col xs={1} ><i onClick={this.toggleShow}>{eye}</i></Col>
              </Row>
              </Container>
             )
@@ -546,32 +552,32 @@ handleNewPasswordChange(val) {
               </Row>
               ):(
                 <Row>
-                  <Col>
+                  <Col className="pr-1 pt-1 pb-1" >
                     <Button
                       block
                       variant="secondary"
-                      className="mb-2"
+                      className="mr-1 mt-1 mb-1"
                       onClick={() => {
                         this.openEdit();
                       }}
                     >
-                      <i className="fa fa-edit"> </i> Edit details{" "}
+                      <i className="fa fa-edit"> </i> Edit {" "}
                     </Button>
                   </Col>
-                  <Col>
+                  <Col xs={6} className="pr-1 pt-1 pl-1 pb-1">
                     <Button
                       block
                       variant="dark"
-                      className="mb-2"
+                      className="mr-1 mt-1 mb-1"
                       onClick={() => this.togglePass()}>
                       <i className="fa fa-key"> </i> Change Password{" "}
                     </Button>
                   </Col>
-                  <Col>
+                  <Col className="pl-1 pt-1 pb-1">
                     <Button
                       block
                       variant="dark"
-                      className="mb-2"
+                      className="mr-1 mt-1 mb-1"
                       onClick={() => this.handleLogout()}>
                       <i className="fa fa-sign-out"> </i> Logout{" "}
                     </Button>
