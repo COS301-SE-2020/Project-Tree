@@ -113,8 +113,8 @@ class ProjectPage extends React.Component {
           <Col 
             sm={12}
             md={12}
-            lg={8}
-            xl={8}
+            lg={6}
+            xl={6}
           >
             <ProjectInfo
               project={this.props.project}
@@ -129,8 +129,8 @@ class ProjectPage extends React.Component {
           <Col
             sm={12}
             md={12}
-            lg={4}
-            xl={4}
+            lg={6}
+            xl={6}
           >
             {this.props.project != null && this.props.user != null ? (
               <NoticeBoard

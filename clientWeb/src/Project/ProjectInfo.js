@@ -15,54 +15,39 @@ class ProjectInfo extends React.Component {
             <Col>
               <Row>
                 <Col
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={6}
-                  className="text-center my-1"
+                  className="text-white text-center"
+                  style={{ fontSize: "22px"}}
+                  xs={12}
                 >
-                  {this.props.userPermission["project"] === true ? (
+                  {this.props.project.name}
+                </Col>
+              </Row>
+              <Row>
+                {this.props.userPermission["project"] === true ? (
+                  <Col
+                    className="text-center my-1"
+                  >
                     <DeleteProject
                       project={this.props.project}
                       setProject={(project) => {
                         this.props.setProject(project);
                       }}
                     />
-                  ) : null}
-                </Col>
-                <Col 
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={6}
-                  className="text-center my-1"
-                >
-                  {this.props.userPermission["project"] === true ? (
+                  </Col>
+                ) : null}
+                {this.props.userPermission["project"] === true ? (
+                  <Col
+                    className="text-center my-1"
+                  >
                     <UpdateProject
                       project={this.props.project}
                       setProject={(project) => {
                         this.props.setProject(project);
                       }}
                     />
-                  ) : null}
-                </Col>
-              </Row>
-            </Col>
-            
-            <Col
-              className="text-white text-center"
-              style={{ fontSize: "22px" }}
-              xs={4}
-            >
-              {this.props.project.name}
-            </Col>
-            <Col>
-              <Row>
+                  </Col>
+                ) : null}
                 <Col
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={6}
                   className="text-center my-1"
                 >
                   <Link to="/graph">
@@ -75,10 +60,6 @@ class ProjectInfo extends React.Component {
                   </Link>
                 </Col>
                 <Col
-                  sm={12}
-                  md={12}
-                  lg={12}
-                  xl={6}
                   className="text-center my-1"
                 >
                   <SendProjectNotification

@@ -441,6 +441,7 @@ class UpdateTask extends React.Component {
               <Form.Group>
                 <Form.Label>Name of task</Form.Label>
                 <Form.Control
+                  required
                   type="text"
                   name="ut_name"
                   value={this.state.name}
