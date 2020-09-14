@@ -479,6 +479,7 @@ class UpdateTask extends React.Component {
                     let endDate =new Date(this.state.endDate);
                     endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
                     if (endDate < startDate) {
+                      alert("You cannot make the start date/time after the end date/time.");
                       this.setState({ 
                         startDate: value, 
                         endDate: value,
@@ -507,6 +508,7 @@ class UpdateTask extends React.Component {
                     let endDate =new Date(this.state.endDate);
                     endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
                     if (endDate < startDate) {
+                      alert("You cannot make the start date/time after the end date/time.");
                       this.setState({ 
                         startDate: value, 
                         endDate: value,
@@ -537,6 +539,7 @@ class UpdateTask extends React.Component {
                     let startDate =new Date(this.state.startDate);
                     startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
                     if (endDate < startDate) {
+                      alert("You cannot make the end date/time before the start date/time.");
                       this.setState({ 
                         startDate: value, 
                         endDate: value,
@@ -565,6 +568,7 @@ class UpdateTask extends React.Component {
                     let startDate =new Date(this.state.startDate);
                     startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
                     if (endDate < startDate) {
+                      alert("You cannot make the end date/time before the start date/time.");
                       this.setState({ 
                         startDate: value, 
                         endDate: value,
@@ -631,7 +635,7 @@ class UpdateTask extends React.Component {
                     if(parseInt(this.state.progress) === 100){
                       this.setState({ issue: false });
                       this.checked = false;
-                      alert("you cant specify that a complete task has an issue");
+                      alert("You cannot specify that a complete task has an issue.");
                     } else {
                       this.setState({ issue: e.target.checked });
                       this.checked = this.state.issue;

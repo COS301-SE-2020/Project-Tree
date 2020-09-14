@@ -1,12 +1,27 @@
 import React from "react";
 import { Chart } from "react-google-charts";
 import { Row, ToggleButtonGroup, ToggleButton, Container, Col, Form, Button } from "react-bootstrap";
-import $ from 'jquery'
+
+function datetimeToString(datetime){
+    let obj = {
+      year: datetime.year.low,
+      month: datetime.month.low < 10 ? `0${datetime.month.low}` : datetime.month.low,
+      day: datetime.day.low < 10 ? `0${datetime.day.low}` : datetime.day.low,
+      hour: datetime.hour.low < 10 ? `0${datetime.hour.low}` : datetime.hour.low,
+      min: datetime.minute.low < 10 ? `0${datetime.minute.low}` : datetime.minute.low,
+    }
+    return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.min}`
+}
 
 export default class GanttChartWrapper extends React.Component{
     constructor(props){
         super(props)
-        this.state = {showCriticalPath:false, durationType:"all"}
+        this.state = {showCriticalPath:false, durationType:"all", rowHeight: null}
+        this.setRowHeight = this.setRowHeight.bind(this);
+    }
+
+    setRowHeight(val){
+        this.setState({rowHeight:val})
     }
 
     render(){
@@ -65,6 +80,8 @@ export default class GanttChartWrapper extends React.Component{
                         project={this.props.project}
                         showCriticalPath={this.state.showCriticalPath}
                         durationType={this.state.durationType}
+                        rowHeight={this.state.rowHeight}
+                        setRowHeight={this.setRowHeight}
                     /> 
                     : null} 
                     </Row>
@@ -77,11 +94,6 @@ export default class GanttChartWrapper extends React.Component{
 
 class GanttChart extends React.Component
 {
-    constructor(props){
-        super(props)
-        this.state = {formattedTasks: null, tasksReceived:false}
-    }
-
     formatTasks(tasks){ 
         let rels = this.filterDependencies(tasks, [...this.props.project.rels]);
         let formattedTasks = [];
@@ -154,7 +166,7 @@ class GanttChart extends React.Component
         let beginFilterDate = new Date();
 
         if(this.props.durationType === "week"){
-            filterDate.setDate(filterDate.getDay()+6);
+            filterDate.setDate(filterDate.getDate()+7)
         }
 
         else if(this.props.durationType === "month"){
@@ -198,8 +210,8 @@ class GanttChart extends React.Component
                 description: el.start.properties.description,
                 type: el.start.properties.type,
                 progress: el.start.properties.progress.low,
-                startDate: el.start.properties.startDate,
-                endDate: el.start.properties.endDate,
+                startDate: datetimeToString(el.start.properties.startDate),
+                endDate:  datetimeToString(el.start.properties.endDate),
                 duration: el.start.properties.duration.low,
               });
             }
@@ -209,8 +221,8 @@ class GanttChart extends React.Component
               description: el.end.properties.description,
               type: el.end.properties.type,
               progress: el.end.properties.progress.low,
-              startDate: el.end.properties.startDate,
-              endDate: el.end.properties.endDate,
+              startDate: datetimeToString(el.start.properties.startDate),
+              endDate:  datetimeToString(el.start.properties.endDate),
               duration: el.end.properties.duration.low,
             });
           });
@@ -238,32 +250,24 @@ class GanttChart extends React.Component
 
     render(){
         if(this.props.project.tasks.length === 0 || this.props.project.tasks === null){
-            return null;
+            return <p style={{marginTop:'20px'}}>No tasks to display</p>
         }
 
-        let tasks = this.filterTasks()
+        let tasks = this.filterTasks();
         let formattedTasks = this.formatTasks(tasks);
-        if(formattedTasks.length === 1){
-            let end = new Date();
-            end.setDate(end.getDay()+6)
-            formattedTasks.push(
-                [
-                    "0",
-                    "Nothing matches your search",
-                    null,
-                    new Date(),
-                    end,
-                    null,
-                    0,
-                    null
-                ]
-            )
+        if(formattedTasks.length === 0 || formattedTasks.length === 1){
+            return <p style={{marginTop:'20px'}}>No tasks to display</p>
+        }
+
+        let chartHeight = ((formattedTasks.length * 30)+30)+"px";
+        if(chartHeight !== this.props.rowHeight){
+            this.props.setRowHeight(chartHeight);
         }
 
         return(
             <Chart
             width={'100%'}
-            height={((formattedTasks.length * 30) + 20)+"px"}
+            height={this.props.rowHeight}
             chartType="Gantt"
             loader={<div>Loading Chart</div>}
             data={formattedTasks}
@@ -283,70 +287,3 @@ class GanttChart extends React.Component
         );
     }
 }
-
-//#184D47
-//#EEBB4D
-//#96BB7C
-
-// [
-//     [
-//       { type: 'string', label: 'Task ID' },
-//       { type: 'string', label: 'Task Name' },
-//       { type: 'string', label: 'Resource' },
-//       { type: 'date', label: 'Start Date' },
-//       { type: 'date', label: 'End Date' },
-//       { type: 'number', label: 'Duration' },
-//       { type: 'number', label: 'Percent Complete' },
-//       { type: 'string', label: 'Dependencies' },
-//     ],
-//     [
-//       'Research',
-//       'Find sources',
-//       null,
-//       new Date(2015, 0, 1),
-//       new Date(2015, 0, 5),
-//       null,
-//       100,
-//       null,
-//     ],
-//     [
-//       'Write',
-//       'Write paper',
-//       'write',
-//       null,
-//       new Date(2015, 0, 9),
-//       3 * 24 * 60 * 60 * 1000,
-//       25,
-//       'Research,Outline',
-//     ],
-//     [
-//       'Cite',
-//       'Create bibliography',
-//       'write',
-//       null,
-//       new Date(2015, 0, 7),
-//       1 * 24 * 60 * 60 * 1000,
-//       20,
-//       'Research',
-//     ],
-//     [
-//       'Complete',
-//       'Hand in paper',
-//       'complete',
-//       null,
-//       new Date(2016, 0, 10),
-//       1 * 24 * 60 * 60 * 1000,
-//       0,
-//       'Cite,Write',
-//     ],
-//     [
-//       'Outline',
-//       'Outline paper',
-//       'write',
-//       null,
-//       new Date(2015, 0, 6),
-//       1 * 24 * 60 * 60 * 1000,
-//       100,
-//       'Research',
-//     ],
-//   ]

@@ -231,7 +231,7 @@ class UpdateDependency extends React.Component {
                     dependency.endDate = `${this.state.dependency.endDate.substring(0,10)}T${e.target.value}`;
                     if (this.state.dependency.relationshipType === "ss") {
                       if (dependency.endDate < this.state.dependency.sStartDate) {
-                        alert("you can not make the second task earlier then the first");
+                        alert("You cannot make the second task earlier then the first.");
                         dependency.endDate = this.state.dependency.sStartDate;
                         this.setState({ 
                           dependency: dependency, 
@@ -245,7 +245,7 @@ class UpdateDependency extends React.Component {
                       }
                     } else {
                       if (dependency.endDate < this.state.dependency.sEndDate) {
-                        alert("you can not make the second task earlier then the first");
+                        alert("You cannot make the second task earlier then the first.");
                         dependency.endDate = this.state.dependency.sEndDate;
                         this.setState({ 
                           dependency: dependency, 

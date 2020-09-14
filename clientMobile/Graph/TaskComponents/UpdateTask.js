@@ -116,7 +116,7 @@ class UpdateTaskForm extends Component {
     if (type.for === 'start') {
         if (this.state.endDate < date) 
           this.setState({
-            error: "you can not set the start after the end",
+            error: "You cannot set the start date/time after the end date/time.",
             startDate: date, 
             endDate: date, 
             dateTimePicker: false
@@ -130,7 +130,7 @@ class UpdateTaskForm extends Component {
     } else {
       if (this.state.startDate > date) 
         this.setState({
-          error: "you can not set the end before the start",
+          error: "You cannot set the end date/time before the start date/time.",
           startDate: date, 
           endDate: date, 
           dateTimePicker: false
@@ -602,9 +602,8 @@ class UpdateTaskForm extends Component {
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={(value) => {
                   if(parseInt(this.state.progress) === 100){
-                    this.setState({ issue: false });
+                    this.setState({ error: "You cannot specify that a complete task has an issue.", issue: false });
                     this.value = false;
-                    alert("you cant specify that a complete task has an issue");
                   } else {
                     this.setState({ issue: value });
                     this.value = this.state.issue;

@@ -213,7 +213,7 @@ class CreateDependency extends React.Component {
                     target.startDate = `${this.state.target.startDate.substring(0,10)}T${e.target.value}`;
                     if (this.state.relationshipType === "ss") {
                       if (target.startDate < this.props.source.startDate) {
-                        alert("you can not make the second task earlier then the first");
+                        alert("You cannot make the second task earlier then the first.");
                         target.startDate = this.props.source.startDate;
                         this.setState({ 
                           target: target, 
@@ -228,7 +228,7 @@ class CreateDependency extends React.Component {
                       }
                     } else {
                       if (target.startDate < this.props.source.endDate) {
-                        alert("you can not make the second task earlier then the first");
+                        alert("You cannot make the second task earlier then the first.");
                         target.startDate = this.props.source.endDate;
                         this.setState({ 
                           target: target, 

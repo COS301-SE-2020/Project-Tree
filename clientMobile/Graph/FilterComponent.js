@@ -377,27 +377,6 @@ class FilterComponent extends React.Component{
                 :null
                 }
 
-                <View style={{flex:searchFlex, width:'100%', alignItems:'center'}}>
-                    {this.state.searchValue !== null ?
-                        <TouchableHighlight 
-                            style={[styles.SelectedButtonStyle, {alignSelf:'center'}]}
-                            onPress={()=>this.setState({searchValue: null})}
-                        >
-                            <Text style={styles.SelectedTextStyle}>
-                                {this.state.searchValue.name}
-                            </Text>
-                        </TouchableHighlight>
-                    :  
-                        <Searchbar 
-                            users={this.props.users} 
-                            filterTaskOption={this.state.filterTaskOption} 
-                            nodes={this.props.nodes}
-                            setSearchValue={this.setSearchValue}
-                            onFocus={this.state.onFocus}
-                        />
-                    }
-                </View>
-
                 {this.state.onFocus === false ?
                     <React.Fragment>
                         <View style={{ flex:4, width:'100%', alignItems:'center'}}>
@@ -475,23 +454,32 @@ class FilterComponent extends React.Component{
                                 </View>
                             </View>  
                         </View>
-                        <View style={{ flex:1, width:'100%', alignItems:'center'}}>
-                            <View>
-                                <TouchableHighlight 
-                                    style={styles.SelectedButtonStyle}
-                                    onPress={()=>this.handleSearch()}
-                                >
-                                    <Text style={styles.SelectedTextStyle}>
-                                        Go!
-                                    </Text>
-                                </TouchableHighlight>
-                            </View>
-                            {this.state.error? <Text style={{textAlign:'center', color:'red'}}>Nothing matches your search</Text> : null}
-                        </View>
                     </React.Fragment>
                     :
                     null
                 }
+
+                <View style={{flex:searchFlex, width:'100%', alignItems:'center'}}>
+                    {this.state.searchValue !== null ?
+                        <TouchableHighlight 
+                            style={[styles.SelectedButtonStyle, {alignSelf:'center'}]}
+                            onPress={()=>this.setState({searchValue: null})}
+                        >
+                            <Text style={styles.SelectedTextStyle}>
+                                {this.state.searchValue.name}
+                            </Text>
+                        </TouchableHighlight>
+                    :  
+                        <Searchbar 
+                            users={this.props.users} 
+                            filterTaskOption={this.state.filterTaskOption} 
+                            nodes={this.props.nodes}
+                            setSearchValue={this.setSearchValue}
+                            onFocus={this.state.onFocus}
+                        />
+                    }
+                </View>
+
                 {this.state.onFocus ? 
                     <View style={{ flex:1, width:'100%', alignItems:'center'}}> 
                         <TouchableHighlight 
@@ -507,7 +495,19 @@ class FilterComponent extends React.Component{
                         </TouchableHighlight>
                     </View>
                     :
-                    null
+                    <View style={{ flex:1, width:'100%', alignItems:'center'}}>
+                        <View>
+                            <TouchableHighlight 
+                                style={styles.SelectedButtonStyle}
+                                onPress={()=>this.handleSearch()}
+                            >
+                                <Text style={styles.SelectedTextStyle}>
+                                    Go!
+                                </Text>
+                            </TouchableHighlight>
+                        </View>
+                        {this.state.error? <Text style={{textAlign:'center', color:'red'}}>Nothing matches your search</Text> : null}
+                    </View>
                 }
             </View>
         )
