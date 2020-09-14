@@ -106,8 +106,8 @@ p {
       width: 15em;
       img {
         float: right;
-        width: 80%;
-        height: 100%;
+        width: 55%;
+        height: 55%;
       }
     }
 
@@ -123,7 +123,7 @@ p {
         align-items: flex-start;
         width: fit-content;
         label {
-          font-size: 18px;
+          font-size: 15px;
         }
         input {
           margin-top: 2px;
@@ -136,7 +136,7 @@ p {
           background-color: #f3f3f3;
           border: 0;
           border-radius: 4px;
-          margin-bottom: 12px;
+          margin-bottom: 5px;
           transition: all 250ms ease-in-out;
           // &:hover {
           //   background-color: #ffffff;
@@ -172,7 +172,7 @@ p {
          // box-shadow: 0px 0px 12px 0.8px #3474dbb2;
         }
         label {
-          font-size: 18px;
+          font-size: 15px;
         }
         input {
           flex-direction:row;
@@ -186,7 +186,7 @@ p {
           background-color: #f3f3f3;
           border: 0;
          // border-radius: 4px;
-          margin-bottom: 30px;
+          margin-bottom: 20px;
           transition: all 250ms ease-in-out;
           // &:hover {
           //   background-color: #ffffff;

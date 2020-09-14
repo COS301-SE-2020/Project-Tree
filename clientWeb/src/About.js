@@ -30,7 +30,7 @@ class About extends React.Component {
         Find out More!{" "}
         </Button>
           <Modal
-          size="xl"
+          size="lg"
             closeButton
             show={this.state.show}
             onHide={() => {

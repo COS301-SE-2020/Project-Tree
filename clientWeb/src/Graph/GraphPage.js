@@ -195,7 +195,7 @@ class GraphPage extends React.Component {
                       </Button>
                     </Link>
                   </Col>
-                  <Col xs={6} md={6} lg={6} xl={6} className="text-center m-1">
+                  <Col xs={8} md={8} lg={8} xl={8} className="text-center m-1">
                     <h3>{this.props.project.name}</h3>
                   </Col>
                   <Col></Col>
@@ -501,8 +501,10 @@ class DependencySidebar extends React.Component {
         >
           <Row>
             <Col></Col>
-            <Col className="text-center">
-              <h4>{start + "→" + end}</h4>
+            <Col className="text-center" style={{wordWrap: "break-word" }} xs={8}>
+              <Row className="m-0"><Col className="text-center"><h5>{start}</h5></Col></Row>
+              <Row className="m-0"><Col className="text-center"><h5><i className="fa fa-arrow-down"></i></h5></Col></Row>
+              <Row className="m-0"><Col className="text-center"><h5>{end}</h5></Col></Row>
             </Col>
             <Col className="text-right">
               <Button

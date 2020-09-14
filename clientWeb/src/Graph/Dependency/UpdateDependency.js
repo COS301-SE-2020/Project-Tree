@@ -226,7 +226,7 @@ class UpdateDependency extends React.Component {
                   type="time"
                   value={this.state.dependency.endDate.substring(11,16)}
                   onChange={(e) => {
-                    if(isNaN(Date.parse(e.target.value))) return;
+                    if(!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)) return;
                     let dependency = this.state.dependency;
                     dependency.endDate = `${this.state.dependency.endDate.substring(0,10)}T${e.target.value}`;
                     if (this.state.dependency.relationshipType === "ss") {
