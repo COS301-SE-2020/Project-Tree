@@ -135,6 +135,11 @@ export default class App extends Component {
   }
 
   async setSelectedProject(project) {
+    if(project === null){
+      this.setState({selectedProject:null});
+      return;
+    }
+
     let tokenVal = null;
     try {
       await AsyncStorage.getItem('sessionToken').then((value) => {

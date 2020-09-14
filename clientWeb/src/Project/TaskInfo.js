@@ -158,7 +158,7 @@ class TaskInfo extends React.Component {
                   {el.name} <hr />
                 </Col>
               </Row>
-              <Row>
+              <Row style={{maxHeight:"200px", overflow:"auto"}}>
                 <Col className="text-center">
                   {el.description} <hr />
                 </Col>
