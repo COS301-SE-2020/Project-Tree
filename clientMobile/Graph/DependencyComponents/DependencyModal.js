@@ -101,7 +101,7 @@ class DependencyModal extends Component {
                   null
                 }
                 
-                {this.props.userPermissions["update"] === true?
+                {this.props.userPermissions["delete"] === true?
                   <View style={{flex: 1}}> 
                     <DeleteDependency
                       dependency={this.props.selectedDependency}

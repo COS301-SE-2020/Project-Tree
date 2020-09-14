@@ -223,7 +223,7 @@ class TaskModal extends Component {
                 </View>
                 
                 <View style={{flexDirection:'row'}}>
-                  {this.props.userPermissions["update"] === true?
+                  {this.props.userPermissions["create"] === true?
                     <View style={{flex: 1}}>
                       <CloneTask
                         task={this.props.selectedTask}
