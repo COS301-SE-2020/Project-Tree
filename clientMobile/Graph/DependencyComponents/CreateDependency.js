@@ -225,7 +225,7 @@ class CreateDependencyForm extends Component {
     if (type.for === 'start') {
         if (this.state.endDate < date) 
           this.setState({
-            error: "You can not set the end before the start",
+            error: "You cannot set the end date/time before the start date/time.",
             startDate: date, 
             endDate: date, 
             dateTimePicker: false
@@ -239,7 +239,7 @@ class CreateDependencyForm extends Component {
     } else {
       if (this.state.startDate > date) 
         this.setState({
-          error: "You can not set the end before the start",
+          error: "You cannot set the end date/time before the start date/time.",
           endDate: this.state.startDate, 
           dateTimePicker: false
         });
