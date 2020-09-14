@@ -196,7 +196,7 @@ class GraphPage extends React.Component {
                     </Link>
                   </Col>
                   <Col xs={8} md={8} lg={8} xl={8} className="text-center m-1">
-                    <h3>{this.props.project.name}</h3>
+                    <h2>{this.props.project.name}</h2>
                   </Col>
                   <Col></Col>
                 </Row>
@@ -354,21 +354,21 @@ class TaskSidebar extends React.Component {
           className="text-dark text-center bg-light py-2"
           style={{ fontSize: "19px", wordWrap: "break-word" }}
         >
-          <Row className="text-center">
+          <Row className="text-center align-items-center">
             <Col></Col>
-            <Col className="text-center">
-              {this.props.viewId !== null ? <h3>{this.props.task.name}<br />(View)</h3> : <h3>{this.props.task.name}</h3>}
+            <Col xs={5}className="text-center">
+              {this.props.viewId !== null ? <h4>{this.props.task.name}<br />(View)</h4> : <h4>{this.props.task.name}</h4>}
             </Col>
             <Col className="text-right">
               <Button
-                className="btn-light border-dark"
+                className="btn-light border-dark m-0"
                 onClick={() => this.props.toggleSidebar(null, null)}
               >
                 <i className="fa fa-close"></i>
               </Button>
             </Col>
           </Row>
-          <Row className="text-center align-items-center p-1">
+          <Row className="p-1">
             <Col className="text-center">{this.props.task.description}</Col>
           </Row>
           <Row className="text-center p-1">
