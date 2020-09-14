@@ -22,7 +22,7 @@ export default class CriticalPathBarCharts extends React.Component {
                 progress: el.start.properties.progress.low,
                 startDate: el.start.properties.startDate,
                 endDate: el.start.properties.endDate,
-                duration: el.start.properties.duration.low,
+                duration: el.start.properties.duration,
               });
             }
             list.push({
@@ -33,7 +33,7 @@ export default class CriticalPathBarCharts extends React.Component {
               progress: el.end.properties.progress.low,
               startDate: el.end.properties.startDate,
               endDate: el.end.properties.endDate,
-              duration: el.end.properties.duration.low,
+              duration: el.end.properties.duration,
             });
           });
         } 
