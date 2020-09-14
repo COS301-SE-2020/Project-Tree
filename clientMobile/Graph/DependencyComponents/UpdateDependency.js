@@ -102,7 +102,7 @@ class UpdateDependencyForm extends Component {
     if (type.for === 'start') {
         if (this.state.endDate < date) 
           this.setState({
-            error: "you can not set the end before the start",
+            error: "You can not set the end before the start",
             startDate: date, 
             endDate: date, 
             dateTimePicker: false
@@ -116,7 +116,7 @@ class UpdateDependencyForm extends Component {
     } else {
       if (this.state.startDate > date) 
         this.setState({
-          error: "you can not set the end before the start",
+          error: "You can not set the end before the start",
           endDate: this.state.startDate, 
           dateTimePicker: false
         });
@@ -208,7 +208,7 @@ class UpdateDependencyForm extends Component {
         </View>
         <View style={{flex: 6, marginBottom:20}}>
           <Form>
-            <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
+            <Text style={{color:'red', alignSelf:'center', marginTop:20}}>{this.state.error}</Text>
             <Item floatingLabel disabled>
               <Label>
               {
@@ -229,8 +229,8 @@ class UpdateDependencyForm extends Component {
               <Label>Start Date of Second Task</Label>
               <Input value={this.state.endDate.substring(0, 10)} />
               <Icon
-                type="AntDesign"
-                name="plus"
+                type="FontAwesome"
+                name="calendar-o"
                 onPress={() => {
                   this.setState({
                     dateTimePicker: true, 
@@ -247,8 +247,8 @@ class UpdateDependencyForm extends Component {
               <Label>Start Time of Second Task</Label>
               <Input value={this.state.endDate.substring(11, 16)} />
               <Icon
-                type="AntDesign"
-                name="plus"
+                type="SimpleLineIcons"
+                name="clock"
                 onPress={() => {
                   this.setState({
                     dateTimePicker: true, 
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 600,
+    height: '90%',
     width: 350,
   },
   hideButton: {

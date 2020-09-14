@@ -317,10 +317,7 @@
 										stroke: borderColor,
 										fill: {
 												type: 'linearGradient',
-												stops: [
-														{ offset: `${node.progress}%`, color: statusColor },
-														{ offset: `${node.progress+1}%`, color: '#fff' },
-												]
+												stops: fillAmount
 										},
 										filter: shadowHighlight,
 								},
