@@ -173,7 +173,7 @@ class NotificationList extends React.Component {
     let messageComponents = this.createMessageList(messages);
 
     return (
-      <React.Fragment>
+      <Container>
         <Row>
           <Col className="text-center" style={{ color: "#EEBB4D" }}>
             <h3>
@@ -183,12 +183,12 @@ class NotificationList extends React.Component {
         </Row>
         <Row>
           <Col
-            style={{ maxHeight: "325px", overflowY: "auto" }}
+            style={{height: "23em", overflowY: "auto" }}
           >
             {messageComponents}
           </Col>
         </Row>
-      </React.Fragment>
+      </Container>
     );
   }
 }

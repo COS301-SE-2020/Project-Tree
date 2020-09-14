@@ -140,7 +140,7 @@ class ProjectPage extends React.Component {
             ) : null}
           </Col>
         </Row>
-        <Row className="mt-2">
+        <Row className="mt-3">
           <Col style={{ color: "#EEBB4D" }}>
               <h3>Tasks</h3>
           </Col>
@@ -156,7 +156,7 @@ class ProjectPage extends React.Component {
         </Row>
         <Row className="mt-2">
           <Col style={{ color: "#EEBB4D" }}>
-              <h3>Gant Chart</h3>
+              <h3>Gantt Chart</h3>
           </Col>
         </Row>
         <Row>

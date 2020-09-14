@@ -657,13 +657,14 @@ class LegendSidebar extends React.Component {
           <Row>
             <Col></Col>
             <Col
-              className="text-center border rounded border-info m-1 align-items-center z-depth-5"
+              className="text-center border rounded border-info m-1 align-items-center "
               xs={6}
               style={{
                 backgroundColor: "white",
                 color: "black",
                 width: "120px",
                 height: "30px",
+                boxShadow: "0 0 10px #009999"
               }}
             >
               Highlight
