@@ -8,6 +8,7 @@ async function sendNotification(
   projName,
   projID,
   mode,
+  profileId
 ) {
   let data = {
     type: type, //personal, task, project, auto
@@ -20,6 +21,7 @@ async function sendNotification(
     projID: projID,
     mode: mode, //email: 0, notice: 1, both: 2
     mobile: true,
+    profileId: profileId
   };
 
   data = JSON.stringify(data);

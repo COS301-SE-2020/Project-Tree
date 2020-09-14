@@ -59,6 +59,8 @@ function deleteTask(req, res) {
     req.body.nodes,
     req.body.rels
   );
+  
+  console.log("successors", successors);
 
   db.getSession()
     .run(
@@ -74,6 +76,7 @@ function deleteTask(req, res) {
         if (req.body.nodes[x].id == req.body.changedInfo.id) {
           if (x == 0) {
             req.body.nodes.shift();
+            x--;
           } else {
             req.body.nodes.splice(x, x);
           }
@@ -87,6 +90,7 @@ function deleteTask(req, res) {
         ) {
           if (x == 0) {
             req.body.rels.shift();
+            x--;
           } else {
             req.body.rels.splice(x, x);
           }

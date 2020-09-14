@@ -205,6 +205,7 @@ function deleteDependency(req, res) {
 
           if (x == 0) {
             req.body.rels.shift();
+            x--;
           } else {
             req.body.rels.splice(x, x);
           }
@@ -255,6 +256,7 @@ function deleteDependency(req, res) {
 
           if (x == 0) {
             req.body.rels.shift();
+            x--;
           } else {
             req.body.rels.splice(x, x);
           }
@@ -312,6 +314,7 @@ function deleteDependency(req, res) {
 
           if (x == 0) {
             req.body.rels.shift();
+            x--;
           } else {
             req.body.rels.splice(x, x);
           }
@@ -360,6 +363,7 @@ function deleteDependency(req, res) {
 
           if (x == 0) {
             req.body.rels.shift();
+            x--;
           } else {
             req.body.rels.splice(x, x);
           }

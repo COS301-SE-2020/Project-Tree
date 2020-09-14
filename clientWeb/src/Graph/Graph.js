@@ -446,7 +446,7 @@ class Graph extends React.Component {
             <Col className="alignSelfCenter">
               <Row>
                 <Col className="text-left align-top " style={{ fontSize: "27px"}}>
-                    <OverlayTrigger overlay={<Tooltip>Double click on empty space to create a new task or right click on two tasks to create a dependency</Tooltip>}><i className="fa fa-question-circle"></i></OverlayTrigger>
+                    <OverlayTrigger overlay={<Tooltip>Double click on an empty space to create a new task or right click on two tasks to create a dependency</Tooltip>}><i className="fa fa-question-circle"></i></OverlayTrigger>
                 </Col>
                 {dependency != null ? (
                   <Col className="text-center">

@@ -40,8 +40,8 @@ export default class SettingsScreen extends Component {
     });
   }
 
-  render() {      console.log(this.state.pfp)
-
+  render() {      
+    console.log(this.state.pfp)
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#008656" barStyle="light-content" />

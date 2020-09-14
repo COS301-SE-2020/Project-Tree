@@ -6,19 +6,10 @@ import $ from 'jquery'
 export default class GanttChartWrapper extends React.Component{
     constructor(props){
         super(props)
-        this.state = {tasks: null, rels:null, criticalPath:false, durationType:"all"}
-    }
-
-    async componentDidMount(){
-        await $.post("/getProject", { id: this.props.project.id }, (response) => {
-            this.setState({tasks:response.tasks, rels:response.rels});
-        }).fail((err) => {
-            throw Error(err);
-        });
+        this.state = {showCriticalPath:false, durationType:"all"}
     }
 
     render(){
-        if(this.state.tasks === null) return null;
         return(
             <React.Fragment>
                 <Container fluid className="mb-3">
@@ -30,7 +21,7 @@ export default class GanttChartWrapper extends React.Component{
                                 size="md"
                                 onClick={() => {
                                     this.setState({
-                                    criticalPath: !this.state.criticalPath,
+                                    showCriticalPath: !this.state.showCriticalPath,
                                     });
                                 }}
                                 >
@@ -38,10 +29,10 @@ export default class GanttChartWrapper extends React.Component{
                                         type="switch"
                                         id="switchEnabled"
                                         label="Display Critical Path"
-                                        checked={this.state.criticalPath}
+                                        checked={this.state.showCriticalPath}
                                         onChange={(e) => {
                                         this.setState({
-                                            criticalPath: this.state.criticalPath,
+                                            showCriticalPath: this.state.showCriticalPath,
                                         });
                                         }}
                                     />
@@ -71,17 +62,14 @@ export default class GanttChartWrapper extends React.Component{
                     <Row className="mt-2">
                     {this.state.tasks !== null? 
                     <GanttChart 
-                        tasks={this.state.tasks} 
-                        rels={this.state.rels}
-                        criticalPath={this.state.criticalPath}
-                        autoSize={this.state.autoSize}
-                        criticalPathTasks={this.props.criticalPathTasks}
+                        project={this.props.project}
+                        showCriticalPath={this.state.showCriticalPath}
                         durationType={this.state.durationType}
                     /> 
                     : null} 
                     </Row>
                 </Container>
-            </React.Fragment>          
+            </React.Fragment>
         )
     }
 
@@ -95,7 +83,7 @@ class GanttChart extends React.Component
     }
 
     formatTasks(tasks){ 
-        let rels = this.filterDependencies(tasks, [...this.props.rels]);
+        let rels = this.filterDependencies(tasks, [...this.props.project.rels]);
         let formattedTasks = [];
 
         formattedTasks.push(
@@ -153,12 +141,12 @@ class GanttChart extends React.Component
 
     filterTasks(){
         let tasks;
-        if(this.props.criticalPath === true){
+        if(this.props.showCriticalPath === true){
             tasks = this.createCriticalPath();
         }
 
         else{
-            tasks = this.props.tasks;
+            tasks = this.props.project.tasks;
         }
         
         let filteredTasks = [];
@@ -199,10 +187,10 @@ class GanttChart extends React.Component
     createCriticalPath() {
         let list = [];
         if (
-          this.props.criticalPathTasks !== null &&
-          this.props.criticalPathTasks.path !== null
+          this.props.project.criticalPath !== null &&
+          this.props.project.criticalPath.path !== null
         ) {
-          this.props.criticalPathTasks.path.segments.forEach((el, index) => {
+          this.props.project.criticalPath.path.segments.forEach((el, index) => {
             if (index === 0) {
               list.push({
                 id: el.start.identity.low,
@@ -249,7 +237,7 @@ class GanttChart extends React.Component
     }
 
     render(){
-        if(this.props.tasks.length === 0 || this.props.tasks === null){
+        if(this.props.project.tasks.length === 0 || this.props.project.tasks === null){
             return null;
         }
 

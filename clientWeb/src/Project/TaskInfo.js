@@ -7,7 +7,7 @@ class TaskInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      taskType: "Critical Path",
+      taskType: "All",
     };
   }
 
@@ -31,10 +31,11 @@ class TaskInfo extends React.Component {
   createCriticalPath() {
     let list = [];
     if (
-      this.props.criticalPath !== null &&
-      this.props.criticalPath.path !== null
+      this.props.project.criticalPath !== null &&
+      this.props.project.criticalPath.path !== null &&
+      this.props.project.criticalPath.path !== undefined
     ) {
-      this.props.criticalPath.path.segments.forEach((el, index) => {
+      this.props.project.criticalPath.path.segments.forEach((el, index) => {
         if (index === 0) {
           list.push({
             name: el.start.properties.name,
@@ -64,8 +65,8 @@ class TaskInfo extends React.Component {
 
   createLateList() {
     let list = [];
-    if (this.props.tasks !== []) {
-      this.props.tasks.forEach((el) => {
+    if (this.props.project.tasks !== []) {
+      this.props.project.tasks.forEach((el) => {
         if (el.type !== "Complete") {
           let today = new Date();
           if (today > new Date(el.endDate)) list.push(el);
@@ -78,13 +79,13 @@ class TaskInfo extends React.Component {
 
   createTaskList() {
     let list = [`No ${this.state.taskType} tasks to display`];
-    if (this.props.tasks.length !== 0 && this.props.criticalPath !== null) {
+    if (this.props.project.tasks.length !== 0 && this.props.project.criticalPath !== null) {
       if (this.state.taskType === "Critical Path")
         list = this.createCriticalPath();
       else if (this.state.taskType === "Late") list = this.createLateList();
       else {
         list = [];
-        this.props.tasks.forEach((el) => {
+        this.props.project.tasks.forEach((el) => {
           switch (this.state.taskType) {
             case "Complete":
               if (el.type === "Complete") {
@@ -147,7 +148,7 @@ class TaskInfo extends React.Component {
                 fontFamily: "Courier New",
                 fontSize: "18px",
                 maxWidth: "300px",
-                minWidth: "250px",
+                minWidth: "280px",
                 fontWeight: "bold",
               }}
               className="rounded border border-dark mr-2 align-items-center"
@@ -215,12 +216,12 @@ class TaskInfo extends React.Component {
                 this.value = this.state.taskType;
               }}
             >
+              <option value="All">All Tasks</option>
               <option value="Critical Path">Critical Path Tasks</option>
               <option value="Incomplete">Incomplete tasks</option>
               <option value="Complete">Complete tasks</option>
               <option value="Issue">Issue Tasks</option>
               <option value="Late">Late Tasks</option>
-              <option value="All">All Tasks</option>
             </Form.Control>
           </Row>
           <Row

@@ -11,8 +11,6 @@ class ProjectPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
-      criticalPath: null,
       noticeBoardRefreshKey: 0,
       messages: null,
     };
@@ -39,26 +37,8 @@ class ProjectPage extends React.Component {
   }
 
   componentDidMount() {
-    $.post(
-      "/project/projecttasks",
-      { projId: this.props.project.id },
-      (response) => {
-        this.setState({ tasks: response.tasks });
-      }
-    ).fail(() => {
-      alert("Unable to get tasks");
-    });
-    $.post(
-      "/project/criticalpath",
-      { projId: this.props.project.id },
-      (response) => {
-        this.setState({ criticalPath: response });
-      }
-    ).fail(() => {
-      alert("Unable to get Critical Path");
-    });
     let data = {
-      projID: this.props.project.id,
+      projID: this.props.project.projectInfo.id,
       userID: this.props.user.id,
     };
 
@@ -73,26 +53,8 @@ class ProjectPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.project !== prevProps.project) {
-      $.post(
-        "/project/projecttasks",
-        { projId: this.props.project.id },
-        (response) => {
-          this.setState({ tasks: response.tasks });
-        }
-      ).fail(() => {
-        alert("Unable to get tasks");
-      });
-      $.post(
-        "/project/criticalpath",
-        { projId: this.props.project.id },
-        (response) => {
-          this.setState({ criticalPath: response });
-        }
-      ).fail(() => {
-        alert("Unable to get Critical Path");
-      });
       let data = {
-        projID: this.props.project.id,
+        projID: this.props.project.projectInfo.id,
         userID: this.props.user.id,
       };
   
@@ -113,8 +75,8 @@ class ProjectPage extends React.Component {
           <Col 
             sm={12}
             md={12}
-            lg={8}
-            xl={8}
+            lg={6}
+            xl={6}
           >
             <ProjectInfo
               project={this.props.project}
@@ -122,15 +84,13 @@ class ProjectPage extends React.Component {
               userPermission={this.props.userPermission}
               user={this.props.user}
               updateNoticeBoardRefreshKey={this.updateNoticeBoardRefreshKey}
-              tasks={this.state.tasks}
-              criticalPath={this.state.criticalPath}
             />
           </Col>
           <Col
             sm={12}
             md={12}
-            lg={4}
-            xl={4}
+            lg={6}
+            xl={6}
           >
             {this.props.project != null && this.props.user != null ? (
               <NoticeBoard
@@ -140,7 +100,7 @@ class ProjectPage extends React.Component {
             ) : null}
           </Col>
         </Row>
-        <Row className="mt-2">
+        <Row className="mt-3">
           <Col style={{ color: "#EEBB4D" }}>
               <h3>Tasks</h3>
           </Col>
@@ -149,19 +109,19 @@ class ProjectPage extends React.Component {
           <Col>
             <TaskInfo
               project={this.props.project}
-              tasks={this.state.tasks}
-              criticalPath={this.state.criticalPath}
             />
           </Col>
         </Row>
         <Row className="mt-2">
           <Col style={{ color: "#EEBB4D" }}>
-              <h3>Gant Chart</h3>
+              <h3>Gantt Chart</h3>
           </Col>
         </Row>
         <Row>
           <Col>
-            <GanttChart project={this.props.project} criticalPathTasks={this.state.criticalPath}/>
+            <GanttChart 
+              project={this.props.project}
+            />
           </Col>
         </Row>
       </Container>

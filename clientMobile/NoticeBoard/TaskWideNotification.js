@@ -178,6 +178,7 @@ class SendNotificationForm extends Component {
       this.props.project.name,
       this.props.project.id,
       this.state.mode,
+      this.props.user.id
     );
     this.props.setModalVisible(false);
   }

@@ -84,6 +84,7 @@ class GraphPage extends React.Component {
       }).fail((err) => {
         throw Error(err);
       });
+      this.toggleSidebar(null, null, null, null, null)
     }
   }
 
@@ -188,13 +189,13 @@ class GraphPage extends React.Component {
                       <Button
                         variant="light"
                         size="sm"
-                        className="text-left align-items-top"
+                        className="text-left align-items-top m-2"
                       >
                         <i className="fa fa-arrow-left"></i>
                       </Button>
                     </Link>
                   </Col>
-                  <Col xs={6} md={6} lg={6} xl={6} className="text-center">
+                  <Col xs={6} md={6} lg={6} xl={6} className="text-center m-1">
                     <h3>{this.props.project.name}</h3>
                   </Col>
                   <Col></Col>
@@ -657,13 +658,14 @@ class LegendSidebar extends React.Component {
           <Row>
             <Col></Col>
             <Col
-              className="text-center border rounded border-info m-1 align-items-center z-depth-5"
+              className="text-center border rounded border-info m-1 align-items-center "
               xs={6}
               style={{
                 backgroundColor: "white",
                 color: "black",
                 width: "120px",
                 height: "30px",
+                boxShadow: "0 0 10px #009999"
               }}
             >
               Highlight

@@ -7,7 +7,7 @@ class ProjectProgress extends React.Component {
       completeDur = 0,
       percentage = 0,
       color = "info";
-    this.props.tasks.forEach((task) => {
+    this.props.project.tasks.forEach((task) => {
       completeDur += task.progress;
       totalDur += 100;
     });
@@ -29,10 +29,11 @@ class ProjectProgress extends React.Component {
       percentage = 0,
       color = "info";
     if (
-      this.props.criticalPath !== null &&
-      this.props.criticalPath.path !== null
+      this.props.project.criticalPath !== {} &&
+      this.props.project.criticalPath.path !== null &&
+      this.props.project.criticalPath.path !== undefined
     )
-      this.props.criticalPath.path.segments.forEach((el, i) => {
+      this.props.project.criticalPath.path.segments.forEach((el, i) => {
         if (i === 0) {
           completeDur += el.start.properties.progress.low;
           totalDur += 100;
