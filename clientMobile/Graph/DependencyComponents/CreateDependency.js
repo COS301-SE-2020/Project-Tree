@@ -321,9 +321,6 @@ class CreateDependencyForm extends Component {
     return (
       <View style={{flex: 1}}>
         <View style={{flex: 1}}>
-          <Text style={styles.modalText}></Text>
-        </View>
-        <View style={{flex: 1}}>
           <ButtonGroup
             onPress={this.updateIndex}
             selectedIndex={this.state.selectedIndex}
@@ -440,7 +437,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 500,
+    height: '90%',
     width: 350,
   },
   hideButton: {
