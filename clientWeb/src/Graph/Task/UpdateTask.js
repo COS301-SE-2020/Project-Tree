@@ -205,7 +205,7 @@ class UpdateTask extends React.Component {
           timestamp: timestamp,
           projName: this.props.project.name,
           projID: this.props.project.id,
-          taskName: data.ut_name,
+          taskName: data.name,
           type: "auto",
           mode: 2,
         }
