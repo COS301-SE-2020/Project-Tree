@@ -175,7 +175,7 @@ class GanttChart extends React.Component
 
         let startDate;
         for(var x=0; x<tasks.length; x++){
-            startDate = new Date(tasks[x].startDate.year.low, tasks[x].startDate.month.low-1, tasks[x].startDate.day.low);
+            startDate = new Date(tasks[x].startDate);
             if(startDate.valueOf() <= filterDate.valueOf() && startDate.valueOf() >= beginFilterDate.valueOf()){
                 filteredTasks.push(tasks[x]);
             }
