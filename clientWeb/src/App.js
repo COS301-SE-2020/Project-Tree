@@ -81,6 +81,7 @@ class App extends Component {
           otherProjects[i].criticalPath = {};
           otherProjects[i].tasks = [];
           otherProjects[i].rels = [];
+          otherProjects[i].userPermission = {}
         });
         this.setState({
           ownedProjects: ownedProjects,
@@ -107,6 +108,25 @@ class App extends Component {
           ).fail(() => {
             alert("Unable to get Critical Path");
           });
+          let data = {};
+          data.token = localStorage.getItem("sessionToken");
+          data.project = project.projectInfo;
+          $.post(
+            "/user/checkpermission",
+            { data: JSON.stringify(data) },
+            (response) => {
+              let ownedProjects = this.state.ownedProjects;
+              ownedProjects[i].userPermission = {
+                create: response.create,
+                update: response.update,
+                delete: response.delete,
+                project: response.project,
+              };
+              this.setState({ ownedProjects: ownedProjects });
+            }
+          ).fail((response) => {
+            console.log(response.message);
+          });
         });
 
         this.state.otherProjects.forEach((project, i) => {
@@ -128,6 +148,25 @@ class App extends Component {
             }
           ).fail(() => {
             alert("Unable to get Critical Path");
+          });
+          let data = {};
+          data.token = localStorage.getItem("sessionToken");
+          data.project = project.projectInfo;
+          $.post(
+            "/user/checkpermission",
+            { data: JSON.stringify(data) },
+            (response) => {
+              let otherProjects = this.state.otherProjects;
+              otherProjects[i].userPermission = {
+                create: response.create,
+                update: response.update,
+                delete: response.delete,
+                project: response.project,
+              };
+              this.setState({ otherProjects: otherProjects });
+            }
+          ).fail((response) => {
+            console.log(response.message);
           });
         });
       }).fail((response) => {
@@ -204,31 +243,24 @@ class App extends Component {
       
       let project = {};
       this.state.ownedProjects.forEach(p => {
-        if (p.projectInfo.id === proj.id) project = p;
-      });
-      this.state.otherProjects.forEach(p => {
-        if (p.projectInfo.id === proj.id) project = p;
-      });
-      this.setState({ project: project });
-      let data = {};
-      data.token = localStorage.getItem("sessionToken");
-      data.project = proj;
-      $.post(
-        "/user/checkpermission",
-        { data: JSON.stringify(data) },
-        (response) => {
-          this.setState({
-            userPermission: {
-              create: response.create,
-              update: response.update,
-              delete: response.delete,
-              project: response.project,
-            },
+        if (p.projectInfo.id === proj.id) {
+          project = p;
+          this.setState({ 
+            project: project,
+            userPermission: p.userPermission 
           });
         }
-      ).fail((response) => {
-        console.log(response.message);
       });
+      this.state.otherProjects.forEach(p => {
+        if (p.projectInfo.id === proj.id) {
+          project = p;
+          this.setState({ 
+            project: project,
+            userPermission: p.userPermission 
+          });
+        }
+      });
+
     }
   }
 

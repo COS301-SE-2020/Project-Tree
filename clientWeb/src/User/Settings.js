@@ -55,7 +55,7 @@ class Settings extends React.Component {
       show: false, 
       toggleEdit: false, 
       user: this.props.user, 
-      pfp: null, 
+      pfp: "", 
       isloading: false, 
       togglePass: false,
       password: "",
@@ -183,7 +183,7 @@ handleNewPasswordChange(val) {
       { token: localStorage.getItem("sessionToken") },
       (response) => {
         console.log(response)
-        this.setState({ toggleEdit: false, user: response.user, pfp:null });
+        this.setState({ toggleEdit: false, user: response.user, pfp:"" });
       }
     )
     .fail((response) => {
@@ -221,7 +221,7 @@ handleNewPasswordChange(val) {
       {
         alert("Success")
         this.togglePass();
-        this.setState({isloading: false, pfp:null});
+        this.setState({isloading: false, pfp:""});
       }
     
     
@@ -248,7 +248,7 @@ handleNewPasswordChange(val) {
     $.post("/user/edit", data, (response) => {
       this.setState({ user: response.user, prevUser: response.user });
       this.closeEdit();
-      this.setState({isloading: false, pfp:null});
+      this.setState({isloading: false, pfp:""});
     }).fail(() => {
       alert("Unable to update user preferences");
     });
@@ -271,7 +271,7 @@ handleNewPasswordChange(val) {
           show={this.state.show}
           onHide={() => {
             this.hideModal();
-            this.setState({pfp:null})
+            this.setState({pfp:""})
           }}
         >
           <Form onSubmit={this.handleSubmit} type="multipart/form-data">
@@ -296,7 +296,7 @@ handleNewPasswordChange(val) {
                       </Col>
                     </Row>
                     <Row>
-                      {this.state.pfp !== null ? <Col style={{fontSize: "18px"}}> Save changes to save photo! </Col>: null}
+                      {this.state.pfp !== "" ? <Col style={{fontSize: "18px"}}> Save changes to save photo! </Col>: null}
                     </Row>
                   </React.Fragment>
                  
