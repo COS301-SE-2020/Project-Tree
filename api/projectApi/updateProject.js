@@ -39,7 +39,7 @@ function updateTask(task, nodes, rels) {
   let maxStartDate =new Date(task.startDate);
   maxStartDate.setTime( maxStartDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
   let predDependencies = getPredDependencies(task, rels);
-  if(predDependencies != []){
+  if(predDependencies.length != 0){
     maxStartDate = new Date(0);
     maxStartDate.setTime( maxStartDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
     predDependencies.forEach(dep => {

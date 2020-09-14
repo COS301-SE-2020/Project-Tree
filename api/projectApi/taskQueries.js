@@ -59,6 +59,8 @@ function deleteTask(req, res) {
     req.body.nodes,
     req.body.rels
   );
+  
+  console.log("successors", successors);
 
   db.getSession()
     .run(
@@ -70,10 +72,13 @@ function deleteTask(req, res) {
       `
     )
     .then(async () => {
+      console.log(req.body.nodes);
+      console.log(req.body.rels);
       for (let x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == req.body.changedInfo.id) {
           if (x == 0) {
             req.body.nodes.shift();
+            x--;
           } else {
             req.body.nodes.splice(x, x);
           }
@@ -87,18 +92,30 @@ function deleteTask(req, res) {
         ) {
           if (x == 0) {
             req.body.rels.shift();
+            x--;
           } else {
             req.body.rels.splice(x, x);
           }
         }
       }
+      console.log();
+      console.log();
+      console.log();
+      console.log(req.body.nodes);
+      console.log(req.body.rels);
+      console.log();
+      console.log();
+      console.log();
 
       await successors.forEach(async succ => {
+        console.log(succ);
         await updateProject.updateTask(
           succ,
           req.body.nodes,
           req.body.rels
         );
+        console.log(req.body.nodes);
+        console.log(req.body.rels);
       });
       res.send({
         nodes: req.body.nodes,

@@ -19,7 +19,7 @@ class ProjectInfo extends React.Component {
                   style={{ fontSize: "22px"}}
                   xs={12}
                 >
-                  {this.props.project.name}
+                  {this.props.project.projectInfo.name}
                 </Col>
               </Row>
               <Row>
@@ -28,7 +28,7 @@ class ProjectInfo extends React.Component {
                     className="text-center my-1"
                   >
                     <DeleteProject
-                      project={this.props.project}
+                      project={this.props.project.projectInfo}
                       setProject={(project) => {
                         this.props.setProject(project);
                       }}
@@ -40,7 +40,7 @@ class ProjectInfo extends React.Component {
                     className="text-center my-1"
                   >
                     <UpdateProject
-                      project={this.props.project}
+                      project={this.props.project.projectInfo}
                       setProject={(project) => {
                         this.props.setProject(project);
                       }}
@@ -63,7 +63,7 @@ class ProjectInfo extends React.Component {
                   className="text-center my-1"
                 >
                   <SendProjectNotification
-                    project={this.props.project}
+                    project={this.props.project.projectInfo}
                     user={this.props.user}
                     updateNoticeBoardRefreshKey={
                       this.props.updateNoticeBoardRefreshKey
@@ -79,7 +79,7 @@ class ProjectInfo extends React.Component {
               className="align-items-center text-center"
               style={{ fontSize: "20px", wordWrap: "break-word" }}
             >
-              {this.props.project.description}
+              {this.props.project.projectInfo.description}
             </Col>
           </Row>
           <Row className="align-items-center py-2">
@@ -104,37 +104,37 @@ class ProjectInfo extends React.Component {
                   <tr>
                     <td>Package Manager</td>
                     <td>
-                      {this.props.project.permissions[0] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[0] === true ? "X" : null}
                     </td>
                     <td>
-                      {this.props.project.permissions[1] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[1] === true ? "X" : null}
                     </td>
                     <td>
-                      {this.props.project.permissions[2] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[2] === true ? "X" : null}
                     </td>
                   </tr>
                   <tr>
                     <td>Responsible Person</td>
                     <td>
-                      {this.props.project.permissions[3] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[3] === true ? "X" : null}
                     </td>
                     <td>
-                      {this.props.project.permissions[4] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[4] === true ? "X" : null}
                     </td>
                     <td>
-                      {this.props.project.permissions[5] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[5] === true ? "X" : null}
                     </td>
                   </tr>
                   <tr>
                     <td>Resource</td>
                     <td>
-                      {this.props.project.permissions[6] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[6] === true ? "X" : null}
                     </td>
                     <td>
-                      {this.props.project.permissions[7] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[7] === true ? "X" : null}
                     </td>
                     <td>
-                      {this.props.project.permissions[8] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[8] === true ? "X" : null}
                     </td>
                   </tr>
                 </tbody>
@@ -145,8 +145,6 @@ class ProjectInfo extends React.Component {
           <Col>
             <ProjectProgress
               project={this.props.project}
-              tasks={this.props.tasks}
-              criticalPath={this.props.criticalPath}
             />
           </Col>
         </Row>
