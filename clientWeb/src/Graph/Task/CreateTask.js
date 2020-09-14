@@ -17,7 +17,6 @@ class CreateTask extends React.Component {
     let now = new Date();
     now.setTime( now.getTime() - new Date().getTimezoneOffset()*60*1000 );
     now = now.toISOString().substring(0,16);
-    console.log(now);
     this.state = {
       Show: true,
       name: "",
@@ -33,8 +32,7 @@ class CreateTask extends React.Component {
       resourcesList: [],
       resPersonList: [],
       isloading: false, 
-    };
-    console.log(this.state.startDate)
+    }
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
@@ -408,7 +406,7 @@ class CreateTask extends React.Component {
                       }); 
                     } else {
                       this.setState({ 
-                        endDate: endDate, 
+                        endDate: value, 
                         duration: this.CalcDiff(this.state.startDate, value) 
                       });
                     }

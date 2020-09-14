@@ -7,7 +7,7 @@ class TaskInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      taskType: "CriticalPath",
+      taskType: "Critical Path",
     };
   }
 
@@ -57,7 +57,7 @@ class TaskInfo extends React.Component {
         });
       });
     } else {
-      list.push("No Critical Path to display");
+      list.push("No Critical Path tasks to display");
     }
     return list;
   }
@@ -79,7 +79,7 @@ class TaskInfo extends React.Component {
   createTaskList() {
     let list = [`No ${this.state.taskType} tasks to display`];
     if (this.props.tasks.length !== 0 && this.props.criticalPath !== null) {
-      if (this.state.taskType === "CriticalPath")
+      if (this.state.taskType === "Critical Path")
         list = this.createCriticalPath();
       else if (this.state.taskType === "Late") list = this.createLateList();
       else {
@@ -113,7 +113,7 @@ class TaskInfo extends React.Component {
           return [`No ${this.state.taskType} tasks to display`];
       }
       if (
-        list[0] === "No Critical Path to Display" ||
+        list[0] === "No Critical Path tasks to display" ||
         list[0] === "No Late tasks to display"
       ) {
         return list[0];
@@ -215,7 +215,7 @@ class TaskInfo extends React.Component {
                 this.value = this.state.taskType;
               }}
             >
-              <option value="CriticalPath">Critical Path Tasks</option>
+              <option value="Critical Path">Critical Path Tasks</option>
               <option value="Incomplete">Incomplete tasks</option>
               <option value="Complete">Complete tasks</option>
               <option value="Issue">Issue Tasks</option>

@@ -150,7 +150,7 @@ class UpdateTask extends React.Component {
     let timeComplete = undefined;
     if(this.state.initialProgress < 100 && parseInt(this.state.progress) === 100){
       timeComplete = new Date();
-      timestamp.setTime( timestamp.getTime() - new Date().getTimezoneOffset()*60*1000 );
+      timeComplete.setTime( timeComplete.getTime() - new Date().getTimezoneOffset()*60*1000 );
       timeComplete = timeComplete.toISOString();
     }
     else if(this.state.initialProgress === 100 && parseInt(this.state.progress) < 100){

@@ -36,7 +36,6 @@ class ProjectPage extends React.Component {
       alert("Unable to fetch notifications");
     });
 
-    console.log('hi')
   }
 
   componentDidMount() {
@@ -108,7 +107,6 @@ class ProjectPage extends React.Component {
   }
 
   render() {
-    console.log(this.state.messages)
     return (
       <Container fluid>
         <Row className="my-1">
