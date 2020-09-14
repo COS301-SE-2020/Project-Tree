@@ -18,7 +18,7 @@ class CalendarWrapper extends React.Component {
         events.push(
           {
             id: tasks[y].id,
-            title: ownedProjects[x].projectInfo.name + " " + tasks[y].name,
+            title: ownedProjects[x].projectInfo.name + ": " + tasks[y].name,
             start: new Date(tasks[y].startDate),
             end: new Date(tasks[y].endDate)
           }
@@ -32,7 +32,7 @@ class CalendarWrapper extends React.Component {
         events.push(
           {
             id: tasks[y].id,
-            title: otherProjects[x].projectInfo.name + " " + tasks[y].name,
+            title: otherProjects[x].projectInfo.name + ": " + tasks[y].name,
             start: new Date(tasks[y].startDate),
             end: new Date(tasks[y].endDate)
           }
