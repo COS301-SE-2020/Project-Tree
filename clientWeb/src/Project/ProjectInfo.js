@@ -99,7 +99,7 @@ class ProjectInfo extends React.Component {
                     <td></td>
                     <td>Create</td>
                     <td>Delete</td>
-                    <td>Update</td>
+                    <td>Edit</td>
                   </tr>
                   <tr>
                     <td>Package Manager</td>
