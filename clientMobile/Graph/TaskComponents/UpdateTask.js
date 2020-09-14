@@ -38,7 +38,7 @@ class UpdateTask extends Component {
               onPress={() => this.props.toggleVisibility(true, false)}>
               <Icon type="FontAwesome" name="close" />
             </TouchableOpacity>
-            <View style={{alignItems: 'center', marginTop: 25}}>
+            <View style={{alignItems: 'center'}}>
               <Text style={{fontSize: 25, color: '#184D47'}}>Edit Task</Text>
               <View
                 style={{
@@ -504,8 +504,8 @@ class UpdateTaskForm extends Component {
               <Label>Start Date</Label>
               <Input value={this.state.startDate.substring(0, 10)} />
               <Icon
-                type="AntDesign"
-                name="plus"
+                type="FontAwesome"
+                name="calendar-o"
                 onPress={() => {
                   this.setState({
                     dateTimePicker: true, 
@@ -522,8 +522,8 @@ class UpdateTaskForm extends Component {
               <Label>Start Time</Label>
               <Input value={this.state.startDate.substring(11, 16)} />
               <Icon
-                type="AntDesign"
-                name="plus"
+                type="SimpleLineIcons"
+                name="clock"
                 onPress={() => {
                   this.setState({
                     dateTimePicker: true, 
@@ -540,8 +540,8 @@ class UpdateTaskForm extends Component {
               <Label>End Date</Label>
               <Input value={this.state.endDate.substring(0, 10)} />
               <Icon
-                type="AntDesign"
-                name="plus"
+                type="FontAwesome"
+                name="calendar-o"
                 onPress={() => {
                   this.setState({
                     dateTimePicker: true, 
@@ -558,8 +558,8 @@ class UpdateTaskForm extends Component {
               <Label>End Time</Label>
               <Input value={this.state.endDate.substring(11, 16)} />
               <Icon
-                type="AntDesign"
-                name="plus"
+                type="SimpleLineIcons"
+                name="clock"
                 onPress={() => {
                   this.setState({
                     dateTimePicker: true, 
@@ -782,7 +782,6 @@ const styles = StyleSheet.create({
     width: 350,
   },
   hideButton: {
-    flex: 0.5,
     backgroundColor: '#fff',
     alignItems: 'flex-end',
     marginRight: 10,

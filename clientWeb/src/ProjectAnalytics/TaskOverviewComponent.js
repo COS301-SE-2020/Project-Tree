@@ -81,7 +81,7 @@ export default class TaskOverviewComponent extends React.Component {
             }
         })
 
-        return soonestTaskEnding.name + " " + soonestTaskEnding.endDate.substring(0, 10);
+        return soonestTaskEnding.name + " " + soonestTaskEnding.endDate.substring(0, 10) + " " + soonestTaskEnding.endDate.substring(11, 16);
     }
 
     getNextTaskStarting(){
@@ -106,7 +106,7 @@ export default class TaskOverviewComponent extends React.Component {
             }
         })
 
-        return soonestTaskStarting.name + " " + soonestTaskStarting.startDate.substring(0, 10);
+        return soonestTaskStarting.name + " " + soonestTaskStarting.startDate.substring(0, 10) + " " + soonestTaskStarting.startDate.substring(11, 16);
     }
 
     render(){
