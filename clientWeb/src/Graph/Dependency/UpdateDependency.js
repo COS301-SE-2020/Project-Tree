@@ -188,7 +188,7 @@ class UpdateDependency extends React.Component {
                     dependency.endDate = `${e.target.value}T${this.state.dependency.endDate.substring(11,16)}`;
                     if (this.state.dependency.relationshipType === "ss") {
                       if (dependency.endDate < this.state.dependency.sStartDate) {
-                        alert("you can not make the second task earlier then the first");
+                        alert("You cannot make the second task earlier than the first");
                         dependency.endDate = this.state.dependency.sStartDate;
                         this.setState({ 
                           dependency: dependency, 
@@ -202,7 +202,7 @@ class UpdateDependency extends React.Component {
                       }
                     } else {
                       if (dependency.endDate < this.state.dependency.sEndDate) {
-                        alert("you can not make the second task earlier then the first");
+                        alert("You cannot make the second task earlier than the first");
                         dependency.endDate = this.state.dependency.sEndDate;
                         this.setState({ 
                           dependency: dependency, 
@@ -218,6 +218,8 @@ class UpdateDependency extends React.Component {
                     this.value = this.state.dependency.endDate;
                   }}
                 />
+                </Form.Group>
+                <Form.Group>
                 <Form.Label>
                   Start time of second task
                 </Form.Label>
@@ -231,7 +233,7 @@ class UpdateDependency extends React.Component {
                     dependency.endDate = `${this.state.dependency.endDate.substring(0,10)}T${e.target.value}`;
                     if (this.state.dependency.relationshipType === "ss") {
                       if (dependency.endDate < this.state.dependency.sStartDate) {
-                        alert("You cannot make the second task earlier then the first.");
+                        alert("You cannot make the second task earlier than the first");
                         dependency.endDate = this.state.dependency.sStartDate;
                         this.setState({ 
                           dependency: dependency, 
@@ -245,7 +247,7 @@ class UpdateDependency extends React.Component {
                       }
                     } else {
                       if (dependency.endDate < this.state.dependency.sEndDate) {
-                        alert("You cannot make the second task earlier then the first.");
+                        alert("You cannot make the second task earlier than the first");
                         dependency.endDate = this.state.dependency.sEndDate;
                         this.setState({ 
                           dependency: dependency, 
