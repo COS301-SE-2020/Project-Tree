@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   ScrollView,
   Image,
+  StyleSheet
 } from 'react-native';
 import {isEmpty} from 'lodash';
 import {Spinner} from 'native-base';
@@ -75,7 +76,7 @@ class NoticeBoardScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {messages: null};
+    this.state = {messages: null, allUsers:null};
   }
 
   async componentDidMount() {
@@ -99,8 +100,23 @@ class NoticeBoardScreen extends Component {
       },
     );
     const body = await response.json();
-    console.log(body)
-    if (this._isMounted === true) this.setState({messages: body.notifications});
+
+    const response2 = await fetch(
+      'http://projecttree.herokuapp.com/people/getAllUsers',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: this.props.project.id}),
+      },
+    );
+
+    const body2 = await response2.json();
+    if (response2.status !== 200) throw Error(body2.message);
+
+    if (this._isMounted === true) this.setState({messages: body.notifications, allUsers: body2.users});
   }
 
   componentWillUnmount() {
@@ -114,7 +130,7 @@ class NoticeBoardScreen extends Component {
 
     return (
       <React.Fragment>
-        <NotificationList messages={this.state.messages} />
+        <NotificationList messages={this.state.messages} allUsers={this.state.allUsers} />
       </React.Fragment>
     );
   }
@@ -197,38 +213,29 @@ class NotificationList extends Component {
     return messageList;
   }
 
-  returnRandomUser(profileId, type) 
+  returnRandomUser(profileId) 
   {
-    console.log(profileId, "      ", type)
-    let index = Math.round(Math.random() * (4 - 1) + 1);
-    if (index === 1)
+    if(profileId === 'undefined'){
       return (
         <Image
-          source={require('../Assets/female1.png')}
-          style={{height: 70, width: 70}}
+          source={require('../Assets/projectTree.png')}
+          style={styles.profilePicture}
         />
       );
-    if (index === 2)
-      return (
-        <Image
-          source={require('../Assets/female2.png')}
-          style={{height: 70, width: 70}}
-        />
-      );
-    if (index === 3)
-      return (
-        <Image
-          source={require('../Assets/male1.png')}
-          style={{height: 70, width: 70}}
-        />
-      );
-    if (index === 4)
-      return (
-        <Image
-          source={require('../Assets/male2.png')}
-          style={{height: 70, width: 70}}
-        />
-      );
+    }
+    else{
+      for(let x = 0; x < this.props.allUsers.length; x++){
+        if(this.props.allUsers[x].id === parseInt(profileId)){
+          let Image_Http_URL ={ uri: `${this.props.allUsers[x].profilePicture}`};
+          return (
+            <Image
+              source={Image_Http_URL}
+              style={styles.profilePicture}
+            />
+          );
+        }
+      }
+    }
   }
 
   createDailyMessageList(messages) {
@@ -242,7 +249,7 @@ class NotificationList extends Component {
             {message.fromName}
           </Text>
         </View>
-        <View style={{paddingLeft: 5, marginRight: 50}}>
+        <View style={{paddingLeft: 5, marginRight: 10}}>
           <Text>
             <Text style={{fontWeight: 'bold'}}>
               {message.type === 'project' ? 'Project Wide' : null}
@@ -263,9 +270,13 @@ class NotificationList extends Component {
             style={{
               backgroundColor: '#96BB7C',
               height: 1,
-              width: 200,
+              width: 250,
             }}></View>
-          <Text style={{paddingTop: 15, fontSize: 17}}>{message.message}</Text>
+            <View style={{
+              width: '85%',
+            }}>
+              <Text style={{paddingTop: 15, fontSize: 17}}>{message.message}</Text>
+            </View>
         </View>
       </View>
     ));
@@ -292,5 +303,13 @@ class NotificationList extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  profilePicture: {
+    height: 70,
+    width: 70,
+    borderRadius: 100
+  }
+});
 
 export default NoticeBoard;
