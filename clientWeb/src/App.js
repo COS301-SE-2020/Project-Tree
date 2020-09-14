@@ -73,6 +73,7 @@ class App extends Component {
           ownedProjects[i].criticalPath = {};
           ownedProjects[i].tasks = [];
           ownedProjects[i].rels = [];
+          ownedProjects[i].userPermission = {};
         });
         let otherProjects = [];
         response.otherProjects.forEach((project, i) => {
@@ -81,7 +82,7 @@ class App extends Component {
           otherProjects[i].criticalPath = {};
           otherProjects[i].tasks = [];
           otherProjects[i].rels = [];
-          otherProjects[i].userPermission = {}
+          otherProjects[i].userPermission = {};
         });
         this.setState({
           ownedProjects: ownedProjects,
@@ -244,18 +245,17 @@ class App extends Component {
       let project = {};
       this.state.ownedProjects.forEach(p => {
         if (p.projectInfo.id === proj.id) {
-          project = p;
           this.setState({ 
-            project: project,
+            project: p,
             userPermission: p.userPermission 
           });
         }
       });
       this.state.otherProjects.forEach(p => {
         if (p.projectInfo.id === proj.id) {
-          project = p;
+          console.log(p.userPermission);
           this.setState({ 
-            project: project,
+            project: p,
             userPermission: p.userPermission 
           });
         }
@@ -413,7 +413,7 @@ class App extends Component {
                       <ProjectPage
                         project={this.state.project}
                         setProject={(project) => this.setProject(project)}
-                        userPermission={this.state.userPermission}
+                        userPermission={this.state.project.userPermission}
                         user={this.state.user}
                       />
                     ) : (
@@ -425,7 +425,7 @@ class App extends Component {
                       <GraphPage
                         height={this.state.height}
                         project={this.state.project.projectInfo}
-                        userPermission={this.state.userPermission}
+                        userPermission={this.state.project.userPermission}
                         user={this.state.user}
                       />
                     ) : (

@@ -24,7 +24,7 @@ export default class ProjectInfoComponent extends React.Component{
                                 width: "100px"
                             }}
                             onClick={() => {
-                                this.props.setProject(this.props.project);
+                                this.props.setProject(this.props.project.projectInfo);
                             }}
                             >
                             <i className="	fa fa-info-circle"></i> Info
@@ -42,19 +42,21 @@ export default class ProjectInfoComponent extends React.Component{
                                 fontSize: "15px",
                             }}
                             onClick={() => {
-                                this.props.setProject(this.props.project);
+                                this.props.setProject(this.props.project.projectInfo);
                             }}
                             >
                             <i className="fa fa-line-chart"></i> Graph
                             </Button>
                         </Link>
                     </Col>
-                    { this.props.project.userPermission !== undefined && this.props.project.userPermission.project !== false ?
+                    { this.props.project.userPermission === undefined ||
+                        this.props.project.userPermission === {} ||
+                     this.props.project.userPermission.project === false ?
+                        null
+                    :
                         <Col className="text-center">
                             <DeleteProject setProject={this.props.setProject} project={this.props.project.projectInfo}/>
                         </Col>
-                    :
-                        null
                     }
                 </Row>
             </Container>

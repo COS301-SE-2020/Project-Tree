@@ -69,6 +69,7 @@ class ProjectPage extends React.Component {
   }
 
   render() {
+
     return (
       <Container fluid>
         <Row className="my-1">
