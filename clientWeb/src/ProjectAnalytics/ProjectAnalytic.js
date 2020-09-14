@@ -15,7 +15,7 @@ class ProjectAnalytic extends React.Component {
         <Row>
           {this.props.displayProjectName ?
           <Col xs={12} sm={12} md={6} lg={4} xl={4} className="m-0 p-2 border">
-            <ProjectInfoComponent project={this.props.project.projectInfo} setProject={this.props.setProject}/>
+            <ProjectInfoComponent project={this.props.project} setProject={this.props.setProject}/>
           </Col>
           :null}
           <Col xs={12} sm={12} md={6} lg={8} xl={4} className="m-0 p-2 border">

@@ -344,6 +344,7 @@ class CreateTask extends React.Component {
                     let endDate =new Date(this.state.endDate);
                     endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
                     if (endDate < startDate) {
+                      alert("You cannot make the start date/time after the end date/time.");
                       this.setState({ 
                         startDate: value, 
                         endDate: value,
@@ -372,6 +373,7 @@ class CreateTask extends React.Component {
                     let endDate =new Date(this.state.endDate);
                     endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
                     if (endDate < startDate) {
+                      alert("You cannot make the start date/time after the end date/time.");
                       this.setState({ 
                         startDate: value, 
                         endDate: value,
@@ -402,6 +404,7 @@ class CreateTask extends React.Component {
                     let endDate =new Date(value);
                     endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
                     if (endDate < startDate) {
+                      alert("You cannot make the end date/time before the start date/time.");
                       this.setState({ 
                         startDate: value, 
                         endDate: value,
@@ -430,6 +433,7 @@ class CreateTask extends React.Component {
                     let endDate =new Date(value);
                     endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
                     if (endDate < startDate) {
+                      alert("You cannot make the end date/time before the start date/time.");
                       this.setState({ 
                         startDate: value, 
                         endDate: value,

@@ -332,8 +332,8 @@ export default class FilterComponent extends React.Component{
                 </Row>
                 <Row>
                     <Col className="p-2">
-                        <Col>{"Select task category"} </Col>
-                        <ToggleButtonGroup vertical name="taskFilterOptions" value={this.state.filterTaskOption} defaultValue={this.state.filterTaskOption} style={{width: "95%"}}>
+                        <Col>{"Select tasks"} </Col>
+                        <ToggleButtonGroup vertical name="taskFilterOptions" value={this.state.filterTaskOption} defaultValue={this.state.filterTaskOption} style={{width: "100%"}}>
                             <ToggleButton variant="outline-secondary" value="taskAll" onClick={()=>this.setState({filterTaskOption:"taskAll", filterPeopleOption:null, error:false})}>All</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="taskComplete" onClick={()=>this.setState({filterTaskOption:"taskComplete", filterPeopleOption:null, error:false})}>Complete</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="taskIncomplete" onClick={()=>this.setState({filterTaskOption:"taskIncomplete", filterPeopleOption:null, error:false})}>Incomplete</ToggleButton>
@@ -342,10 +342,10 @@ export default class FilterComponent extends React.Component{
                     </Col>
                     <Col className="p-2">
                         <Col>{"Select people"} </Col>
-                        <ToggleButtonGroup vertical name="peopleFilterOptions" value={this.state.filterPeopleOption} defaultValue={this.state.filterPeopleOption} style={{width: "95%"}}>
+                        <ToggleButtonGroup vertical name="peopleFilterOptions" value={this.state.filterPeopleOption} defaultValue={this.state.filterPeopleOption} style={{width: "100%"}}>
                             <ToggleButton variant="outline-secondary" value="peopleAll" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleAll", errror:false})}>All</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="peoplePackMan" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peoplePackMan", error:false})}>Package Managers</ToggleButton>
-                            <ToggleButton variant="outline-secondary"  value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer", error:false})}>Responsible Persons</ToggleButton>
+                            <ToggleButton variant="outline-secondary"  value="peopleResPer" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResPer", error:false})}>Responsible People</ToggleButton>
                             <ToggleButton variant="outline-secondary" value="peopleResources" onClick={()=>this.setState({filterTaskOption:null, filterPeopleOption:"peopleResources", error:false})}>Resources</ToggleButton>
                         </ToggleButtonGroup>
                     </Col>

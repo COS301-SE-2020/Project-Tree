@@ -9,7 +9,7 @@ export default class ProjectInfoComponent extends React.Component{
             <Container>
                 <Row>
                     <Col className="text-center">
-                        <h2 style={{textDecoration: "underline"}}>{this.props.project.name}</h2>
+                        <h2 style={{textDecoration: "underline"}}>{this.props.project.projectInfo.name}</h2>
                     </Col>
                 </Row>
                 <Row className="align-items-center py-2">
@@ -49,9 +49,13 @@ export default class ProjectInfoComponent extends React.Component{
                             </Button>
                         </Link>
                     </Col>
-                    <Col className="text-center">
-                        <DeleteProject setProject={this.props.setProject} project={this.props.project}/>
-                    </Col>
+                    { this.props.project.userPermission !== undefined && this.props.project.userPermission.project !== false ?
+                        <Col className="text-center">
+                            <DeleteProject setProject={this.props.setProject} project={this.props.project.projectInfo}/>
+                        </Col>
+                    :
+                        null
+                    }
                 </Row>
             </Container>
         )
