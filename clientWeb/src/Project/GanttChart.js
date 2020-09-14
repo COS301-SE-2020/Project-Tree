@@ -250,16 +250,16 @@ class GanttChart extends React.Component
 
     render(){
         if(this.props.project.tasks.length === 0 || this.props.project.tasks === null){
-            return null;
+            return <p style={{marginTop:'20px'}}>No tasks to display</p>
         }
 
         let tasks = this.filterTasks();
         let formattedTasks = this.formatTasks(tasks);
         if(formattedTasks.length === 0 || formattedTasks.length === 1){
-            return <p>No tasks to display</p>
+            return <p style={{marginTop:'20px'}}>No tasks to display</p>
         }
 
-        let chartHeight = ((formattedTasks.length * 30))+"px";
+        let chartHeight = ((formattedTasks.length * 30)+30)+"px";
         if(chartHeight !== this.props.rowHeight){
             this.props.setRowHeight(chartHeight);
         }
