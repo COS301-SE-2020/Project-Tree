@@ -32,7 +32,8 @@ class TaskInfo extends React.Component {
     let list = [];
     if (
       this.props.project.criticalPath !== null &&
-      this.props.project.criticalPath.path !== null
+      this.props.project.criticalPath.path !== null &&
+      this.props.project.criticalPath.path !== undefined
     ) {
       this.props.project.criticalPath.path.segments.forEach((el, index) => {
         if (index === 0) {

@@ -72,8 +72,6 @@ function deleteTask(req, res) {
       `
     )
     .then(async () => {
-      console.log(req.body.nodes);
-      console.log(req.body.rels);
       for (let x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == req.body.changedInfo.id) {
           if (x == 0) {
@@ -98,24 +96,13 @@ function deleteTask(req, res) {
           }
         }
       }
-      console.log();
-      console.log();
-      console.log();
-      console.log(req.body.nodes);
-      console.log(req.body.rels);
-      console.log();
-      console.log();
-      console.log();
 
       await successors.forEach(async succ => {
-        console.log(succ);
         await updateProject.updateTask(
           succ,
           req.body.nodes,
           req.body.rels
         );
-        console.log(req.body.nodes);
-        console.log(req.body.rels);
       });
       res.send({
         nodes: req.body.nodes,
