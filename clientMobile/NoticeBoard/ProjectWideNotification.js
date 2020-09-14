@@ -112,6 +112,7 @@ class SendNotificationForm extends Component {
 
     var timestamp = new Date();
     timestamp.setHours(timestamp.getHours() + 2);
+    console.log(this.props.user.id)
     await sendNotification(
       this.props.type,
       this.props.user.name + ' ' + this.props.user.sname,
@@ -122,6 +123,7 @@ class SendNotificationForm extends Component {
       this.props.project.name,
       this.props.project.id,
       this.state.mode,
+      this.props.user.id
     );
     this.props.setModalVisible(false);
   }
