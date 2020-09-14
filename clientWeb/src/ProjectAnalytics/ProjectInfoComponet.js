@@ -49,15 +49,9 @@ export default class ProjectInfoComponent extends React.Component{
                             </Button>
                         </Link>
                     </Col>
-                    { this.props.project.userPermission === undefined ||
-                        this.props.project.userPermission === {} ||
-                     this.props.project.userPermission.project === false ?
-                        null
-                    :
-                        <Col className="text-center">
-                            <DeleteProject setProject={this.props.setProject} project={this.props.project.projectInfo}/>
-                        </Col>
-                    }
+                    <Col className="text-center">
+                        <DeleteProject setProject={this.props.setProject} project={this.props.project.projectInfo}/>
+                    </Col>
                 </Row>
             </Container>
         )
