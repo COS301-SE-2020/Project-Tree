@@ -84,6 +84,7 @@ class GraphPage extends React.Component {
       }).fail((err) => {
         throw Error(err);
       });
+      this.toggleSidebar(null, null, null, null, null)
     }
   }
 
