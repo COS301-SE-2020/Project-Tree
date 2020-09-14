@@ -24,7 +24,7 @@
 }
 
 .selectedPersonBtn:hover {
-    border: 2px solid #ff6961;
-    background-color: #ff6961;
+    border: 2px solid #DC3545;
+    background-color: #DC3545;
     color: white;
 }

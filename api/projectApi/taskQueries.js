@@ -65,7 +65,8 @@ function deleteTask(req, res) {
       `
         MATCH (n)
         WHERE ID(n)=${req.body.changedInfo.id}
-        DETACH DELETE (n)
+        OPTIONAL MATCH (n)<-[r:VIEW_OF]-(m:View)
+        DETACH DELETE n,r,m
       `
     )
     .then(async () => {

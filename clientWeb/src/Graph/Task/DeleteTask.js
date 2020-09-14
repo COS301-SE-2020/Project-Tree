@@ -86,7 +86,7 @@ class DeleteTask extends React.Component {
               closeButton
               style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
-              <Modal.Title>Delete Task</Modal.Title>
+              {this.props.viewId !== null ? <Modal.Title>Delete View</Modal.Title> : <Modal.Title>Delete Task</Modal.Title>}
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
@@ -104,7 +104,7 @@ class DeleteTask extends React.Component {
                   value={this.props.viewId !== null ? this.props.viewId : ""}
                   onChange={() => {}}
                 />
-                <p> Are you sure you want to delete this task?</p>
+                {this.props.viewId !== null ? <p> Are you sure you want to delete the view of this task?</p> : <p> Are you sure you want to delete this task?</p>}
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
