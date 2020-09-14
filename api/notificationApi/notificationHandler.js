@@ -166,7 +166,7 @@ function formatAutoAssignData(
     timestamp: data.timestamp,
     message:
       "You have been assigned as a package manager to task: " + data.taskName,
-    taskName: undefined,
+    taskName:  data.taskName,
     projName: data.projName,
     projID: data.projID,
     mode: 2,
@@ -189,7 +189,7 @@ function formatAutoAssignData(
     message:
       "You have been assigned as a responsible person to task: " +
       data.taskName,
-    taskName: undefined,
+    taskName: data.taskName,
     projName: data.projName,
     projID: data.projID,
     mode: 2,
@@ -207,7 +207,7 @@ function formatAutoAssignData(
     recipients: [...recipients],
     timestamp: data.timestamp,
     message: "You have been assigned as a resource to task: " + data.taskName,
-    taskName: undefined,
+    taskName: data.taskName,
     projName: data.projName,
     projID: data.projID,
     mode: 2,

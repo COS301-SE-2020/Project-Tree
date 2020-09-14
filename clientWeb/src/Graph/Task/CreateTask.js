@@ -240,7 +240,7 @@ class CreateTask extends React.Component {
           timestamp: timestamp,
           projName: this.props.project.name,
           projID: this.props.project.id,
-          taskName: data.ct_Name,
+          taskName: data.name,
           type: "auto",
           mode: 2,
         },

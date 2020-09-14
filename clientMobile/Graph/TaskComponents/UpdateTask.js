@@ -578,7 +578,7 @@ class UpdateTaskForm extends Component {
                 value={this.CalcDiff(this.state.startDate, this.state.endDate)}
               />
             </Item>
-            <View style={{flex: 1}}>
+            <View style={{flex: 1,marginBottom:15}}>
               <Text style={styles.text}>{String(this.state.progress)}</Text>
               <Slider
                 step={1}
@@ -594,8 +594,8 @@ class UpdateTaskForm extends Component {
               />
             </View>
 
-            <View style={{flex: 1}}>
-              <Text style={styles.text}>Does your Task have any issues</Text>
+            <View style={styles.modalText,{flex: 1, flexDirection:"row", padding:12}}>
+              <Text style={{alignItems:"flex-start"}}>There is an issue with this task: </Text>
               <Switch
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                 thumbColor={this.state.issue ? "#f5dd4b" : "#f4f3f4"}
@@ -611,6 +611,7 @@ class UpdateTaskForm extends Component {
                   }
                 }}
                 value={this.state.issue}
+                style={{alignItems:"flex-end"}}
               />
             </View>
             <Item floatingLabel>
