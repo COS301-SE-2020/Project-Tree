@@ -99,6 +99,7 @@ class NoticeBoardScreen extends Component {
       },
     );
     const body = await response.json();
+    console.log(body)
     if (this._isMounted === true) this.setState({messages: body.notifications});
   }
 
@@ -196,7 +197,9 @@ class NotificationList extends Component {
     return messageList;
   }
 
-  returnRandomUser() {
+  returnRandomUser(profileId, type) 
+  {
+    console.log(profileId, "      ", type)
     let index = Math.round(Math.random() * (4 - 1) + 1);
     if (index === 1)
       return (
@@ -234,7 +237,7 @@ class NotificationList extends Component {
         key={i}
         style={{paddingTop: 10, paddingBottom: 10, flexDirection: 'row'}}>
         <View style={{width:'25%', alignItems:'center'}}>
-          {this.returnRandomUser()}
+          {this.returnRandomUser(message.profileId, message.type)}
           <Text style={{textAlign:'center'}}>
             {message.fromName}
           </Text>
