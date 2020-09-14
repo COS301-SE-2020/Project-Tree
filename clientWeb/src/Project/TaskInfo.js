@@ -31,10 +31,10 @@ class TaskInfo extends React.Component {
   createCriticalPath() {
     let list = [];
     if (
-      this.props.criticalPath !== null &&
-      this.props.criticalPath.path !== null
+      this.props.project.criticalPath !== null &&
+      this.props.project.criticalPath.path !== null
     ) {
-      this.props.criticalPath.path.segments.forEach((el, index) => {
+      this.props.project.criticalPath.path.segments.forEach((el, index) => {
         if (index === 0) {
           list.push({
             name: el.start.properties.name,
@@ -64,8 +64,8 @@ class TaskInfo extends React.Component {
 
   createLateList() {
     let list = [];
-    if (this.props.tasks !== []) {
-      this.props.tasks.forEach((el) => {
+    if (this.props.project.tasks !== []) {
+      this.props.project.tasks.forEach((el) => {
         if (el.type !== "Complete") {
           let today = new Date();
           if (today > new Date(el.endDate)) list.push(el);
@@ -78,13 +78,13 @@ class TaskInfo extends React.Component {
 
   createTaskList() {
     let list = [`No ${this.state.taskType} tasks to display`];
-    if (this.props.tasks.length !== 0 && this.props.criticalPath !== null) {
+    if (this.props.project.tasks.length !== 0 && this.props.project.criticalPath !== null) {
       if (this.state.taskType === "Critical Path")
         list = this.createCriticalPath();
       else if (this.state.taskType === "Late") list = this.createLateList();
       else {
         list = [];
-        this.props.tasks.forEach((el) => {
+        this.props.project.tasks.forEach((el) => {
           switch (this.state.taskType) {
             case "Complete":
               if (el.type === "Complete") {

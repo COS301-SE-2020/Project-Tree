@@ -11,8 +11,6 @@ class ProjectPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
-      criticalPath: null,
       noticeBoardRefreshKey: 0,
       messages: null,
     };
@@ -39,26 +37,8 @@ class ProjectPage extends React.Component {
   }
 
   componentDidMount() {
-    $.post(
-      "/project/projecttasks",
-      { projId: this.props.project.id },
-      (response) => {
-        this.setState({ tasks: response.tasks });
-      }
-    ).fail(() => {
-      alert("Unable to get tasks");
-    });
-    $.post(
-      "/project/criticalpath",
-      { projId: this.props.project.id },
-      (response) => {
-        this.setState({ criticalPath: response });
-      }
-    ).fail(() => {
-      alert("Unable to get Critical Path");
-    });
     let data = {
-      projID: this.props.project.id,
+      projID: this.props.project.projectInfo.id,
       userID: this.props.user.id,
     };
 
@@ -73,26 +53,8 @@ class ProjectPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.project !== prevProps.project) {
-      $.post(
-        "/project/projecttasks",
-        { projId: this.props.project.id },
-        (response) => {
-          this.setState({ tasks: response.tasks });
-        }
-      ).fail(() => {
-        alert("Unable to get tasks");
-      });
-      $.post(
-        "/project/criticalpath",
-        { projId: this.props.project.id },
-        (response) => {
-          this.setState({ criticalPath: response });
-        }
-      ).fail(() => {
-        alert("Unable to get Critical Path");
-      });
       let data = {
-        projID: this.props.project.id,
+        projID: this.props.project.projectInfo.id,
         userID: this.props.user.id,
       };
   
@@ -122,8 +84,6 @@ class ProjectPage extends React.Component {
               userPermission={this.props.userPermission}
               user={this.props.user}
               updateNoticeBoardRefreshKey={this.updateNoticeBoardRefreshKey}
-              tasks={this.state.tasks}
-              criticalPath={this.state.criticalPath}
             />
           </Col>
           <Col
@@ -149,8 +109,6 @@ class ProjectPage extends React.Component {
           <Col>
             <TaskInfo
               project={this.props.project}
-              tasks={this.state.tasks}
-              criticalPath={this.state.criticalPath}
             />
           </Col>
         </Row>
@@ -161,7 +119,9 @@ class ProjectPage extends React.Component {
         </Row>
         <Row>
           <Col>
-            <GanttChart project={this.props.project} criticalPathTasks={this.state.criticalPath}/>
+            <GanttChart 
+              project={this.props.project}
+            />
           </Col>
         </Row>
       </Container>

@@ -201,7 +201,15 @@ class App extends Component {
         ownedProjects.push(project);
         this.setState({ ownedProjects: ownedProjects });
       }
-      this.setState({ project: proj });
+      
+      let project = {};
+      this.state.ownedProjects.forEach(p => {
+        if (p.projectInfo.id === proj.id) project = p;
+      });
+      this.state.otherProjects.forEach(p => {
+        if (p.projectInfo.id === proj.id) project = p;
+      });
+      this.setState({ project: project });
       let data = {};
       data.token = localStorage.getItem("sessionToken");
       data.project = proj;
@@ -384,7 +392,7 @@ class App extends Component {
                     {this.state.project != null ? (
                       <GraphPage
                         height={this.state.height}
-                        project={this.state.project}
+                        project={this.state.project.projectInfo}
                         userPermission={this.state.userPermission}
                         user={this.state.user}
                       />
