@@ -176,7 +176,7 @@ class UpdateDependency extends React.Component {
               </Form.Group>
               <Form.Group>
                 <Form.Label>
-                  Start Date of Second Task
+                  Start date of second task
                 </Form.Label>
                 <Form.Control
                   required
@@ -219,7 +219,7 @@ class UpdateDependency extends React.Component {
                   }}
                 />
                 <Form.Label>
-                  Start Time of Second Task
+                  Start time of second task
                 </Form.Label>
                 <Form.Control
                   required
