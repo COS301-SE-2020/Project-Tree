@@ -336,6 +336,7 @@ class CreateTask extends React.Component {
                   type="date"
                   value={this.state.startDate.substring(0,10)}
                   onChange={(e) => {
+                    if(isNaN(Date.parse(e.target.value))) return;
                     let value = this.state.startDate;
                     value = `${e.target.value}T${this.state.startDate.substring(11,16)}`;
                     let startDate =new Date(value);
@@ -363,6 +364,7 @@ class CreateTask extends React.Component {
                   type="time"
                   value={this.state.startDate.substring(11,16)}
                   onChange={(e) => {
+                    if(isNaN(Date.parse(e.target.value))) return;
                     let value = this.state.startDate;
                     value = `${this.state.startDate.substring(0,10)}T${e.target.value}`;
                     let startDate =new Date(value);
@@ -392,6 +394,7 @@ class CreateTask extends React.Component {
                   type="date"
                   value={this.state.endDate.substring(0,10)}
                   onChange={(e) => {
+                    if(isNaN(Date.parse(e.target.value))) return;
                     let value = this.state.endDate;
                     value = `${e.target.value}T${this.state.endDate.substring(11,16)}`;
                     let startDate =new Date(this.state.startDate);
@@ -419,6 +422,7 @@ class CreateTask extends React.Component {
                   type="time"
                   value={this.state.endDate.substring(11,16)}
                   onChange={(e) => {
+                    if(isNaN(Date.parse(e.target.value))) return;
                     let value = this.state.endDate;
                     value = `${this.state.endDate.substring(0,10)}T${e.target.value}`;
                     let startDate =new Date(this.state.startDate);
