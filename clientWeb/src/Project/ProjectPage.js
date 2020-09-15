@@ -22,12 +22,12 @@ class ProjectPage extends React.Component {
 
   async updateNoticeBoardRefreshKey() {
     let data = {
-      projID: this.props.project.id,
+      projID: this.props.project.projectInfo.id,
       userID: this.props.user.id,
     };
 
     data = JSON.stringify(data);
-    await new Promise(r => setTimeout(r, 2000));
+    await new Promise(r => setTimeout(r, 4000));
 
     $.post("/retrieveNotifications", JSON.parse(data), (response) => {
       this.setState({ messages: response.notifications });
