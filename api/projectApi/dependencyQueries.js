@@ -159,6 +159,7 @@ function updateDependency(req, res) { //update a Dependency between 2 nodes with
       };
 
       let changedRel = rel;
+      
       for (let x = 0; x < req.body.rels.length; x++) {
         if (req.body.rels[x].id == changedRel.id) {
           req.body.rels[x] = changedRel;
@@ -199,18 +200,9 @@ function deleteDependency(req, res) {
     .then(async () => {
       let rel = {};
 
-      for (let x = 0; x < req.body.rels.length; x++) {
-        if (req.body.rels[x].id == req.body.changedInfo.dd_did) {
-          rel = req.body.rels[x];
-
-          if (x == 0) {
-            req.body.rels.shift();
-            x--;
-          } else {
-            req.body.rels.splice(x, x);
-          }
-        }
-      }
+      req.body.rels = req.body.rels.filter((rel)=>{
+        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
+      });
 
       let target;
       req.body.nodes.forEach( node => {
@@ -249,19 +241,10 @@ function deleteDependency(req, res) {
     )
     .then(async () => {
       let rel = {};
-
-      for (let x = 0; x < req.body.rels.length; x++) {
-        if (req.body.rels[x].id == req.body.changedInfo.dd_did) {
-          rel = req.body.rels[x];
-
-          if (x == 0) {
-            req.body.rels.shift();
-            x--;
-          } else {
-            req.body.rels.splice(x, x);
-          }
-        }
-      }
+      
+      req.body.rels = req.body.rels.filter((rel)=>{
+        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
+      });
 
       let target;
       req.body.nodes.forEach( node => {
@@ -307,19 +290,10 @@ function deleteDependency(req, res) {
     )
     .then(async () => {
       let rel = {};
-
-      for (let x = 0; x < req.body.rels.length; x++) {
-        if (req.body.rels[x].id == req.body.changedInfo.dd_did) {
-          rel = req.body.rels[x];
-
-          if (x == 0) {
-            req.body.rels.shift();
-            x--;
-          } else {
-            req.body.rels.splice(x, x);
-          }
-        }
-      }
+      
+      req.body.rels = req.body.rels.filter((rel)=>{
+        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
+      });
 
       let target;
       req.body.nodes.forEach( node => {
@@ -357,18 +331,9 @@ function deleteDependency(req, res) {
     .then(async () => {
       let rel = {};
 
-      for (let x = 0; x < req.body.rels.length; x++) {
-        if (req.body.rels[x].id == req.body.changedInfo.dd_did) {
-          rel = req.body.rels[x];
-
-          if (x == 0) {
-            req.body.rels.shift();
-            x--;
-          } else {
-            req.body.rels.splice(x, x);
-          }
-        }
-      }
+      req.body.rels = req.body.rels.filter((rel)=>{
+        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
+      });
       
       let target;
       req.body.nodes.forEach( node => {
