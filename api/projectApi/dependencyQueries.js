@@ -200,8 +200,13 @@ function deleteDependency(req, res) {
     .then(async () => {
       let rel = {};
 
-      req.body.rels = req.body.rels.filter((rel)=>{
-        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
+      req.body.rels = req.body.rels.filter((el)=>{
+        if (el.target != req.body.changedInfo.dd_did && el.source != req.body.changedInfo.dd_did) {
+          rel = el;
+          return false;
+        }else{
+          return true;
+        }
       });
 
       let target;
@@ -242,8 +247,13 @@ function deleteDependency(req, res) {
     .then(async () => {
       let rel = {};
       
-      req.body.rels = req.body.rels.filter((rel)=>{
-        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
+      req.body.rels = req.body.rels.filter((el)=>{
+        if (el.target != req.body.changedInfo.dd_did && el.source != req.body.changedInfo.dd_did) {
+          rel = el;
+          return false;
+        }else{
+          return true;
+        }
       });
 
       let target;
@@ -291,8 +301,13 @@ function deleteDependency(req, res) {
     .then(async () => {
       let rel = {};
       
-      req.body.rels = req.body.rels.filter((rel)=>{
-        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
+      req.body.rels = req.body.rels.filter((el)=>{
+        if (el.target != req.body.changedInfo.dd_did && el.source != req.body.changedInfo.dd_did) {
+          rel = el;
+          return false;
+        }else{
+          return true;
+        }
       });
 
       let target;
@@ -331,8 +346,13 @@ function deleteDependency(req, res) {
     .then(async () => {
       let rel = {};
 
-      req.body.rels = req.body.rels.filter((rel)=>{
-        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
+      req.body.rels = req.body.rels.filter((el)=>{
+        if (el.target != req.body.changedInfo.dd_did && el.source != req.body.changedInfo.dd_did) {
+          rel = el;
+          return false;
+        }else{
+          return true;
+        }
       });
       
       let target;
