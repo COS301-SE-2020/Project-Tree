@@ -148,11 +148,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 250,
     width: 350,
   },
   hideButton: {
-    flex: 0.5,
     backgroundColor: '#fff',
     alignItems: 'flex-end',
     marginRight: 10,
