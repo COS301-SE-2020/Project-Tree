@@ -12,17 +12,12 @@ import {
 } from 'react-native';
 import {
   Icon,
-  Label,
-  Form,
-  Item,
-  Input,
 } from 'native-base';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { showMessage, hideMessage } from "react-native-flash-message";
 
 class UserSettings extends Component {
   constructor(props) {
@@ -77,7 +72,6 @@ class UserSettings extends Component {
   password_validate(p) {
     let str = "";
     let arr = [];
-   // let p = d.password;
    /[A-Z]/.test(p) === false
      ? arr.push("Must contain at least one Capital Letter \n")
      : arr.push ("Must contain at least one Capital Letter ✓");
@@ -98,7 +92,6 @@ class UserSettings extends Component {
     this.setState({
       hiddenText: !this.state.hiddenText,
     });
-    console.log(this.state.hiddenText)
   }
 
   updateConfirmHiddenText() {
@@ -134,7 +127,6 @@ class UserSettings extends Component {
         body: JSON.stringify({token: token}),
       });
       const body = await response.json();
-      console.log(body)
       this.setState({
         userName: body.user.name,
         sname: body.user.sname,
@@ -256,8 +248,6 @@ class UserSettings extends Component {
 
   async handlePass(pass, passNew) 
   {
-    console.log(passNew.trim().length, "        ", pass.trim().length)
-
     if (pass.trim().length < 1) {
       alert('Please enter your password you wish to change');
       return;
@@ -268,7 +258,6 @@ class UserSettings extends Component {
       return;
     }
 
-    console.log(pass, passNew)
     if(!this.state.confirmNewPass && !this.state.confirmNewPass)
     {
       alert("Invalid password")
@@ -281,7 +270,6 @@ class UserSettings extends Component {
         newPass: passNew
       };
       data = JSON.stringify(data);
-      console.log(data)
       const response = await fetch('http://projecttree.herokuapp.com/user/pass', {
         method: 'POST',
         headers: {
@@ -547,15 +535,7 @@ class UserSettings extends Component {
                 <Text style={(this.state.passwordError2.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError2}</Text>
                 <Text style={(this.state.passwordError3.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError3}</Text>
                 <Text style={(this.state.passwordError4.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError4}</Text>
-{/* 
-                <Text style={styles.errorMsg}>
-                {"\n"}
-                {this.state.passwordError}{"\n"}
-                {this.state.passwordError2}{"\n"}
-                {this.state.passwordError3}{"\n"}
-                {this.state.passwordError4}
-                </Text> */}
-               </Animatable.View>
+              </Animatable.View>
             )}
             <View style={styleUser.buttonSign}>
               <TouchableOpacity

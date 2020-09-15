@@ -13,7 +13,6 @@ import SettingsScreen from './Settings/SettingsScreen';
 import UserSettings from './Settings/UserSettings';
 import NoticeBoard from './NoticeBoard/NoticeBoardScreen';
 console.disableYellowBox = true;
-
 import AsyncStorage from '@react-native-community/async-storage';
 import SplashScreen from './User/SplashScreen';
 import LoginScreen from './User/LoginScreen';
@@ -245,7 +244,6 @@ export default class App extends Component {
     });
 
     AsyncStorage.getItem('userPermissions').then((value) => {
-      console.log(value);
       if (value) this.setState({userPermissions: JSON.parse(value)});
     });
   }

@@ -90,17 +90,6 @@ export default class SendTaskWideNotificationWrapper extends Component {
   }
 }
 
-{/* <TouchableOpacity
-                        style={styles.editButton}
-                        onPress={() => this.toggleProgressModal(false, true)}>
-                        <Icon
-                          type="Entypo"
-                          name="progress-one"
-                          style={{color: 'white', paddingBottom: 10}}>
-                          <Text>&nbsp;Clone</Text>
-                        </Icon>
-                      </TouchableOpacity> */}
-
 class SendNotificationModal extends Component {
   constructor(props) {
     super(props);

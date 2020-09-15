@@ -571,7 +571,7 @@ class Searchbar extends React.Component{
             let name = "";
             for(var x=0; x<this.state.users.length; x++){
                 name = this.state.users[x].name + " " + this.state.users[x].surname
-                if(name.toLowerCase().indexOf(value) !== -1){
+                if(name.toLowerCase().indexOf(value.toLowerCase()) !== -1){
                     suggestions.push(this.state.users[x]);
                 }
             }
@@ -747,7 +747,6 @@ const styles = StyleSheet.create({
     },
     CreateDependencyBtn: {
       height: 50,
-      //width: 200,
       borderRadius: 5,
       borderColor: 'green',
       borderWidth: 3,

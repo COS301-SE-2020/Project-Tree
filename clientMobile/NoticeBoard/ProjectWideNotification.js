@@ -112,7 +112,6 @@ class SendNotificationForm extends Component {
 
     var timestamp = new Date();
     timestamp.setHours(timestamp.getHours() + 2);
-    console.log(this.props.user.id)
     await sendNotification(
       this.props.type,
       this.props.user.name + ' ' + this.props.user.sname,

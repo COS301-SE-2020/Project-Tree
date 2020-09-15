@@ -130,16 +130,6 @@ class LoginScreen extends Component {
               autoCapitalize="none"
               onChangeText={(val) => this.handlePasswordChange(val)}
             />
-            {/* <TouchableOpacity
-              onPress={() => {
-                this.updateSecureTextEntry();
-              }}>
-              {this.state.secureTextEntry ? (
-                <Feather name="eye-off" color="#05375a" size={20} />
-              ) : (
-                <Feather name="eye" color="#05375a" size={20} />
-              )}
-            </TouchableOpacity> */}
           </View>
           <View style={styles.button}>
             <TouchableOpacity

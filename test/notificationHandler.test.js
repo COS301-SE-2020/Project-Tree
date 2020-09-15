@@ -75,7 +75,7 @@ test('x', () => {
             "projID": 303, 
             "projName": "Project William_", 
             "recipients": [{"email": "wda199@", "id": 312}], 
-            "taskName": undefined, 
+            "taskName": "Task check", 
             "timestamp": "2020-08-18T10:20:40.700Z", 
             "type": "auto"
         }, 
@@ -86,7 +86,8 @@ test('x', () => {
             "projID": 303, 
             "projName": "Project William_", 
             "recipients": [{"email": "u1807@", "id": 307}, {"email": "daynemoon@", "id": 199}], 
-            "taskName": undefined, "timestamp": "2020-08-18T10:20:40.700Z", 
+            "taskName": "Task check", 
+            "timestamp": "2020-08-18T10:20:40.700Z", 
             "type": "auto"
         }, 
         "resPer": {
@@ -96,7 +97,7 @@ test('x', () => {
             "projID": 303, 
             "projName": "Project William_", 
             "recipients": [{"email": "u1816@", "id": 299}], 
-            "taskName": undefined, 
+            "taskName": "Task check", 
             "timestamp": "2020-08-18T10:20:40.700Z", 
             "type": "auto"
         }
