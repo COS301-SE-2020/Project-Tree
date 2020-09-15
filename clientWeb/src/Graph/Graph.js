@@ -457,6 +457,7 @@ class Graph extends React.Component {
                       block
                       size="sm"
                       disabled={this.state.target === null}
+                      style={{overflow: "hidden"}}
                     >
                       {dependency}
                     </Button>
@@ -481,7 +482,7 @@ class Graph extends React.Component {
                       block
                       xs={2}
                       size="sm"
-                      style={{height: "31px", wordWrap: "break-word"}}
+                      style={{height: "31px", overflow: "hidden"}}
                       onClick={() => {
                         this.setState({
                           displayCriticalPath: !this.state.displayCriticalPath,
