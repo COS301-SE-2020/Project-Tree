@@ -8,7 +8,9 @@ import {
   TouchableHighlight,
   Switch,
 } from 'react-native';
+import { Tooltip } from 'react-native-elements'
 import {useNavigation} from '@react-navigation/native';
+import IconEntypo from 'react-native-vector-icons/Entypo';
 
 function GoToHome() {
   const navigation = useNavigation();
@@ -126,6 +128,13 @@ export default class GraphDrawer extends Component {
             />
           </View>
 
+          <View style={styles.tooltipView}>
+            <Tooltip popover={<Text style={{color:'white'}}>Create a task by pressing the + button (bottom right).{'\n\n'}Create a dependency by pressing and holding on a task for 2 seconds, releasing and then pressing and holding on the second task for 2 seconds.</Text>} height={150} width={250} skipAndroidStatusBar={true} backgroundColor={'rgba(0, 0, 0, 1)'}>
+              <View style={styles.tooltipButton}>
+                <IconEntypo name="help" size={25} />
+              </View>
+            </Tooltip>
+          </View>
           <View style={styles.keyView}>
             <Text
               style={[
@@ -187,10 +196,12 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   keyView: {
-    margin: 20,
     borderRadius: 20,
-    padding: 35,
+    padding: 25,
     alignItems: 'center',
+  },
+  tooltipView: {
+    marginTop:25
   },
   textSign: {
     color: 'black',
@@ -283,5 +294,13 @@ const styles = StyleSheet.create({
   text: {
     margin: 6,
     textAlign: 'center',
+  },
+  tooltipButton: {
+    width:35,
+    height:35,
+    borderRadius: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
   },
 });
