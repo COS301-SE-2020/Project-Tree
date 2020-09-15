@@ -747,7 +747,6 @@ const styles = StyleSheet.create({
     },
     CreateDependencyBtn: {
       height: 50,
-      //width: 200,
       borderRadius: 5,
       borderColor: 'green',
       borderWidth: 3,

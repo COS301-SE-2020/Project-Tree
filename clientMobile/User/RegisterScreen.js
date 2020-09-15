@@ -101,7 +101,6 @@ class RegisterScreen extends Component {
   password_validate(p) {
      let str = "";
      let arr = [];
-    // let p = d.password;
     /[A-Z]/.test(p) === false
       ? arr.push("Must contain at least one Capital Letter \n")
       : arr.push ("✓");
@@ -217,7 +216,6 @@ class RegisterScreen extends Component {
         },
       );
       const body = await response.json();
-      console.log(body)
       if(body.message !== "success")
       {
         alert(body.message)
