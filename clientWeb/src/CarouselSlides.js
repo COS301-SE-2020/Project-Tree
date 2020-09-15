@@ -16,27 +16,20 @@ class CarouselSlides extends Component {
               <Carousel className="border rounded align-items-center">
               <Carousel.Item>
                 <img src={Dashboard} alt="Logo" className="carouselSlides" />
-                <Carousel.Caption>
-                </Carousel.Caption>
               </Carousel.Item>
               <Carousel.Item>
                 <img src={Graph} alt="Graph" className="carouselSlides" />
-                <Carousel.Caption>
-                </Carousel.Caption>
+              </Carousel.Item>
+              <Carousel.Item>
+                <img src={Notification} alt="Notification" className="carouselSlides" />
+              </Carousel.Item>
+              <Carousel.Item>
+                <img src={Calendar} alt="Calendar" className="carouselSlides" />
               </Carousel.Item>
               <Carousel.Item>
               <img src={Mobile} alt="Mobile" className="carouselSlides" />
                 <Carousel.Caption>
-                </Carousel.Caption>
-              </Carousel.Item>
-              <Carousel.Item>
-                <img src={Notification} alt="Notification" className="carouselSlides" />
-                <Carousel.Caption>
-                </Carousel.Caption>
-              </Carousel.Item>
-              <Carousel.Item>
-                <img src={Calendar} alt="Calendar" className="carouselSlides" />
-                <Carousel.Caption>
+                  <h4><a href="https://projecttree.herokuapp.com/">Click here to <br></br> download Mobile  <br></br> App!</a></h4>
                 </Carousel.Caption>
               </Carousel.Item>
             </Carousel>
