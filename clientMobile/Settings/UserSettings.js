@@ -561,8 +561,6 @@ class UserSettings extends Component {
                   {
                     borderColor: '#296d98',
                     borderWidth: 2,
-                    marginTop: 0,
-                    paddding: 140
                   },
                 ]}>
                 <Text
@@ -639,8 +637,6 @@ class UserSettings extends Component {
   }
 }
 export default UserSettings;
-// }
-// export default User;
 
 const styleUser = StyleSheet.create({
   container: {
@@ -742,7 +738,6 @@ const styleUser = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 400,
     width: 350,
   },
   openButton: {
