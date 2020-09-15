@@ -140,9 +140,10 @@ class UserSettings extends Component {
         sname: body.user.sname,
         email: body.user.email,
         initialEmail: body.user.email,
+        profilepicture: body.user.profilepicture,
       });
       if(body.user.birthday == '  '){}
-      else{this.setState({startDate: new Date(body.user.birthday)})}
+      else{this.setState({startDate: body.user.birthday})}
     });
   }
 
@@ -328,6 +329,7 @@ class UserSettings extends Component {
         bday: this.state.startDate,
         testEmail: this.state.initialEmail,
         testPass: pass,
+        profilepicture: this.state.profilepicture,
       };
       data = JSON.stringify(data);
 
