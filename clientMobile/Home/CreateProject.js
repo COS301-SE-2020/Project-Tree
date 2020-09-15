@@ -1,24 +1,7 @@
 import React, {Component} from 'react';
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
-import {
-  Label,
-  Form,
-  Item,
-  Input,
-  Icon,
-} from 'native-base';
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-} from 'react-native-table-component';
+import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {Label, Form, Item, Input, Icon} from 'native-base';
+import {Table, TableWrapper, Row, Rows} from 'react-native-table-component';
 
 class CreateProject extends Component {
   constructor(props) {
@@ -117,7 +100,7 @@ class CreateProjectForm extends Component {
   }
 
   async handleSubmit() {
-    if(this.checkFormData("all") === false) return;
+    if (this.checkFormData('all') === false) return;
 
     this.props.setModalVisible(false);
 
@@ -161,29 +144,27 @@ class CreateProjectForm extends Component {
     this.props.setProjectInfo(body);
   }
 
-  checkFormData(check){
-    if(check === "name" || check === "all"){
+  checkFormData(check) {
+    if (check === 'name' || check === 'all') {
       let name = this.state.projName;
-      if(name === null || !name.trim().length){
-        this.setState({error:"Please enter a project name"});
+      if (name === null || !name.trim().length) {
+        this.setState({error: 'Please enter a project name'});
         return false;
-      }
-
-      else{
-        this.setState({error:null});
+      } else {
+        this.setState({error: null});
       }
     }
 
-    if(check === "description" || check === "all"){
-      if(this.state.error !== null){return false;}
-      let description = this.state.projDescription;
-      if(description === null || !description.trim().length){
-        this.setState({error:"Please enter a project description"});
+    if (check === 'description' || check === 'all') {
+      if (this.state.error !== null) {
         return false;
       }
-
-      else{
-        this.setState({error:null});
+      let description = this.state.projDescription;
+      if (description === null || !description.trim().length) {
+        this.setState({error: 'Please enter a project description'});
+        return false;
+      } else {
+        this.setState({error: null});
       }
     }
   }
@@ -192,16 +173,21 @@ class CreateProjectForm extends Component {
     return (
       <React.Fragment>
         <Form>
-          <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
+          <Text style={{color: 'red', alignSelf: 'center'}}>
+            {this.state.error}
+          </Text>
           <Item floatingLabel>
             <Label>Name of project</Label>
-            <Input onChangeText={(val) => this.setState({projName: val})} onEndEditing={()=>this.checkFormData("name")}/>
+            <Input
+              onChangeText={(val) => this.setState({projName: val})}
+              onEndEditing={() => this.checkFormData('name')}
+            />
           </Item>
           <Item floatingLabel>
             <Label>Description of project</Label>
             <Input
               onChangeText={(val) => this.setState({projDescription: val})}
-              onEndEditing={()=>this.checkFormData("description")}
+              onEndEditing={() => this.checkFormData('description')}
             />
           </Item>
         </Form>

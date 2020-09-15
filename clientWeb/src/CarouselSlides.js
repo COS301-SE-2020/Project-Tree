@@ -12,33 +12,43 @@ class CarouselSlides extends Component {
     return (
       <Container fluid className="align-items-center">
         <Row className="text-center align-items-center">
-            <Col className="text-center align-items-center">
-              <Carousel className="border rounded align-items-center">
-                <Carousel.Item>
+          <Col className="text-center align-items-center">
+            <Carousel className="border rounded align-items-center">
+              <Carousel.Item>
                 <img src={Graph} alt="Graph" className="carouselSlides" />
               </Carousel.Item>
               <Carousel.Item>
-                <img src={Dashboard} alt="Dashboard" className="carouselSlides" />
+                <img
+                  src={Dashboard}
+                  alt="Dashboard"
+                  className="carouselSlides"
+                />
               </Carousel.Item>
-              
+
               <Carousel.Item>
-                <img src={Notification} alt="Notification" className="carouselSlides" />
+                <img
+                  src={Notification}
+                  alt="Notification"
+                  className="carouselSlides"
+                />
               </Carousel.Item>
               <Carousel.Item>
                 <img src={Calendar} alt="Calendar" className="carouselSlides" />
               </Carousel.Item>
               <Carousel.Item>
-              <img src={Mobile} alt="Mobile" className="carouselSlides" />
+                <img src={Mobile} alt="Mobile" className="carouselSlides" />
                 <Carousel.Caption>
-                  <h4><a href="https://projecttree.herokuapp.com/">Click here to <br></br> download Mobile  <br></br> App!</a></h4>
+                  <h4>
+                    <a href="https://projecttree.herokuapp.com/">
+                      Click here to <br></br> download Mobile <br></br> App!
+                    </a>
+                  </h4>
                 </Carousel.Caption>
               </Carousel.Item>
             </Carousel>
-            </Col>
-          </Row>
+          </Col>
+        </Row>
       </Container>
-      
-       
     );
   }
 }

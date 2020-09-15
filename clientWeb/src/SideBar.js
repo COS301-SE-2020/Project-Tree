@@ -38,14 +38,14 @@ class SideBar extends React.Component {
                         backgroundColor: "#EEBB4D",
                         color: "black",
                         fontSize: "15px",
-                        width: "100px"
+                        width: "100px",
                       }}
                       onClick={() => {
                         this.props.setProject(project.projectInfo);
                         this.props.closeSideBar(true);
                       }}
                     >
-                     <i className="	fa fa-info-circle"></i> Info
+                      <i className="	fa fa-info-circle"></i> Info
                     </Button>
                   </Link>
                 </Col>
@@ -64,7 +64,7 @@ class SideBar extends React.Component {
                         this.props.closeSideBar(true);
                       }}
                     >
-                     <i className="fa fa-line-chart"></i> Graph
+                      <i className="fa fa-line-chart"></i> Graph
                     </Button>
                   </Link>
                 </Col>
@@ -118,14 +118,14 @@ class SideBar extends React.Component {
                         backgroundColor: "#EEBB4D",
                         color: "black",
                         fontSize: "15px",
-                        width: "90px"
+                        width: "90px",
                       }}
                       onClick={() => {
                         this.props.setProject(project.projectInfo);
                         this.props.closeSideBar(true);
                       }}
                     >
-                     <i className="	fa fa-info-circle"></i> Info
+                      <i className="	fa fa-info-circle"></i> Info
                     </Button>
                   </Link>
                 </Col>
@@ -144,7 +144,7 @@ class SideBar extends React.Component {
                         this.props.closeSideBar(true);
                       }}
                     >
-                     <i className="fa fa-line-chart"></i> Graph
+                      <i className="fa fa-line-chart"></i> Graph
                     </Button>
                   </Link>
                 </Col>

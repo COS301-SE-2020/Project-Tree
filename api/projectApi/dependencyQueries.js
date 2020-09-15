@@ -8,7 +8,9 @@ function createDependency(req, res) {
     .run(
       `
         MATCH (a),(b)
-        WHERE ID(a) = ${req.body.changedInfo.fid} AND ID(b) = ${req.body.changedInfo.sid}
+        WHERE ID(a) = ${req.body.changedInfo.fid} AND ID(b) = ${
+        req.body.changedInfo.sid
+      }
         CREATE (a)-[n:DEPENDENCY{
           projId:${req.body.changedInfo.projId},
           relationshipType:'${req.body.changedInfo.relationshipType}',
@@ -45,11 +47,12 @@ function createDependency(req, res) {
       let changedRel = rel;
       req.body.rels.push(changedRel);
 
-      if(req.body.changedInfo.cd_viewId_source !== null){
-        if(req.body.changedInfo.cd_viewId_target !== null){
-          await db.getSession()
-          .run(
-            `
+      if (req.body.changedInfo.cd_viewId_source !== null) {
+        if (req.body.changedInfo.cd_viewId_target !== null) {
+          await db
+            .getSession()
+            .run(
+              `
               MATCH (a)
               WHERE ID(a) = ${req.body.changedInfo.cd_viewId_source}
               SET a.outDepArr=coalesce(a.outDepArr, []) + ${changedRel.id}
@@ -58,43 +61,43 @@ function createDependency(req, res) {
               WHERE ID(b) = ${req.body.changedInfo.cd_viewId_target}
               SET b.inDepArr=coalesce(b.inDepArr, []) + ${changedRel.id}
             `
-          )
-          .catch((err) => {
-            console.log(err);
-            res.status(400);
-            res.send({ message: err });
-          });
-        }
-        else{
-          await db.getSession()
-          .run(
-            `
+            )
+            .catch((err) => {
+              console.log(err);
+              res.status(400);
+              res.send({ message: err });
+            });
+        } else {
+          await db
+            .getSession()
+            .run(
+              `
               MATCH (a)
               WHERE ID(a) = ${req.body.changedInfo.cd_viewId_source}
               SET a.outDepArr=coalesce(a.outDepArr, []) + ${changedRel.id}
             `
+            )
+            .catch((err) => {
+              console.log(err);
+              res.status(400);
+              res.send({ message: err });
+            });
+        }
+      } else if (req.body.changedInfo.cd_viewId_target !== null) {
+        await db
+          .getSession()
+          .run(
+            `
+            MATCH (a)
+            WHERE ID(a) = ${req.body.changedInfo.cd_viewId_target}
+            SET a.inDepArr=coalesce(a.inDepArr, []) + ${changedRel.id}
+          `
           )
           .catch((err) => {
             console.log(err);
             res.status(400);
             res.send({ message: err });
           });
-        }
-      }
-      else if(req.body.changedInfo.cd_viewId_target !== null){
-        await db.getSession()
-        .run(
-          `
-            MATCH (a)
-            WHERE ID(a) = ${req.body.changedInfo.cd_viewId_target}
-            SET a.inDepArr=coalesce(a.inDepArr, []) + ${changedRel.id}
-          `
-        )
-        .catch((err) => {
-          console.log(err);
-          res.status(400);
-          res.send({ message: err });
-        });
       }
 
       await updateProject.updateCurDependency(
@@ -117,7 +120,8 @@ function createDependency(req, res) {
     });
 }
 
-function updateDependency(req, res) { //update a Dependency between 2 nodes with specified fields
+function updateDependency(req, res) {
+  //update a Dependency between 2 nodes with specified fields
   let startDate = new Date(req.body.changedInfo.startDate);
   let endDate = new Date(req.body.changedInfo.endDate);
   db.getSession()
@@ -159,7 +163,7 @@ function updateDependency(req, res) { //update a Dependency between 2 nodes with
       };
 
       let changedRel = rel;
-      
+
       for (let x = 0; x < req.body.rels.length; x++) {
         if (req.body.rels[x].id == changedRel.id) {
           req.body.rels[x] = changedRel;
@@ -186,104 +190,109 @@ function updateDependency(req, res) { //update a Dependency between 2 nodes with
 }
 
 function deleteDependency(req, res) {
-  if(req.body.changedInfo.sourceView.length !== 0 && req.body.changedInfo.targetView.length === 0){
+  if (
+    req.body.changedInfo.sourceView.length !== 0 &&
+    req.body.changedInfo.targetView.length === 0
+  ) {
     db.getSession()
-    .run(
-      `
+      .run(
+        `
         MATCH (c:View)-[:VIEW_OF]->(a:Task)-[r:DEPENDENCY]->(b:Task)
         WHERE ID(r)=${req.body.changedInfo.dd_did}
         SET c.outDepArr=FILTER(x IN c.outDepArr WHERE x <> ${req.body.changedInfo.dd_did})
         DELETE r
         RETURN *
 		  `
-    )
-    .then(async () => {
-      let rel = {};
+      )
+      .then(async () => {
+        let rel = {};
 
-      req.body.rels = req.body.rels.filter((el)=>{
-        if (el.target != req.body.changedInfo.dd_did && el.source != req.body.changedInfo.dd_did) {
-          rel = el;
-          return false;
-        }else{
-          return true;
-        }
-      });
+        req.body.rels = req.body.rels.filter((el) => {
+          if (
+            el.target != req.body.changedInfo.dd_did &&
+            el.source != req.body.changedInfo.dd_did
+          ) {
+            rel = el;
+            return false;
+          } else {
+            return true;
+          }
+        });
 
-      let target;
-      req.body.nodes.forEach( node => {
-        if (node.id == rel.target) target = node;
-      });
+        let target;
+        req.body.nodes.forEach((node) => {
+          if (node.id == rel.target) target = node;
+        });
 
-      await updateProject.updateTask(
-        target,
-        req.body.nodes,
-        req.body.rels
-      );
-      res.status(200);
-      res.send({
-        nodes: req.body.nodes,
-        rels: req.body.rels,
-        displayNode: null,
-        displayRel: null,
+        await updateProject.updateTask(target, req.body.nodes, req.body.rels);
+        res.status(200);
+        res.send({
+          nodes: req.body.nodes,
+          rels: req.body.rels,
+          displayNode: null,
+          displayRel: null,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err });
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send({ message: err });
-    });
-  }
-  else if(req.body.changedInfo.sourceView.length === 0 && req.body.changedInfo.targetView.length !== 0){
+  } else if (
+    req.body.changedInfo.sourceView.length === 0 &&
+    req.body.changedInfo.targetView.length !== 0
+  ) {
     db.getSession()
-    .run(
-      `
+      .run(
+        `
         MATCH (a:Task)-[r:DEPENDENCY]->(b:Task)<-[:VIEW_OF]-(c:View)
         WHERE ID(r)=${req.body.changedInfo.dd_did}
         SET c.inDepArr=FILTER(x IN c.inDepArr WHERE x <> ${req.body.changedInfo.dd_did})
         DELETE r
         RETURN *
 		  `
-    )
-    .then(async () => {
-      let rel = {};
-      
-      req.body.rels = req.body.rels.filter((el)=>{
-        if (el.target != req.body.changedInfo.dd_did && el.source != req.body.changedInfo.dd_did) {
-          rel = el;
-          return false;
-        }else{
-          return true;
-        }
-      });
+      )
+      .then(async () => {
+        let rel = {};
 
-      let target;
-      req.body.nodes.forEach( node => {
-        if (node.id == rel.target) target = node;
-      });
+        req.body.rels = req.body.rels.filter((el) => {
+          if (
+            el.target != req.body.changedInfo.dd_did &&
+            el.source != req.body.changedInfo.dd_did
+          ) {
+            rel = el;
+            return false;
+          } else {
+            return true;
+          }
+        });
 
-      await updateProject.updateTask(
-        target,
-        req.body.nodes,
-        req.body.rels
-      );
-      res.status(200);
-      res.send({
-        nodes: req.body.nodes,
-        rels: req.body.rels,
-        displayNode: null,
-        displayRel: null,
+        let target;
+        req.body.nodes.forEach((node) => {
+          if (node.id == rel.target) target = node;
+        });
+
+        await updateProject.updateTask(target, req.body.nodes, req.body.rels);
+        res.status(200);
+        res.send({
+          nodes: req.body.nodes,
+          rels: req.body.rels,
+          displayNode: null,
+          displayRel: null,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err });
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send({ message: err });
-    });
-  }
-  else if(req.body.changedInfo.sourceView.length !== 0 && req.body.changedInfo.targetView.length !== 0){
+  } else if (
+    req.body.changedInfo.sourceView.length !== 0 &&
+    req.body.changedInfo.targetView.length !== 0
+  ) {
     db.getSession()
-    .run(
-      `
+      .run(
+        `
         MATCH (c:View)-[:VIEW_OF]->(a:Task)-[r:DEPENDENCY]->(b:Task)<-[:VIEW_OF]-(d:View)
         WHERE ID(r)=${req.body.changedInfo.dd_did}
         SET c.outDepArr=FILTER(x IN c.outDepArr WHERE x <> ${req.body.changedInfo.dd_did})
@@ -297,87 +306,87 @@ function deleteDependency(req, res) {
         DELETE r
         RETURN *
 		  `
-    )
-    .then(async () => {
-      let rel = {};
-      
-      req.body.rels = req.body.rels.filter((el)=>{
-        if (el.target != req.body.changedInfo.dd_did && el.source != req.body.changedInfo.dd_did) {
-          rel = el;
-          return false;
-        }else{
-          return true;
-        }
-      });
+      )
+      .then(async () => {
+        let rel = {};
 
-      let target;
-      req.body.nodes.forEach( node => {
-        if (node.id == rel.target) target = node;
-      });
+        req.body.rels = req.body.rels.filter((el) => {
+          if (
+            el.target != req.body.changedInfo.dd_did &&
+            el.source != req.body.changedInfo.dd_did
+          ) {
+            rel = el;
+            return false;
+          } else {
+            return true;
+          }
+        });
 
-      await updateProject.updateTask(
-        target,
-        req.body.nodes,
-        req.body.rels
-      );
-      res.status(200);
-      res.send({
-        nodes: req.body.nodes,
-        rels: req.body.rels,
-        displayNode: null,
-        displayRel: null,
+        let target;
+        req.body.nodes.forEach((node) => {
+          if (node.id == rel.target) target = node;
+        });
+
+        await updateProject.updateTask(target, req.body.nodes, req.body.rels);
+        res.status(200);
+        res.send({
+          nodes: req.body.nodes,
+          rels: req.body.rels,
+          displayNode: null,
+          displayRel: null,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err });
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send({ message: err });
-    });
-  }
-  else if(req.body.changedInfo.sourceView.length === 0 && req.body.changedInfo.targetView.length === 0){
+  } else if (
+    req.body.changedInfo.sourceView.length === 0 &&
+    req.body.changedInfo.targetView.length === 0
+  ) {
     db.getSession()
-    .run(
-      `
+      .run(
+        `
         MATCH (a:Task)-[r:DEPENDENCY]->(b:Task)
         WHERE ID(r)=${req.body.changedInfo.dd_did}
         DELETE r
 		  `
-    )
-    .then(async () => {
-      let rel = {};
+      )
+      .then(async () => {
+        let rel = {};
 
-      req.body.rels = req.body.rels.filter((el)=>{
-        if (el.target != req.body.changedInfo.dd_did && el.source != req.body.changedInfo.dd_did) {
-          rel = el;
-          return false;
-        }else{
-          return true;
-        }
-      });
-      
-      let target;
-      req.body.nodes.forEach( node => {
-        if (node.id == rel.target) target = node;
-      });
+        req.body.rels = req.body.rels.filter((el) => {
+          if (
+            el.target != req.body.changedInfo.dd_did &&
+            el.source != req.body.changedInfo.dd_did
+          ) {
+            rel = el;
+            return false;
+          } else {
+            return true;
+          }
+        });
 
-      await updateProject.updateTask(
-        target,
-        req.body.nodes,
-        req.body.rels
-      );
-      res.status(200);
-      res.send({
-        nodes: req.body.nodes,
-        rels: req.body.rels,
-        displayNode: null,
-        displayRel: null,
+        let target;
+        req.body.nodes.forEach((node) => {
+          if (node.id == rel.target) target = node;
+        });
+
+        await updateProject.updateTask(target, req.body.nodes, req.body.rels);
+        res.status(200);
+        res.send({
+          nodes: req.body.nodes,
+          rels: req.body.rels,
+          displayNode: null,
+          displayRel: null,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err });
       });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(400);
-      res.send({ message: err });
-    });
   }
 }
 

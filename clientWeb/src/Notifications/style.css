@@ -1,12 +1,12 @@
 .circular {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    overflow: hidden;
-    border-radius: 50%;
-  }
-  
-  .circular img {
-    width: 100%;
-    height: auto;
-  }
+  position: relative;
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.circular img {
+  width: 100%;
+  height: auto;
+}

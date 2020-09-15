@@ -6,7 +6,7 @@ import {
   TextInput,
   Platform,
   StyleSheet,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -58,12 +58,12 @@ class LoginScreen extends Component {
       alert('Please enter your Password');
       return;
     }
-    
+
     if (this.state.isValidUser && this.state.isValidPassword) {
       let data = {
         email: Email.trim(),
         password: password,
-        type: "mobileToken"
+        type: 'mobileToken',
       };
       data = JSON.stringify(data);
 
@@ -122,11 +122,7 @@ class LoginScreen extends Component {
               placeholder="Your Password"
               placeholderTextColor="#666666"
               secureTextEntry={this.state.secureTextEntry ? true : false}
-              style={[
-                styles.textInput,
-                {
-                }
-              ]}
+              style={[styles.textInput, {}]}
               autoCapitalize="none"
               onChangeText={(val) => this.handlePasswordChange(val)}
             />

@@ -1,10 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableOpacity
-} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Icon} from 'native-base';
 
 class DeleteTask extends Component {
@@ -15,17 +10,18 @@ class DeleteTask extends Component {
   }
 
   deleteConfirmation() {
-    if(this.props.clonedNode !== null){
+    if (this.props.clonedNode !== null) {
       Alert.alert(
         'Are you sure?',
-        'Are you sure you want to delete the view of ' + this.props.task.name + '?',
+        'Are you sure you want to delete the view of ' +
+          this.props.task.name +
+          '?',
         [
           {text: 'NO', style: 'cancel'},
           {text: 'YES', onPress: () => this.handleSubmit()},
         ],
       );
-    }
-    else{
+    } else {
       Alert.alert(
         'Are you sure?',
         'Are you sure you want to delete ' + this.props.task.name + '?',
@@ -38,7 +34,7 @@ class DeleteTask extends Component {
   }
 
   async handleSubmit() {
-    if(this.props.clonedNode !== null){
+    if (this.props.clonedNode !== null) {
       const response = await fetch(
         'http://projecttree.herokuapp.com/task/deleteClone',
         {
@@ -48,18 +44,17 @@ class DeleteTask extends Component {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            changedInfo:{
-              viewId: this.props.clonedNode
-            }
+            changedInfo: {
+              viewId: this.props.clonedNode,
+            },
           }),
         },
       );
-  
+
       const body = await response.json();
       this.props.toggleVisibility(true, false, null);
       this.props.setProjectInfo(undefined, undefined);
-    }
-    else{
+    } else {
       let projectData = await this.props.getProjectInfo();
       projectData.changedInfo = {
         id: this.props.task.id,

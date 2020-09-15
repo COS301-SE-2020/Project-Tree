@@ -12,7 +12,7 @@ function stringifyFormData(fd) {
 class DeleteTask extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { Show: false, isloading: false};
+    this.state = { Show: false, isloading: false };
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,7 +28,7 @@ class DeleteTask extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    this.setState({isloading: true});
+    this.setState({ isloading: true });
     let data = new FormData(event.target);
     data = await stringifyFormData(data);
     let projectData = await this.props.getProjectInfo();
@@ -36,7 +36,7 @@ class DeleteTask extends React.Component {
     projectData = JSON.stringify(projectData);
 
     let response = null;
-    if(this.props.viewId !== null) {
+    if (this.props.viewId !== null) {
       response = await fetch("/task/deleteClone", {
         method: "POST",
         headers: {
@@ -45,8 +45,7 @@ class DeleteTask extends React.Component {
         },
         body: projectData,
       });
-    }
-    else {
+    } else {
       response = await fetch("/task/delete", {
         method: "POST",
         headers: {
@@ -73,7 +72,7 @@ class DeleteTask extends React.Component {
       <React.Fragment>
         <Button
           className="btn-danger"
-          style={{width: "170px"}}
+          style={{ width: "170px" }}
           onClick={() => {
             this.ShowModal();
           }}
@@ -86,7 +85,11 @@ class DeleteTask extends React.Component {
               closeButton
               style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
-              {this.props.viewId !== null ? <Modal.Title>Delete View</Modal.Title> : <Modal.Title>Delete Task</Modal.Title>}
+              {this.props.viewId !== null ? (
+                <Modal.Title>Delete View</Modal.Title>
+              ) : (
+                <Modal.Title>Delete Task</Modal.Title>
+              )}
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
@@ -104,7 +107,11 @@ class DeleteTask extends React.Component {
                   value={this.props.viewId !== null ? this.props.viewId : ""}
                   onChange={() => {}}
                 />
-                {this.props.viewId !== null ? <p> Are you sure you want to delete the view of this task?</p> : <p> Are you sure you want to delete this task?</p>}
+                {this.props.viewId !== null ? (
+                  <p> Are you sure you want to delete the view of this task?</p>
+                ) : (
+                  <p> Are you sure you want to delete this task?</p>
+                )}
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
@@ -113,16 +120,21 @@ class DeleteTask extends React.Component {
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark" style={{width: "100px"}}
-              disabled={this.state.isloading}
+              <Button
+                type="submit"
+                variant="dark"
+                style={{ width: "100px" }}
+                disabled={this.state.isloading}
               >
-                {this.state.isloading ? 
+                {this.state.isloading ? (
                   <Spinner
                     animation="border"
                     variant="success"
                     size="sm"
-                  ></Spinner> 
-                : "Delete" } 
+                  ></Spinner>
+                ) : (
+                  "Delete"
+                )}
               </Button>
             </Modal.Footer>
           </Form>

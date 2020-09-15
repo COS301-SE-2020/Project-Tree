@@ -29,10 +29,10 @@ class RegisterScreen extends Component {
       checkSname: false,
       hiddenText: true,
       confirm_hiddenText: true,
-      passwordError: "",
-      passwordError2: "",
-      passwordError3: "",
-      passwordError4: ""
+      passwordError: '',
+      passwordError2: '',
+      passwordError3: '',
+      passwordError4: '',
     };
     this.inputChange = this.inputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
@@ -99,20 +99,20 @@ class RegisterScreen extends Component {
   }
 
   password_validate(p) {
-     let str = "";
-     let arr = [];
+    let str = '';
+    let arr = [];
     /[A-Z]/.test(p) === false
-      ? arr.push("Must contain at least one Capital Letter \n")
-      : arr.push ("✓");
+      ? arr.push('Must contain at least one Capital Letter \n')
+      : arr.push('✓');
     /[0-9]/.test(p) === false
-      ? arr.push("Must contain at least one number \n")
-      : arr.push("✓");
+      ? arr.push('Must contain at least one number \n')
+      : arr.push('✓');
     /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
-      ? arr.push("Must contain at least one special character eg. #!@$ \n")
-      : arr.push("✓");
+      ? arr.push('Must contain at least one special character eg. #!@$ \n')
+      : arr.push('✓');
     /^.{8,22}$/.test(p) === false
-      ? arr.push("Must be between 8 and 22 characters ")
-      : arr.push("✓");
+      ? arr.push('Must be between 8 and 22 characters ')
+      : arr.push('✓');
     return arr;
   }
 
@@ -134,25 +134,24 @@ class RegisterScreen extends Component {
     let arr = this.password_validate(val);
     this.setState({
       passwordError: arr[0],
-      passwordError2: arr[1], 
+      passwordError2: arr[1],
       passwordError3: arr[2],
       passwordError4: arr[3],
-      isValidPassword: false
-    })
-    if(arr[0]== "✓" && arr[1]== "✓" && arr[2]== "✓" && arr[3]== "✓")
-    {
+      isValidPassword: false,
+    });
+    if (arr[0] == '✓' && arr[1] == '✓' && arr[2] == '✓' && arr[3] == '✓') {
       this.setState({
         password: val,
-        isValidPassword: true
+        isValidPassword: true,
       });
     } else {
       this.setState({
-        isValidPassword: false
-      });    }
+        isValidPassword: false,
+      });
+    }
   }
 
-  updateHiddenText() 
-  {
+  updateHiddenText() {
     this.setState({
       hiddenText: !this.state.hiddenText,
     });
@@ -164,9 +163,7 @@ class RegisterScreen extends Component {
     });
   }
 
-  async handleRegister(userName, password, email, sname) 
-  {
-   
+  async handleRegister(userName, password, email, sname) {
     if (userName.trim().length < 1) {
       alert('Please enter a username');
       return;
@@ -182,25 +179,24 @@ class RegisterScreen extends Component {
       return;
     }
 
-    if (/@/g.test(email) === false)
-    {
+    if (/@/g.test(email) === false) {
       alert('Please enter a valid email address');
       return;
     }
 
-    if (this.state.validUser &&
+    if (
+      this.state.validUser &&
       this.state.isValidPassword &&
       this.state.isValidEmail &&
       this.state.isValidSname
-      )
-      {
-        let data = {
-          name: userName,
-          sname: this.state.sname,
-          email: this.state.email,
-          password: this.state.password,         
-          um_date: '  ',
-          type: "mobileToken"
+    ) {
+      let data = {
+        name: userName,
+        sname: this.state.sname,
+        email: this.state.email,
+        password: this.state.password,
+        um_date: '  ',
+        type: 'mobileToken',
       };
       data = JSON.stringify(data);
 
@@ -216,17 +212,12 @@ class RegisterScreen extends Component {
         },
       );
       const body = await response.json();
-      if(body.message !== "success")
-      {
-        alert(body.message)
+      if (body.message !== 'success') {
+        alert(body.message);
+      } else {
+        this.props.handleLogin(body);
       }
-      else
-      {
-         this.props.handleLogin(body);
-      }
-    } 
-    else 
-    {
+    } else {
       alert('Please ensure all entered information is valid');
     }
   }
@@ -283,12 +274,12 @@ class RegisterScreen extends Component {
                 onChangeText={(val) => this.snameInputChange(val)}
                 onEndEditing={(val) => this.handleValidSname(this.state.sname)}
               />
-            
-            {this.state.checkSname ? (
-              <Animatable.View animation="rubberBand">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
+
+              {this.state.checkSname ? (
+                <Animatable.View animation="rubberBand">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
             </View>
             {this.state.isValidSname ? null : (
               <Animatable.View animation="rubberBand" duration={400}>
@@ -323,16 +314,21 @@ class RegisterScreen extends Component {
                 )}
               </TouchableOpacity>
             </View>
-            {this.state.isValidPassword ? true : (
+            {this.state.isValidPassword ? (
+              true
+            ) : (
               <Animatable.View animation="fadeInLeft" duration={500}>
                 <Text style={styles.errorMsg}>
-                {"\n"}
-                {this.state.passwordError}{"\n"}
-                {this.state.passwordError2}{"\n"}
-                {this.state.passwordError3}{"\n"}
-                {this.state.passwordError4}
+                  {'\n'}
+                  {this.state.passwordError}
+                  {'\n'}
+                  {this.state.passwordError2}
+                  {'\n'}
+                  {this.state.passwordError3}
+                  {'\n'}
+                  {this.state.passwordError4}
                 </Text>
-               </Animatable.View>
+              </Animatable.View>
             )}
             <Text style={[styles.text_footer, {marginTop: 35}]}>Email</Text>
             <View style={styles.mover}>
@@ -354,17 +350,21 @@ class RegisterScreen extends Component {
                 onPress={() => {
                   this.props.switchScreen('Login');
                 }}
-                style={[styles.signer,
-                {
-                  borderColor: '#296d98',
-                  borderWidth: 2,
-                  marginTop: 40,
-                }]}>
-                <Text
-                  style={[styles.textSign,
+                style={[
+                  styles.signer,
                   {
-                    color: '#296d98',
-                  }]}>
+                    borderColor: '#296d98',
+                    borderWidth: 2,
+                    marginTop: 40,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styles.textSign,
+                    {
+                      color: '#296d98',
+                    },
+                  ]}>
                   Already have an account? Sign in now
                 </Text>
               </TouchableOpacity>
@@ -407,8 +407,7 @@ class RegisterScreen extends Component {
 
 export default RegisterScreen;
 
-styles = StyleSheet.create
-({
+styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEBB4D',
@@ -422,7 +421,7 @@ styles = StyleSheet.create
     paddingBottom: 80,
   },
   footer: {
-    width: "100%",
+    width: '100%',
     backgroundColor: 'white',
     flex: Platform.OS === 'ios' ? 3 : 5,
     backgroundColor: '#fff',
@@ -449,18 +448,18 @@ styles = StyleSheet.create
     flex: 1,
     paddingLeft: 10,
     color: 'black',
-    marginTop: Platform.OS === 'ios' ? 0 : -12
+    marginTop: Platform.OS === 'ios' ? 0 : -12,
   },
   button: {
     alignItems: 'center',
     marginTop: 20,
   },
-  signer: { 
+  signer: {
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    borderRadius: 10
+    borderRadius: 10,
   },
   textSign: {
     fontSize: 18,
@@ -473,5 +472,5 @@ styles = StyleSheet.create
   },
   priv: {
     color: 'grey',
-  }
+  },
 });

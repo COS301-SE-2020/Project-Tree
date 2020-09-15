@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
 import {Icon} from 'native-base';
 
 export default class DeleteProject extends Component {

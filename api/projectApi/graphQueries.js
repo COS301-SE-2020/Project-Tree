@@ -27,11 +27,12 @@ function getProjectTasks(req, res) {
             record._fields[0].properties.endDate
           ),
           duration: parseInt(record._fields[0].properties.duration),
-          timeComplete: record._fields[0].properties.timeComplete !== undefined ? updateProject.datetimeToString(
-            record._fields[0].properties.timeComplete
-          )
-          :
-          null,
+          timeComplete:
+            record._fields[0].properties.timeComplete !== undefined
+              ? updateProject.datetimeToString(
+                  record._fields[0].properties.timeComplete
+                )
+              : null,
         });
       });
       db.getSession()
@@ -61,8 +62,7 @@ function getProjectTasks(req, res) {
                 record._fields[0].properties.endDate
               ),
               duration: parseInt(record._fields[0].properties.duration),
-              relationshipType:
-                record._fields[0].properties.relationshipType,
+              relationshipType: record._fields[0].properties.relationshipType,
               source: record._fields[0].start.low,
               target: record._fields[0].end.low,
             });
@@ -96,7 +96,7 @@ function getProjectViews(req, res) {
           id: record._fields[0].identity.low,
           inDepArr: record._fields[0].properties.inDepArr,
           outDepArr: record._fields[0].properties.outDepArr,
-          originalNode: record._fields[0].properties.originalNode.low
+          originalNode: record._fields[0].properties.originalNode.low,
         });
       });
       res.send({ views: viewsArr });

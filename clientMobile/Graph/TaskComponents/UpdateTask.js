@@ -9,15 +9,9 @@ import {
   Slider,
   Switch,
 } from 'react-native';
-import {
-  Icon,
-  Label,
-  Form,
-  Item,
-  Input,
-} from 'native-base';
+import {Icon, Label, Form, Item, Input} from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import ms from "ms";
+import ms from 'ms';
 
 class UpdateTask extends Component {
   constructor(props) {
@@ -46,8 +40,7 @@ class UpdateTask extends Component {
                   height: 1,
                   width: '60%',
                   marginBottom: 10,
-                }}>
-              </View>
+                }}></View>
             </View>
             <UpdateTaskForm
               task={this.props.task}
@@ -81,15 +74,15 @@ class UpdateTaskForm extends Component {
       duration: this.props.task.duration,
       progress: this.props.task.progress,
       type: this.props.task.type,
-      issue: this.props.task.type === "Issue",
+      issue: this.props.task.type === 'Issue',
       dateTimePicker: false,
-      dateTimeType: { type: 'date', for: 'start', value: new Date() },
-      error:null,
+      dateTimeType: {type: 'date', for: 'start', value: new Date()},
+      error: null,
       people: [...this.props.allUsers],
       assignedProjUsers: [...this.props.assignedProjUsers],
-      pacManSearchTerm: "",
-      resourcesSearchTerm: "",
-      resPersonSearchTerm: "",
+      pacManSearchTerm: '',
+      resourcesSearchTerm: '',
+      resPersonSearchTerm: '',
       pacManList: [...this.props.pacMans],
       resourcesList: [...this.props.resources],
       resPersonList: [...this.props.resPersons],
@@ -108,49 +101,53 @@ class UpdateTaskForm extends Component {
   }
 
   handleDateTimeSelect(event, selectedDate, type) {
-    if(event.type === 'dismissed') {
+    if (event.type === 'dismissed') {
       this.setState({dateTimePicker: false});
       return;
     }
-    let date = new Date(new Date(selectedDate).getTime() - new Date().getTimezoneOffset()*60*1000).toISOString().substring(0,16);
+    let date = new Date(
+      new Date(selectedDate).getTime() -
+        new Date().getTimezoneOffset() * 60 * 1000,
+    )
+      .toISOString()
+      .substring(0, 16);
     if (type.for === 'start') {
-        if (this.state.endDate < date) 
-          this.setState({
-            error: "You cannot set the start date/time after the end date/time.",
-            startDate: date, 
-            endDate: date, 
-            dateTimePicker: false
-          });
-        else
+      if (this.state.endDate < date)
         this.setState({
-          error: null,
-          startDate: date, 
-          dateTimePicker: false
-        });
-    } else {
-      if (this.state.startDate > date) 
-        this.setState({
-          error: "You cannot set the end date/time before the start date/time.",
-          startDate: date, 
-          endDate: date, 
-          dateTimePicker: false
+          error: 'You cannot set the start date/time after the end date/time.',
+          startDate: date,
+          endDate: date,
+          dateTimePicker: false,
         });
       else
-      this.setState({
-        error: null,
-        endDate: date, 
-        dateTimePicker: false
-      });
+        this.setState({
+          error: null,
+          startDate: date,
+          dateTimePicker: false,
+        });
+    } else {
+      if (this.state.startDate > date)
+        this.setState({
+          error: 'You cannot set the end date/time before the start date/time.',
+          startDate: date,
+          endDate: date,
+          dateTimePicker: false,
+        });
+      else
+        this.setState({
+          error: null,
+          endDate: date,
+          dateTimePicker: false,
+        });
     }
   }
 
   formatValidateInput() {
-    if(this.checkFormData("all") === false) return null;
+    if (this.checkFormData('all') === false) return null;
 
-    let type = "Incomplete"
-    if (this.state.issue === true) type = "Issue";
-    if (parseInt(this.state.progress) === 100) type = "Complete";
-
+    let type = 'Incomplete';
+    if (this.state.issue === true) type = 'Issue';
+    if (parseInt(this.state.progress) === 100) type = 'Complete';
 
     let data = {
       id: this.props.task.id,
@@ -217,9 +214,9 @@ class UpdateTaskForm extends Component {
   }
 
   updateSearch(value, mode) {
-    if (mode === 0) this.setState({ pacManSearchTerm: value });
-    if (mode === 1) this.setState({ resPersonSearchTerm: value });
-    if (mode === 2) this.setState({ resourcesSearchTerm: value });
+    if (mode === 0) this.setState({pacManSearchTerm: value});
+    if (mode === 1) this.setState({resPersonSearchTerm: value});
+    if (mode === 2) this.setState({resourcesSearchTerm: value});
   }
 
   addPacMan(person) {
@@ -227,12 +224,12 @@ class UpdateTaskForm extends Component {
     tempPacManList.push(person);
 
     let tempProjUsersList = this.state.assignedProjUsers;
-    let userTask = []
+    let userTask = [];
     userTask.push(person);
     userTask.push({
       start: person.id,
       end: this.props.task.id,
-      type: "PACKAGE_MANAGER"
+      type: 'PACKAGE_MANAGER',
     });
     tempProjUsersList.push(userTask);
 
@@ -248,7 +245,7 @@ class UpdateTaskForm extends Component {
     this.setState({
       assignedProjUsers: tempProjUsersList,
       pacManList: tempPacManList,
-      pacManSearchTerm: ""
+      pacManSearchTerm: '',
     });
   }
 
@@ -257,12 +254,12 @@ class UpdateTaskForm extends Component {
     tempResPersonList.push(person);
 
     let tempProjUsersList = this.state.assignedProjUsers;
-    let userTask = []
+    let userTask = [];
     userTask.push(person);
     userTask.push({
       start: person.id,
       end: this.props.task.id,
-      type: "RESPONSIBLE_PERSON"
+      type: 'RESPONSIBLE_PERSON',
     });
     tempProjUsersList.push(userTask);
 
@@ -278,7 +275,7 @@ class UpdateTaskForm extends Component {
     this.setState({
       assignedProjUsers: tempProjUsersList,
       resPersonList: tempResPersonList,
-      resPersonSearchTerm: "",
+      resPersonSearchTerm: '',
     });
   }
 
@@ -287,12 +284,12 @@ class UpdateTaskForm extends Component {
     tempResourceList.push(person);
 
     let tempProjUsersList = this.state.assignedProjUsers;
-    let userTask = []
+    let userTask = [];
     userTask.push(person);
     userTask.push({
       start: person.id,
       end: this.props.task.id,
-      type: "RESOURCE"
+      type: 'RESOURCE',
     });
     tempProjUsersList.push(userTask);
 
@@ -308,13 +305,13 @@ class UpdateTaskForm extends Component {
     this.setState({
       assignedProjUsers: tempProjUsersList,
       resourceList: tempResourceList,
-      resourcesSearchTerm: ""
+      resourcesSearchTerm: '',
     });
   }
 
   /*
-  * Removes an assigned person from the assigned people arrays
-  */
+   * Removes an assigned person from the assigned people arrays
+   */
   removeAssignedPerson(person, mode) {
     let peopleList = this.state.people;
     if (mode === 0) {
@@ -350,17 +347,17 @@ class UpdateTaskForm extends Component {
       }
     }
 
-    for(let x = 0; x < this.state.assignedProjUsers.length; x++){
+    for (let x = 0; x < this.state.assignedProjUsers.length; x++) {
       if (person.id === this.state.assignedProjUsers[x][0].id) {
         if (x === 0) this.state.assignedProjUsers.shift();
         else if (x === this.state.assignedProjUsers.length - 1)
-        this.state.assignedProjUsers.pop();
+          this.state.assignedProjUsers.pop();
         else this.state.assignedProjUsers.splice(x, 1);
       }
     }
-    
+
     peopleList.push(person);
-    this.setState({ people: peopleList });
+    this.setState({people: peopleList});
   }
 
   async handleSubmit() {
@@ -385,33 +382,38 @@ class UpdateTaskForm extends Component {
     const body = await response.json();
 
     let timestamp = new Date();
-    timestamp.setTime(timestamp.getTime() - new Date().getTimezoneOffset()*60*1000);
+    timestamp.setTime(
+      timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
     timestamp = timestamp.toISOString();
 
-    await fetch("http://projecttree.herokuapp.com/people/updateAssignedPeople", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+    await fetch(
+      'http://projecttree.herokuapp.com/people/updateAssignedPeople',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ut_taskId: this.props.task.id,
+          ut_pacMans: this.state.pacManList,
+          ut_resPersons: this.state.resPersonList,
+          ut_resources: this.state.resourcesList,
+          ut_originalPacMans: this.props.pacMans,
+          ut_originalResPersons: this.props.resPersons,
+          ut_originalResources: this.props.resources,
+          auto_notification: {
+            timestamp: timestamp,
+            projName: this.props.project.name,
+            projID: this.props.project.id,
+            taskName: this.state.name,
+            type: 'auto',
+            mode: 2,
+          },
+        }),
       },
-      body: JSON.stringify({
-        ut_taskId: this.props.task.id,
-        ut_pacMans: this.state.pacManList,
-        ut_resPersons: this.state.resPersonList,
-        ut_resources: this.state.resourcesList,
-        ut_originalPacMans: this.props.pacMans,
-        ut_originalResPersons: this.props.resPersons,
-        ut_originalResources: this.props.resources,
-        auto_notification: {
-          timestamp: timestamp,
-          projName: this.props.project.name,
-          projID: this.props.project.id,
-          taskName: this.state.name,
-          type: "auto",
-          mode: 2,
-        }
-      }),
-    });
+    );
 
     // Resets the people list
     for (let x = 0; x < this.state.pacManList.length; x++) {
@@ -426,38 +428,45 @@ class UpdateTaskForm extends Component {
 
     this.props.toggleVisibility(true, false);
     this.props.displayTaskDependency(null, null);
-    this.props.setProjectInfo(body.nodes, body.rels, this.state.assignedProjUsers);
+    this.props.setProjectInfo(
+      body.nodes,
+      body.rels,
+      this.state.assignedProjUsers,
+    );
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.removeAssignedPeople();
   }
 
-  checkFormData(check){
-    if(check === "name" || check === "all"){
+  checkFormData(check) {
+    if (check === 'name' || check === 'all') {
       let name = this.state.name;
-      if(name === null || !name.trim().length){
-        this.setState({error:"Please enter a task name"});
+      if (name === null || !name.trim().length) {
+        this.setState({error: 'Please enter a task name'});
         return false;
-      }
-      else{
-        this.setState({error:null});
+      } else {
+        this.setState({error: null});
       }
     }
   }
 
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
-    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    startDate.setTime(
+      startDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
     let endDate = new Date(ed);
-    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    endDate.setTime(
+      endDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
   render() {
     /*
-    * Filters the list of people to only show people matching the search term
-    */
+     * Filters the list of people to only show people matching the search term
+     */
     let filteredPacMan = this.state.people.filter((person) => {
       return (
         person.name
@@ -482,15 +491,17 @@ class UpdateTaskForm extends Component {
 
     return (
       <React.Fragment>
-        <ScrollView style={{height:650}}>
+        <ScrollView style={{height: 650}}>
           <Form>
-            <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
+            <Text style={{color: 'red', alignSelf: 'center'}}>
+              {this.state.error}
+            </Text>
             <Item floatingLabel>
               <Label>Name of Task</Label>
               <Input
                 value={this.state.name}
                 onChangeText={(val) => this.setState({name: val})}
-                onEndEditing={()=>this.checkFormData("name")} 
+                onEndEditing={() => this.checkFormData('name')}
               />
             </Item>
             <Item floatingLabel>
@@ -508,12 +519,12 @@ class UpdateTaskForm extends Component {
                 name="calendar-o"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'date', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'date',
                       for: 'start',
                       value: this.state.startDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -526,12 +537,12 @@ class UpdateTaskForm extends Component {
                 name="clock"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'time', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'time',
                       for: 'start',
                       value: this.state.startDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -544,12 +555,12 @@ class UpdateTaskForm extends Component {
                 name="calendar-o"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'date', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'date',
                       for: 'end',
                       value: this.state.endDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -562,12 +573,12 @@ class UpdateTaskForm extends Component {
                 name="clock"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'time', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'time',
                       for: 'end',
                       value: this.state.endDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -578,39 +589,54 @@ class UpdateTaskForm extends Component {
                 value={this.CalcDiff(this.state.startDate, this.state.endDate)}
               />
             </Item>
-            <View style={{flex: 1,marginBottom:15}}>
+            <View style={{flex: 1, marginBottom: 15}}>
               <Text style={styles.text}>{String(this.state.progress)}</Text>
               <Slider
                 step={1}
                 maximumValue={100}
                 value={this.state.progress}
                 onValueChange={(value) => {
-                  if(parseInt(value) === 100){
-                    this.setState({ issue: false });
+                  if (parseInt(value) === 100) {
+                    this.setState({issue: false});
                   }
-                  this.setState({ progress: value });
+                  this.setState({progress: value});
                   this.value = this.state.progress;
                 }}
               />
             </View>
 
-            <View style={styles.modalText,{flex: 1, flexDirection:"row", paddingTop:20,paddingLeft:24}}>
-              <Text style={{alignItems:"flex-start", fontSize:16}}>There is an issue with this task: </Text>
+            <View
+              style={
+                (styles.modalText,
+                {
+                  flex: 1,
+                  flexDirection: 'row',
+                  paddingTop: 20,
+                  paddingLeft: 24,
+                })
+              }>
+              <Text style={{alignItems: 'flex-start', fontSize: 16}}>
+                There is an issue with this task:{' '}
+              </Text>
               <Switch
-                trackColor={{ false: "#767577", true: "#81b0ff" }}
-                thumbColor={this.state.issue ? "#f5dd4b" : "#f4f3f4"}
+                trackColor={{false: '#767577', true: '#81b0ff'}}
+                thumbColor={this.state.issue ? '#f5dd4b' : '#f4f3f4'}
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={(value) => {
-                  if(parseInt(this.state.progress) === 100){
-                    this.setState({ error: "You cannot specify that a complete task has an issue.", issue: false });
+                  if (parseInt(this.state.progress) === 100) {
+                    this.setState({
+                      error:
+                        'You cannot specify that a complete task has an issue.',
+                      issue: false,
+                    });
                     this.value = false;
                   } else {
-                    this.setState({ issue: value });
+                    this.setState({issue: value});
                     this.value = this.state.issue;
                   }
                 }}
                 value={this.state.issue}
-                style={{alignItems:"flex-end"}}
+                style={{alignItems: 'flex-end'}}
               />
             </View>
             <Item floatingLabel>
@@ -620,34 +646,38 @@ class UpdateTaskForm extends Component {
                 onChangeText={(val) => this.updateSearch(val, 0)}
               />
             </Item>
-            
-            <View style={{flexDirection: 'row', flex:1}}>
+
+            <View style={{flexDirection: 'row', flex: 1}}>
               {this.state.pacManSearchTerm.length >= 2 ? (
-                <View style={{flex:0.5}}>
+                <View style={{flex: 0.5}}>
                   {filteredPacMan.map((person) => {
                     return (
                       <TouchableOpacity
                         type="button"
                         onPress={() => this.addPacMan(person)}
                         key={person.id}
-                        style={styles.peopleButtons}
-                      >
-                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                        style={styles.peopleButtons}>
+                        <Text style={{color: 'white'}}>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-              ) : <View style={{flex:0.5}}></View>}
-              <View style={{flex:0.5}}>
+              ) : (
+                <View style={{flex: 0.5}}></View>
+              )}
+              <View style={{flex: 0.5}}>
                 {this.state.pacManList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
                       onPress={() => this.removeAssignedPerson(person, 0)}
                       key={person.id}
-                      style={styles.selectedPeopleButtons}
-                    >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      style={styles.selectedPeopleButtons}>
+                      <Text>
+                        {person.name}&nbsp;{person.surname}
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -660,33 +690,37 @@ class UpdateTaskForm extends Component {
                 onChangeText={(val) => this.updateSearch(val, 1)}
               />
             </Item>
-            <View style={{flexDirection: 'row', flex:1}}>
+            <View style={{flexDirection: 'row', flex: 1}}>
               {this.state.resPersonSearchTerm.length >= 2 ? (
-                <View style={{flex:0.5}}>
+                <View style={{flex: 0.5}}>
                   {filteredResPerson.map((person) => {
                     return (
                       <TouchableOpacity
                         type="button"
                         onPress={() => this.addResPerson(person)}
                         key={person.id}
-                        style={styles.peopleButtons}
-                      >
-                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                        style={styles.peopleButtons}>
+                        <Text style={{color: 'white'}}>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-              ) : <View style={{flex:0.5}}></View>}
-              <View style={{flex:0.5}}>
+              ) : (
+                <View style={{flex: 0.5}}></View>
+              )}
+              <View style={{flex: 0.5}}>
                 {this.state.resPersonList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
                       onPress={() => this.removeAssignedPerson(person, 1)}
                       key={person.id}
-                      style={styles.selectedPeopleButtons}
-                    >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      style={styles.selectedPeopleButtons}>
+                      <Text>
+                        {person.name}&nbsp;{person.surname}
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -699,33 +733,37 @@ class UpdateTaskForm extends Component {
                 onChangeText={(val) => this.updateSearch(val, 2)}
               />
             </Item>
-            <View style={{flexDirection: 'row', flex:1}}>
+            <View style={{flexDirection: 'row', flex: 1}}>
               {this.state.resourcesSearchTerm.length >= 2 ? (
-                <View style={{flex:0.5}}>
+                <View style={{flex: 0.5}}>
                   {filteredResources.map((person) => {
                     return (
                       <TouchableOpacity
                         type="button"
                         onPress={() => this.addResource(person)}
                         key={person.id}
-                        style={styles.peopleButtons}
-                      >
-                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                        style={styles.peopleButtons}>
+                        <Text style={{color: 'white'}}>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-              ) : <View style={{flex:0.5}}></View>}
-              <View style={{flex:0.5}}>
+              ) : (
+                <View style={{flex: 0.5}}></View>
+              )}
+              <View style={{flex: 0.5}}>
                 {this.state.resourcesList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
                       onPress={() => this.removeAssignedPerson(person, 2)}
                       key={person.id}
-                      style={styles.selectedPeopleButtons}
-                    >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      style={styles.selectedPeopleButtons}>
+                      <Text>
+                        {person.name}&nbsp;{person.surname}
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -735,11 +773,22 @@ class UpdateTaskForm extends Component {
           {this.state.dateTimePicker && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={new Date(new Date(this.state.dateTimeType.value).getTime() + new Date().getTimezoneOffset()*60*1000)}
+              value={
+                new Date(
+                  new Date(this.state.dateTimeType.value).getTime() +
+                    new Date().getTimezoneOffset() * 60 * 1000,
+                )
+              }
               mode={this.state.dateTimeType.type}
               is24Hour={true}
               display="default"
-              onChange={(event, selectedDate) => this.handleDateTimeSelect(event, selectedDate, this.state.dateTimeType)}
+              onChange={(event, selectedDate) =>
+                this.handleDateTimeSelect(
+                  event,
+                  selectedDate,
+                  this.state.dateTimeType,
+                )
+              }
             />
           )}
         </ScrollView>
@@ -786,7 +835,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginRight: 10,
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   submitButton: {
     backgroundColor: '#184D47',
@@ -850,7 +899,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
     margin: 3,
-  }
+  },
 });
 
 export default UpdateTask;

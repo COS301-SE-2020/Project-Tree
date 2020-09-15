@@ -6,7 +6,7 @@ import {
   TouchableHighlight,
   ScrollView,
   Image,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import {isEmpty} from 'lodash';
 import {Spinner} from 'native-base';
@@ -76,7 +76,7 @@ class NoticeBoardScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {messages: null, allUsers:null};
+    this.state = {messages: null, allUsers: null};
   }
 
   async componentDidMount() {
@@ -116,7 +116,8 @@ class NoticeBoardScreen extends Component {
     const body2 = await response2.json();
     if (response2.status !== 200) throw Error(body2.message);
 
-    if (this._isMounted === true) this.setState({messages: body.notifications, allUsers: body2.users});
+    if (this._isMounted === true)
+      this.setState({messages: body.notifications, allUsers: body2.users});
   }
 
   componentWillUnmount() {
@@ -130,7 +131,10 @@ class NoticeBoardScreen extends Component {
 
     return (
       <React.Fragment>
-        <NotificationList messages={this.state.messages} allUsers={this.state.allUsers} />
+        <NotificationList
+          messages={this.state.messages}
+          allUsers={this.state.allUsers}
+        />
       </React.Fragment>
     );
   }
@@ -213,25 +217,22 @@ class NotificationList extends Component {
     return messageList;
   }
 
-  returnRandomUser(profileId) 
-  {
-    if(profileId === 'undefined'){
+  returnRandomUser(profileId) {
+    if (profileId === 'undefined') {
       return (
         <Image
           source={require('../Assets/projectTree.png')}
           style={styles.profilePicture}
         />
       );
-    }
-    else{
-      for(let x = 0; x < this.props.allUsers.length; x++){
-        if(this.props.allUsers[x].id === parseInt(profileId)){
-          let Image_Http_URL ={ uri: `${this.props.allUsers[x].profilePicture}`};
+    } else {
+      for (let x = 0; x < this.props.allUsers.length; x++) {
+        if (this.props.allUsers[x].id === parseInt(profileId)) {
+          let Image_Http_URL = {
+            uri: `${this.props.allUsers[x].profilePicture}`,
+          };
           return (
-            <Image
-              source={Image_Http_URL}
-              style={styles.profilePicture}
-            />
+            <Image source={Image_Http_URL} style={styles.profilePicture} />
           );
         }
       }
@@ -243,11 +244,9 @@ class NotificationList extends Component {
       <View
         key={i}
         style={{paddingTop: 10, paddingBottom: 10, flexDirection: 'row'}}>
-        <View style={{width:'25%', alignItems:'center'}}>
+        <View style={{width: '25%', alignItems: 'center'}}>
           {this.returnRandomUser(message.profileId, message.type)}
-          <Text style={{textAlign:'center'}}>
-            {message.fromName}
-          </Text>
+          <Text style={{textAlign: 'center'}}>{message.fromName}</Text>
         </View>
         <View style={{paddingLeft: 5, marginRight: 10}}>
           <Text>
@@ -272,11 +271,14 @@ class NotificationList extends Component {
               height: 1,
               width: 250,
             }}></View>
-            <View style={{
+          <View
+            style={{
               width: '85%',
             }}>
-              <Text style={{paddingTop: 15, fontSize: 17}}>{message.message}</Text>
-            </View>
+            <Text style={{paddingTop: 15, fontSize: 17}}>
+              {message.message}
+            </Text>
+          </View>
         </View>
       </View>
     ));
@@ -308,8 +310,8 @@ const styles = StyleSheet.create({
   profilePicture: {
     height: 70,
     width: 70,
-    borderRadius: 100
-  }
+    borderRadius: 100,
+  },
 });
 
 export default NoticeBoard;

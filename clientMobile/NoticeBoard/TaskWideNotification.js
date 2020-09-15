@@ -58,7 +58,7 @@ export default class SendTaskWideNotificationWrapper extends Component {
         email: this.props.user.email,
       });
 
-    this.setState({ notificationRec: userNotifications });
+    this.setState({notificationRec: userNotifications});
   }
 
   render() {
@@ -69,10 +69,7 @@ export default class SendTaskWideNotificationWrapper extends Component {
             this.setModalVisible(true);
           }}
           style={styles.editButton}>
-          <Icon
-            type="AntDesign"
-            name="notification"
-            style={{color: 'white'}}>
+          <Icon type="AntDesign" name="notification" style={{color: 'white'}}>
             <Text>&nbsp;Notify</Text>
           </Icon>
         </TouchableHighlight>
@@ -167,7 +164,7 @@ class SendNotificationForm extends Component {
       this.props.project.name,
       this.props.project.id,
       this.state.mode,
-      this.props.user.id
+      this.props.user.id,
     );
     this.props.setModalVisible(false);
   }
