@@ -354,8 +354,8 @@ class CreateDependencyForm extends Component {
               <Label>Start Date of Second Task</Label>
               <Input value={this.state.endDate.substring(0, 10)} />
               <Icon
-                type="AntDesign"
-                name="plus"
+                type="FontAwesome"
+                name="calendar-o"
                 onPress={() => {
                   this.setState({
                     dateTimePicker: true, 
@@ -372,8 +372,8 @@ class CreateDependencyForm extends Component {
               <Label>Start Time of Second Task</Label>
               <Input value={this.state.endDate.substring(11, 16)} />
               <Icon
-                type="AntDesign"
-                name="plus"
+                type="SimpleLineIcons"
+                name="clock"
                 onPress={() => {
                   this.setState({
                     dateTimePicker: true, 
