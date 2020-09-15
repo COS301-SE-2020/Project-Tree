@@ -80,16 +80,16 @@ class UserSettings extends Component {
    // let p = d.password;
    /[A-Z]/.test(p) === false
      ? arr.push("Must contain at least one Capital Letter \n")
-     : arr.push ("✓");
+     : arr.push ("Must contain at least one Capital Letter ✓");
    /[0-9]/.test(p) === false
      ? arr.push("Must contain at least one number \n")
-     : arr.push("✓");
+     : arr.push("Must contain at least one number ✓");
    /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
      ? arr.push("Must contain at least one special character eg. #!@$ \n")
-     : arr.push("✓");
+     : arr.push("Must contain at least one special character eg. #!@$ ✓");
    /^.{8,22}$/.test(p) === false
      ? arr.push("Must be between 8 and 22 characters ")
-     : arr.push("✓");
+     : arr.push("Must be between 8 and 22 characters  ✓");
    return arr;
  }
 
@@ -222,7 +222,7 @@ class UserSettings extends Component {
         passwordError4: arr[3],
         isValidPassword: false
       })
-      if(arr[0]== "✓" && arr[1]== "✓" && arr[2]== "✓" && arr[3]== "✓")
+      if(arr[0].indexOf('✓') != -1 && arr[1].indexOf('✓') != -1 && arr[2].indexOf('✓') != -1 && arr[3].indexOf('✓') != -1)
       {
         this.setState({
           newPass: val,
@@ -349,7 +349,7 @@ class UserSettings extends Component {
   render() {
     return (
       <View style={styleUser.container}>
-        <StatusBar backgroundColor="#94334b" barStyle="light-content" />
+        <StatusBar backgroundColor="#EBB035" barStyle="light-content" />
         <View style={styleUser.header}>
           <Text style={styleUser.text_header}>User details</Text>
         </View>
@@ -643,7 +643,7 @@ export default UserSettings;
 const styleUser = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#94334b',
+    backgroundColor: '#EBB035',
     alignItems: 'center',
   },
   header: {
