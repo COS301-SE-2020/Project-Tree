@@ -355,7 +355,7 @@ class UserSettings extends Component {
         </View>
         <Animatable.View animation="fadeInUp" style={styleUser.footer}>
           <ScrollView>
-            <Text style={styleUser.text_footer}>Username</Text>
+            <Text style={styleUser.text_footer}>Name</Text>
             <View style={styleUser.action}>
               <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
@@ -467,7 +467,7 @@ class UserSettings extends Component {
               <View style={styleUser.centeredView}>
                 <View style={styleUser.modalView}>
                   <TouchableOpacity
-                  style={styles.hideButton}
+                  style={styleUser.hideButton}
                   onPress={() => this.setModalVisible(false)}>
                   <Icon type="FontAwesome" name="close" />
                   </TouchableOpacity>
@@ -770,7 +770,6 @@ const styleUser = StyleSheet.create({
     backgroundColor: '#EEBB4D',
   },
   hideButton: {
-    flex: 0.5,
     backgroundColor: '#fff',
     alignItems: 'flex-end',
     marginRight: 10,
