@@ -594,8 +594,8 @@ class UpdateTaskForm extends Component {
               />
             </View>
 
-            <View style={styles.modalText,{flex: 1, flexDirection:"row", padding:12}}>
-              <Text style={{alignItems:"flex-start"}}>There is an issue with this task: </Text>
+            <View style={styles.modalText,{flex: 1, flexDirection:"row", paddingTop:20,paddingLeft:24}}>
+              <Text style={{alignItems:"flex-start", fontSize:16}}>There is an issue with this task: </Text>
               <Switch
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                 thumbColor={this.state.issue ? "#f5dd4b" : "#f4f3f4"}
