@@ -540,18 +540,6 @@ handleNewPasswordChange(val)
                (
               <Container>
                 <Row>
-               <Col>
-                <Button
-                  block
-                  variant="secondary"
-                  className="mb-2"
-                  onClick={() => {
-                    this.handlePass(this.state.password, this.state.confirmPassword);
-                  }}
-                >
-                  <i className="fa fa-edit"> </i> Submit
-                </Button>
-              </Col>
               <Col>
               <Button
               block
@@ -563,6 +551,18 @@ handleNewPasswordChange(val)
               <i className="fa fa-remove"> </i> Cancel {" "}
             </Button>
             </Col>
+            <Col>
+                <Button
+                  block
+                  variant="dark"
+                  className="mb-2"
+                  onClick={() => {
+                    this.handlePass(this.state.password, this.state.confirmPassword);
+                  }}
+                >
+                  <i className="fa fa-edit"> </i> Submit
+                </Button>
+              </Col>
             </Row>
             </Container>
 
