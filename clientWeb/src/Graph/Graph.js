@@ -269,10 +269,12 @@ class Graph extends React.Component {
         }
         if (this.recDepCheck(this.state.target.id, this.state.source.id) === true) {
           this.setState({ target: null, alert: 1 });
+          return;
         }
 
         else if(this.alreadyExists(this.state.target.id, this.state.source.id)){
           this.setState({ target: null, alert: 2 });
+          return;
         }
       }
     }
