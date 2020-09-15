@@ -32,16 +32,15 @@ export default class SettingsScreen extends Component {
         body: JSON.stringify({token: token}),
       });
       const body = await response.json();
-      //console.log(body.profilepicture)
-      this.setState({
-        pfp: body.user.profilepicture
-      });
-      console.log(this.state.pfp)
+      if(body.user.profilepicture !== 'undefined'){
+        this.setState({
+          pfp: body.user.profilepicture
+        });
+      }
     });
   }
 
-  render() {      
-    console.log(this.state.pfp)
+  render() {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#008656" barStyle="light-content" />
@@ -188,9 +187,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 110,
     height: 110,
-    borderRadius: 50,
-    //borderWidth:2,
-    borderColor: 'white',
+    borderRadius: 100,
     marginBottom: 10
   },
 });
