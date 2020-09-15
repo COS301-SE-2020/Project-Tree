@@ -163,9 +163,9 @@ class Dashboard extends React.Component {
                   xl={6}
                   className="text-center p-1"
                 >
-                  <Button variant="warning" onClick={()=>this.scroll("calendar")}>
+                  <a href="#calendar"><Button variant="warning">   {/* onClick={()=>this.scroll("calendar")} >*/}
                     Jump To Calendar
-                  </Button>
+                  </Button></a>
                 </Col>
               </Row>
             </Col>
@@ -177,11 +177,11 @@ class Dashboard extends React.Component {
               </Row>
               <Row style={{marginBottom:'10em', marginTop:'2em'}}>
                 <Col className="text-center">
-                  <Scroll.Element name="calendar" className="element">
-                    <h1>Calendar</h1>
+                  {/* <Scroll.Element name="calendar" className="element"> */}
+                    <h1 id="calendar">Calendar</h1> 
                     <hr style={{ backgroundColor: "#EEBB4D", width:"50%"}} />
                     <Calendar ownedProjects={this.props.ownedProjects} otherProjects={this.props.otherProjects}/>
-                  </Scroll.Element>
+                  {/* </Scroll.Element> */}
                 </Col>
               </Row>
             </Container>
