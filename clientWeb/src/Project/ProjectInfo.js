@@ -141,13 +141,6 @@ class ProjectInfo extends React.Component {
               </Table>
             </Col>
           </Row>
-          <Row className="align-items-center py-1">
-          <Col>
-            <ProjectProgress
-              project={this.props.project}
-            />
-          </Col>
-        </Row>
         </Container>
       </React.Fragment>
     );
