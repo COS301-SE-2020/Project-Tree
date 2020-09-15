@@ -14,12 +14,13 @@ class CarouselSlides extends Component {
         <Row className="text-center align-items-center">
             <Col className="text-center align-items-center">
               <Carousel className="border rounded align-items-center">
-              <Carousel.Item>
-                <img src={Dashboard} alt="Logo" className="carouselSlides" />
-              </Carousel.Item>
-              <Carousel.Item>
+                <Carousel.Item>
                 <img src={Graph} alt="Graph" className="carouselSlides" />
               </Carousel.Item>
+              <Carousel.Item>
+                <img src={Dashboard} alt="Dashboard" className="carouselSlides" />
+              </Carousel.Item>
+              
               <Carousel.Item>
                 <img src={Notification} alt="Notification" className="carouselSlides" />
               </Carousel.Item>
