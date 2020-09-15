@@ -174,15 +174,6 @@ export default class GraphDrawer extends Component {
             </View>
             <View style={styles.button}>
               <TouchableOpacity
-                // style={[
-                //   styles.signIn,
-                //   {backgroundColor: 'white', shadowOpacity: 0.75,
-                //   shadowRadius: 5,
-                //   shadowColor: 'red',
-                //   shadowOffset: { height: 10, width: 10 },
-                //   elevation:6
-                //   }
-                // ]}
                 style={[styles.signIn, {backgroundColor:'white', borderColor: "#009999", borderWidth: 3}]}>
                 <Text style={[styles.textSign, {color: 'black', textAlign:'center'}]}>
                   Highlighted Task

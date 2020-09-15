@@ -408,12 +408,12 @@ class UserSettings extends Component {
                 onChangeText={(val) => this.snameInputChange(val)}
                 onEndEditing={(val) => this.handleValidSname(this.state.sname)}
               />
+              {this.state.checkSname ? (
+                <Animatable.View animation="rubberBand">
+                  <Feather name="check-circle" color="green" size={16} />
+                </Animatable.View>
+              ) : null}
             </View>
-            {this.state.checkSname ? (
-              <Animatable.View animation="rubberBand">
-                <Feather name="check-circle" color="green" size={16} />
-              </Animatable.View>
-            ) : null}
             {this.state.isValidSname ? null : (
               <Animatable.View animation="rubberBand" duration={400}>
                 <Text style={styleUser.errorMsg}>
@@ -460,12 +460,12 @@ class UserSettings extends Component {
             </View> */}
             <Modal
               animationType="fade"
-              transperant={true}
+              transparent={true}
               visible={this.state.modalVisible}
               onRequestClose={() => this.setModalVisible(false)}
             >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
+              <View style={styleUser.centeredView}>
+                <View style={styleUser.modalView}>
                   <TouchableOpacity
                   style={styles.hideButton}
                   onPress={() => this.setModalVisible(false)}>
@@ -740,7 +740,7 @@ const styleUser = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 500,
+    height: 400,
     width: 350,
   },
   openButton: {

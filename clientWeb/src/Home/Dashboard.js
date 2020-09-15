@@ -2,7 +2,6 @@ import React from "react";
 import Calendar from "./Calendar";
 import ProjectAnalytic from "../ProjectAnalytics/ProjectAnalytic";
 import { Container, Row, Col, Button, Dropdown } from "react-bootstrap";
-import $ from "jquery";
 
 class Dashboard extends React.Component {
   constructor(props) {
