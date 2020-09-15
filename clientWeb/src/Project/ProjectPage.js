@@ -5,6 +5,7 @@ import TaskInfo from "./TaskInfo";
 import $ from "jquery";
 import NoticeBoard from "../Notifications/NoticeBoard";
 import GanttChart from "./GanttChart";
+import ProjectAnalytic from "../ProjectAnalytics/ProjectAnalytic"
 
 
 class ProjectPage extends React.Component {
@@ -69,7 +70,6 @@ class ProjectPage extends React.Component {
   }
 
   render() {
-
     return (
       <Container fluid>
         <Row className="my-1">
@@ -101,6 +101,18 @@ class ProjectPage extends React.Component {
             ) : null}
           </Col>
         </Row>
+
+        <Row className="mt-3">
+          <Col style={{ color: "#EEBB4D" }}>
+              <h3>Analytics</h3>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <ProjectAnalytic project={this.props.project} displayProjectName={false}/>
+          </Col>
+        </Row>
+
         <Row className="mt-3">
           <Col style={{ color: "#EEBB4D" }}>
               <h3>Tasks</h3>
