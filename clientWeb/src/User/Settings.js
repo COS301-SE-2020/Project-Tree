@@ -161,8 +161,10 @@ handleNewPasswordChange(val)
     isValidPassword: false
   })//indexOf('?') != -1
   console.log(arr[0].indexOf('✓'))
+
   if(arr[0].indexOf('✓') != -1 && arr[1].indexOf('✓') != -1 && arr[2].indexOf('✓') != -1 && arr[3].indexOf('✓') != -1)
       {
+        console.log("POP")
         this.setState({
           confirmPassword: val,
           confirmNewPass: true,
@@ -241,7 +243,9 @@ handleNewPasswordChange(val)
       alert('Please ensure all password criteria are met');
       return;
     }
-    if(!this.state.confirmNewPass)
+
+    console.log(this.state.confirmNewPass)
+    if(this.state.confirmNewPass)
     {
     let data = {
       token: localStorage.getItem("sessionToken"),
@@ -393,13 +397,18 @@ handleNewPasswordChange(val)
                 <Col xs={1} ><i onClick={this.toggleShow}>{eye}</i></Col>
               </Row>
              <Row>
-             <div style={{ fontSize: 13, color: "black" }}>
-                <p></p><p></p>
+             <div><p></p><p></p>
+                <p style={(this.state.passwordError.indexOf("✓") != -1) ?  {color: "green"} : {color: "red"}}> {this.state.passwordError}</p>
+                <p style={(this.state.passwordError2.indexOf("✓") != -1) ? {color: "green"} : {color: "red"}}> {this.state.passwordError2}</p>
+                <p style={(this.state.passwordError3.indexOf("✓") != -1) ? {color: "green"} : {color: "red"}}> {this.state.passwordError3}</p>
+                <p style={(this.state.passwordError4.indexOf("✓") != -1) ? {color: "green"} : {color: "red"}}> {this.state.passwordError4}</p>
+                {/* <p></p><p></p>
                 <p><b>{this.state.passwordError}</b></p>
                 <p><b>{this.state.passwordError2}</b></p>
                 <p><b>{this.state.passwordError3}</b></p>
-                <p><b>{this.state.passwordError4}</b></p>
-             </div></Row>
+                <p><b>{this.state.passwordError4}</b></p> */}
+             </div>
+             </Row>
              </Container>
             )
             :(
