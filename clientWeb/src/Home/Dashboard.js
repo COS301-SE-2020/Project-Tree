@@ -9,43 +9,76 @@ class Dashboard extends React.Component {
     this.ProjectAnalyticList = this.ProjectAnalyticList.bind(this);
   }
 
-  ProjectAnalyticList(){
-    let items = []
-    this.props.ownedProjects.forEach(project => {
+  ProjectAnalyticList() {
+    let items = [];
+    this.props.ownedProjects.forEach((project) => {
       items.push(
-        <Col key={project.projectInfo.id.toString()} id={project.projectInfo.id.toString()} xl={12} lg={12} className="m-2" style={{width:'100%'}}>
-            <ProjectAnalytic project={project} displayProjectName={true} setProject={this.props.setProject} owned={true}/>
-            <hr style={{ backgroundColor: "#EEBB4D",  height:"4px"  }} />
+        <Col
+          key={project.projectInfo.id.toString()}
+          id={project.projectInfo.id.toString()}
+          xl={12}
+          lg={12}
+          className="m-2"
+          style={{ width: "100%" }}
+        >
+          <ProjectAnalytic
+            project={project}
+            displayProjectName={true}
+            setProject={this.props.setProject}
+            owned={true}
+          />
+          <hr style={{ backgroundColor: "#EEBB4D", height: "4px" }} />
         </Col>
-      )
+      );
     });
-    this.props.otherProjects.forEach(project => {
+    this.props.otherProjects.forEach((project) => {
       items.push(
-        <Col key={project.projectInfo.id.toString()} id={project.projectInfo.id.toString()} xl={12} lg={12} className="m-2" style={{width:'100%'}}>
-            <ProjectAnalytic project={project} displayProjectName={true} setProject={this.props.setProject}/>
-            <hr style={{ backgroundColor: "#EEBB4D", height:"4px"  }} />
+        <Col
+          key={project.projectInfo.id.toString()}
+          id={project.projectInfo.id.toString()}
+          xl={12}
+          lg={12}
+          className="m-2"
+          style={{ width: "100%" }}
+        >
+          <ProjectAnalytic
+            project={project}
+            displayProjectName={true}
+            setProject={this.props.setProject}
+          />
+          <hr style={{ backgroundColor: "#EEBB4D", height: "4px" }} />
         </Col>
-      )
-    })
+      );
+    });
     return items;
   }
 
-  MakeDropdown(){
+  MakeDropdown() {
     let ownedProjects = [];
-    this.props.ownedProjects.forEach(project => {
+    this.props.ownedProjects.forEach((project) => {
       ownedProjects.push(
-        <Dropdown.Item key={project.projectInfo.id.toString()} href={"#"+project.projectInfo.id.toString()}>{project.projectInfo.name}</Dropdown.Item>
-      )
+        <Dropdown.Item
+          key={project.projectInfo.id.toString()}
+          href={"#" + project.projectInfo.id.toString()}
+        >
+          {project.projectInfo.name}
+        </Dropdown.Item>
+      );
     });
 
     let otherProjects = [];
-    this.props.otherProjects.forEach(project => {
+    this.props.otherProjects.forEach((project) => {
       otherProjects.push(
-        <Dropdown.Item key={project.projectInfo.id.toString()} href={"#"+project.projectInfo.id.toString()}>{project.projectInfo.name}</Dropdown.Item>
-      )
+        <Dropdown.Item
+          key={project.projectInfo.id.toString()}
+          href={"#" + project.projectInfo.id.toString()}
+        >
+          {project.projectInfo.name}
+        </Dropdown.Item>
+      );
     });
 
-    return(
+    return (
       <Dropdown>
         <Dropdown.Toggle variant="warning" id="dropdown-basic">
           Jump To Project
@@ -58,7 +91,7 @@ class Dashboard extends React.Component {
           {otherProjects}
         </Dropdown.Menu>
       </Dropdown>
-    )
+    );
   }
 
   render() {
@@ -66,29 +99,18 @@ class Dashboard extends React.Component {
       <React.Fragment>
         <Container fluid className="mt-2">
           <Row>
-            <Col>
-            </Col>
+            <Col></Col>
             <Col xl={4} xs={3} className="text-center">
-              <h1 style={{fontWeight: "bold"}}>Project Dashboard</h1>
+              <h1 style={{ fontWeight: "bold" }}>Project Dashboard</h1>
             </Col>
             <Col>
               <Row>
-                <Col 
-                  sm={12}
-                  xl={6}
-                  className="text-center p-1"
-                >
+                <Col sm={12} xl={6} className="text-center p-1">
                   {this.MakeDropdown()}
                 </Col>
-                <Col
-                  sm={12}
-                  xl={6}
-                  className="text-center p-1"
-                >
+                <Col sm={12} xl={6} className="text-center p-1">
                   <a href="#calendar">
-                    <Button variant="warning">
-                      Jump To Calendar
-                    </Button>
+                    <Button variant="warning">Jump To Calendar</Button>
                   </a>
                 </Col>
               </Row>
@@ -96,14 +118,15 @@ class Dashboard extends React.Component {
           </Row>
           <Row>
             <Container fluid className="p-0">
-              <Row>
-                {this.ProjectAnalyticList()}
-              </Row>
-              <Row style={{marginBottom:'10em', marginTop:'2em'}}>
+              <Row>{this.ProjectAnalyticList()}</Row>
+              <Row style={{ marginBottom: "10em", marginTop: "2em" }}>
                 <Col className="text-center">
-                    <h1 id="calendar">Calendar</h1> 
-                    <hr style={{ backgroundColor: "#EEBB4D", width:"50%"}} />
-                    <Calendar ownedProjects={this.props.ownedProjects} otherProjects={this.props.otherProjects}/>
+                  <h1 id="calendar">Calendar</h1>
+                  <hr style={{ backgroundColor: "#EEBB4D", width: "50%" }} />
+                  <Calendar
+                    ownedProjects={this.props.ownedProjects}
+                    otherProjects={this.props.otherProjects}
+                  />
                 </Col>
               </Row>
             </Container>

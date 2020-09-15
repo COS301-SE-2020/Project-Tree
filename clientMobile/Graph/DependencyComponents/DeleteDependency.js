@@ -1,10 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Icon} from 'native-base';
 
 class DeleteDependency extends Component {
@@ -27,14 +22,14 @@ class DeleteDependency extends Component {
 
   async handleSubmit() {
     let projectData = await this.props.getProjectInfo();
-    let sourceViewId=this.props.sourceViewId
-    let targetViewId=this.props.targetViewId
-    if(sourceViewId === null) sourceViewId=''
-    if(targetViewId === null) targetViewId=''
+    let sourceViewId = this.props.sourceViewId;
+    let targetViewId = this.props.targetViewId;
+    if (sourceViewId === null) sourceViewId = '';
+    if (targetViewId === null) targetViewId = '';
     projectData.changedInfo = {
       dd_did: this.props.dependency.id,
       sourceView: sourceViewId,
-      targetView: targetViewId
+      targetView: targetViewId,
     };
     projectData = JSON.stringify(projectData);
 

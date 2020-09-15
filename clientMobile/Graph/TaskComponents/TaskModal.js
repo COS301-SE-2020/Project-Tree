@@ -5,17 +5,15 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ScrollView
+  ScrollView,
 } from 'react-native';
-import {
-  Icon
-} from 'native-base';
+import {Icon} from 'native-base';
 import * as Progress from 'react-native-progress';
 import DeleteTask from './DeleteTask';
 import UpdateTask from './UpdateTask';
 import CloneTask from './CloneTask';
-import SendTaskNotification from '../../NoticeBoard/TaskWideNotification'
-import ms from "ms";
+import SendTaskNotification from '../../NoticeBoard/TaskWideNotification';
+import ms from 'ms';
 
 let taskPacMans = null;
 let taskResPersons = null;
@@ -63,21 +61,23 @@ class TaskModal extends Component {
     let taskResources = [];
 
     // Get the users that are part of the selected task
-    for(let x = 0; x < this.props.assignedProjUsers.length; x++){
-      if(this.props.assignedProjUsers[x][1].end === this.props.selectedTask.id){
-        taskUsers.push(this.props.assignedProjUsers[x])
+    for (let x = 0; x < this.props.assignedProjUsers.length; x++) {
+      if (
+        this.props.assignedProjUsers[x][1].end === this.props.selectedTask.id
+      ) {
+        taskUsers.push(this.props.assignedProjUsers[x]);
       }
     }
 
     // Assign users to their respective roles by putting them in arrays
     for (let x = 0; x < taskUsers.length; x++) {
-      if (taskUsers[x][1].type === "PACKAGE_MANAGER") {
+      if (taskUsers[x][1].type === 'PACKAGE_MANAGER') {
         taskPacMans.push(taskUsers[x][0]);
       }
-      if (taskUsers[x][1].type === "RESPONSIBLE_PERSON") {
+      if (taskUsers[x][1].type === 'RESPONSIBLE_PERSON') {
         taskResPersons.push(taskUsers[x][0]);
       }
-      if (taskUsers[x][1].type === "RESOURCE") {
+      if (taskUsers[x][1].type === 'RESOURCE') {
         taskResources.push(taskUsers[x][0]);
       }
     }
@@ -96,7 +96,7 @@ class TaskModal extends Component {
       list.push(
         <Text key={people[x].id} style={styles.personText}>
           {people[x].name}&nbsp;{people[x].surname}
-        </Text>
+        </Text>,
       );
     }
     return list;
@@ -109,7 +109,11 @@ class TaskModal extends Component {
   }
 
   render() {
-    if (this.props.selectedTask === null || this.props.assignedProjUsers === null) return null;
+    if (
+      this.props.selectedTask === null ||
+      this.props.assignedProjUsers === null
+    )
+      return null;
 
     let taskUsers = this.classifyExistingUsers();
     taskPacMans = taskUsers[0];
@@ -146,36 +150,39 @@ class TaskModal extends Component {
                 onPress={() => this.props.displayTaskDependency(null, null)}>
                 <Icon type="FontAwesome" name="close" />
               </TouchableOpacity>
-              <View style={{alignItems: 'center', marginBottom:10}}>
-                <Text style={{fontSize: 30, color: '#184D47', textAlign:'center'}}>
+              <View style={{alignItems: 'center', marginBottom: 10}}>
+                <Text
+                  style={{fontSize: 30, color: '#184D47', textAlign: 'center'}}>
                   {this.props.selectedTask.name}
-                  {this.props.clonedNode !== null ? <Text>{'\n'}(View)</Text> : null}
+                  {this.props.clonedNode !== null ? (
+                    <Text>{'\n'}(View)</Text>
+                  ) : null}
                 </Text>
               </View>
-              <ScrollView style={{height:200}}>
+              <ScrollView style={{height: 200}}>
                 <Text style={styles.modalText}>
                   {this.props.selectedTask.description}
                 </Text>
                 <Text style={styles.modalText}>
-                  Task Id:{' '} 
-                  {this.props.selectedTask.id}
+                  Task Id: {this.props.selectedTask.id}
                 </Text>
                 <Text style={styles.modalText}>
                   Start Date:{' '}
-                  {this.props.selectedTask.startDate.replace("T", " ")}
+                  {this.props.selectedTask.startDate.replace('T', ' ')}
                 </Text>
                 <Text style={styles.modalText}>
-                  End Date:{' '}
-                  {this.props.selectedTask.endDate.replace("T", " ")}
+                  End Date: {this.props.selectedTask.endDate.replace('T', ' ')}
                 </Text>
                 <Text style={styles.modalText}>
                   Duration:{' '}
-                  {this.CalcDiff(this.props.selectedTask.startDate, this.props.selectedTask.endDate)}
+                  {this.CalcDiff(
+                    this.props.selectedTask.startDate,
+                    this.props.selectedTask.endDate,
+                  )}
                 </Text>
-                <View style={{alignItems:'center'}}>
+                <View style={{alignItems: 'center'}}>
                   <Progress.Bar
-                    progress={this.props.selectedTask.progress/100}
-                    
+                    progress={this.props.selectedTask.progress / 100}
                     showsText={true}
                     formatText={() => {
                       return `${this.props.selectedTask.progress}%`;
@@ -190,24 +197,25 @@ class TaskModal extends Component {
                 <Text style={styles.roleText}>Resources:</Text>
                 {this.printUsers(taskResources)}
               </ScrollView>
-              
+
               <View>
-                <View style={{flexDirection:'row'}}>
-                  {this.props.userPermissions["update"] === true?
+                <View style={{flexDirection: 'row'}}>
+                  {this.props.userPermissions['update'] === true ? (
                     <View style={{flex: 1}}>
                       <TouchableOpacity
                         style={styles.editButton}
                         onPress={() => this.toggleVisibility(false, true)}>
-                        <Icon type="AntDesign" name="edit" style={{color: 'white'}}>
+                        <Icon
+                          type="AntDesign"
+                          name="edit"
+                          style={{color: 'white'}}>
                           <Text>&nbsp;Edit</Text>
                         </Icon>
                       </TouchableOpacity>
                     </View>
-                  :
-                    null
-                  }
+                  ) : null}
 
-                  {this.props.userPermissions["delete"] === true?
+                  {this.props.userPermissions['delete'] === true ? (
                     <View style={{flex: 1}}>
                       <DeleteTask
                         task={this.props.selectedTask}
@@ -217,13 +225,11 @@ class TaskModal extends Component {
                         setProjectInfo={this.props.setProjectInfo}
                       />
                     </View>
-                  :
-                    null
-                  }
+                  ) : null}
                 </View>
-                
-                <View style={{flexDirection:'row'}}>
-                  {this.props.userPermissions["create"] === true?
+
+                <View style={{flexDirection: 'row'}}>
+                  {this.props.userPermissions['create'] === true ? (
                     <View style={{flex: 1}}>
                       <CloneTask
                         task={this.props.selectedTask}
@@ -232,9 +238,7 @@ class TaskModal extends Component {
                         setProjectInfo={this.props.setProjectInfo}
                       />
                     </View>
-                  :
-                    null
-                  }
+                  ) : null}
                   <View style={{flex: 1}}>
                     <SendTaskNotification
                       project={this.props.project}
@@ -296,7 +300,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: 'center',
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   personText: {
     marginBottom: 5,

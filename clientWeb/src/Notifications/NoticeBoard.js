@@ -4,26 +4,24 @@ import { Row, Col, Container } from "react-bootstrap";
 import $ from "jquery";
 import "./style.css";
 
-
-let global_pfp = " "
+let global_pfp = " ";
 
 class NoticeBoard extends Component {
   _isMounted = false;
 
   constructor(props) {
     super(props);
-    this.state = { users:null };
+    this.state = { users: null };
   }
 
-  async componentDidMount() 
-  {
-    $.post("/people/getAllUsers",
+  async componentDidMount() {
+    $.post(
+      "/people/getAllUsers",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
-       this.setState({ users: response});
+        this.setState({ users: response });
       }
-    )
-    .fail((response) => {
+    ).fail((response) => {
       throw Error(response.message);
     });
   }
@@ -33,35 +31,55 @@ class NoticeBoard extends Component {
       return null;
     }
 
-    if(this.state.users === null){
+    if (this.state.users === null) {
       return null;
     }
-    
-    return <NotificationList messages={this.props.messages} users={this.state.users}/>;
+
+    return (
+      <NotificationList
+        messages={this.props.messages}
+        users={this.state.users}
+      />
+    );
   }
 }
 
 class NotificationList extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      user: this.props.users, pfp: "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture", imageHash: Date.now()};
+      user: this.props.users,
+      pfp: "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture",
+      imageHash: Date.now(),
+    };
     this.returnRandomUser = this.returnRandomUser.bind(this);
   }
 
-  
-
   returnRandomUser(profileId, type) {
     let users = this.state.user.users;
-    if(type == "auto")
-    {
-      return <img class="circular" src={this.state.pfp} alt="user" width="70" height="70"/>
+    if (type == "auto") {
+      return (
+        <img
+          class="circular"
+          src={this.state.pfp}
+          alt="user"
+          width="70"
+          height="70"
+        />
+      );
     }
 
-    for(var x=0; x<users.length; x++){
-      if(parseInt(users[x].id) === parseInt(profileId[0])){
-        return <img class="circular" src={users[x].profilePicture} alt="user" width="70" height="70"/>
+    for (var x = 0; x < users.length; x++) {
+      if (parseInt(users[x].id) === parseInt(profileId[0])) {
+        return (
+          <img
+            class="circular"
+            src={users[x].profilePicture}
+            alt="user"
+            width="70"
+            height="70"
+          />
+        );
       }
     }
   }
@@ -119,7 +137,8 @@ class NotificationList extends React.Component {
             {dailyMessages[0].timestamp.day.low +
               " " +
               monthNames[dailyMessages[0].timestamp.month.low - 1] +
-              " " + dailyMessages[0].timestamp.year.low}
+              " " +
+              dailyMessages[0].timestamp.year.low}
           </Col>
         </Row>
         <hr style={{ backgroundColor: "#EEBB4D" }} />
@@ -132,13 +151,15 @@ class NotificationList extends React.Component {
   createDailyMessageList(messages) {
     let messageList = messages.map((message, i) => (
       <Container key={i}>
-        <Row>              
-          <Col>{this.returnRandomUser([message.profileId], message.type)}</Col>       
+        <Row>
+          <Col>{this.returnRandomUser([message.profileId], message.type)}</Col>
           <Col xs={8}>
-            <em>{message.type === "task" ? message.taskName : null}
-            {message.type === "project" ? "Project Wide" : null}
-            {message.type === "auto" ? "Task assigned" : null}{" "} </em>
-            <br/>
+            <em>
+              {message.type === "task" ? message.taskName : null}
+              {message.type === "project" ? "Project Wide" : null}
+              {message.type === "auto" ? "Task assigned" : null}{" "}
+            </em>
+            <br />
             {message.message}
           </Col>
           <Col className="text-right">
@@ -159,7 +180,7 @@ class NotificationList extends React.Component {
     ));
     return messageList;
   }
-  
+
   render() {
     let messages = this.sortMessages();
     let messageComponents = this.createMessageList(messages);
@@ -174,9 +195,7 @@ class NotificationList extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col
-            style={{height: "23em", overflowY: "auto" }}
-          >
+          <Col style={{ height: "23em", overflowY: "auto" }}>
             {messageComponents}
           </Col>
         </Row>

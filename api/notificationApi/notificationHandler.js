@@ -164,7 +164,7 @@ function formatAutoAssignData(
     timestamp: data.timestamp,
     message:
       "You have been assigned as a package manager to task: " + data.taskName,
-    taskName:  data.taskName,
+    taskName: data.taskName,
     projName: data.projName,
     projID: data.projID,
     mode: 2,
@@ -247,5 +247,5 @@ module.exports = {
   retrieveNotifications,
   formatAutoAssignData,
   getEmails,
-  getIds
+  getIds,
 };

@@ -4,8 +4,7 @@ const bcrypt = require("bcrypt");
 
 async function editUser(req, res) {
   let pfp = req.body.profilepicture;
-  if(pfp == '')
-  {
+  if (pfp == "") {
     pfp = req.body.oldprofile;
   }
   let userId = await verify(req.body.token);
@@ -51,7 +50,7 @@ async function editUser(req, res) {
 
 async function register(req, res) {
   //email, password, name, surname
-  let x = 'https://i.ibb.co/MRpbpHN/default.png';
+  let x = "https://i.ibb.co/MRpbpHN/default.png";
   db.getSession()
     .run(
       `
@@ -63,8 +62,7 @@ async function register(req, res) {
       if (result.records.length != 0) {
         res.status(200);
         res.send({ message: "duplicate" });
-      } else 
-      {       
+      } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           let token = JWT.sign(
             { email: req.body.email, hash },
@@ -92,11 +90,11 @@ async function register(req, res) {
                   sessionToken: token,
                   status: true,
                   id: id,
-                  message: "success"
+                  message: "success",
                 });
               } else {
                 res.status(400);
-                res.send({ status: false, message: err});
+                res.send({ status: false, message: err });
               }
             })
             .catch((err) => {
@@ -128,7 +126,10 @@ function login(req, res) {
         let hash = result.records[0]._fields[0].properties.password;
         bcrypt.compare(req.body.password, hash, (err, result) => {
           if (result) {
-            let token = JWT.sign({ email: req.body.email, hash }, process.env.ACCESS_TOKEN_SECRET);
+            let token = JWT.sign(
+              { email: req.body.email, hash },
+              process.env.ACCESS_TOKEN_SECRET
+            );
             db.getSession()
               .run(
                 `
@@ -278,23 +279,22 @@ async function checkPermission(req, res) {
 async function editPassword(req, res) {
   let userId = await verify(req.body.token);
   db.getSession()
-  .run(
-    `
+    .run(
+      `
       MATCH (u:User) 
       WHERE ID(u) = ${userId} 
       RETURN u
     `
-  )
-  .then((result) => {
-    if (result.records.length != 0) {
-      let hash = result.records[0]._fields[0].properties.password;   
-      bcrypt.compare(req.body.testPass, hash, (err, result) => {
-        let newPass = bcrypt.hashSync(req.body.newPass, 10);
-        if (result) 
-        {
-          db.getSession()
-                .run(
-                  `
+    )
+    .then((result) => {
+      if (result.records.length != 0) {
+        let hash = result.records[0]._fields[0].properties.password;
+        bcrypt.compare(req.body.testPass, hash, (err, result) => {
+          let newPass = bcrypt.hashSync(req.body.newPass, 10);
+          if (result) {
+            db.getSession()
+              .run(
+                `
                     MATCH (a) 
                     WHERE ID(a) = ${userId}
                     SET a += {
@@ -302,26 +302,26 @@ async function editPassword(req, res) {
                     } 
                     RETURN a
                   `
-                ).then((result) => {
-                    res.status(200);
-                    res.send({ status: true, message: "success" });
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                    res.status(400);
-                    res.send({ message: err });
-                  });
-                  }
-                  else {
-                    res.status(200);
-                    res.send({ status: false, message: "wrong" });
-                  } 
-    })}
-    else {
-      res.status(400);
-      res.send({ message: "err" });
-    }
-  })
+              )
+              .then((result) => {
+                res.status(200);
+                res.send({ status: true, message: "success" });
+              })
+              .catch((err) => {
+                console.log(err);
+                res.status(400);
+                res.send({ message: err });
+              });
+          } else {
+            res.status(200);
+            res.send({ status: false, message: "wrong" });
+          }
+        });
+      } else {
+        res.status(400);
+        res.send({ message: "err" });
+      }
+    });
 }
 
 async function getUser(req, res) {
@@ -399,5 +399,5 @@ module.exports = {
   getUser,
   checkPermission,
   checkPermissionInternal,
-  editPassword
+  editPassword,
 };

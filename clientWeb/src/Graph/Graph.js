@@ -5,7 +5,15 @@ import $ from "jquery";
 import dagre from "dagre";
 import graphlib from "graphlib";
 import CreateDependency from "./Dependency/CreateDependency";
-import { Form, Button, Container, Row, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Container,
+  Row,
+  Col,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
 
 function makeLink(edge, criticalPathLinks) {
@@ -15,8 +23,8 @@ function makeLink(edge, criticalPathLinks) {
     id: "l" + edge.id,
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
-    connector: { name: 'rounded' },
-    router: { name: 'manhattan' },
+    connector: { name: "rounded" },
+    router: { name: "manhattan" },
     // connector: { name: 'smooth' },
     attrs: {
       type: "link",
@@ -24,7 +32,7 @@ function makeLink(edge, criticalPathLinks) {
     },
   });
 
-  return link
+  return link;
 }
 
 function makeElement(node, criticalPathNodes) {
@@ -41,52 +49,45 @@ function makeElement(node, criticalPathNodes) {
   let fillAmount = null;
   if (node.type === "Incomplete") {
     let today = new Date();
-    if (today > new Date(node.endDate)){
+    if (today > new Date(node.endDate)) {
       statusColor = "#ff6961";
-      fillAmount = [
-        { offset: `100%`, color: statusColor },
-      ]
-    }
-    else{
+      fillAmount = [{ offset: `100%`, color: statusColor }];
+    } else {
       fillAmount = [
         { offset: `${node.progress}%`, color: statusColor },
-        { offset: `${node.progress+1}%`, color: '#fff' },
-      ]
+        { offset: `${node.progress + 1}%`, color: "#fff" },
+      ];
     }
   } else if (node.type === "Complete") {
     statusColor = "#77dd77";
-    fillAmount = [
-      { offset: `100%`, color: statusColor },
-    ]
+    fillAmount = [{ offset: `100%`, color: statusColor }];
   } else if (node.type === "Issue") {
     statusColor = "#ffae42";
-    fillAmount = [
-      { offset: `100%`, color: statusColor },
-    ]
+    fillAmount = [{ offset: `100%`, color: statusColor }];
   }
-  
+
   var borderColor = "#000";
   var borderWidth = 1;
   if (criticalPathNodes.includes(node.id)) borderColor = "#0275d8";
 
   let shadowHighlight = {
-    name: 'dropShadow',
+    name: "dropShadow",
     args: {
       dx: 1,
       dy: 1,
-      blur: 2
-    }
-  }
-  if(node.highlighted !== undefined){
+      blur: 2,
+    },
+  };
+  if (node.highlighted !== undefined) {
     shadowHighlight = {
-      name: 'highlight',
+      name: "highlight",
       args: {
-        color: '#009999',
+        color: "#009999",
         width: 3,
         opacity: 0.7,
-        blur: 5
-      }
-    }
+        blur: 5,
+      },
+    };
   }
 
   return new joint.shapes.standard.Rectangle({
@@ -96,8 +97,8 @@ function makeElement(node, criticalPathNodes) {
       type: "node",
       body: {
         fill: {
-          type: 'linearGradient',
-          stops: fillAmount
+          type: "linearGradient",
+          stops: fillAmount,
         },
         filter: shadowHighlight,
         stroke: borderColor,
@@ -140,38 +141,41 @@ function buildGraph(nodes, rels, criticalPath) {
   return elements.concat(links);
 }
 
-function createViews(allNodes, viewNodes){
+function createViews(allNodes, viewNodes) {
   let clonedNodes = allNodes;
-  if(viewNodes !== null){
-    for(let x = 0; x < viewNodes.length; x++){
-      for(let y = 0; y < allNodes.length; y++){
-        if(viewNodes[x].originalNode === parseInt(allNodes[y].id)){
+  if (viewNodes !== null) {
+    for (let x = 0; x < viewNodes.length; x++) {
+      for (let y = 0; y < allNodes.length; y++) {
+        if (viewNodes[x].originalNode === parseInt(allNodes[y].id)) {
           let clonedNode = allNodes[y].clone();
 
           var width = 100;
           var height = 80;
 
-          var wraptext = joint.util.breakText(`(View) ${allNodes[y].attributes.attrs.text.text}`, {
-            width: width - 20,
-            height: height,
-          });
+          var wraptext = joint.util.breakText(
+            `(View) ${allNodes[y].attributes.attrs.text.text}`,
+            {
+              width: width - 20,
+              height: height,
+            }
+          );
 
-          clonedNode.attributes.attrs.text.text = `${wraptext}`
+          clonedNode.attributes.attrs.text.text = `${wraptext}`;
           clonedNode.attributes.attrs.originId = allNodes[y].id;
           clonedNode.attributes.id = `${viewNodes[x].id}`;
           clonedNode.id = `${viewNodes[x].id}`;
           clonedNodes.push(clonedNode);
         }
 
-        for(let z = 0; z < viewNodes[x].outDepArr.length; z++){
-          if(`l${viewNodes[x].outDepArr[z].low}` === allNodes[y].id){
-            allNodes[y].attributes.source = {id: `${viewNodes[x].id}`};
+        for (let z = 0; z < viewNodes[x].outDepArr.length; z++) {
+          if (`l${viewNodes[x].outDepArr[z].low}` === allNodes[y].id) {
+            allNodes[y].attributes.source = { id: `${viewNodes[x].id}` };
           }
         }
 
-        for(let a = 0; a < viewNodes[x].inDepArr.length; a++){
-          if(`l${viewNodes[x].inDepArr[a].low}` === allNodes[y].id){
-            allNodes[y].attributes.target = {id: `${viewNodes[x].id}`};
+        for (let a = 0; a < viewNodes[x].inDepArr.length; a++) {
+          if (`l${viewNodes[x].inDepArr[a].low}` === allNodes[y].id) {
+            allNodes[y].attributes.target = { id: `${viewNodes[x].id}` };
           }
         }
       }
@@ -218,7 +222,7 @@ class Graph extends React.Component {
     for (let i = 0; i < this.props.links.length; i++) {
       const el = this.props.links[i];
       if (el.source === curr) {
-        if (target === el.target) check =  true;
+        if (target === el.target) check = true;
         check = check || this.recDepCheck(el.target, target);
       }
     }
@@ -232,8 +236,10 @@ class Graph extends React.Component {
     }
 
     var new_source_targetID = parseInt(clickedNode.model.id);
-    if(clickedNode.model.attributes.attrs.originId !== undefined){
-      new_source_targetID = parseInt(clickedNode.model.attributes.attrs.originId);
+    if (clickedNode.model.attributes.attrs.originId !== undefined) {
+      new_source_targetID = parseInt(
+        clickedNode.model.attributes.attrs.originId
+      );
     }
     this.setState({ alert: null });
 
@@ -250,28 +256,34 @@ class Graph extends React.Component {
     }
 
     if (this.state.source === null) {
-      if(clickedNode.model.attributes.attrs.originId !== undefined){
-        this.setState({ source: source_target, viewId_source: clickedNode.model.id});
-      }
-      else{
+      if (clickedNode.model.attributes.attrs.originId !== undefined) {
+        this.setState({
+          source: source_target,
+          viewId_source: clickedNode.model.id,
+        });
+      } else {
         this.setState({ source: source_target });
       }
     } else {
       if (this.state.source.id === new_source_targetID) {
         this.setState({ source: null, target: null });
       } else {
-        if(clickedNode.model.attributes.attrs.originId !== undefined){
-          this.setState({ target: source_target, viewId_target: clickedNode.model.id});
-        }
-        else{
+        if (clickedNode.model.attributes.attrs.originId !== undefined) {
+          this.setState({
+            target: source_target,
+            viewId_target: clickedNode.model.id,
+          });
+        } else {
           this.setState({ target: source_target });
         }
-        if (this.recDepCheck(this.state.target.id, this.state.source.id) === true) {
+        if (
+          this.recDepCheck(this.state.target.id, this.state.source.id) === true
+        ) {
           this.setState({ target: null, alert: 1 });
           return;
-        }
-
-        else if(this.alreadyExists(this.state.target.id, this.state.source.id)){
+        } else if (
+          this.alreadyExists(this.state.target.id, this.state.source.id)
+        ) {
           this.setState({ target: null, alert: 2 });
           return;
         }
@@ -279,26 +291,35 @@ class Graph extends React.Component {
     }
   }
 
-  alreadyExists(target, source){
+  alreadyExists(target, source) {
     let rels = this.props.links;
 
-    for(var x=0; x<rels.length; x++){
-      if(target === rels[x].target && source === rels[x].source) return true;
+    for (var x = 0; x < rels.length; x++) {
+      if (target === rels[x].target && source === rels[x].source) return true;
     }
 
     return false;
   }
 
   clearDependency() {
-    this.setState({ source: null, target: null, alert: null, viewId_source: null, viewId_target: null });
+    this.setState({
+      source: null,
+      target: null,
+      alert: null,
+      viewId_source: null,
+      viewId_target: null,
+    });
   }
 
   handleClick(clickedNode) {
     if (clickedNode.model.attributes.attrs.type === "node") {
-      if(clickedNode.model.attributes.attrs.originId !== undefined){
-        this.props.toggleSidebar(parseInt(clickedNode.model.attributes.attrs.originId), null, clickedNode.model.id);
-      }
-      else{
+      if (clickedNode.model.attributes.attrs.originId !== undefined) {
+        this.props.toggleSidebar(
+          parseInt(clickedNode.model.attributes.attrs.originId),
+          null,
+          clickedNode.model.id
+        );
+      } else {
         this.props.toggleSidebar(parseInt(clickedNode.model.id), null);
       }
     } else if (clickedNode.model.attributes.attrs.type === "link") {
@@ -307,15 +328,20 @@ class Graph extends React.Component {
       let sourceView = null;
       let targetView = null;
 
-      for(let x = 0; x < this.props.views.length; x++) {
-        if(this.props.views[x].id === source){
+      for (let x = 0; x < this.props.views.length; x++) {
+        if (this.props.views[x].id === source) {
           sourceView = source;
-        }
-        else if(this.props.views[x].id === target){
+        } else if (this.props.views[x].id === target) {
           targetView = target;
         }
       }
-      this.props.toggleSidebar(null, parseInt(clickedNode.model.id.substr(1)), undefined, sourceView, targetView);
+      this.props.toggleSidebar(
+        null,
+        parseInt(clickedNode.model.id.substr(1)),
+        undefined,
+        sourceView,
+        targetView
+      );
     }
   }
 
@@ -370,13 +396,13 @@ class Graph extends React.Component {
 
     paper.on("blank:pointerdblclick", this.addTask);
 
-    paper.on('blank:mousewheel', function(evt, x, y, delta) {
+    paper.on("blank:mousewheel", function (evt, x, y, delta) {
       evt.preventDefault();
       evt = evt.originalEvent;
-      var normalizedDelta = Math.max(-1, Math.min(1, (delta))) / 50;
+      var normalizedDelta = Math.max(-1, Math.min(1, delta)) / 50;
       graphScale += normalizedDelta; // the current paper scale changed by delta
       paper.scale(graphScale, graphScale);
-    })
+    });
 
     $("#paper").mousemove(function (event) {
       if (dragStartPosition)
@@ -395,7 +421,7 @@ class Graph extends React.Component {
     }
 
     var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
-    cells = createViews(cells, this.props.views)
+    cells = createViews(cells, this.props.views);
     this.state.graph.resetCells(cells);
     joint.layout.DirectedGraph.layout(this.state.graph, {
       dagre: dagre,
@@ -404,7 +430,7 @@ class Graph extends React.Component {
       rankDir: "TB",
       nodeSep: 100,
       rankSep: 100,
-    });   
+    });
   }
 
   hideModal() {
@@ -447,8 +473,20 @@ class Graph extends React.Component {
           <Row>
             <Col className="alignSelfCenter">
               <Row>
-                <Col className="text-left align-top " style={{ fontSize: "27px"}}>
-                    <OverlayTrigger overlay={<Tooltip>Double click on an empty space to create a new task or right click on two tasks to create a dependency</Tooltip>}><i className="fa fa-question-circle"></i></OverlayTrigger>
+                <Col
+                  className="text-left align-top "
+                  style={{ fontSize: "27px" }}
+                >
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip>
+                        Double click on an empty space to create a new task or
+                        right click on two tasks to create a dependency
+                      </Tooltip>
+                    }
+                  >
+                    <i className="fa fa-question-circle"></i>
+                  </OverlayTrigger>
                 </Col>
                 {dependency != null ? (
                   <Col className="text-center">
@@ -458,7 +496,7 @@ class Graph extends React.Component {
                       block
                       size="sm"
                       disabled={this.state.target === null}
-                      style={{overflow: "hidden"}}
+                      style={{ overflow: "hidden" }}
                     >
                       {dependency}
                     </Button>
@@ -483,7 +521,7 @@ class Graph extends React.Component {
                       block
                       xs={2}
                       size="sm"
-                      style={{height: "31px", overflow: "hidden"}}
+                      style={{ height: "31px", overflow: "hidden" }}
                       onClick={() => {
                         this.setState({
                           displayCriticalPath: !this.state.displayCriticalPath,
@@ -536,24 +574,21 @@ class Graph extends React.Component {
                 </Col>
               </Row>
               {this.state.alert === 1 ? (
-                <Row style={{color: "red"}}>
+                <Row style={{ color: "red" }}>
                   Please select another node that is not higher in the same
                   chain
                 </Row>
               ) : null}
 
               {this.state.alert === 2 ? (
-                <Row style={{color: "red"}}>
+                <Row style={{ color: "red" }}>
                   This dependency already exists
                 </Row>
               ) : null}
             </Col>
           </Row>
         </Container>
-        <div
-          id="paper"
-          className="overflow-hidden user-select-none m-10"
-        ></div>
+        <div id="paper" className="overflow-hidden user-select-none m-10"></div>
         {this.state.createDependency ? (
           <CreateDependency
             closeModal={this.closeCreateDependency}

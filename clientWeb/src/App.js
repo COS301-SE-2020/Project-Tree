@@ -20,11 +20,7 @@ function RightSide(props) {
   };
 
   return (
-    <div
-      className="wing"
-      ref={props.containerRef}
-      onClick={props.onClick}
-    >
+    <div className="wing" ref={props.containerRef} onClick={props.onClick}>
       <div className="inner-container">
         <div className="text">{props.current}</div>
       </div>
@@ -61,14 +57,14 @@ class App extends Component {
 
   componentDidMount() {
     this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
+    window.addEventListener("resize", this.updateWindowDimensions);
     let token = localStorage.getItem("sessionToken");
     if (token != null) {
       $.post("/project/get", { token }, (response) => {
         let ownedProjects = [];
 
         response.ownedProjects.forEach(async (project, i) => {
-          ownedProjects[i] = {}
+          ownedProjects[i] = {};
           ownedProjects[i].projectInfo = project;
           ownedProjects[i].criticalPath = {};
           ownedProjects[i].tasks = [];
@@ -76,7 +72,7 @@ class App extends Component {
         });
         let otherProjects = [];
         response.otherProjects.forEach((project, i) => {
-          otherProjects[i] = {}
+          otherProjects[i] = {};
           otherProjects[i].projectInfo = project;
           otherProjects[i].criticalPath = {};
           otherProjects[i].tasks = [];
@@ -147,14 +143,13 @@ class App extends Component {
       if (this.rightSide) this.rightSide.classList.add("right");
     }
   }
-  
+
   componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions);
+    window.removeEventListener("resize", this.updateWindowDimensions);
   }
 
-
   updateWindowDimensions() {
-    this.setState({ height: window.innerHeight-87 + "px" });
+    this.setState({ height: window.innerHeight - 87 + "px" });
   }
 
   setProject(proj) {
@@ -184,14 +179,14 @@ class App extends Component {
       });
     } else {
       let owned = false;
-      this.state.ownedProjects.forEach(project => {
+      this.state.ownedProjects.forEach((project) => {
         if (project.projectInfo.id === proj.id) owned = true;
       });
       let other = false;
-      this.state.otherProjects.forEach(project => {
+      this.state.otherProjects.forEach((project) => {
         if (project.projectInfo.id === proj.id) other = true;
       });
-      if ( !owned && !other) {
+      if (!owned && !other) {
         let ownedProjects = this.state.ownedProjects;
         let project = {};
         project.projectInfo = proj;
@@ -201,12 +196,12 @@ class App extends Component {
         ownedProjects.push(project);
         this.setState({ ownedProjects: ownedProjects });
       }
-      
+
       let project = {};
-      this.state.ownedProjects.forEach(p => {
+      this.state.ownedProjects.forEach((p) => {
         if (p.projectInfo.id === proj.id) project = p;
       });
-      this.state.otherProjects.forEach(p => {
+      this.state.otherProjects.forEach((p) => {
         if (p.projectInfo.id === proj.id) project = p;
       });
       this.setState({ project: project });
@@ -297,13 +292,14 @@ class App extends Component {
         <BrowserRouter>
           <Navbar
             bg="#96BB7C"
-            style={{ 
-              fontFamily: "Courier New", 
-              backgroundColor: "#96BB7C", 
-              position:"fixed",
+            style={{
+              fontFamily: "Courier New",
+              backgroundColor: "#96BB7C",
+              position: "fixed",
               height: "87px",
               width: "100%",
-              zIndex:"90"}}
+              zIndex: "90",
+            }}
           >
             <Nav className="form-inline ">
               {this.state.loggedInStatus === true ? (
@@ -326,7 +322,7 @@ class App extends Component {
             </Nav>
             <Nav className="m-auto form-inline">
               <Nav.Link href="/">
-                <img src={logo} alt="Logo" style={{ width: "110px"}} />
+                <img src={logo} alt="Logo" style={{ width: "110px" }} />
               </Nav.Link>
             </Nav>
             <Nav className="form-inline">
@@ -335,7 +331,7 @@ class App extends Component {
               ) : null}
             </Nav>
           </Navbar>
-          <Container fluid style={{paddingTop:"87px", height:"100%"}}>
+          <Container fluid style={{ paddingTop: "87px", height: "100%" }}>
             <Row style={{}}>
               {this.state.showSideBar !== false ? (
                 <Col
@@ -346,7 +342,7 @@ class App extends Component {
                   xs={4}
                   className="border-right border-dark"
                   style={{
-                    height:this.state.height,
+                    height: this.state.height,
                     backgroundColor: "#303030",
                     position: "fixed",
                     zIndex: "9",
@@ -360,7 +356,7 @@ class App extends Component {
                   />
                 </Col>
               ) : null}
-              <Col style={{ height:this.state.height, overflowY: "auto"}} >
+              <Col style={{ height: this.state.height, overflowY: "auto" }}>
                 <Switch>
                   <Route path="/home">
                     {this.state.loggedInStatus ? (
@@ -418,34 +414,34 @@ class App extends Component {
                       ) : (
                         <Redirect to="/home" />
                       )
-                      ) : (
-                        <div class="screenC">
-                       {/* <div className="column left" style={{ backgroundColor: "white" }}> */}
-                          <div className="login">
-                            <div
-                              className="container"
-                              ref={(ref) => (this.container = ref)}
-                            >
-                              {isLogginActive && (
-                                <Login
-                                  containerRef={(ref) => (this.current = ref)}
-                                  handleLogin={(data) => this.handleLogin(data)}
-                                />
-                              )}
-                              {!isLogginActive && (
-                                <Register
-                                  containerRef={(ref) => (this.current = ref)}
-                                  handleReg={(data) => this.handleReg(data)}
-                                />
-                              )}
-                            </div>
-                            <RightSide
-                              current={current}
-                              currentActive={currentActive}
-                              containerRef={(ref) => (this.rightSide = ref)}
-                              onClick={this.changeState.bind(this)}
-                            />
+                    ) : (
+                      <div class="screenC">
+                        {/* <div className="column left" style={{ backgroundColor: "white" }}> */}
+                        <div className="login">
+                          <div
+                            className="container"
+                            ref={(ref) => (this.container = ref)}
+                          >
+                            {isLogginActive && (
+                              <Login
+                                containerRef={(ref) => (this.current = ref)}
+                                handleLogin={(data) => this.handleLogin(data)}
+                              />
+                            )}
+                            {!isLogginActive && (
+                              <Register
+                                containerRef={(ref) => (this.current = ref)}
+                                handleReg={(data) => this.handleReg(data)}
+                              />
+                            )}
                           </div>
+                          <RightSide
+                            current={current}
+                            currentActive={currentActive}
+                            containerRef={(ref) => (this.rightSide = ref)}
+                            onClick={this.changeState.bind(this)}
+                          />
+                        </div>
                       </div>
                     )}
                   </Route>

@@ -9,13 +9,16 @@ class ProjectInfo extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container className="block-example border rounded border-secondary" style={{height:"27em"}}>
+        <Container
+          className="block-example border rounded border-secondary"
+          style={{ height: "27em" }}
+        >
           <Row className="align-items-center bg-secondary py-2">
             <Col>
               <Row>
                 <Col
                   className="text-white text-center"
-                  style={{ fontSize: "22px"}}
+                  style={{ fontSize: "22px" }}
                   xs={12}
                 >
                   {this.props.project.projectInfo.name}
@@ -23,9 +26,7 @@ class ProjectInfo extends React.Component {
               </Row>
               <Row>
                 {this.props.userPermission["project"] === true ? (
-                  <Col
-                    className="text-center my-1"
-                  >
+                  <Col className="text-center my-1">
                     <DeleteProject
                       project={this.props.project.projectInfo}
                       setProject={(project) => {
@@ -35,9 +36,7 @@ class ProjectInfo extends React.Component {
                   </Col>
                 ) : null}
                 {this.props.userPermission["project"] === true ? (
-                  <Col
-                    className="text-center my-1"
-                  >
+                  <Col className="text-center my-1">
                     <UpdateProject
                       project={this.props.project.projectInfo}
                       setProject={(project) => {
@@ -46,21 +45,14 @@ class ProjectInfo extends React.Component {
                     />
                   </Col>
                 ) : null}
-                <Col
-                  className="text-center my-1"
-                >
+                <Col className="text-center my-1">
                   <Link to="/graph">
-                    <Button
-                      variant="warning"
-                      style={{width: "100px"}}
-                    >
+                    <Button variant="warning" style={{ width: "100px" }}>
                       <i className="fa fa-line-chart"></i> Graph{" "}
                     </Button>
                   </Link>
                 </Col>
-                <Col
-                  className="text-center my-1"
-                >
+                <Col className="text-center my-1">
                   <SendProjectNotification
                     project={this.props.project.projectInfo}
                     user={this.props.user}
@@ -71,7 +63,6 @@ class ProjectInfo extends React.Component {
                 </Col>
               </Row>
             </Col>
-            
           </Row>
           <Row className="align-items-center py-2">
             <Col
@@ -103,37 +94,55 @@ class ProjectInfo extends React.Component {
                   <tr>
                     <td>Package Manager</td>
                     <td>
-                      {this.props.project.projectInfo.permissions[0] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[0] === true
+                        ? "X"
+                        : null}
                     </td>
                     <td>
-                      {this.props.project.projectInfo.permissions[1] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[1] === true
+                        ? "X"
+                        : null}
                     </td>
                     <td>
-                      {this.props.project.projectInfo.permissions[2] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[2] === true
+                        ? "X"
+                        : null}
                     </td>
                   </tr>
                   <tr>
                     <td>Responsible Person</td>
                     <td>
-                      {this.props.project.projectInfo.permissions[3] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[3] === true
+                        ? "X"
+                        : null}
                     </td>
                     <td>
-                      {this.props.project.projectInfo.permissions[4] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[4] === true
+                        ? "X"
+                        : null}
                     </td>
                     <td>
-                      {this.props.project.projectInfo.permissions[5] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[5] === true
+                        ? "X"
+                        : null}
                     </td>
                   </tr>
                   <tr>
                     <td>Resource</td>
                     <td>
-                      {this.props.project.projectInfo.permissions[6] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[6] === true
+                        ? "X"
+                        : null}
                     </td>
                     <td>
-                      {this.props.project.projectInfo.permissions[7] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[7] === true
+                        ? "X"
+                        : null}
                     </td>
                     <td>
-                      {this.props.project.projectInfo.permissions[8] === true ? "X" : null}
+                      {this.props.project.projectInfo.permissions[8] === true
+                        ? "X"
+                        : null}
                     </td>
                   </tr>
                 </tbody>

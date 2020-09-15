@@ -12,34 +12,100 @@ class ProjectAnalytic extends React.Component {
     return (
       <Container fluid>
         <Row>
-          {this.props.displayProjectName ?
+          {this.props.displayProjectName ? (
+            <Col
+              xs={12}
+              sm={12}
+              md={6}
+              lg={4}
+              xl={4}
+              className="m-0 p-2 border"
+            >
+              <ProjectInfoComponent
+                project={this.props.project}
+                setProject={this.props.setProject}
+                owned={this.props.owned}
+              />
+            </Col>
+          ) : null}
+          {this.props.displayProjectName ? (
+            <Col
+              xs={12}
+              sm={12}
+              md={6}
+              lg={8}
+              xl={4}
+              className="m-0 p-2 border"
+            >
+              <ProjectProgressComponent
+                tasks={this.props.project.tasks}
+                criticalPath={this.props.project.criticalPath}
+              />
+            </Col>
+          ) : (
+            <Col
+              xs={12}
+              sm={12}
+              md={6}
+              lg={8}
+              xl={8}
+              className="m-0 p-2 border"
+            >
+              <ProjectProgressComponent
+                tasks={this.props.project.tasks}
+                criticalPath={this.props.project.criticalPath}
+              />
+            </Col>
+          )}
           <Col xs={12} sm={12} md={6} lg={4} xl={4} className="m-0 p-2 border">
-            <ProjectInfoComponent project={this.props.project} setProject={this.props.setProject} owned={this.props.owned}/>
+            <TaskOverviewComponent
+              tasks={this.props.project.tasks}
+              criticalPath={this.props.project.criticalPath}
+            />
           </Col>
-          :null}
-          {this.props.displayProjectName ?
-            <Col xs={12} sm={12} md={6} lg={8} xl={4} className="m-0 p-2 border">
-              <ProjectProgressComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
+          {this.props.displayProjectName ? (
+            <Col
+              xs={12}
+              sm={12}
+              md={6}
+              lg={8}
+              xl={5}
+              className="m-0 p-2 border"
+            >
+              <DependencyPieChartsComponent
+                tasks={this.props.project.tasks}
+                criticalPath={this.props.project.criticalPath}
+                rels={this.props.project.rels}
+              />
             </Col>
-            :
-            <Col xs={12} sm={12} md={6} lg={8} xl={8} className="m-0 p-2 border">
-              <ProjectProgressComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
+          ) : (
+            <Col
+              xs={12}
+              sm={12}
+              md={12}
+              lg={12}
+              xl={5}
+              className="m-0 p-2 border"
+            >
+              <DependencyPieChartsComponent
+                tasks={this.props.project.tasks}
+                criticalPath={this.props.project.criticalPath}
+                rels={this.props.project.rels}
+              />
             </Col>
-          }
-          <Col xs={12} sm={12} md={6} lg={4} xl={4} className="m-0 p-2 border">
-            <TaskOverviewComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
-          </Col>
-          {this.props.displayProjectName ?
-            <Col xs={12} sm={12} md={6} lg={8} xl={5} className="m-0 p-2 border">
-              <DependencyPieChartsComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath} rels={this.props.project.rels}/>
-            </Col>
-            :
-            <Col xs={12} sm={12} md={12} lg={12} xl={5} className="m-0 p-2 border">
-              <DependencyPieChartsComponent tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath} rels={this.props.project.rels}/>
-            </Col>
-          }
-          <Col xs={12} sm={12} md={12} lg={12} xl={7} className="m-0 p-2 border">
-            <CriticalPathBarCharts tasks={this.props.project.tasks} criticalPath={this.props.project.criticalPath}/>
+          )}
+          <Col
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={7}
+            className="m-0 p-2 border"
+          >
+            <CriticalPathBarCharts
+              tasks={this.props.project.tasks}
+              criticalPath={this.props.project.criticalPath}
+            />
           </Col>
           <Col className="m-0 p-2 border">
             <ScheduleTrackingComponent tasks={this.props.project.tasks} />

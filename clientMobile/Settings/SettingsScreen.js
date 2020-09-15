@@ -6,16 +6,15 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
-  Image
+  Image,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-community/async-storage';
 
-
 export default class SettingsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { pfp: "https://i.ibb.co/MRpbpHN/default.png"}
+    this.state = {pfp: 'https://i.ibb.co/MRpbpHN/default.png'};
   }
 
   async componentDidMount() {
@@ -23,18 +22,21 @@ export default class SettingsScreen extends Component {
     await AsyncStorage.getItem('sessionToken').then(async (value) => {
       token = JSON.parse(value);
       this.setState({token: token});
-      const response = await fetch('http://projecttree.herokuapp.com/user/get', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'http://projecttree.herokuapp.com/user/get',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({token: token}),
         },
-        body: JSON.stringify({token: token}),
-      });
+      );
       const body = await response.json();
-      if(body.user.profilepicture !== 'undefined'){
+      if (body.user.profilepicture !== 'undefined') {
         this.setState({
-          pfp: body.user.profilepicture
+          pfp: body.user.profilepicture,
         });
       }
     });
@@ -45,9 +47,7 @@ export default class SettingsScreen extends Component {
       <View style={styles.container}>
         <StatusBar backgroundColor="#008656" barStyle="light-content" />
         <View style={styles.header}>
-          <Image
-            style={styles.logo}
-            source = {{uri: this.state.pfp }}/>
+          <Image style={styles.logo} source={{uri: this.state.pfp}} />
           <Text style={styles.text_header}>User Details</Text>
         </View>
         <Animatable.View
@@ -56,7 +56,7 @@ export default class SettingsScreen extends Component {
             styles.footer,
             {
               backgroundColor: 'white',
-              marginBottom: 40
+              marginBottom: 40,
             },
           ]}>
           <View style={styles.button}>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     paddingTop: 50,
-    paddingBottom:24
+    paddingBottom: 24,
   },
   footer: {
     flex: 3,
@@ -188,6 +188,6 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     borderRadius: 100,
-    marginBottom: 10
+    marginBottom: 10,
   },
 });

@@ -1,5 +1,12 @@
 import React from "react";
-import { Form, Modal, Button, ToggleButtonGroup, ToggleButton, Spinner } from "react-bootstrap";
+import {
+  Form,
+  Modal,
+  Button,
+  ToggleButtonGroup,
+  ToggleButton,
+  Spinner,
+} from "react-bootstrap";
 import $ from "jquery";
 
 function returnFormData(fd) {
@@ -29,7 +36,7 @@ class SendProjectNotification extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({isloading: true});
+    this.setState({ isloading: true });
     let notification = returnFormData(new FormData(event.target));
     let timestamp = new Date();
     timestamp.setHours(timestamp.getHours() + 2);
@@ -61,7 +68,7 @@ class SendProjectNotification extends React.Component {
       <React.Fragment>
         <Button
           className="btn-warning"
-          style={{width: "100px"}}
+          style={{ width: "100px" }}
           onClick={() => {
             this.showModal();
           }}
@@ -79,10 +86,7 @@ class SendProjectNotification extends React.Component {
               this.handleSubmit(event);
             }}
           >
-            <Modal.Header
-              closeButton
-              style={{ backgroundColor: "#96BB7C" }}
-            >
+            <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
               <Modal.Title>Send Notification</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -104,7 +108,7 @@ class SendProjectNotification extends React.Component {
                     this.setState({ mode: 0 });
                   }}
                 >
-                  Email 
+                  Email
                 </ToggleButton>
                 <ToggleButton
                   value="NB"
@@ -114,7 +118,7 @@ class SendProjectNotification extends React.Component {
                   }}
                 >
                   Notice Board
-                  </ToggleButton>
+                </ToggleButton>
                 <ToggleButton
                   variant="outline-secondary"
                   value="both"
@@ -123,7 +127,7 @@ class SendProjectNotification extends React.Component {
                   }}
                 >
                   Both
-                  </ToggleButton>
+                </ToggleButton>
               </ToggleButtonGroup>
             </Modal.Body>
             <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
@@ -135,16 +139,21 @@ class SendProjectNotification extends React.Component {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="dark" style={{width: "100px"}}
-              disabled={this.state.isloading}
+              <Button
+                type="submit"
+                variant="dark"
+                style={{ width: "100px" }}
+                disabled={this.state.isloading}
               >
-                {this.state.isloading ? 
+                {this.state.isloading ? (
                   <Spinner
                     animation="border"
                     variant="success"
                     size="sm"
-                  ></Spinner> 
-                : "Send" } 
+                  ></Spinner>
+                ) : (
+                  "Send"
+                )}
               </Button>
             </Modal.Footer>
           </Form>

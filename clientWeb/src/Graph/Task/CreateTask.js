@@ -5,10 +5,10 @@ import ms from "ms";
 
 class CreateTask extends React.Component {
   constructor(props) {
-    super(props); 
+    super(props);
     let now = new Date();
-    now.setTime( now.getTime() - new Date().getTimezoneOffset()*60*1000 );
-    now = now.toISOString().substring(0,16);
+    now.setTime(now.getTime() - new Date().getTimezoneOffset() * 60 * 1000);
+    now = now.toISOString().substring(0, 16);
     this.state = {
       Show: true,
       name: "",
@@ -23,8 +23,8 @@ class CreateTask extends React.Component {
       pacManList: [],
       resourcesList: [],
       resPersonList: [],
-      isloading: false, 
-    }
+      isloading: false,
+    };
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
@@ -46,7 +46,7 @@ class CreateTask extends React.Component {
       this.state.people.push(this.state.resourcesList[x]);
     }
 
-    this.setState({ Show: false, isloading: false  });
+    this.setState({ Show: false, isloading: false });
     this.props.hideModal();
   }
 
@@ -146,40 +146,40 @@ class CreateTask extends React.Component {
   }
 
   /*
-  * Assigns people to tasks
-  */
-  assignPeople(newTask){
+   * Assigns people to tasks
+   */
+  assignPeople(newTask) {
     let peopleArray = this.props.assignedProjUsers;
-    for(let x = 0; x < this.state.pacManList.length; x++){
+    for (let x = 0; x < this.state.pacManList.length; x++) {
       let user = this.state.pacManList[x];
       let relationship = {
         start: this.state.pacManList[x].id,
         end: newTask,
-        type: "PACKAGE_MANAGER"
-      }
-      let userRel = [user,relationship];
+        type: "PACKAGE_MANAGER",
+      };
+      let userRel = [user, relationship];
       peopleArray.push(userRel);
     }
 
-    for(let x = 0; x < this.state.resPersonList.length; x++){
+    for (let x = 0; x < this.state.resPersonList.length; x++) {
       let user = this.state.resPersonList[x];
       let relationship = {
         start: this.state.resPersonList[x].id,
         end: newTask,
-        type: "RESPONSIBLE_PERSON"
-      }
-      let userRel = [user,relationship];
+        type: "RESPONSIBLE_PERSON",
+      };
+      let userRel = [user, relationship];
       peopleArray.push(userRel);
     }
 
-    for(let x = 0; x < this.state.resourcesList.length; x++){
+    for (let x = 0; x < this.state.resourcesList.length; x++) {
       let user = this.state.resourcesList[x];
       let relationship = {
         start: this.state.resourcesList[x].id,
         end: newTask,
-        type: "RESOURCE"
-      }
-      let userRel = [user,relationship];
+        type: "RESOURCE",
+      };
+      let userRel = [user, relationship];
       peopleArray.push(userRel);
     }
     return peopleArray;
@@ -187,7 +187,7 @@ class CreateTask extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    this.setState({isloading: true});
+    this.setState({ isloading: true });
     let data = {
       project: this.props.project,
       name: this.state.name,
@@ -195,7 +195,7 @@ class CreateTask extends React.Component {
       startDate: this.state.startDate,
       duration: this.state.duration,
       endDate: this.state.endDate,
-    }
+    };
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
@@ -214,7 +214,9 @@ class CreateTask extends React.Component {
     let assignedPeople = this.assignPeople(newTask);
 
     let timestamp = new Date();
-    timestamp.setTime( timestamp.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    timestamp.setTime(
+      timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+    );
     timestamp = timestamp.toISOString();
 
     await fetch("/people/assignPeople", {
@@ -252,10 +254,14 @@ class CreateTask extends React.Component {
 
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
-    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    startDate.setTime(
+      startDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+    );
     let endDate = new Date(ed);
-    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+    endDate.setTime(
+      endDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+    );
+    return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
   render() {
@@ -326,26 +332,37 @@ class CreateTask extends React.Component {
                 <Form.Control
                   required
                   type="date"
-                  value={this.state.startDate.substring(0,10)}
+                  value={this.state.startDate.substring(0, 10)}
                   onChange={(e) => {
-                    if(isNaN(Date.parse(e.target.value))) return;
+                    if (isNaN(Date.parse(e.target.value))) return;
                     let value = this.state.startDate;
-                    value = `${e.target.value}T${this.state.startDate.substring(11,16)}`;
-                    let startDate =new Date(value);
-                    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-                    let endDate =new Date(this.state.endDate);
-                    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+                    value = `${e.target.value}T${this.state.startDate.substring(
+                      11,
+                      16
+                    )}`;
+                    let startDate = new Date(value);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let endDate = new Date(this.state.endDate);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
                     if (endDate < startDate) {
-                      alert("You cannot make the start date/time after the end date/time.");
-                      this.setState({ 
-                        startDate: value, 
+                      alert(
+                        "You cannot make the start date/time after the end date/time."
+                      );
+                      this.setState({
+                        startDate: value,
                         endDate: value,
                         duration: this.CalcDiff(value, value),
-                      }); 
+                      });
                     } else {
-                      this.setState({ 
-                        startDate: value, 
-                        duration: this.CalcDiff(value, this.state.endDate) 
+                      this.setState({
+                        startDate: value,
+                        duration: this.CalcDiff(value, this.state.endDate),
                       });
                     }
                     this.value = this.state.startDate;
@@ -355,26 +372,39 @@ class CreateTask extends React.Component {
                 <Form.Control
                   required
                   type="time"
-                  value={this.state.startDate.substring(11,16)}
+                  value={this.state.startDate.substring(11, 16)}
                   onChange={(e) => {
-                    if(!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)) return;
+                    if (
+                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
+                    )
+                      return;
                     let value = this.state.startDate;
-                    value = `${this.state.startDate.substring(0,10)}T${e.target.value}`;
-                    let startDate =new Date(value);
-                    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-                    let endDate =new Date(this.state.endDate);
-                    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+                    value = `${this.state.startDate.substring(0, 10)}T${
+                      e.target.value
+                    }`;
+                    let startDate = new Date(value);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let endDate = new Date(this.state.endDate);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
                     if (endDate < startDate) {
-                      alert("You cannot make the start date/time after the end date/time.");
-                      this.setState({ 
-                        startDate: value, 
+                      alert(
+                        "You cannot make the start date/time after the end date/time."
+                      );
+                      this.setState({
+                        startDate: value,
                         endDate: value,
                         duration: this.CalcDiff(value, value),
-                      }); 
+                      });
                     } else {
-                      this.setState({ 
-                        startDate: value, 
-                        duration: this.CalcDiff(value, this.state.endDate) 
+                      this.setState({
+                        startDate: value,
+                        duration: this.CalcDiff(value, this.state.endDate),
                       });
                     }
                     this.value = this.state.startDate;
@@ -382,30 +412,41 @@ class CreateTask extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-              <Form.Label>End date of task</Form.Label>
+                <Form.Label>End date of task</Form.Label>
                 <Form.Control
                   required
                   type="date"
-                  value={this.state.endDate.substring(0,10)}
+                  value={this.state.endDate.substring(0, 10)}
                   onChange={(e) => {
-                    if(isNaN(Date.parse(e.target.value))) return;
+                    if (isNaN(Date.parse(e.target.value))) return;
                     let value = this.state.endDate;
-                    value = `${e.target.value}T${this.state.endDate.substring(11,16)}`;
-                    let startDate =new Date(this.state.startDate);
-                    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-                    let endDate =new Date(value);
-                    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+                    value = `${e.target.value}T${this.state.endDate.substring(
+                      11,
+                      16
+                    )}`;
+                    let startDate = new Date(this.state.startDate);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let endDate = new Date(value);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
                     if (endDate < startDate) {
-                      alert("You cannot make the end date/time before the start date/time.");
-                      this.setState({ 
-                        startDate: value, 
+                      alert(
+                        "You cannot make the end date/time before the start date/time."
+                      );
+                      this.setState({
+                        startDate: value,
                         endDate: value,
                         duration: this.CalcDiff(value, value),
-                      }); 
+                      });
                     } else {
-                      this.setState({ 
-                        endDate: value, 
-                        duration: this.CalcDiff(this.state.startDate, value) 
+                      this.setState({
+                        endDate: value,
+                        duration: this.CalcDiff(this.state.startDate, value),
                       });
                     }
                     this.value = this.state.endDate;
@@ -415,26 +456,39 @@ class CreateTask extends React.Component {
                 <Form.Control
                   required
                   type="time"
-                  value={this.state.endDate.substring(11,16)}
+                  value={this.state.endDate.substring(11, 16)}
                   onChange={(e) => {
-                    if(!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)) return;
+                    if (
+                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
+                    )
+                      return;
                     let value = this.state.endDate;
-                    value = `${this.state.endDate.substring(0,10)}T${e.target.value}`;
-                    let startDate =new Date(this.state.startDate);
-                    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-                    let endDate =new Date(value);
-                    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+                    value = `${this.state.endDate.substring(0, 10)}T${
+                      e.target.value
+                    }`;
+                    let startDate = new Date(this.state.startDate);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let endDate = new Date(value);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
                     if (endDate < startDate) {
-                      alert("You cannot make the end date/time before the start date/time.");
-                      this.setState({ 
-                        startDate: value, 
+                      alert(
+                        "You cannot make the end date/time before the start date/time."
+                      );
+                      this.setState({
+                        startDate: value,
                         endDate: value,
                         duration: this.CalcDiff(value, value),
-                      }); 
+                      });
                     } else {
-                      this.setState({ 
-                        endDate: value, 
-                        duration: this.CalcDiff(this.state.startDate, value) 
+                      this.setState({
+                        endDate: value,
+                        duration: this.CalcDiff(this.state.startDate, value),
                       });
                     }
                     this.value = this.state.endDate;
@@ -460,10 +514,10 @@ class CreateTask extends React.Component {
                       value={this.state.pacManSearchTerm}
                       onChange={(e) => this.updateSearch(e, 0)}
                       placeholder="Search for a name"
-                      style={{width:'100%'}}
+                      style={{ width: "100%" }}
                     />
-                    {this.state.pacManSearchTerm.length >= 2 ? (
-                        filteredPacMan.map((person) => {
+                    {this.state.pacManSearchTerm.length >= 2
+                      ? filteredPacMan.map((person) => {
                           return (
                             <React.Fragment>
                               <button
@@ -478,7 +532,7 @@ class CreateTask extends React.Component {
                             </React.Fragment>
                           );
                         })
-                    ) : null}
+                      : null}
                   </Col>
                   <Col>
                     {this.state.pacManList.map((person) => {
@@ -508,10 +562,10 @@ class CreateTask extends React.Component {
                       value={this.state.resPersonSearchTerm}
                       onChange={(e) => this.updateSearch(e, 1)}
                       placeholder="Search for a name"
-                      style={{width:'100%'}}
+                      style={{ width: "100%" }}
                     />
-                    {this.state.resPersonSearchTerm.length >= 2 ? (
-                        filteredResPerson.map((person) => {
+                    {this.state.resPersonSearchTerm.length >= 2
+                      ? filteredResPerson.map((person) => {
                           return (
                             <React.Fragment>
                               <button
@@ -526,7 +580,7 @@ class CreateTask extends React.Component {
                             </React.Fragment>
                           );
                         })
-                    ) : null}
+                      : null}
                   </Col>
                   <Col>
                     {this.state.resPersonList.map((person) => {
@@ -556,10 +610,10 @@ class CreateTask extends React.Component {
                       value={this.state.resourcesSearchTerm}
                       onChange={(e) => this.updateSearch(e, 2)}
                       placeholder="Search for a name"
-                      style={{width:'100%'}}
+                      style={{ width: "100%" }}
                     />
-                    {this.state.resourcesSearchTerm.length >= 2 ? (
-                        filteredResources.map((person) => {
+                    {this.state.resourcesSearchTerm.length >= 2
+                      ? filteredResources.map((person) => {
                           return (
                             <React.Fragment>
                               <button
@@ -574,7 +628,7 @@ class CreateTask extends React.Component {
                             </React.Fragment>
                           );
                         })
-                    ) : null}
+                      : null}
                   </Col>
                   <Col>
                     {this.state.resourcesList.map((person) => {
@@ -602,16 +656,21 @@ class CreateTask extends React.Component {
               <Button variant="secondary" onClick={this.hideModal}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark" style={{width: "100px"}}
-              disabled={this.state.isloading}
+              <Button
+                type="submit"
+                variant="dark"
+                style={{ width: "100px" }}
+                disabled={this.state.isloading}
               >
-                {this.state.isloading ? 
+                {this.state.isloading ? (
                   <Spinner
                     animation="border"
                     variant="success"
                     size="sm"
-                  ></Spinner> 
-                : "Create" } 
+                  ></Spinner>
+                ) : (
+                  "Create"
+                )}
               </Button>
             </Modal.Footer>
           </Form>

@@ -1,17 +1,9 @@
 import React, {Component} from 'react';
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
-import {
-  Icon,
-} from 'native-base';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Icon} from 'native-base';
 import DeleteDependency from './DeleteDependency';
 import UpdateDependency from './UpdateDependency';
-import ms from "ms";
+import ms from 'ms';
 
 class DependencyModal extends Component {
   constructor(props) {
@@ -76,7 +68,10 @@ class DependencyModal extends Component {
                 <Icon type="FontAwesome" name="close" />
               </TouchableOpacity>
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                <Text style={{fontSize: 30, color: '#184D47', textAlign:'center'}}>{name}</Text>
+                <Text
+                  style={{fontSize: 30, color: '#184D47', textAlign: 'center'}}>
+                  {name}
+                </Text>
               </View>
               <Text style={styles.modalText}>
                 {this.props.selectedDependency.relationshipType === 'fs'
@@ -84,25 +79,30 @@ class DependencyModal extends Component {
                   : 'Start→Start'}
               </Text>
               <Text style={styles.modalText}>
-                {'Duration: ' + this.CalcDiff(this.props.selectedDependency.startDate, this.props.selectedDependency.endDate )}
+                {'Duration: ' +
+                  this.CalcDiff(
+                    this.props.selectedDependency.startDate,
+                    this.props.selectedDependency.endDate,
+                  )}
               </Text>
-              <View style={{flexDirection:'row'}}>
-                {this.props.userPermissions["update"] === true?
-                  <View style={{flex: 1}}> 
+              <View style={{flexDirection: 'row'}}>
+                {this.props.userPermissions['update'] === true ? (
+                  <View style={{flex: 1}}>
                     <TouchableOpacity
                       style={styles.editButton}
                       onPress={() => this.toggleVisibility(false, true)}>
-                      <Icon type="AntDesign" name="edit" style={{color: 'white'}}>
+                      <Icon
+                        type="AntDesign"
+                        name="edit"
+                        style={{color: 'white'}}>
                         <Text>&nbsp;Edit</Text>
                       </Icon>
                     </TouchableOpacity>
                   </View>
-                :
-                  null
-                }
-                
-                {this.props.userPermissions["delete"] === true?
-                  <View style={{flex: 1}}> 
+                ) : null}
+
+                {this.props.userPermissions['delete'] === true ? (
+                  <View style={{flex: 1}}>
                     <DeleteDependency
                       dependency={this.props.selectedDependency}
                       sourceViewId={this.props.sourceViewId}
@@ -113,9 +113,7 @@ class DependencyModal extends Component {
                       name={name}
                     />
                   </View>
-                :
-                  null
-                }
+                ) : null}
               </View>
             </View>
           </View>

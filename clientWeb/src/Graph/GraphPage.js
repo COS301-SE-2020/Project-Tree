@@ -13,23 +13,22 @@ import $ from "jquery";
 import ms from "ms";
 import "./style.scss";
 
-
 class GraphPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      project: this.props.project, 
-      task:null, 
-      dependency:null, 
-      nodes:null, 
-      links:null,
-      views:null,
-      allUsers:null, 
-      assignedProjUsers:null,
-      filterOn:false,
-      viewId:null,
-      sourceView:null,
-      targetView:null
+    this.state = {
+      project: this.props.project,
+      task: null,
+      dependency: null,
+      nodes: null,
+      links: null,
+      views: null,
+      allUsers: null,
+      assignedProjUsers: null,
+      filterOn: false,
+      viewId: null,
+      sourceView: null,
+      targetView: null,
     };
     this.toggleSidebar = this.toggleSidebar.bind(this);
     this.setTaskInfo = this.setTaskInfo.bind(this);
@@ -52,17 +51,20 @@ class GraphPage extends React.Component {
     });
 
     // Gets all the users in the database, might update to be all users assigned to the project
-    $.post( "/people/getAllUsers", {id: this.state.project.id} , response => {
+    $.post("/people/getAllUsers", { id: this.state.project.id }, (response) => {
       this.setState({ allUsers: response.users });
     }).fail((err) => {
       throw Error(err);
     });
 
     // Gets all users already assigned to a task in a project
-    $.post( "/people/assignedProjectUsers", {id: this.state.project.id} , response => {
-      this.setState({assignedProjUsers:response.projectUsers});
-    })
-    .fail(err => {
+    $.post(
+      "/people/assignedProjectUsers",
+      { id: this.state.project.id },
+      (response) => {
+        this.setState({ assignedProjUsers: response.projectUsers });
+      }
+    ).fail((err) => {
       throw Error(err);
     });
   }
@@ -84,12 +86,12 @@ class GraphPage extends React.Component {
       }).fail((err) => {
         throw Error(err);
       });
-      this.toggleSidebar(null, null, null, null, null)
+      this.toggleSidebar(null, null, null, null, null);
     }
   }
 
-  setFilterOn(value){
-    this.setState({filterOn: value});
+  setFilterOn(value) {
+    this.setState({ filterOn: value });
   }
 
   getProjectInfo() {
@@ -102,8 +104,8 @@ class GraphPage extends React.Component {
 
       if (displayNode !== undefined || displayRel !== undefined) {
         // Will set the state of the assigned project users when a task is created or updated
-        if(assignedPeople !== undefined){
-          this.setState({assignedProjUsers: assignedPeople});
+        if (assignedPeople !== undefined) {
+          this.setState({ assignedProjUsers: assignedPeople });
         }
         this.toggleSidebar(displayNode, displayRel);
       }
@@ -130,8 +132,8 @@ class GraphPage extends React.Component {
     });
   }
 
-  updateAssignedPeople(newPeopleList){
-    this.setState({assignedProjUsers:newPeopleList})
+  updateAssignedPeople(newPeopleList) {
+    this.setState({ assignedProjUsers: newPeopleList });
   }
 
   toggleSidebar(newTaskID, newDependencyID, viewId, sourceView, targetView) {
@@ -145,11 +147,18 @@ class GraphPage extends React.Component {
           newTask = this.state.nodes[x];
         }
       }
-      if(viewId !== undefined){
-        this.setState({ task: newTask, dependency: newDependency, viewId: viewId });
-      }
-      else{
-        this.setState({ task: newTask, dependency: newDependency, viewId: null });
+      if (viewId !== undefined) {
+        this.setState({
+          task: newTask,
+          dependency: newDependency,
+          viewId: viewId,
+        });
+      } else {
+        this.setState({
+          task: newTask,
+          dependency: newDependency,
+          viewId: null,
+        });
       }
     } else if (newDependencyID != null) {
       for (x = 0; x < this.state.links.length; x++) {
@@ -157,11 +166,20 @@ class GraphPage extends React.Component {
           newDependency = this.state.links[x];
         }
       }
-      if(sourceView !== undefined && targetView !== undefined) {
-        this.setState({ task: newTask, dependency: newDependency, sourceView: sourceView, targetView: targetView });
-      }
-      else {
-        this.setState({ task: newTask, dependency: newDependency, sourceView: null, targetView: null });
+      if (sourceView !== undefined && targetView !== undefined) {
+        this.setState({
+          task: newTask,
+          dependency: newDependency,
+          sourceView: sourceView,
+          targetView: targetView,
+        });
+      } else {
+        this.setState({
+          task: newTask,
+          dependency: newDependency,
+          sourceView: null,
+          targetView: null,
+        });
       }
     } else {
       this.setState({ task: null, dependency: null });
@@ -171,7 +189,11 @@ class GraphPage extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container fluid className="m-0 p-0" style={{height:this.props.height}}>
+        <Container
+          fluid
+          className="m-0 p-0"
+          style={{ height: this.props.height }}
+        >
           <Row>
             <Col
               xs={3}
@@ -180,7 +202,7 @@ class GraphPage extends React.Component {
               lg={3}
               xl={3}
               className="text-center border-right border-secondary bg-light "
-              style={{ overflowY:"auto", height:this.props.height}}
+              style={{ overflowY: "auto", height: this.props.height }}
             >
               <Container>
                 <Row>
@@ -230,18 +252,17 @@ class GraphPage extends React.Component {
                   targetView={this.state.targetView}
                 />
               ) : null}
-              {this.state.dependency===null && this.state.task===null ?
-                <FilterComponent 
-                  nodes={this.state.nodes} 
-                  users={this.state.assignedProjUsers} 
-                  setTaskInfo={this.setTaskInfo} 
+              {this.state.dependency === null && this.state.task === null ? (
+                <FilterComponent
+                  nodes={this.state.nodes}
+                  users={this.state.assignedProjUsers}
+                  setTaskInfo={this.setTaskInfo}
                   links={this.state.links}
                   filterOn={this.state.filterOn}
                   setFilterOn={this.setFilterOn}
                   user={this.props.user}
                 />
-                :null
-              }
+              ) : null}
               <LegendSidebar />
             </Col>
             <Col
@@ -287,9 +308,9 @@ class TaskSidebar extends React.Component {
     let taskResources = [];
 
     // Get the users that are part of the selected task
-    for(let x = 0; x < this.props.assignedProjUsers.length; x++){
-      if(this.props.assignedProjUsers[x][1].end === this.props.task.id){
-        taskUsers.push(this.props.assignedProjUsers[x])
+    for (let x = 0; x < this.props.assignedProjUsers.length; x++) {
+      if (this.props.assignedProjUsers[x][1].end === this.props.task.id) {
+        taskUsers.push(this.props.assignedProjUsers[x]);
       }
     }
 
@@ -315,18 +336,26 @@ class TaskSidebar extends React.Component {
   }
 
   printUsers(people) {
-    console.log(people)
+    console.log(people);
     let list = [];
     for (let x = 0; x < people.length; x++) {
       list.push(
-        <Row className="justify-content-md-center">              
+        <Row className="justify-content-md-center">
           <Col className="justify-content-md-center">
-         <img class="circular" src={people[x].profilePicture} alt="user" width="50" height="50"/>
-         </Col>
-          <Col key={people[x].id} xs={8} className="text-left">
-          {people[x].name}&nbsp;{people[x].surname}
+            <img
+              class="circular"
+              src={people[x].profilePicture}
+              alt="user"
+              width="50"
+              height="50"
+            />
           </Col>
-          <Row><br /></Row>
+          <Col key={people[x].id} xs={8} className="text-left">
+            {people[x].name}&nbsp;{people[x].surname}
+          </Col>
+          <Row>
+            <br />
+          </Row>
         </Row>
       );
     }
@@ -336,7 +365,7 @@ class TaskSidebar extends React.Component {
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
     let endDate = new Date(ed);
-    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+    return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
   render() {
@@ -345,8 +374,7 @@ class TaskSidebar extends React.Component {
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
 
-    
-    let progressColor = "info"
+    let progressColor = "info";
 
     return (
       <React.Fragment>
@@ -356,8 +384,16 @@ class TaskSidebar extends React.Component {
         >
           <Row className="text-center align-items-center">
             <Col></Col>
-            <Col xs={5}className="text-center">
-              {this.props.viewId !== null ? <h4>{this.props.task.name}<br />(View)</h4> : <h4>{this.props.task.name}</h4>}
+            <Col xs={5} className="text-center">
+              {this.props.viewId !== null ? (
+                <h4>
+                  {this.props.task.name}
+                  <br />
+                  (View)
+                </h4>
+              ) : (
+                <h4>{this.props.task.name}</h4>
+              )}
             </Col>
             <Col className="text-right">
               <Button
@@ -372,19 +408,25 @@ class TaskSidebar extends React.Component {
             <Col className="text-center">{this.props.task.description}</Col>
           </Row>
           <Row className="text-center p-1">
+            <Col className="text-center">Task Id: {this.props.task.id}</Col>
+          </Row>
+          <Row className="text-center p-1">
             <Col className="text-center">
-              Task Id: {this.props.task.id}
+              Start Date: {this.props.task.startDate.replace("T", " ")}
             </Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">Start Date: {this.props.task.startDate.replace("T", " ")}</Col>
-          </Row>
-          <Row className="text-center p-1">
-            <Col className="text-center">End Date: {this.props.task.endDate.replace("T", " ")}</Col>
+            <Col className="text-center">
+              End Date: {this.props.task.endDate.replace("T", " ")}
+            </Col>
           </Row>
           <Row className="text-center p-1">
             <Col className="text-center">
-            Duration: {this.CalcDiff(this.props.task.startDate, this.props.task.endDate)}
+              Duration:{" "}
+              {this.CalcDiff(
+                this.props.task.startDate,
+                this.props.task.endDate
+              )}
             </Col>
           </Row>
           <Row>
@@ -438,7 +480,7 @@ class TaskSidebar extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col xs={12} >
+            <Col xs={12}>
               {this.props.userPermission["delete"] === true ? (
                 <DeleteTask
                   task={this.props.task}
@@ -457,13 +499,13 @@ class TaskSidebar extends React.Component {
           {this.printUsers(taskPacMans)}
           <br />
           <b>Responsible persons:</b>
-          <br />          
+          <br />
           <br />
           {this.printUsers(taskResPersons)}
-          <br />       
+          <br />
           <b>Resources:</b>
-          <br /> 
-          <br />   
+          <br />
+          <br />
           {this.printUsers(taskResources)}
           <br />
         </Container>
@@ -473,13 +515,11 @@ class TaskSidebar extends React.Component {
 }
 
 class DependencySidebar extends React.Component {
-  
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
     let endDate = new Date(ed);
-    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+    return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
-
 
   render() {
     var start;
@@ -501,10 +541,28 @@ class DependencySidebar extends React.Component {
         >
           <Row>
             <Col></Col>
-            <Col className="text-center" style={{wordWrap: "break-word" }} xs={8}>
-              <Row className="m-0"><Col className="text-center"><h5>{start}</h5></Col></Row>
-              <Row className="m-0"><Col className="text-center"><h5><i className="fa fa-arrow-down"></i></h5></Col></Row>
-              <Row className="m-0"><Col className="text-center"><h5>{end}</h5></Col></Row>
+            <Col
+              className="text-center"
+              style={{ wordWrap: "break-word" }}
+              xs={8}
+            >
+              <Row className="m-0">
+                <Col className="text-center">
+                  <h5>{start}</h5>
+                </Col>
+              </Row>
+              <Row className="m-0">
+                <Col className="text-center">
+                  <h5>
+                    <i className="fa fa-arrow-down"></i>
+                  </h5>
+                </Col>
+              </Row>
+              <Row className="m-0">
+                <Col className="text-center">
+                  <h5>{end}</h5>
+                </Col>
+              </Row>
             </Col>
             <Col className="text-right">
               <Button
@@ -525,16 +583,32 @@ class DependencySidebar extends React.Component {
             <Col></Col>
           </Row>
           <Row className="text-center p-1">
-            {this.props.dependency.relationshipType === "fs"
-              ? (<Col className="text-center">End date of first task: {this.props.dependency.startDate.replace("T", " ")}</Col>)
-              : (<Col className="text-center">Start date of first task: {this.props.dependency.startDate.replace("T", " ")}</Col>)
-            }
+            {this.props.dependency.relationshipType === "fs" ? (
+              <Col className="text-center">
+                End date of first task:{" "}
+                {this.props.dependency.startDate.replace("T", " ")}
+              </Col>
+            ) : (
+              <Col className="text-center">
+                Start date of first task:{" "}
+                {this.props.dependency.startDate.replace("T", " ")}
+              </Col>
+            )}
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">Start date of second task: {this.props.dependency.endDate.replace("T", " ")}</Col>
+            <Col className="text-center">
+              Start date of second task:{" "}
+              {this.props.dependency.endDate.replace("T", " ")}
+            </Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">Duration: {this.CalcDiff(this.props.dependency.startDate, this.props.dependency.endDate)}</Col>
+            <Col className="text-center">
+              Duration:{" "}
+              {this.CalcDiff(
+                this.props.dependency.startDate,
+                this.props.dependency.endDate
+              )}
+            </Col>
           </Row>
           <Row>
             <Col>
@@ -623,7 +697,8 @@ class LegendSidebar extends React.Component {
                 color: "black",
                 width: "120px",
                 height: "30px",
-              }}>
+              }}
+            >
               Overdue
             </Col>
             <Col></Col>
@@ -670,7 +745,7 @@ class LegendSidebar extends React.Component {
                 color: "black",
                 width: "120px",
                 height: "30px",
-                boxShadow: "0 0 10px #009999"
+                boxShadow: "0 0 10px #009999",
               }}
             >
               Highlight

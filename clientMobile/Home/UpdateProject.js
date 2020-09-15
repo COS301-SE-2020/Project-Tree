@@ -7,18 +7,8 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-} from 'react-native-table-component';
-import {
-  Icon,
-  Form,
-  Item,
-  Input,
-} from 'native-base';
+import {Table, TableWrapper, Row, Rows} from 'react-native-table-component';
+import {Icon, Form, Item, Input} from 'native-base';
 
 class UpdateProject extends Component {
   constructor(props) {
@@ -100,7 +90,7 @@ class UpdateProjectForm extends Component {
   }
 
   async handleSubmit() {
-    if(this.checkFormData("all") === false) return;
+    if (this.checkFormData('all') === false) return;
 
     this.props.setModalVisible(false, false);
 
@@ -145,29 +135,27 @@ class UpdateProjectForm extends Component {
     this.props.setProjectInfo(body);
   }
 
-  checkFormData(check){
-    if(check === "name" || check === "all"){
+  checkFormData(check) {
+    if (check === 'name' || check === 'all') {
       let name = this.state.projName;
-      if(name === null || !name.trim().length){
-        this.setState({error:"Please enter a project name"});
+      if (name === null || !name.trim().length) {
+        this.setState({error: 'Please enter a project name'});
         return false;
-      }
-
-      else{
-        this.setState({error:null});
+      } else {
+        this.setState({error: null});
       }
     }
 
-    if(check === "description" || check === "all"){
-      if(this.state.error !== null){return false;}
-      let description = this.state.projDescription;
-      if(description === null || !description.trim().length){
-        this.setState({error:"Please enter a project description"});
+    if (check === 'description' || check === 'all') {
+      if (this.state.error !== null) {
         return false;
       }
-
-      else{
-        this.setState({error:null});
+      let description = this.state.projDescription;
+      if (description === null || !description.trim().length) {
+        this.setState({error: 'Please enter a project description'});
+        return false;
+      } else {
+        this.setState({error: null});
       }
     }
   }
@@ -176,18 +164,20 @@ class UpdateProjectForm extends Component {
     return (
       <React.Fragment>
         <Form>
-          <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
+          <Text style={{color: 'red', alignSelf: 'center'}}>
+            {this.state.error}
+          </Text>
           <Item>
             <Input
               onChangeText={(val) => this.setState({projName: val})}
-              onEndEditing={()=>this.checkFormData("name")}
+              onEndEditing={() => this.checkFormData('name')}
               value={this.state.projName}
             />
           </Item>
           <Item floatingLabel>
             <Input
               onChangeText={(val) => this.setState({projDescription: val})}
-              onEndEditing={()=>this.checkFormData("description")}
+              onEndEditing={() => this.checkFormData('description')}
               value={this.state.projDescription}
             />
           </Item>

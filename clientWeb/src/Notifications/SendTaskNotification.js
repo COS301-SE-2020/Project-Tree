@@ -1,5 +1,12 @@
 import React from "react";
-import { Form, Modal, Button, ToggleButton, ToggleButtonGroup, Spinner } from "react-bootstrap";
+import {
+  Form,
+  Modal,
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+  Spinner,
+} from "react-bootstrap";
 import $ from "jquery";
 
 function returnFormData(fd) {
@@ -13,7 +20,12 @@ function returnFormData(fd) {
 class SendTaskNotification extends React.Component {
   constructor() {
     super();
-    this.state = { show: false, mode: 2, notificationRec: [], isloading: false  };
+    this.state = {
+      show: false,
+      mode: 2,
+      notificationRec: [],
+      isloading: false,
+    };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -29,7 +41,7 @@ class SendTaskNotification extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({isloading: true});
+    this.setState({ isloading: true });
     let notification = returnFormData(new FormData(event.target));
     let timestamp = new Date();
     timestamp.setHours(timestamp.getHours() + 2);
@@ -48,7 +60,7 @@ class SendTaskNotification extends React.Component {
     };
 
     $.post("/sendNotification", data, (response) => {
-      this.setState({ show: false, isloading: false  });
+      this.setState({ show: false, isloading: false });
     }).fail(() => {
       alert("Unable to send notification");
     });
@@ -98,13 +110,13 @@ class SendTaskNotification extends React.Component {
       <React.Fragment>
         <Button
           variant="outline-dark"
-          style={{width: "170px"}}
+          style={{ width: "170px" }}
           onClick={() => {
             this.showModal();
             this.notifyUsers();
           }}
         >
-          <i className="fa fa-bullhorn"> </i> {" "}Notify
+          <i className="fa fa-bullhorn"> </i> Notify
         </Button>
         <Modal
           show={this.state.show}
@@ -117,10 +129,7 @@ class SendTaskNotification extends React.Component {
               this.handleSubmit(event);
             }}
           >
-            <Modal.Header
-              closeButton
-              style={{ backgroundColor: "#96BB7C" }}
-            >
+            <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
               <Modal.Title>Send Notification</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -142,7 +151,7 @@ class SendTaskNotification extends React.Component {
                     this.setState({ mode: 0 });
                   }}
                 >
-                  Email 
+                  Email
                 </ToggleButton>
                 <ToggleButton
                   value="NB"
@@ -152,7 +161,7 @@ class SendTaskNotification extends React.Component {
                   }}
                 >
                   Notice Board
-                  </ToggleButton>
+                </ToggleButton>
                 <ToggleButton
                   variant="outline-secondary"
                   value="both"
@@ -161,10 +170,10 @@ class SendTaskNotification extends React.Component {
                   }}
                 >
                   Both
-                  </ToggleButton>
+                </ToggleButton>
               </ToggleButtonGroup>
             </Modal.Body>
-            <Modal.Footer  style={{ backgroundColor: "#96BB7C" }}>
+            <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
               <Button
                 variant="secondary"
                 onClick={() => {
@@ -173,16 +182,21 @@ class SendTaskNotification extends React.Component {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="dark" style={{width: "100px"}}
-              disabled={this.state.isloading}
+              <Button
+                type="submit"
+                variant="dark"
+                style={{ width: "100px" }}
+                disabled={this.state.isloading}
               >
-                {this.state.isloading ? 
+                {this.state.isloading ? (
                   <Spinner
                     animation="border"
                     variant="success"
                     size="sm"
-                  ></Spinner> 
-                : "Send" } 
+                  ></Spinner>
+                ) : (
+                  "Send"
+                )}
               </Button>
             </Modal.Footer>
           </Form>

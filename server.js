@@ -30,8 +30,8 @@ app.post("/project/criticalpath", pq.getCriticalPath);
 app.post("/task/add", tq.createTask);
 app.post("/task/update", tq.updateTask);
 app.post("/task/delete", tq.deleteTask);
-app.post("/task/createClone", tq.createClone)
-app.post("/task/deleteClone", tq.deleteClone)
+app.post("/task/createClone", tq.createClone);
+app.post("/task/deleteClone", tq.deleteClone);
 app.post("/dependency/add", dq.createDependency);
 app.post("/dependency/update", dq.updateDependency);
 app.post("/dependency/delete", dq.deleteDependency);
@@ -88,12 +88,12 @@ app.post("/mobile", async (req, res) => {
     criticalPath: JSON.stringify(criticalPath),
   });
 });
-app.post('/people/getAllUsers',personQueries.getAllUsers);
-app.post('/people/assignPeople',personQueries.assignPeople);
-app.post('/people/updateAssignedPeople',personQueries.updateAssignedPeople);
-app.post('/people/assignedProjectUsers',personQueries.getAssignedProjectUsers);
-app.post('/sendNotification', nh.sendNotification);
-app.post('/retrieveNotifications', nh.retrieveNotifications);
+app.post("/people/getAllUsers", personQueries.getAllUsers);
+app.post("/people/assignPeople", personQueries.assignPeople);
+app.post("/people/updateAssignedPeople", personQueries.updateAssignedPeople);
+app.post("/people/assignedProjectUsers", personQueries.getAssignedProjectUsers);
+app.post("/sendNotification", nh.sendNotification);
+app.post("/retrieveNotifications", nh.retrieveNotifications);
 
 if (process.env.NODE_ENV === "production") {
   // Serve any static files

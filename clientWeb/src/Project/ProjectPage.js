@@ -5,8 +5,7 @@ import TaskInfo from "./TaskInfo";
 import $ from "jquery";
 import NoticeBoard from "../Notifications/NoticeBoard";
 import GanttChart from "./GanttChart";
-import ProjectAnalytic from "../ProjectAnalytics/ProjectAnalytic"
-
+import ProjectAnalytic from "../ProjectAnalytics/ProjectAnalytic";
 
 class ProjectPage extends React.Component {
   constructor(props) {
@@ -16,7 +15,8 @@ class ProjectPage extends React.Component {
       messages: null,
     };
 
-    this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(this
+    this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(
+      this
     );
   }
 
@@ -27,14 +27,13 @@ class ProjectPage extends React.Component {
     };
 
     data = JSON.stringify(data);
-    await new Promise(r => setTimeout(r, 4000));
+    await new Promise((r) => setTimeout(r, 4000));
 
     $.post("/retrieveNotifications", JSON.parse(data), (response) => {
       this.setState({ messages: response.notifications });
     }).fail(() => {
       alert("Unable to fetch notifications");
     });
-
   }
 
   componentDidMount() {
@@ -58,9 +57,9 @@ class ProjectPage extends React.Component {
         projID: this.props.project.projectInfo.id,
         userID: this.props.user.id,
       };
-  
+
       data = JSON.stringify(data);
-  
+
       $.post("/retrieveNotifications", JSON.parse(data), (response) => {
         this.setState({ messages: response.notifications });
       }).fail(() => {
@@ -73,12 +72,7 @@ class ProjectPage extends React.Component {
     return (
       <Container fluid>
         <Row className="my-1">
-          <Col 
-            sm={12}
-            md={12}
-            lg={6}
-            xl={6}
-          >
+          <Col sm={12} md={12} lg={6} xl={6}>
             <ProjectInfo
               project={this.props.project}
               setProject={(project) => this.props.setProject(project)}
@@ -87,12 +81,7 @@ class ProjectPage extends React.Component {
               updateNoticeBoardRefreshKey={this.updateNoticeBoardRefreshKey}
             />
           </Col>
-          <Col
-            sm={12}
-            md={12}
-            lg={6}
-            xl={6}
-          >
+          <Col sm={12} md={12} lg={6} xl={6}>
             {this.props.project != null && this.props.user != null ? (
               <NoticeBoard
                 messages={this.state.messages}
@@ -104,37 +93,36 @@ class ProjectPage extends React.Component {
 
         <Row className="mt-3">
           <Col style={{ color: "#EEBB4D" }}>
-              <h3>Analytics</h3>
+            <h3>Analytics</h3>
           </Col>
         </Row>
         <Row>
           <Col>
-            <ProjectAnalytic project={this.props.project} displayProjectName={false}/>
+            <ProjectAnalytic
+              project={this.props.project}
+              displayProjectName={false}
+            />
           </Col>
         </Row>
 
         <Row className="mt-3">
           <Col style={{ color: "#EEBB4D" }}>
-              <h3>Tasks</h3>
+            <h3>Tasks</h3>
           </Col>
         </Row>
         <Row>
           <Col>
-            <TaskInfo
-              project={this.props.project}
-            />
+            <TaskInfo project={this.props.project} />
           </Col>
         </Row>
         <Row className="mt-2">
           <Col style={{ color: "#EEBB4D" }}>
-              <h3>Gantt Chart</h3>
+            <h3>Gantt Chart</h3>
           </Col>
         </Row>
         <Row>
           <Col>
-            <GanttChart 
-              project={this.props.project}
-            />
+            <GanttChart project={this.props.project} />
           </Col>
         </Row>
       </Container>

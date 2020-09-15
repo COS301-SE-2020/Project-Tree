@@ -1,17 +1,6 @@
 import React, {Component} from 'react';
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-} from 'react-native-table-component';
+import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {Table, TableWrapper, Row, Rows} from 'react-native-table-component';
 import {Icon} from 'native-base';
 import DeleteProject from './DeleteProject';
 

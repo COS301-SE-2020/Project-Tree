@@ -1,9 +1,16 @@
 import React, { Component } from "react";
-import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstrap";
+import {
+  Modal,
+  Button,
+  Col,
+  Row,
+  Container,
+  Form,
+  Spinner,
+} from "react-bootstrap";
 import $ from "jquery";
 import loginImg from "../Images/LoginImg.svg";
 import About from "../About";
-
 
 function stringifyFormData(fd) {
   const data = {};
@@ -21,7 +28,7 @@ export class Login extends Component {
       email: "",
       password: "",
       loginErrors: "",
-      webToken: ""
+      webToken: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -40,10 +47,9 @@ export class Login extends Component {
         localStorage.setItem("sessionToken", response.sessionToken);
         this.props.handleLogin(response);
       } else alert("Email or Password is incorrect");
-    })
-    .fail(() => {
+    }).fail(() => {
       alert("Email or Password is incorrect.");
-    })
+    });
     event.preventDefault();
   }
 
@@ -80,22 +86,22 @@ export class Login extends Component {
             </div>
           </div>
           <input
-                hidden
-                type="text"
-                name="type"
-                id="type"
-                value={"webToken"}
-                onChange={() => {}}
-         />
-        <div className="footer">
-              <Button type="submit" className=".btn">
-                Login
-              </Button>  
-           <Row>
-            <Col>
-              <About/>
-            </Col>
-            </Row>          
+            hidden
+            type="text"
+            name="type"
+            id="type"
+            value={"webToken"}
+            onChange={() => {}}
+          />
+          <div className="footer">
+            <Button type="submit" className=".btn">
+              Login
+            </Button>
+            <Row>
+              <Col>
+                <About />
+              </Col>
+            </Row>
           </div>
         </Form>
       </div>

@@ -59,9 +59,8 @@ export default class ProjectProgressComponent extends React.Component {
         <Container>
           <Row className="align-items-center bg-white">
             <Col>
-                <h4>Project Progress</h4>
+              <h4>Project Progress</h4>
             </Col>
-            
           </Row>
           <Row className="align-items-center bg-white">
             <Col sm={12} style={{ fontSize: "20px" }}>
@@ -72,7 +71,6 @@ export default class ProjectProgressComponent extends React.Component {
             </Col>
           </Row>
         </Container>
-        
       </React.Fragment>
     );
   }

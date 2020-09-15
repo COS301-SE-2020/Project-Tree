@@ -27,7 +27,7 @@ export class Register extends React.Component {
       passwordError2: "",
       passwordError3: "",
       passwordError4: "",
-      hidden: true
+      hidden: true,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -44,7 +44,7 @@ export class Register extends React.Component {
     /[0-9]/.test(p) === false
       ? arr.push("Must contain at least one number \n")
       : (str += "");
-      /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
+    /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
       ? arr.push("Must contain at least one special character eg. #!@$ \n")
       : (str += "");
     /^.{8,22}$/.test(p) === false
@@ -52,7 +52,6 @@ export class Register extends React.Component {
       : (str += "");
     return arr;
   }
-  
 
   handleChange(event) {
     this.setState({
@@ -67,19 +66,17 @@ export class Register extends React.Component {
     let arr = this.password_validate(x);
     if (arr.length === 0) {
       $.post("/register", JSON.parse(data), (response) => {
-       if(response.message == "duplicate")
-       {
-          alert("User with this email already exists. Try with a different email.")
-       }
-       else
-       {       
-        localStorage.setItem("sessionToken", response.sessionToken);
-        this.props.handleReg(response);
-      }
-      })
-      .fail(() => {
+        if (response.message == "duplicate") {
+          alert(
+            "User with this email already exists. Try with a different email."
+          );
+        } else {
+          localStorage.setItem("sessionToken", response.sessionToken);
+          this.props.handleReg(response);
+        }
+      }).fail(() => {
         alert("Unable to create User");
-      })
+      });
     } else {
       this.setState({ passwordError: arr[0] });
       this.setState({ passwordError2: arr[1] });
@@ -92,18 +89,12 @@ export class Register extends React.Component {
     this.setState({ hidden: !this.state.hidden });
   }
 
-
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
   render() {
-    const {
-      email,
-      password,
-      name,
-      sname,
-    } = this.state;
+    const { email, password, name, sname } = this.state;
     return (
       <div className="base-container" ref={this.props.containerRef}>
         <div className="header"> Register </div>
@@ -144,17 +135,17 @@ export class Register extends React.Component {
                 />
               </div>
               <div className="form-groupPass">
-               <label htmlFor="password">Password</label>   
-               <div className="form-line">                
-                <input
-                  type={this.state.hidden ? "password" : "text"}
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={this.onChange}
-                  required
-                />              
-                <i onClick={this.toggleShow}>{eye}</i>
+                <label htmlFor="password">Password</label>
+                <div className="form-line">
+                  <input
+                    type={this.state.hidden ? "password" : "text"}
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={this.onChange}
+                    required
+                  />
+                  <i onClick={this.toggleShow}>{eye}</i>
                 </div>
               </div>
               <input
@@ -182,18 +173,18 @@ export class Register extends React.Component {
             </div>
           </div>
           <div className="footer">
-          <Row>
-            <Col>
-              <Button type="submit" className=".btn">
-                Register
-              </Button>
-            </Col>
-           </Row>  
-          <Row>
-            <Col>
-              <About/>
-            </Col>
-          </Row>          
+            <Row>
+              <Col>
+                <Button type="submit" className=".btn">
+                  Register
+                </Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <About />
+              </Col>
+            </Row>
           </div>
         </Form>
       </div>
