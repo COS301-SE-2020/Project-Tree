@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
 import DeleteProject from "./DeleteProject";
-import ProjectProgress from "./ProjectProgress";
 
 class ProjectInfo extends React.Component {
   render() {

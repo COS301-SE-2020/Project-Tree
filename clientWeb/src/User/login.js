@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstrap";
 import $ from "jquery";
 import loginImg from "../Images/LoginImg.svg";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import About from "../About";
 
 
@@ -38,7 +37,6 @@ export class Login extends Component {
     let data = stringifyFormData(new FormData(event.target));
     $.post("/login", JSON.parse(data), (response) => {
       if (response.status === true) {
-        console.log("LOGGED IN")
         localStorage.setItem("sessionToken", response.sessionToken);
         this.props.handleLogin(response);
       } else alert("Email or Password is incorrect");

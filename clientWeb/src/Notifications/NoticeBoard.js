@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { isEmpty } from "lodash";
 import { Row, Col, Container } from "react-bootstrap";
-import f1 from "../Images/female1.png";
-import f2 from "../Images/female2.png";
-import m1 from "../Images/male1.png";
-import m2 from "../Images/male2.png";
 import $ from "jquery";
 import "./style.css";
 
@@ -94,7 +90,6 @@ class NotificationList extends React.Component {
     if (!isEmpty(dailyMessages)) {
       messages.push(dailyMessages);
     }
-    //console.log(messages)
     return messages;
   }
 
@@ -166,7 +161,6 @@ class NotificationList extends React.Component {
   }
   
   render() {
-    console.log(this.props.users)
     let messages = this.sortMessages();
     let messageComponents = this.createMessageList(messages);
 

@@ -2,14 +2,6 @@ import React from "react";
 import {Form, Modal, Button, Row, Col, InputGroup, Spinner } from "react-bootstrap";
 import ms from "ms";
 
-function stringifyFormData(fd) {
-  const data = {};
-  for (let key of fd.keys()) {
-    data[key] = fd.get(key);
-  }
-  return data;
-}
-
 class UpdateTask extends React.Component {
   constructor(props) {
     super(props);

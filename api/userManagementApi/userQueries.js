@@ -3,11 +3,9 @@ const { JWT } = require("jose");
 const bcrypt = require("bcrypt");
 
 async function editUser(req, res) {
-  console.log(req.body)
   let pfp = req.body.profilepicture;
   if(pfp == '')
   {
-    console.log("no profile picture change")
     pfp = req.body.oldprofile;
   }
   let userId = await verify(req.body.token);
@@ -72,7 +70,6 @@ async function register(req, res) {
             { email: req.body.email, hash },
             process.env.ACCESS_TOKEN_SECRET
           );
-          console.log(req.body.type,  "       ", token)
           db.getSession()
             .run(
               `

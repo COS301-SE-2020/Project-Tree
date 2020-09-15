@@ -34,7 +34,6 @@ class SendProjectNotification extends React.Component {
     let timestamp = new Date();
     timestamp.setHours(timestamp.getHours() + 2);
     timestamp = timestamp.toISOString();
-    console.log("PROJECT:  ", this.props.user.id)
     let data = {
       type: "project", //personal, task, project, auto
       fromName: this.props.user.name + " " + this.props.user.sname,

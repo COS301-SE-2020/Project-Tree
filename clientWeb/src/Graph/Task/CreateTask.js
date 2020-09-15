@@ -3,14 +3,6 @@ import { Form, Modal, Button, Row, Col, Spinner } from "react-bootstrap";
 import "./AssigningPeople.css";
 import ms from "ms";
 
-function stringifyFormData(fd) {
-  const data = {};
-  for (let key of fd.keys()) {
-    data[key] = fd.get(key);
-  }
-  return data;
-}
-
 class CreateTask extends React.Component {
   constructor(props) {
     super(props); 

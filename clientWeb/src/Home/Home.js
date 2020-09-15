@@ -1,9 +1,8 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
 import CreateProject from "../Project/CreateProject";
 import Dashboard from "./Dashboard";
 import image from "../Images/BigTree.svg";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 class Home extends React.Component {
   render() {

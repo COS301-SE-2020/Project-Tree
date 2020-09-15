@@ -7,7 +7,6 @@ import graphlib from "graphlib";
 import CreateDependency from "./Dependency/CreateDependency";
 import { Form, Button, Container, Row, Col, Tooltip, OverlayTrigger } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
-import { isElement } from "react-dom/test-utils";
 
 function makeLink(edge, criticalPathLinks) {
   let strokeColor = "#000";

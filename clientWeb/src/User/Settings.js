@@ -132,9 +132,7 @@ class Settings extends React.Component {
       "data": form
     }; 
     await $.ajax(settings).done(function (response) {
-      console.log(response);
       var jx = JSON.parse(response);
-      console.log(jx.data.url); 
       global_pfp = jx.data.url;
     });
     this.setState({ pfp: global_pfp });
@@ -147,7 +145,6 @@ class Settings extends React.Component {
   handlePasswordChange(val) {
     this.setState({
       password: val,
-    //  isValidPassword: true,
 })}
 
 handleNewPasswordChange(val) 
@@ -159,8 +156,7 @@ handleNewPasswordChange(val)
     passwordError3: arr[2],
     passwordError4: arr[3],
     isValidPassword: false
-  })//indexOf('?') != -1
-  console.log(arr[0].indexOf('✓'))
+  })
 
   if(arr[0].indexOf('✓') != -1 && arr[1].indexOf('✓') != -1 && arr[2].indexOf('✓') != -1 && arr[3].indexOf('✓') != -1)
       {
@@ -175,31 +171,12 @@ handleNewPasswordChange(val)
         });    
       }
   }
-  // let arr = this.password_validate(val);
-  // this.setState({
-  //   passwordError: arr[0],
-  //   passwordError2: arr[1], 
-  //   passwordError3: arr[2],
-  //   passwordError4: arr[3],
-  //   isValidPassword: false
-  // })
-  // if(arr[0]== "✓" && arr[1]== "✓" && arr[2]== "✓" && arr[3]== "✓")
-  // {
-  //   this.setState({
-  //     newPass: val,
-  //     confirmNewPass: true,
-  //   });
-  // } else {
-  //   this.setState({
-  //     confirmNewPass: true,
-  //   });    }
 
 
   handleLogout() {
     localStorage.clear();
     this.setState({
       loggedInStatus: false,
-      //user: {},
     });
     this._isMounted = false;
     window.location.reload(false);
@@ -222,7 +199,6 @@ handleNewPasswordChange(val)
       "/user/get",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
-        console.log(response)
         this.setState({ toggleEdit: false, user: response.user, pfp:"" });
       }
     )
@@ -244,7 +220,6 @@ handleNewPasswordChange(val)
       return;
     }
 
-    console.log(this.state.confirmNewPass)
     if(this.state.confirmNewPass)
     {
     let data = {
@@ -253,9 +228,7 @@ handleNewPasswordChange(val)
       newPass: newPass
     };
     data = JSON.stringify(data);
-    console.log(data)
     $.post("/user/pass", JSON.parse(data), (response) => {
-      console.log(response)
       if(response.message === "wrong")
       {
         alert('Password entered does not match password registered with this account.');
@@ -281,8 +254,6 @@ handleNewPasswordChange(val)
 
   async handleSubmit(event) {
     this.setState({isloading: true});
-    console.log("OLD PFP", this.state.user.profilepicture)
-    console.log("GLOBAL", global_pfp)
     event.preventDefault();
     let data = new FormData();
     data.append("name", this.state.user.name);
@@ -402,11 +373,6 @@ handleNewPasswordChange(val)
                 <p style={(this.state.passwordError2.indexOf("✓") != -1) ? {color: "green"} : {color: "red"}}> {this.state.passwordError2}</p>
                 <p style={(this.state.passwordError3.indexOf("✓") != -1) ? {color: "green"} : {color: "red"}}> {this.state.passwordError3}</p>
                 <p style={(this.state.passwordError4.indexOf("✓") != -1) ? {color: "green"} : {color: "red"}}> {this.state.passwordError4}</p>
-                {/* <p></p><p></p>
-                <p><b>{this.state.passwordError}</b></p>
-                <p><b>{this.state.passwordError2}</b></p>
-                <p><b>{this.state.passwordError3}</b></p>
-                <p><b>{this.state.passwordError4}</b></p> */}
              </div>
              </Row>
              </Container>
@@ -501,41 +467,6 @@ handleNewPasswordChange(val)
               </Container>
             )}
             </Modal.Body>
-            {/* {this.state.togglePass === true ? 
-            (        
-            <Container>
-               <Row>
-                  <Col>
-                    <Row>
-                      <Col>
-                        <Button
-                          block
-                          variant="secondary"
-                          className="mb-2"
-                          onClick={() => {
-                            this.closeEdit();
-                          }}
-                        >
-                          <i className="fa fa-remove"> </i> Cancel
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          type="submit"
-                          block
-                          variant="secondary"
-                          className="mb-2"
-                        >
-                          <i className="fa fa-save"> </i> Save Changes{" "}
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-                </Container>
-              ):
-                ( */}
-
               {this.state.togglePass === true ?
                (
               <Container>

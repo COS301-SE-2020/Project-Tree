@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Modal, Button, Row, Col, Spinner } from "react-bootstrap";
+import {Modal, Button, Spinner } from "react-bootstrap";
 
 class CloneTask extends React.Component {
   constructor(props) {

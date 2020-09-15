@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button, Col, Row, Container, Form, Spinner } from "react-bootstrap";
+import { Button, Col, Row, Form } from "react-bootstrap";
 import $ from "jquery";
 import register from "../Images/Register.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -67,7 +67,6 @@ export class Register extends React.Component {
     let arr = this.password_validate(x);
     if (arr.length === 0) {
       $.post("/register", JSON.parse(data), (response) => {
-        //console.log(response);
        if(response.message == "duplicate")
        {
           alert("User with this email already exists. Try with a different email.")
@@ -158,15 +157,6 @@ export class Register extends React.Component {
                 <i onClick={this.toggleShow}>{eye}</i>
                 </div>
               </div>
-              {/* <div className="pass-wrapper">
-        {" "}
-        <input
-          placeholder="Password"
-          name="password"
-          type={this.state.hidden ? "text" : "password"}
-          required        />
-        <i onClick={this.toggleShow}>{eye}</i>{" "}
-      </div> */}
               <input
                 hidden
                 type="date"

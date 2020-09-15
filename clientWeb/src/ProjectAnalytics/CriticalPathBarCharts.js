@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Button, ProgressBar } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { Chart } from 'react-google-charts';
 import image from '../Images/project_analytic_3.svg'
 

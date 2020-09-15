@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import image from '../Images/project_analytic_4.svg'
 
 export default class TaskOverviewComponent extends React.Component {
