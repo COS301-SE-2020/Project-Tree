@@ -51,7 +51,7 @@ export default class GraphDrawer extends Component {
   render() {
     let isEnabled = this.props.direction === 'TB' ? true : false;
     return (
-      <ScrollView>
+      <ScrollView >
         <View
           style={{
             flex: 1,
@@ -165,10 +165,27 @@ export default class GraphDrawer extends Component {
               <TouchableOpacity
                 style={[
                   styles.signIn,
-                  {backgroundColor: 'white', borderColor: 'blue'},
+                  {backgroundColor: 'white', borderColor: '#0275D8', borderWidth: 3},
                 ]}>
                 <Text style={[styles.textSign, {color: 'black'}]}>
                   Critical Path
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.button}>
+              <TouchableOpacity
+                // style={[
+                //   styles.signIn,
+                //   {backgroundColor: 'white', shadowOpacity: 0.75,
+                //   shadowRadius: 5,
+                //   shadowColor: 'red',
+                //   shadowOffset: { height: 10, width: 10 },
+                //   elevation:6
+                //   }
+                // ]}
+                style={[styles.signIn, {backgroundColor:'white', borderColor: "#009999", borderWidth: 3}]}>
+                <Text style={[styles.textSign, {color: 'black', textAlign:'center'}]}>
+                  Highlighted Task
                 </Text>
               </TouchableOpacity>
             </View>
@@ -233,7 +250,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: 15,
     paddingBottom: 4,
     height: 50,
     width: 200,
@@ -283,5 +300,10 @@ const styles = StyleSheet.create({
   text: {
     margin: 6,
     textAlign: 'center',
+  },
+  buttonShadow: {
+    borderColor: '#009999',
+    borderWidth: 3,
+    borderRadius: 10
   },
 });

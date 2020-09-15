@@ -218,6 +218,7 @@ class Graph extends React.Component {
     for (let i = 0; i < this.props.links.length; i++) {
       const el = this.props.links[i];
       if (el.source === curr) {
+        console.log("el", el);
         if (target === el.target) return true;
         return this.recDepCheck(el.target, target);
       }
@@ -268,10 +269,12 @@ class Graph extends React.Component {
         }
         if (this.recDepCheck(this.state.target.id, this.state.source.id) === true) {
           this.setState({ target: null, alert: 1 });
+          return;
         }
 
         else if(this.alreadyExists(this.state.target.id, this.state.source.id)){
           this.setState({ target: null, alert: 2 });
+          return;
         }
       }
     }
