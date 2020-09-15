@@ -59,8 +59,6 @@ function deleteTask(req, res) {
     req.body.nodes,
     req.body.rels
   );
-  
-  console.log("successors", successors);
 
   db.getSession()
     .run(
@@ -74,26 +72,17 @@ function deleteTask(req, res) {
     .then(async () => {
       for (let x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == req.body.changedInfo.id) {
-          if (x == 0) {
-            req.body.nodes.shift();
-            x--;
-          } else {
-            req.body.nodes.splice(x, x);
-          }
+          if (x === 0) req.body.nodes.shift();
+          else if(x === req.body.nodes.length - 1) req.body.nodes.pop();
+          else req.body.nodes.splice(x, 1);
         }
       }
 
       for (let x = 0; x < req.body.rels.length; x++) {
-        if (
-          req.body.rels[x].target == req.body.changedInfo.id ||
-          req.body.rels[x].source == req.body.changedInfo.id
-        ) {
-          if (x == 0) {
-            req.body.rels.shift();
-            x--;
-          } else {
-            req.body.rels.splice(x, x);
-          }
+        if (req.body.rels[x].target == req.body.changedInfo.id || req.body.rels[x].source == req.body.changedInfo.id) {
+          if (x === 0) req.body.rels.shift();
+          else if(x === req.body.rels.length - 1) req.body.rels.pop();
+          else req.body.rels.splice(x, 1);
         }
       }
 
