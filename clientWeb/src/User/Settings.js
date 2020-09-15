@@ -62,6 +62,10 @@ class Settings extends React.Component {
       secureTextEntry: true,
       confirm_secureTextEntry: true,
       confirmPassword: "",  
+      passwordError: "",
+      passwordError2: "",
+      passwordError3: "",
+      passwordError4: "",
       hidden: true,
       
     };
@@ -76,9 +80,27 @@ class Settings extends React.Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handlePass = this.handlePass.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
+    this.password_validate = this.password_validate.bind(this);
   }
 
-  
+  password_validate(p) {
+    let str = "";
+    let arr = [];
+   // let p = d.password;
+   /[A-Z]/.test(p) === false
+     ? arr.push("Must contain at least one Capital Letter \n")
+     : arr.push ("Must contain at least one Capital Letter ✓");
+   /[0-9]/.test(p) === false
+     ? arr.push("Must contain at least one number \n")
+     : arr.push("Must contain at least one number ✓");
+   /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
+     ? arr.push("Must contain at least one special character eg. #!@$ \n")
+     : arr.push("Must contain at least one special character eg. #!@$ ✓");
+   /^.{8,22}$/.test(p) === false
+     ? arr.push("Must be between 8 and 22 characters ")
+     : arr.push("Must be between 8 and 22 characters  ✓");
+   return arr;
+ }
 
   componentDidUpdate(prevProps) {
     if (this.props.user !== prevProps.user) {
@@ -128,13 +150,29 @@ class Settings extends React.Component {
     //  isValidPassword: true,
 })}
 
-handleNewPasswordChange(val) {
-
+handleNewPasswordChange(val) 
+{
+  let arr = this.password_validate(val);
   this.setState({
-      confirmPassword: val,
-    //  isValidPassword: true,
-})
-
+    passwordError: arr[0],
+    passwordError2: arr[1], 
+    passwordError3: arr[2],
+    passwordError4: arr[3],
+    isValidPassword: false
+  })//indexOf('?') != -1
+  console.log(arr[0].indexOf('✓'))
+  if(arr[0].indexOf('✓') != -1 && arr[1].indexOf('✓') != -1 && arr[2].indexOf('✓') != -1 && arr[3].indexOf('✓') != -1)
+      {
+        this.setState({
+          confirmPassword: val,
+          confirmNewPass: true,
+        });
+      } else {
+        this.setState({
+          confirmNewPass: true,
+        });    
+      }
+  }
   // let arr = this.password_validate(val);
   // this.setState({
   //   passwordError: arr[0],
@@ -153,7 +191,7 @@ handleNewPasswordChange(val) {
   //   this.setState({
   //     confirmNewPass: true,
   //   });    }
-}
+
 
   handleLogout() {
     localStorage.clear();
@@ -203,7 +241,8 @@ handleNewPasswordChange(val) {
       alert('Please ensure all password criteria are met');
       return;
     }
-
+    if(!this.state.confirmNewPass)
+    {
     let data = {
       token: localStorage.getItem("sessionToken"),
       testPass: oldPass,
@@ -228,6 +267,11 @@ handleNewPasswordChange(val) {
     }) .fail(() => {
       alert("Unable to change password");
     })
+   }
+   else
+   {
+    alert("Unable to change password");
+   }
   }
 
 
@@ -339,14 +383,23 @@ handleNewPasswordChange(val) {
                         name="newPass"
                         value={this.state.confirmPassword}
                         onChange={(e) => {
+                          this.handleNewPasswordChange(e.target.value)
                           this.setState({ confirmPassword: e.target.value })
                           this.value = this.state.confirmPassword;
                           console.log(this.state.confirmPassword)
                         }}
-                        required
-                /></Col>
+                        required/>
+                  </Col>
                 <Col xs={1} ><i onClick={this.toggleShow}>{eye}</i></Col>
-             </Row>
+              </Row>
+             <Row>
+             <div style={{ fontSize: 13, color: "black" }}>
+                <p></p><p></p>
+                <p><b>{this.state.passwordError}</b></p>
+                <p><b>{this.state.passwordError2}</b></p>
+                <p><b>{this.state.passwordError3}</b></p>
+                <p><b>{this.state.passwordError4}</b></p>
+             </div></Row>
              </Container>
             )
             :(
