@@ -12,7 +12,7 @@ function stringifyFormData(fd) {
 class DeleteTask extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { Show: false, id: this.props.task.id , isloading: false};
+    this.state = { Show: false, isloading: false};
     this.ShowModal = this.ShowModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -94,7 +94,7 @@ class DeleteTask extends React.Component {
                   hidden
                   type="number"
                   name="id"
-                  value={this.state.id}
+                  value={this.props.task.id}
                   onChange={() => {}}
                 />
                 <input

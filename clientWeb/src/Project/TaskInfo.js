@@ -155,14 +155,16 @@ class TaskInfo extends React.Component {
             >
               <Row>
                 <Col className="text-center">
-                  {el.name} <hr />
+                  {el.name} 
                 </Col>
               </Row>
-              <Row style={{maxHeight:"200px", overflow:"auto"}}>
+              <hr />
+              <Row style={{height:"80px", overflow:"auto"}}>
                 <Col className="text-center">
-                  {el.description} <hr />
+                  {el.description} 
                 </Col>
               </Row>
+              <hr />
               <Row>
                 <Col className="text-center">Start:</Col>
                 <Col className="text-center">End:</Col>
