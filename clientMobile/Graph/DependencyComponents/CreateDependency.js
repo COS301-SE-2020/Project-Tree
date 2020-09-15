@@ -37,15 +37,17 @@ class CreateDependency extends Component {
     this.setState({createDependencyVisibility: visible});
   }
 
+  
   recDepCheck(curr, target) {
+    let check = false;
     for (let i = 0; i < this.props.links.length; i++) {
       const el = this.props.links[i];
       if (el.source === curr) {
-        if (target === el.target) return true;
-        return this.recDepCheck(el.target, target);
+        if (target === el.target) check =  true;
+        check = check || this.recDepCheck(el.target, target);
       }
     }
-    return false;
+    return check;
   }
 
   alreadyExists(target, source){
