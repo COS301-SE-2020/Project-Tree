@@ -525,10 +525,13 @@ class DependencySidebar extends React.Component {
             <Col></Col>
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">Start Date: {this.props.dependency.startDate.replace("T", " ")}</Col>
+            {this.props.dependency.relationshipType === "fs"
+              ? (<Col className="text-center">End date of first task: {this.props.dependency.startDate.replace("T", " ")}</Col>)
+              : (<Col className="text-center">Start date of first task: {this.props.dependency.startDate.replace("T", " ")}</Col>)
+            }
           </Row>
           <Row className="text-center p-1">
-            <Col className="text-center">End Date: {this.props.dependency.endDate.replace("T", " ")}</Col>
+            <Col className="text-center">Start date of second task: {this.props.dependency.endDate.replace("T", " ")}</Col>
           </Row>
           <Row className="text-center p-1">
             <Col className="text-center">Duration: {this.CalcDiff(this.props.dependency.startDate, this.props.dependency.endDate)}</Col>
