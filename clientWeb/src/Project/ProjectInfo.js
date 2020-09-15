@@ -10,7 +10,7 @@ class ProjectInfo extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container className="block-example border rounded border-secondary">
+        <Container className="block-example border rounded border-secondary" style={{height:"27em"}}>
           <Row className="align-items-center bg-secondary py-2">
             <Col>
               <Row>
@@ -88,7 +88,7 @@ class ProjectInfo extends React.Component {
                 className="mt-2"
                 striped
                 bordered
-                size="sm"
+                size="md"
                 variant="light"
               >
                 <tbody>
