@@ -215,15 +215,15 @@ class Graph extends React.Component {
   }
 
   recDepCheck(curr, target) {
+    let check = false;
     for (let i = 0; i < this.props.links.length; i++) {
       const el = this.props.links[i];
       if (el.source === curr) {
-        console.log("el", el);
-        if (target === el.target) return true;
-        return this.recDepCheck(el.target, target);
+        if (target === el.target) check =  true;
+        check = check || this.recDepCheck(el.target, target);
       }
     }
-    return false;
+    return check;
   }
 
   toggleCreateDependency(clickedNode) {
@@ -459,6 +459,7 @@ class Graph extends React.Component {
                       block
                       size="sm"
                       disabled={this.state.target === null}
+                      style={{overflow: "hidden"}}
                     >
                       {dependency}
                     </Button>
@@ -483,7 +484,7 @@ class Graph extends React.Component {
                       block
                       xs={2}
                       size="sm"
-                      style={{height: "31px", wordWrap: "break-word"}}
+                      style={{height: "31px", overflow: "hidden"}}
                       onClick={() => {
                         this.setState({
                           displayCriticalPath: !this.state.displayCriticalPath,
