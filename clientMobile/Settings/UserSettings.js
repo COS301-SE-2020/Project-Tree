@@ -353,6 +353,11 @@ class UserSettings extends Component {
       <View style={styleUser.container}>
         <StatusBar backgroundColor="#EBB035" barStyle="light-content" />
         <View style={styleUser.header}>
+          <TouchableOpacity
+                  style={styleUser.hideButton1}
+                  onPress={() => this.props.userScreen(false)}>
+                  <Icon type="FontAwesome" name="close" />
+           </TouchableOpacity>
           <Text style={styleUser.text_header}>User details</Text>
         </View>
         <Animatable.View animation="fadeInUp" style={styleUser.footer}>
@@ -464,8 +469,7 @@ class UserSettings extends Component {
               animationType="fade"
               transparent={true}
               visible={this.state.modalVisible}
-              onRequestClose={() => this.setModalVisible(false)}
-            >
+              onRequestClose={() => this.setModalVisible(false)}>
               <View style={styleUser.centeredView}>
                 <View style={styleUser.modalView}>
                   <TouchableOpacity
@@ -539,13 +543,18 @@ class UserSettings extends Component {
             </View>
             {this.state.isValidPassword ? true : (
               <Animatable.View animation="fadeInLeft" duration={500}>
+                <Text style={(this.state.passwordError.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError}</Text>
+                <Text style={(this.state.passwordError2.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError2}</Text>
+                <Text style={(this.state.passwordError3.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError3}</Text>
+                <Text style={(this.state.passwordError4.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError4}</Text>
+{/* 
                 <Text style={styles.errorMsg}>
                 {"\n"}
                 {this.state.passwordError}{"\n"}
                 {this.state.passwordError2}{"\n"}
                 {this.state.passwordError3}{"\n"}
                 {this.state.passwordError4}
-                </Text>
+                </Text> */}
                </Animatable.View>
             )}
             <View style={styleUser.buttonSign}>
@@ -773,6 +782,13 @@ const styleUser = StyleSheet.create({
     marginTop: 0,
     bottom: 0,
   },
+  hideButton1: {
+    alignItems: 'flex-end',
+    marginRight: 210,
+    marginLeft: 0,
+    marginTop: 0,
+    bottom: 0,
+  },
   submitButton: {
     backgroundColor: '#184D47',
     alignItems: 'center',
@@ -789,4 +805,10 @@ const styleUser = StyleSheet.create({
     elevation: 1,
     marginTop: 15,
   },
+  green: {
+    color: '#008656'
+  },
+  red: {
+    color: '#ff0000'
+  }
 });

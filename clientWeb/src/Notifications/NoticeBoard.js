@@ -25,8 +25,6 @@ class NoticeBoard extends Component {
       { token: localStorage.getItem("sessionToken") },
       (response) => {
        this.setState({ users: response});
-        // console.log(this.state.user)
-        // console.log(response)
       }
     )
     .fail((response) => {
