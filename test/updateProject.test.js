@@ -1,25 +1,14 @@
 const updateProject = require('../api/projectApi/updateProject');
-
-test('Compares 2020-12-4 with 2020-11-10', () => {
-  expect(updateProject.compareDates(2020, 12, 4, 2020, 11, 10)).toBe(0);
-});
-
-test('Compares 2020-11-10 with 2020-12-4', () => {
-    expect(updateProject.compareDates(2020, 11, 10, 2020, 12, 4)).toBe(1);
-});
-
-test('Adds 5 days to 2020-06-04', () => {
-    expect(updateProject.addDays(2020, 6, 4, 5)).toStrictEqual([2020, 6, 9]);
-});
-
-test('Adds 10 days to 2020-07-23 (Month Wrapping)', () => {
-    expect(updateProject.addDays(2020, 7, 23, 10)).toStrictEqual([2020, 8, 2]);
-});
-
-test('Subtract 5 days to 2020-06-06', () => {
-    expect(updateProject.addDays(2020, 6, 6, -5)).toStrictEqual([2020, 6, 1]);
-});
-
-test('Subtract 10 days to 2020-06-06 (Month Wrapping)', () => {
-    expect(updateProject.addDays(2020, 6, 6, -10)).toStrictEqual([2020, 5, 27]);
+  
+test('Coverts date obejct to date string', () => {
+    let datetime = {
+        year: { low: 1970, high: 0 },
+        month: { low: 1, high: 0 },
+        day: { low: 2, high: 0 },
+        hour: { low: 2, high: 0 },
+        minute: { low: 26, high: 0 },
+        second: { low: 0, high: 0 },
+        nanosecond: { low: 0, high: 0 }
+    }
+    expect(updateProject.datetimeToString(datetime)).toBe("1970-01-02T02:26");
 });
