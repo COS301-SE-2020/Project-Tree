@@ -142,6 +142,7 @@ function login(req, res) {
               )
               .then((result) => {
                 if (result.records.length != 0) {
+                  res.status(200);
                   res.send({
                     sessionToken: token,
                     status: true,
