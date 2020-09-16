@@ -1,21 +1,9 @@
 import React, {Component} from 'react';
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {
-  Icon,
-  Label,
-  Form,
-  Item,
-  Input,
-} from 'native-base';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Icon, Label, Form, Item, Input} from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import ms from "ms";
+import ms from 'ms';
 
 class CreateDependency extends Component {
   constructor(props) {
@@ -25,7 +13,7 @@ class CreateDependency extends Component {
       source: null,
       target: null,
       source_viewId: null,
-      target_viewId: null
+      target_viewId: null,
     };
     this.setCreateDependencyVisibility = this.setCreateDependencyVisibility.bind(
       this,
@@ -37,24 +25,23 @@ class CreateDependency extends Component {
     this.setState({createDependencyVisibility: visible});
   }
 
-  
   recDepCheck(curr, target) {
     let check = false;
     for (let i = 0; i < this.props.links.length; i++) {
       const el = this.props.links[i];
       if (el.source === curr) {
-        if (target === el.target) check =  true;
+        if (target === el.target) check = true;
         check = check || this.recDepCheck(el.target, target);
       }
     }
     return check;
   }
 
-  alreadyExists(target, source){
+  alreadyExists(target, source) {
     let rels = this.props.links;
 
-    for(var x=0; x<rels.length; x++){
-      if(target === rels[x].target && source === rels[x].source) return true;
+    for (var x = 0; x < rels.length; x++) {
+      if (target === rels[x].target && source === rels[x].source) return true;
     }
 
     return false;
@@ -68,25 +55,33 @@ class CreateDependency extends Component {
       return;
     }
 
-    if ( this.recDepCheck(this.props.targetCreateDependency.id, this.props.sourceCreateDependency.id) === true) {
+    if (
+      this.recDepCheck(
+        this.props.targetCreateDependency.id,
+        this.props.sourceCreateDependency.id,
+      ) === true
+    ) {
       alert('A task cannot be directly or indirectly dependent on itself');
       this.props.setCreateDependency(null);
       return;
     }
 
-    if(this.alreadyExists(this.props.targetCreateDependency.id, this.props.sourceCreateDependency.id)){
+    if (
+      this.alreadyExists(
+        this.props.targetCreateDependency.id,
+        this.props.sourceCreateDependency.id,
+      )
+    ) {
       alert('A dependency between these nodes already exists');
       this.props.setCreateDependency(null);
       return;
     }
 
-    
-
     this.setState({
       source: this.props.sourceCreateDependency,
       target: this.props.targetCreateDependency,
       source_viewId: this.props.source_viewId,
-      target_viewId: this.props.target_viewId
+      target_viewId: this.props.target_viewId,
     });
     this.setCreateDependencyVisibility(true);
     this.props.setCreateDependency(null);
@@ -115,8 +110,7 @@ class CreateDependency extends Component {
               <Text>
                 {this.props.sourceCreateDependency.name +
                   '→' +
-                  (this.props.targetCreateDependency ===
-                  null
+                  (this.props.targetCreateDependency === null
                     ? ''
                     : this.props.targetCreateDependency.name)}
               </Text>
@@ -197,11 +191,11 @@ class CreateDependencyForm extends Component {
     if (this.props.source.startDate > endDate)
       endDate = this.props.source.startDate;
     this.state = {
-      relationshipType: "ss",
+      relationshipType: 'ss',
       source: this.props.source,
       target: this.props.target,
-      source_viewId:this.props.source_viewId,
-      target_viewId:this.props.target_viewId,
+      source_viewId: this.props.source_viewId,
+      target_viewId: this.props.target_viewId,
       sStartDate: this.props.source.startDate,
       sEndDate: this.props.source.endDate,
       startDate: this.props.source.startDate,
@@ -209,7 +203,7 @@ class CreateDependencyForm extends Component {
       selectedIndex: 0,
       error: null,
       dateTimePicker: false,
-      dateTimeType: { type: 'date', for: 'start', value: new Date() },
+      dateTimeType: {type: 'date', for: 'start', value: new Date()},
     };
 
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
@@ -217,51 +211,55 @@ class CreateDependencyForm extends Component {
     this.formatValidateInput = this.formatValidateInput.bind(this);
     this.updateIndex = this.updateIndex.bind(this);
   }
-  
+
   handleDateTimeSelect(event, selectedDate, type) {
-    if(event.type === 'dismissed') {
+    if (event.type === 'dismissed') {
       this.setState({dateTimePicker: false});
       return;
     }
-    let date = new Date(new Date(selectedDate).getTime() - new Date().getTimezoneOffset()*60*1000).toISOString().substring(0,16);
+    let date = new Date(
+      new Date(selectedDate).getTime() -
+        new Date().getTimezoneOffset() * 60 * 1000,
+    )
+      .toISOString()
+      .substring(0, 16);
     if (type.for === 'start') {
-        if (this.state.endDate < date) 
-          this.setState({
-            error: "You cannot set the end date/time before the start date/time.",
-            startDate: date, 
-            endDate: date, 
-            dateTimePicker: false
-          });
-        else
+      if (this.state.endDate < date)
         this.setState({
-          error: null,
-          startDate: date, 
-          dateTimePicker: false
-        });
-    } else {
-      if (this.state.startDate > date) 
-        this.setState({
-          error: "You cannot set the end date/time before the start date/time.",
-          endDate: this.state.startDate, 
-          dateTimePicker: false
+          error: 'You cannot set the end date/time before the start date/time.',
+          startDate: date,
+          endDate: date,
+          dateTimePicker: false,
         });
       else
-      this.setState({
-        error: null,
-        endDate: date, 
-        dateTimePicker: false
-      });
+        this.setState({
+          error: null,
+          startDate: date,
+          dateTimePicker: false,
+        });
+    } else {
+      if (this.state.startDate > date)
+        this.setState({
+          error: 'You cannot set the end date/time before the start date/time.',
+          endDate: this.state.startDate,
+          dateTimePicker: false,
+        });
+      else
+        this.setState({
+          error: null,
+          endDate: date,
+          dateTimePicker: false,
+        });
     }
   }
 
-  
   updateIndex(selectedIndex) {
     if (selectedIndex == 0) {
       this.setState({selectedIndex: 0, relationshipType: 'ss'});
-      this.handleDateTimeSelect({}, this.state.sStartDate, {for:"start"});
+      this.handleDateTimeSelect({}, this.state.sStartDate, {for: 'start'});
     } else {
       this.setState({selectedIndex: 1, relationshipType: 'fs'});
-      this.handleDateTimeSelect({}, this.state.sEndDate, {for:"start"});
+      this.handleDateTimeSelect({}, this.state.sEndDate, {for: 'start'});
     }
   }
 
@@ -306,12 +304,16 @@ class CreateDependencyForm extends Component {
     this.props.setCreateDependencyVisibility(false);
     this.props.setProjectInfo(body.nodes, body.rels);
   }
-  
+
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
-    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    startDate.setTime(
+      startDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
     let endDate = new Date(ed);
-    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    endDate.setTime(
+      endDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
@@ -331,24 +333,24 @@ class CreateDependencyForm extends Component {
             selectedButtonStyle={{backgroundColor: '#EEBB4D'}}
           />
         </View>
-        <View style={{flex: 6, marginBottom:10}}>
+        <View style={{flex: 6, marginBottom: 10}}>
           <Form>
-          <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
+            <Text style={{color: 'red', alignSelf: 'center'}}>
+              {this.state.error}
+            </Text>
             <Item floatingLabel disabled>
               <Label>
-              {
-                this.state.relationshipType === 'ss'?
-                  "Start Date and Time of First Task"
-                  :
-                  "End Date and Time of First Task"
-              }
+                {this.state.relationshipType === 'ss'
+                  ? 'Start Date and Time of First Task'
+                  : 'End Date and Time of First Task'}
               </Label>
-              <Input value={
-                this.state.relationshipType === 'ss'?
-                  this.state.sStartDate.replace("T", " ")
-                  :
-                  this.state.sEndDate.replace("T", " ")
-                } />
+              <Input
+                value={
+                  this.state.relationshipType === 'ss'
+                    ? this.state.sStartDate.replace('T', ' ')
+                    : this.state.sEndDate.replace('T', ' ')
+                }
+              />
             </Item>
             <Item floatingLabel disabled>
               <Label>Start Date of Second Task</Label>
@@ -358,12 +360,12 @@ class CreateDependencyForm extends Component {
                 name="calendar-o"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'date', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'date',
                       for: 'end',
                       value: this.state.endDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -376,12 +378,12 @@ class CreateDependencyForm extends Component {
                 name="clock"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'time', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'time',
                       for: 'end',
                       value: this.state.endDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -404,11 +406,22 @@ class CreateDependencyForm extends Component {
         {this.state.dateTimePicker && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={new Date(new Date(this.state.dateTimeType.value).getTime() + new Date().getTimezoneOffset()*60*1000)}
+            value={
+              new Date(
+                new Date(this.state.dateTimeType.value).getTime() +
+                  new Date().getTimezoneOffset() * 60 * 1000,
+              )
+            }
             mode={this.state.dateTimeType.type}
             is24Hour={true}
             display="default"
-            onChange={(event, selectedDate) => this.handleDateTimeSelect(event, selectedDate, this.state.dateTimeType)}
+            onChange={(event, selectedDate) =>
+              this.handleDateTimeSelect(
+                event,
+                selectedDate,
+                this.state.dateTimeType,
+              )
+            }
           />
         )}
       </View>
@@ -473,7 +486,6 @@ const styles = StyleSheet.create({
   },
   CreateDependencyBtn: {
     height: 50,
-    //width: 200,
     borderRadius: 5,
     borderColor: 'green',
     borderWidth: 3,

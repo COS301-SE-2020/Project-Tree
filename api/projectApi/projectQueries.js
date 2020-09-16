@@ -299,12 +299,14 @@ async function getProjects(req, res) {
   }
 }
 
-function filterProjects(ownedProjects, otherProjects){
-  for(var x=0; x<ownedProjects.length; x++){
-    otherProjects = otherProjects.filter(item => item.id !== ownedProjects[x].id);
+function filterProjects(ownedProjects, otherProjects) {
+  for (var x = 0; x < ownedProjects.length; x++) {
+    otherProjects = otherProjects.filter(
+      (item) => item.id !== ownedProjects[x].id
+    );
   }
 
-  return {ownedProjects, otherProjects};
+  return { ownedProjects, otherProjects };
 }
 
 function getProjectTasks(req, res) {
@@ -329,9 +331,7 @@ function getProjectTasks(req, res) {
           startDate: up.datetimeToString(
             record._fields[0].properties.startDate
           ),
-          endDate: up.datetimeToString(
-            record._fields[0].properties.endDate
-          ),
+          endDate: up.datetimeToString(record._fields[0].properties.endDate),
           duration: parseInt(record._fields[0].properties.duration),
         });
       });
@@ -369,9 +369,7 @@ function getCriticalPath(req, res) {
     });
 }
 
-function getAllInfo(req, res) {
-  
-}
+function getAllInfo(req, res) {}
 
 module.exports = {
   createProject,

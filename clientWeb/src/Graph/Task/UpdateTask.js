@@ -1,14 +1,14 @@
 import React from "react";
-import {Form, Modal, Button, Row, Col, InputGroup, Spinner } from "react-bootstrap";
+import {
+  Form,
+  Modal,
+  Button,
+  Row,
+  Col,
+  InputGroup,
+  Spinner,
+} from "react-bootstrap";
 import ms from "ms";
-
-function stringifyFormData(fd) {
-  const data = {};
-  for (let key of fd.keys()) {
-    data[key] = fd.get(key);
-  }
-  return data;
-}
 
 class UpdateTask extends React.Component {
   constructor(props) {
@@ -18,7 +18,10 @@ class UpdateTask extends React.Component {
       id: this.props.task.id,
       name: this.props.task.name,
       startDate: this.props.task.startDate,
-      duration: this.CalcDiff(this.props.task.startDate, this.props.task.endDate),
+      duration: this.CalcDiff(
+        this.props.task.startDate,
+        this.props.task.endDate
+      ),
       endDate: this.props.task.endDate,
       description: this.props.task.description,
       progress: this.props.task.progress,
@@ -51,7 +54,10 @@ class UpdateTask extends React.Component {
         id: this.props.task.id,
         name: this.props.task.name,
         startDate: this.props.task.startDate,
-        duration: this.CalcDiff(this.props.task.startDate, this.props.task.endDate),
+        duration: this.CalcDiff(
+          this.props.task.startDate,
+          this.props.task.endDate
+        ),
         endDate: this.props.task.endDate,
         description: this.props.task.description,
         progress: this.props.task.progress,
@@ -68,7 +74,7 @@ class UpdateTask extends React.Component {
       });
     }
   }
-  
+
   //Removes people from the people list if they are already assigned to a role so that they can't be selected again
   removeAssignedPeople() {
     for (let x = 0; x < this.state.people.length; x++) {
@@ -142,22 +148,28 @@ class UpdateTask extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-    this.setState({isloading: true});
-    let type = "Incomplete"
+    this.setState({ isloading: true });
+    let type = "Incomplete";
     if (this.state.issue === true) type = "Issue";
     if (parseInt(this.state.progress) === 100) type = "Complete";
 
     let timeComplete = undefined;
-    if(this.state.initialProgress < 100 && parseInt(this.state.progress) === 100){
+    if (
+      this.state.initialProgress < 100 &&
+      parseInt(this.state.progress) === 100
+    ) {
       timeComplete = new Date();
-      timeComplete.setTime( timeComplete.getTime() - new Date().getTimezoneOffset()*60*1000 );
+      timeComplete.setTime(
+        timeComplete.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+      );
       timeComplete = timeComplete.toISOString();
-    }
-    else if(this.state.initialProgress === 100 && parseInt(this.state.progress) < 100){
+    } else if (
+      this.state.initialProgress === 100 &&
+      parseInt(this.state.progress) < 100
+    ) {
       timeComplete = null;
     }
 
-    
     let data = {
       id: this.state.id,
       name: this.state.name,
@@ -167,7 +179,7 @@ class UpdateTask extends React.Component {
       progress: this.state.progress,
       type: type,
       timeComplete: timeComplete,
-    }
+    };
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
     projectData = JSON.stringify(projectData);
@@ -184,7 +196,9 @@ class UpdateTask extends React.Component {
     const body = await response.json();
 
     let timestamp = new Date();
-    timestamp.setTime( timestamp.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    timestamp.setTime(
+      timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+    );
     timestamp = timestamp.toISOString();
 
     await fetch("/people/updateAssignedPeople", {
@@ -208,7 +222,7 @@ class UpdateTask extends React.Component {
           taskName: data.name,
           type: "auto",
           mode: 2,
-        }
+        },
       }),
     });
 
@@ -245,12 +259,12 @@ class UpdateTask extends React.Component {
     tempPacManList.push(person);
 
     let tempProjUsersList = this.state.assignedProjUsers;
-    let userTask = []
+    let userTask = [];
     userTask.push(person);
     userTask.push({
       start: person.id,
       end: this.state.id,
-      type: "PACKAGE_MANAGER"
+      type: "PACKAGE_MANAGER",
     });
     tempProjUsersList.push(userTask);
 
@@ -266,7 +280,7 @@ class UpdateTask extends React.Component {
     this.setState({
       assignedProjUsers: tempProjUsersList,
       pacManList: tempPacManList,
-      pacManSearchTerm: ""
+      pacManSearchTerm: "",
     });
   }
 
@@ -275,12 +289,12 @@ class UpdateTask extends React.Component {
     tempResPersonList.push(person);
 
     let tempProjUsersList = this.state.assignedProjUsers;
-    let userTask = []
+    let userTask = [];
     userTask.push(person);
     userTask.push({
       start: person.id,
       end: this.state.id,
-      type: "RESPONSIBLE_PERSON"
+      type: "RESPONSIBLE_PERSON",
     });
     tempProjUsersList.push(userTask);
 
@@ -305,12 +319,12 @@ class UpdateTask extends React.Component {
     tempResourceList.push(person);
 
     let tempProjUsersList = this.state.assignedProjUsers;
-    let userTask = []
+    let userTask = [];
     userTask.push(person);
     userTask.push({
       start: person.id,
       end: this.state.id,
-      type: "RESOURCE"
+      type: "RESOURCE",
     });
     tempProjUsersList.push(userTask);
 
@@ -326,13 +340,13 @@ class UpdateTask extends React.Component {
     this.setState({
       assignedProjUsers: tempProjUsersList,
       resourceList: tempResourceList,
-      resourcesSearchTerm: ""
+      resourcesSearchTerm: "",
     });
   }
 
   /*
-  * Removes an assigned person from the assigned people arrays
-  */
+   * Removes an assigned person from the assigned people arrays
+   */
   removeAssignedPerson(person, mode) {
     let peopleList = this.state.people;
     if (mode === 0) {
@@ -368,31 +382,35 @@ class UpdateTask extends React.Component {
       }
     }
 
-    for(let x = 0; x < this.state.assignedProjUsers.length; x++){
+    for (let x = 0; x < this.state.assignedProjUsers.length; x++) {
       if (person.id === this.state.assignedProjUsers[x][0].id) {
         if (x === 0) this.state.assignedProjUsers.shift();
         else if (x === this.state.assignedProjUsers.length - 1)
-        this.state.assignedProjUsers.pop();
+          this.state.assignedProjUsers.pop();
         else this.state.assignedProjUsers.splice(x, 1);
       }
     }
-    
+
     peopleList.push(person);
     this.setState({ people: peopleList });
   }
 
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
-    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    startDate.setTime(
+      startDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+    );
     let endDate = new Date(ed);
-    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+    endDate.setTime(
+      endDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+    );
+    return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
   render() {
     /*
-    * Filters the list of people to only show people matching the search term
-    */
+     * Filters the list of people to only show people matching the search term
+     */
     let filteredPacMan = this.state.people.filter((person) => {
       return (
         person.name
@@ -417,15 +435,16 @@ class UpdateTask extends React.Component {
 
     return (
       <React.Fragment>
-        <Button variant="outline-dark" style={{width: "170px" }} onClick={this.ShowModal}>
-          <i className="fa fa-edit"> </i>{" "}Edit
+        <Button
+          variant="outline-dark"
+          style={{ width: "170px" }}
+          onClick={this.ShowModal}
+        >
+          <i className="fa fa-edit"> </i> Edit
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
           <Form onSubmit={this.handleSubmit}>
-            <Modal.Header
-              closeButton
-              style={{ backgroundColor: "#96BB7C" }}
-            >
+            <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
               <Modal.Title>Edit Task</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -469,26 +488,37 @@ class UpdateTask extends React.Component {
                 <Form.Control
                   required
                   type="date"
-                  value={this.state.startDate.substring(0,10)}
+                  value={this.state.startDate.substring(0, 10)}
                   onChange={(e) => {
-                    if(isNaN(Date.parse(e.target.value))) return;
+                    if (isNaN(Date.parse(e.target.value))) return;
                     let value = this.state.startDate;
-                    value = `${e.target.value}T${this.state.startDate.substring(11,16)}`;
-                    let startDate =new Date(value);
-                    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-                    let endDate =new Date(this.state.endDate);
-                    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+                    value = `${e.target.value}T${this.state.startDate.substring(
+                      11,
+                      16
+                    )}`;
+                    let startDate = new Date(value);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let endDate = new Date(this.state.endDate);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
                     if (endDate < startDate) {
-                      alert("You cannot make the start date/time after the end date/time.");
-                      this.setState({ 
-                        startDate: value, 
+                      alert(
+                        "You cannot make the start date/time after the end date/time."
+                      );
+                      this.setState({
+                        startDate: value,
                         endDate: value,
                         duration: this.CalcDiff(value, value),
-                      }); 
+                      });
                     } else {
-                      this.setState({ 
-                        startDate: value, 
-                        duration: this.CalcDiff(value, this.state.endDate) 
+                      this.setState({
+                        startDate: value,
+                        duration: this.CalcDiff(value, this.state.endDate),
                       });
                     }
                     this.value = this.state.startDate;
@@ -498,26 +528,39 @@ class UpdateTask extends React.Component {
                 <Form.Control
                   required
                   type="time"
-                  value={this.state.startDate.substring(11,16)}
+                  value={this.state.startDate.substring(11, 16)}
                   onChange={(e) => {
-                    if(!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)) return;
+                    if (
+                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
+                    )
+                      return;
                     let value = this.state.startDate;
-                    value = `${this.state.startDate.substring(0,10)}T${e.target.value}`;
-                    let startDate =new Date(value);
-                    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-                    let endDate =new Date(this.state.endDate);
-                    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+                    value = `${this.state.startDate.substring(0, 10)}T${
+                      e.target.value
+                    }`;
+                    let startDate = new Date(value);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let endDate = new Date(this.state.endDate);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
                     if (endDate < startDate) {
-                      alert("You cannot make the start date/time after the end date/time.");
-                      this.setState({ 
-                        startDate: value, 
+                      alert(
+                        "You cannot make the start date/time after the end date/time."
+                      );
+                      this.setState({
+                        startDate: value,
                         endDate: value,
                         duration: this.CalcDiff(value, value),
-                      }); 
+                      });
                     } else {
-                      this.setState({ 
-                        startDate: value, 
-                        duration: this.CalcDiff(value, this.state.endDate) 
+                      this.setState({
+                        startDate: value,
+                        duration: this.CalcDiff(value, this.state.endDate),
                       });
                     }
                     this.value = this.state.startDate;
@@ -525,30 +568,41 @@ class UpdateTask extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-              <Form.Label>End date of task</Form.Label>
+                <Form.Label>End date of task</Form.Label>
                 <Form.Control
                   required
                   type="date"
-                  value={this.state.endDate.substring(0,10)}
+                  value={this.state.endDate.substring(0, 10)}
                   onChange={(e) => {
-                    if(isNaN(Date.parse(e.target.value))) return;
+                    if (isNaN(Date.parse(e.target.value))) return;
                     let value = this.state.endDate;
-                    value = `${e.target.value}T${this.state.endDate.substring(11,16)}`;
-                    let endDate =new Date(value);
-                    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-                    let startDate =new Date(this.state.startDate);
-                    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+                    value = `${e.target.value}T${this.state.endDate.substring(
+                      11,
+                      16
+                    )}`;
+                    let endDate = new Date(value);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let startDate = new Date(this.state.startDate);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
                     if (endDate < startDate) {
-                      alert("You cannot make the end date/time before the start date/time.");
-                      this.setState({ 
-                        startDate: value, 
+                      alert(
+                        "You cannot make the end date/time before the start date/time."
+                      );
+                      this.setState({
+                        startDate: value,
                         endDate: value,
                         duration: this.CalcDiff(value, value),
-                      }); 
+                      });
                     } else {
-                      this.setState({ 
-                        endDate: value, 
-                        duration: this.CalcDiff(this.state.startDate, value) 
+                      this.setState({
+                        endDate: value,
+                        duration: this.CalcDiff(this.state.startDate, value),
                       });
                     }
                     this.value = this.state.endDate;
@@ -558,26 +612,39 @@ class UpdateTask extends React.Component {
                 <Form.Control
                   required
                   type="time"
-                  value={this.state.endDate.substring(11,16)}
+                  value={this.state.endDate.substring(11, 16)}
                   onChange={(e) => {
-                    if(!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)) return;
+                    if (
+                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
+                    )
+                      return;
                     let value = this.state.endDate;
-                    value = `${this.state.endDate.substring(0,10)}T${e.target.value}`;
-                    let endDate =new Date(value);
-                    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-                    let startDate =new Date(this.state.startDate);
-                    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+                    value = `${this.state.endDate.substring(0, 10)}T${
+                      e.target.value
+                    }`;
+                    let endDate = new Date(value);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let startDate = new Date(this.state.startDate);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
                     if (endDate < startDate) {
-                      alert("You cannot make the end date/time before the start date/time.");
-                      this.setState({ 
-                        startDate: value, 
+                      alert(
+                        "You cannot make the end date/time before the start date/time."
+                      );
+                      this.setState({
+                        startDate: value,
                         endDate: value,
                         duration: this.CalcDiff(value, value),
-                      }); 
+                      });
                     } else {
-                      this.setState({ 
-                        endDate: value, 
-                        duration: this.CalcDiff(this.state.startDate, value) 
+                      this.setState({
+                        endDate: value,
+                        duration: this.CalcDiff(this.state.startDate, value),
                       });
                     }
                     this.value = this.state.endDate;
@@ -605,37 +672,39 @@ class UpdateTask extends React.Component {
                     max={100}
                     value={this.state.progress}
                     onChange={(e) => {
-                      if(parseInt(e.target.value) === 100){
+                      if (parseInt(e.target.value) === 100) {
                         this.setState({ issue: false });
                       }
                       this.setState({ progress: e.target.value });
                       this.value = this.state.progress;
                     }}
                   />
-                  <Form.Control 
+                  <Form.Control
                     type="range"
                     value={this.state.progress}
                     onChange={(e) => {
-                      if(parseInt(e.target.value) === 100){
+                      if (parseInt(e.target.value) === 100) {
                         this.setState({ issue: false });
                       }
                       this.setState({ progress: e.target.value });
                       this.value = this.state.progress;
                     }}
-                    />
+                  />
                 </InputGroup>
               </Form.Group>
-              
+
               <Form.Group>
-                <Form.Check 
-                  type="checkbox" 
-                  label="There is an issue with the task" 
+                <Form.Check
+                  type="checkbox"
+                  label="There is an issue with the task"
                   checked={this.state.issue}
                   onChange={(e) => {
-                    if(parseInt(this.state.progress) === 100){
+                    if (parseInt(this.state.progress) === 100) {
                       this.setState({ issue: false });
                       this.checked = false;
-                      alert("You cannot specify that a complete task has an issue.");
+                      alert(
+                        "You cannot specify that a complete task has an issue."
+                      );
                     } else {
                       this.setState({ issue: e.target.checked });
                       this.checked = this.state.issue;
@@ -652,10 +721,10 @@ class UpdateTask extends React.Component {
                       value={this.state.pacManSearchTerm}
                       onChange={(e) => this.updateSearch(e, 0)}
                       placeholder="Search for a name"
-                      style={{width:'100%'}}
+                      style={{ width: "100%" }}
                     />
-                    {this.state.pacManSearchTerm.length >= 2 ? (
-                        filteredPacMan.map((person) => {
+                    {this.state.pacManSearchTerm.length >= 2
+                      ? filteredPacMan.map((person) => {
                           return (
                             <React.Fragment>
                               <button
@@ -670,7 +739,7 @@ class UpdateTask extends React.Component {
                             </React.Fragment>
                           );
                         })
-                    ) : null}
+                      : null}
                   </Col>
                   <Col>
                     {this.state.pacManList.map((person) => {
@@ -700,25 +769,25 @@ class UpdateTask extends React.Component {
                       value={this.state.resPersonSearchTerm}
                       onChange={(e) => this.updateSearch(e, 1)}
                       placeholder="Search for a name"
-                      style={{width:'100%'}}
+                      style={{ width: "100%" }}
                     />
-                    {this.state.resPersonSearchTerm.length >= 2 ? (
-                      filteredResPerson.map((person) => {
-                        return (
-                          <React.Fragment>
-                            <button
-                              type="button"
-                              className="selectPersonBtn"
-                              onClick={() => this.addResPerson(person)}
-                              key={person.id}
-                            >
-                              {person.name}&nbsp;{person.surname}
-                            </button>
-                            <br />
-                          </React.Fragment>
-                        );
-                      })
-                    ) : null}
+                    {this.state.resPersonSearchTerm.length >= 2
+                      ? filteredResPerson.map((person) => {
+                          return (
+                            <React.Fragment>
+                              <button
+                                type="button"
+                                className="selectPersonBtn"
+                                onClick={() => this.addResPerson(person)}
+                                key={person.id}
+                              >
+                                {person.name}&nbsp;{person.surname}
+                              </button>
+                              <br />
+                            </React.Fragment>
+                          );
+                        })
+                      : null}
                   </Col>
                   <Col>
                     {this.state.resPersonList.map((person) => {
@@ -748,25 +817,25 @@ class UpdateTask extends React.Component {
                       value={this.state.resourcesSearchTerm}
                       onChange={(e) => this.updateSearch(e, 2)}
                       placeholder="Search for a name"
-                      style={{width:'100%'}}
+                      style={{ width: "100%" }}
                     />
-                    {this.state.resourcesSearchTerm.length >= 2 ? (
-                      filteredResources.map((person) => {
-                        return (
-                          <React.Fragment>
-                            <button
-                              type="button"
-                              className="selectPersonBtn"
-                              onClick={() => this.addResource(person)}
-                              key={person.id}
-                            >
-                              {person.name}&nbsp;{person.surname}
-                            </button>
-                            <br />
-                          </React.Fragment>
-                        );
-                      })
-                    ) : null}
+                    {this.state.resourcesSearchTerm.length >= 2
+                      ? filteredResources.map((person) => {
+                          return (
+                            <React.Fragment>
+                              <button
+                                type="button"
+                                className="selectPersonBtn"
+                                onClick={() => this.addResource(person)}
+                                key={person.id}
+                              >
+                                {person.name}&nbsp;{person.surname}
+                              </button>
+                              <br />
+                            </React.Fragment>
+                          );
+                        })
+                      : null}
                   </Col>
                   <Col>
                     {this.state.resourcesList.map((person) => {
@@ -789,22 +858,25 @@ class UpdateTask extends React.Component {
               </Form.Group>
               <br />
             </Modal.Body>
-            <Modal.Footer
-               style={{ backgroundColor: "#96BB7C" }}
-            >
+            <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark" style={{width: "100px"}}
-              disabled={this.state.isloading}
+              <Button
+                type="submit"
+                variant="dark"
+                style={{ width: "100px" }}
+                disabled={this.state.isloading}
               >
-                {this.state.isloading ? 
+                {this.state.isloading ? (
                   <Spinner
                     animation="border"
                     variant="success"
                     size="sm"
-                  ></Spinner> 
-                : "Save" } 
+                  ></Spinner>
+                ) : (
+                  "Save"
+                )}
               </Button>
             </Modal.Footer>
           </Form>

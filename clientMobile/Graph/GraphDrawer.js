@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   Switch,
 } from 'react-native';
-import { Tooltip } from 'react-native-elements'
+import {Tooltip} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 
@@ -53,7 +53,7 @@ export default class GraphDrawer extends Component {
   render() {
     let isEnabled = this.props.direction === 'TB' ? true : false;
     return (
-      <ScrollView >
+      <ScrollView>
         <View
           style={{
             flex: 1,
@@ -129,7 +129,19 @@ export default class GraphDrawer extends Component {
           </View>
 
           <View style={styles.tooltipView}>
-            <Tooltip popover={<Text style={{color:'white'}}>Create a task by pressing the + button (bottom right).{'\n\n'}Create a dependency by pressing and holding on a task for 2 seconds, releasing and then pressing and holding on the second task for 2 seconds.</Text>} height={150} width={250} skipAndroidStatusBar={true} backgroundColor={'rgba(0, 0, 0, 1)'}>
+            <Tooltip
+              popover={
+                <Text style={{color: 'white'}}>
+                  Create a task by pressing the + button (bottom right).{'\n\n'}
+                  Create a dependency by pressing and holding on a task for 2
+                  seconds, releasing and then pressing and holding on the second
+                  task for 2 seconds.
+                </Text>
+              }
+              height={150}
+              width={250}
+              skipAndroidStatusBar={true}
+              backgroundColor={'rgba(0, 0, 0, 1)'}>
               <View style={styles.tooltipButton}>
                 <IconEntypo name="help" size={25} />
               </View>
@@ -174,7 +186,11 @@ export default class GraphDrawer extends Component {
               <TouchableOpacity
                 style={[
                   styles.signIn,
-                  {backgroundColor: 'white', borderColor: '#0275D8', borderWidth: 3},
+                  {
+                    backgroundColor: 'white',
+                    borderColor: '#0275D8',
+                    borderWidth: 3,
+                  },
                 ]}>
                 <Text style={[styles.textSign, {color: 'black'}]}>
                   Critical Path
@@ -183,8 +199,19 @@ export default class GraphDrawer extends Component {
             </View>
             <View style={styles.button}>
               <TouchableOpacity
-                style={[styles.signIn, {backgroundColor:'white', borderColor: "#009999", borderWidth: 3}]}>
-                <Text style={[styles.textSign, {color: 'black', textAlign:'center'}]}>
+                style={[
+                  styles.signIn,
+                  {
+                    backgroundColor: 'white',
+                    borderColor: '#009999',
+                    borderWidth: 3,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styles.textSign,
+                    {color: 'black', textAlign: 'center'},
+                  ]}>
                   Highlighted Task
                 </Text>
               </TouchableOpacity>
@@ -209,7 +236,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tooltipView: {
-    marginTop:25
+    marginTop: 25,
   },
   textSign: {
     color: 'black',
@@ -304,8 +331,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tooltipButton: {
-    width:35,
-    height:35,
+    width: 35,
+    height: 35,
     borderRadius: 200,
     justifyContent: 'center',
     alignItems: 'center',
@@ -314,6 +341,6 @@ const styles = StyleSheet.create({
   buttonShadow: {
     borderColor: '#009999',
     borderWidth: 3,
-    borderRadius: 10
+    borderRadius: 10,
   },
 });

@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-} from 'react-native';
+import {View, Text} from 'react-native';
 import * as Progress from 'react-native-progress';
 import {Spinner} from 'native-base';
 
@@ -136,7 +133,7 @@ class ProgressDashboard extends Component {
     let totalDur = 0,
       completeDur = 0,
       percentage = 0;
-      
+
     if (
       this.props.criticalPath !== null &&
       this.props.criticalPath.path !== null

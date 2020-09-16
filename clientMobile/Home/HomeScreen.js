@@ -7,22 +7,9 @@ import {
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
-import {
-  Content,
-  Card,
-  CardItem,
-  Text,
-  Icon,
-  Body,
-  Spinner,
-} from 'native-base';
+import {Content, Card, CardItem, Text, Icon, Body, Spinner} from 'native-base';
 import DeleteProject from '../Home/DeleteProject';
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-} from 'react-native-table-component';
+import {Table, TableWrapper, Row, Rows} from 'react-native-table-component';
 import UpdateProject from './UpdateProject';
 import Drawer from 'react-native-drawer';
 import styled from 'styled-components/native';
@@ -42,7 +29,10 @@ function GoToTree() {
       onPress={() => {
         navigation.navigate('Project Tree');
       }}>
-      <Icon type="FontAwesome" name="line-chart" style={{color: 'white'}}></Icon>
+      <Icon
+        type="FontAwesome"
+        name="line-chart"
+        style={{color: 'white'}}></Icon>
     </TouchableOpacity>
   );
 }
@@ -325,28 +315,33 @@ class HomeScreen extends Component {
                     }}>
                     <View style={{width: '15%'}}></View>
                     <View style={{width: '80%', alignItems: 'center'}}>
-                      <Text style={{fontSize: 30, color: '#184D47', textAlign: 'center'}}>
+                      <Text
+                        style={{
+                          fontSize: 30,
+                          color: '#184D47',
+                          textAlign: 'center',
+                        }}>
                         {this.props.project.name}
                       </Text>
                     </View>
                     <View
                       style={{width: 40, height: 40, justifyContent: 'center'}}>
-                      {this.props.userPermissions["project"] === true?
+                      {this.props.userPermissions['project'] === true ? (
                         <DeleteProject
                           project={this.props.project}
                           setProjectInfo={this.props.setProjectInfo}
                           token={this.props.token}
                         />
-                      :
-                        null
-                      }
+                      ) : null}
                     </View>
                   </View>
                 </Body>
               </CardItem>
               <CardItem>
                 <Body style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Text style={{textAlign:'center'}}>{this.props.project.description}</Text>
+                  <Text style={{textAlign: 'center'}}>
+                    {this.props.project.description}
+                  </Text>
                 </Body>
               </CardItem>
               <CardItem
@@ -356,8 +351,8 @@ class HomeScreen extends Component {
                   project={this.props.project}
                   user={this.props.user}
                 />
-                
-                {this.props.userPermissions["project"] === true?
+
+                {this.props.userPermissions['project'] === true ? (
                   <TouchableOpacity
                     style={styles.editButton}
                     onPress={() =>
@@ -366,12 +361,9 @@ class HomeScreen extends Component {
                     <Icon
                       type="FontAwesome"
                       name="edit"
-                      style={{color: 'white'}}>
-                    </Icon>
+                      style={{color: 'white'}}></Icon>
                   </TouchableOpacity>
-                :
-                  null
-                }
+                ) : null}
               </CardItem>
               <CardItem>
                 <View style={{width: '100%', alignItems: 'center'}}>

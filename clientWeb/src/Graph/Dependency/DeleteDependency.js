@@ -27,7 +27,7 @@ class DeleteDependency extends React.Component {
   }
 
   async handleSubmit(event) {
-    this.setState({isloading: true});
+    this.setState({ isloading: true });
     event.preventDefault();
     let data = new FormData(event.target);
     data = await stringifyFormData(data);
@@ -58,7 +58,7 @@ class DeleteDependency extends React.Component {
       <React.Fragment>
         <Button
           className="btn-danger"
-          style={{width: "100px"}}
+          style={{ width: "100px" }}
           onClick={() => {
             this.ShowModal();
           }}
@@ -89,34 +89,43 @@ class DeleteDependency extends React.Component {
                   hidden
                   type="number"
                   name="sourceView"
-                  value={this.props.sourceView !== null ? this.props.sourceView : ""}
+                  value={
+                    this.props.sourceView !== null ? this.props.sourceView : ""
+                  }
                   onChange={() => {}}
                 />
                 <input
                   hidden
                   type="number"
                   name="targetView"
-                  value={this.props.targetView !== null ? this.props.targetView : ""}
+                  value={
+                    this.props.targetView !== null ? this.props.targetView : ""
+                  }
                   onChange={() => {}}
                 />
               </Form.Group>
             </Modal.Body>
             <Modal.Footer
-               style={{ backgroundColor: "#96BB7C", color: "white" }}
+              style={{ backgroundColor: "#96BB7C", color: "white" }}
             >
               <Button variant="secondary" onClick={this.HideModal}>
                 Cancel
               </Button>
-              <Button type="submit" variant="dark" style={{width: "100px"}}
-              disabled={this.state.isloading}
+              <Button
+                type="submit"
+                variant="dark"
+                style={{ width: "100px" }}
+                disabled={this.state.isloading}
               >
-                {this.state.isloading ? 
+                {this.state.isloading ? (
                   <Spinner
                     animation="border"
                     variant="success"
                     size="sm"
-                  ></Spinner> 
-                : "Delete" } 
+                  ></Spinner>
+                ) : (
+                  "Delete"
+                )}
               </Button>
             </Modal.Footer>
           </Form>

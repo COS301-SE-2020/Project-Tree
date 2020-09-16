@@ -7,7 +7,7 @@ class DeleteProject extends React.Component {
     super(props);
     this.state = {
       show: false,
-      isloading: false
+      isloading: false,
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
@@ -24,7 +24,7 @@ class DeleteProject extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({isloading: true});
+    this.setState({ isloading: true });
     let data = {};
     data.project = this.props.project;
     data.token = localStorage.getItem("sessionToken");
@@ -42,7 +42,7 @@ class DeleteProject extends React.Component {
       <React.Fragment>
         <Button
           className="btn-danger"
-          style={{width: "100px"}}
+          style={{ width: "100px" }}
           onClick={() => {
             this.showModal();
           }}
@@ -60,10 +60,7 @@ class DeleteProject extends React.Component {
               this.handleSubmit(event);
             }}
           >
-            <Modal.Header
-              closeButton
-              style={{ backgroundColor: "#96BB7C" }}
-            >
+            <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
               <Modal.Title>Delete Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -71,9 +68,7 @@ class DeleteProject extends React.Component {
                 <p>Are you sure you want to delete this project?</p>
               </Form.Group>
             </Modal.Body>
-            <Modal.Footer
-              style={{ backgroundColor: "#96BB7C" }}
-            >
+            <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
               <Button
                 variant="secondary"
                 onClick={() => {
@@ -82,16 +77,21 @@ class DeleteProject extends React.Component {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="dark" style={{width: "100px"}}
-              disabled={this.state.isloading}
+              <Button
+                type="submit"
+                variant="dark"
+                style={{ width: "100px" }}
+                disabled={this.state.isloading}
               >
-                {this.state.isloading ? 
+                {this.state.isloading ? (
                   <Spinner
                     animation="border"
                     variant="success"
                     size="sm"
-                  ></Spinner> 
-                : "Delete" } 
+                  ></Spinner>
+                ) : (
+                  "Delete"
+                )}
               </Button>
             </Modal.Footer>
           </Form>

@@ -21,7 +21,7 @@ import styled from 'styled-components/native';
 import GraphDrawer from './GraphDrawer';
 import {useNavigation} from '@react-navigation/native';
 import {Spinner} from 'native-base';
-import Filter from './FilterComponent'
+import Filter from './FilterComponent';
 
 function GoToHome() {
   const navigation = useNavigation();
@@ -167,16 +167,16 @@ class GraphScreen extends Component {
       key: 0,
       sourceCreateDependency: null,
       targetCreateDependency: null,
-      allUsers:null, 
-      assignedProjUsers:null,
-      filterVisibility:false,
-      filterOn:false,
-      views:null,
-      clonedNode:null,
-      source_viewId:null,
-      target_viewId:null,
-      delDep_sourceViewId:null,
-      delDep_targetViewId:null,
+      allUsers: null,
+      assignedProjUsers: null,
+      filterVisibility: false,
+      filterOn: false,
+      views: null,
+      clonedNode: null,
+      source_viewId: null,
+      target_viewId: null,
+      delDep_sourceViewId: null,
+      delDep_targetViewId: null,
     };
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.displayTaskDependency = this.displayTaskDependency.bind(this);
@@ -227,7 +227,7 @@ class GraphScreen extends Component {
     const body2 = await response2.json();
     if (response2.status !== 200) throw Error(body2.message);
 
-    this.setState({ allUsers: body2.users });
+    this.setState({allUsers: body2.users});
 
     const response3 = await fetch(
       'http://projecttree.herokuapp.com/people/assignedProjectUsers',
@@ -244,7 +244,7 @@ class GraphScreen extends Component {
     const body3 = await response3.json();
     if (response3.status !== 200) throw Error(body3.message);
 
-    this.setState({ assignedProjUsers:body3.projectUsers });
+    this.setState({assignedProjUsers: body3.projectUsers});
 
     const response4 = await fetch(
       'http://projecttree.herokuapp.com/getProjectViews',
@@ -261,7 +261,7 @@ class GraphScreen extends Component {
     const body4 = await response4.json();
     if (response4.status !== 200) throw Error(body4.message);
 
-    this.setState({ views:body4.views });
+    this.setState({views: body4.views});
   }
 
   componentWillUnmount() {
@@ -282,23 +282,21 @@ class GraphScreen extends Component {
     return null;
   }
 
-  setFilterVisibility(value){
-    this.setState({filterVisibility:value})
+  setFilterVisibility(value) {
+    this.setState({filterVisibility: value});
   }
 
-  setFilterOn(value){
-    this.setState({filterOn:value})
+  setFilterOn(value) {
+    this.setState({filterOn: value});
   }
 
   async setProjectInfo(nodes, rels, assignedPeople) {
-    if(nodes !== undefined && rels !== undefined){
+    if (nodes !== undefined && rels !== undefined) {
       this.setState({nodes: nodes, links: rels});
-      if(assignedPeople !== undefined){
+      if (assignedPeople !== undefined) {
         this.setState({assignedProjUsers: assignedPeople});
       }
-    }
-
-    else{
+    } else {
       const response = await fetch(
         'http://projecttree.herokuapp.com/getProject',
         {
@@ -310,7 +308,7 @@ class GraphScreen extends Component {
           body: JSON.stringify({id: this.props.project.id}),
         },
       );
-  
+
       const body = await response.json();
       if (response.status !== 200) throw Error(body.message);
       this.setState({nodes: body.tasks, links: body.rels});
@@ -331,22 +329,22 @@ class GraphScreen extends Component {
     const body2 = await response2.json();
     if (response2.status !== 200) throw Error(body2.message);
 
-    this.setState({ views:body2.views });
+    this.setState({views: body2.views});
 
     this.props.reload();
   }
 
-  setCreateDependency(id,cloned) {
+  setCreateDependency(id, cloned) {
     let clonedNode = null;
     let isNumber = false;
 
-    isNumber = !Number.isNaN(cloned)
-    if(isNumber){
+    isNumber = !Number.isNaN(cloned);
+    if (isNumber) {
       clonedNode = cloned;
     }
 
-    if ( this.props.userPermissions["create"] === false) {
-      alert("You do not have permissions to create any dependencies.");
+    if (this.props.userPermissions['create'] === false) {
+      alert('You do not have permissions to create any dependencies.');
       return;
     }
     if (id === null) {
@@ -357,20 +355,32 @@ class GraphScreen extends Component {
     } else if (this.state.sourceCreateDependency === null) {
       for (var x = 0; x < this.state.nodes.length; x++) {
         if (id === this.state.nodes[x].id) {
-          this.setState({sourceCreateDependency: this.state.nodes[x], source_viewId:clonedNode});
+          this.setState({
+            sourceCreateDependency: this.state.nodes[x],
+            source_viewId: clonedNode,
+          });
         }
       }
     } else {
       if (id === this.state.sourceCreateDependency.id) return null;
       for (var x = 0; x < this.state.nodes.length; x++) {
         if (id === this.state.nodes[x].id) {
-          this.setState({targetCreateDependency: this.state.nodes[x], target_viewId:clonedNode});
+          this.setState({
+            targetCreateDependency: this.state.nodes[x],
+            target_viewId: clonedNode,
+          });
         }
       }
     }
   }
 
-  displayTaskDependency(taskID, dependencyID, clonedID, sourceView, targetView) {
+  displayTaskDependency(
+    taskID,
+    dependencyID,
+    clonedID,
+    sourceView,
+    targetView,
+  ) {
     let task = null;
     let dependency = null;
     let clonedNode = null;
@@ -378,20 +388,20 @@ class GraphScreen extends Component {
     let targetViewId = null;
     let isNumber = false;
 
-    isNumber = !Number.isNaN(clonedID)
-    if(isNumber){
+    isNumber = !Number.isNaN(clonedID);
+    if (isNumber) {
       clonedNode = clonedID;
       isNumber = false;
     }
 
-    isNumber = !Number.isNaN(sourceView)
-    if(isNumber){
+    isNumber = !Number.isNaN(sourceView);
+    if (isNumber) {
       sourceViewId = sourceView;
       isNumber = false;
     }
 
-    isNumber = !Number.isNaN(targetView)
-    if(isNumber){
+    isNumber = !Number.isNaN(targetView);
+    if (isNumber) {
       targetViewId = targetView;
       isNumber = false;
     }
@@ -410,7 +420,13 @@ class GraphScreen extends Component {
       }
     }
 
-    this.setState({selectedTask: task, selectedDependency: dependency, clonedNode: clonedNode, delDep_sourceViewId: sourceViewId, delDep_targetViewId: targetViewId});
+    this.setState({
+      selectedTask: task,
+      selectedDependency: dependency,
+      clonedNode: clonedNode,
+      delDep_sourceViewId: sourceViewId,
+      delDep_targetViewId: targetViewId,
+    });
   }
 
   render() {
@@ -458,21 +474,19 @@ class GraphScreen extends Component {
           getName={this.getName}
         />
 
-        {this.state.filterOn === false?
-        <Filter 
-          filterVisibility={this.state.filterVisibility} 
-          setFilterVisibility={this.setFilterVisibility}
-          nodes={this.state.nodes} 
-          users={this.state.assignedProjUsers} 
-          setProjectInfo={this.setProjectInfo} 
-          links={this.state.links}
-          filterOn={this.state.filterOn}
-          setFilterOn={this.setFilterOn}
-          user={this.props.user}
-        />
-        :
-        null
-        }
+        {this.state.filterOn === false ? (
+          <Filter
+            filterVisibility={this.state.filterVisibility}
+            setFilterVisibility={this.setFilterVisibility}
+            nodes={this.state.nodes}
+            users={this.state.assignedProjUsers}
+            setProjectInfo={this.setProjectInfo}
+            links={this.state.links}
+            filterOn={this.state.filterOn}
+            setFilterOn={this.setFilterOn}
+            user={this.props.user}
+          />
+        ) : null}
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <TouchableOpacity
@@ -482,8 +496,8 @@ class GraphScreen extends Component {
             }}>
             <IconEntypo name="menu-fold" size={25} />
           </TouchableOpacity>
-          
-          {this.state.filterOn === false?
+
+          {this.state.filterOn === false ? (
             <TouchableOpacity
               style={styles.floatinBtn2}
               onPress={() => {
@@ -491,7 +505,7 @@ class GraphScreen extends Component {
               }}>
               <IconFeather name="search" size={25} />
             </TouchableOpacity>
-            :
+          ) : (
             <TouchableOpacity
               style={styles.floatinBtn2}
               onPress={() => {
@@ -500,8 +514,7 @@ class GraphScreen extends Component {
               }}>
               <IconMaterial name="clear" size={25} />
             </TouchableOpacity>
-          }
-          
+          )}
 
           <CreateDependency
             sourceCreateDependency={this.state.sourceCreateDependency}
@@ -513,20 +526,18 @@ class GraphScreen extends Component {
             projID={this.props.project.id}
             setProjectInfo={this.setProjectInfo}
             getProjectInfo={this.getProjectInfo}
-            links = {this.state.links}
+            links={this.state.links}
           />
-          {this.props.userPermissions["create"] === true?
-          <CreateTask
-            projectID={this.props.project.id}
-            project={this.props.project}
-            getProjectInfo={this.getProjectInfo}
-            setProjectInfo={this.setProjectInfo}
-            assignedProjUsers={this.state.assignedProjUsers}
-            allUsers={this.state.allUsers}
-          />
-          :
-            null
-          }
+          {this.props.userPermissions['create'] === true ? (
+            <CreateTask
+              projectID={this.props.project.id}
+              project={this.props.project}
+              getProjectInfo={this.getProjectInfo}
+              setProjectInfo={this.setProjectInfo}
+              assignedProjUsers={this.state.assignedProjUsers}
+              allUsers={this.state.allUsers}
+            />
+          ) : null}
         </View>
       </View>
     ) : (
@@ -558,14 +569,20 @@ class WebViewWrapper extends Component {
       let sourceView = parseInt(message[1].substr(10));
       let targetView = parseInt(message[2].substr(10));
 
-      this.props.displayTaskDependency(null, node, null, sourceView, targetView);
+      this.props.displayTaskDependency(
+        null,
+        node,
+        null,
+        sourceView,
+        targetView,
+      );
     } else {
       message = message.split(' ');
 
       let node = parseInt(message[0].substr(1));
       let cloned = parseInt(message[1].substr(6));
 
-      this.props.setCreateDependency(node,cloned);
+      this.props.setCreateDependency(node, cloned);
     }
   }
 
@@ -585,11 +602,13 @@ class WebViewWrapper extends Component {
             this.props.links,
           )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
             this.props.displayCriticalPath
-          }&projId=${this.props.projID}&views=${JSON.stringify(this.props.views)}`,
+          }&projId=${this.props.projID}&views=${JSON.stringify(
+            this.props.views,
+          )}`,
         }}
         onMessage={(event) => this.handleOnMessage(event)}
       />
-    ):(
+    ) : (
       <Spinner />
     );
   }

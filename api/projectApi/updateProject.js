@@ -25,26 +25,33 @@ function updateCurTask(task, nodes, rels) {
         
       }
     }); */
-  getSuccDependencies(task, rels)
-    .forEach(dep => updateDependency(dep, nodes, rels));
+  getSuccDependencies(task, rels).forEach((dep) =>
+    updateDependency(dep, nodes, rels)
+  );
 }
 
 function updateCurDependency(dependency, nodes, rels) {
-  nodes.forEach( node => {
+  nodes.forEach((node) => {
     if (node.id == dependency.target) updateTask(node, nodes, rels);
   });
 }
 
 function updateTask(task, nodes, rels) {
-  let maxStartDate =new Date(task.startDate);
-  maxStartDate.setTime( maxStartDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+  let maxStartDate = new Date(task.startDate);
+  maxStartDate.setTime(
+    maxStartDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+  );
   let predDependencies = getPredDependencies(task, rels);
-  if(predDependencies.length != 0){
+  if (predDependencies.length != 0) {
     maxStartDate = new Date(0);
-    maxStartDate.setTime( maxStartDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-    predDependencies.forEach(dep => {
-      let endDate = new Date(dep.endDate)
-      endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    maxStartDate.setTime(
+      maxStartDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+    );
+    predDependencies.forEach((dep) => {
+      let endDate = new Date(dep.endDate);
+      endDate.setTime(
+        endDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+      );
       if (endDate > maxStartDate) maxStartDate = endDate;
     });
   }
@@ -63,27 +70,33 @@ function updateTask(task, nodes, rels) {
           endDate: datetime("${task.endDate}")
         }
       `
-    ).catch((err) => {
+    )
+    .catch((err) => {
       console.log(err);
     });
 
-  getSuccDependencies(task, rels)
-    .forEach( dep => updateDependency(dep, nodes, rels))
+  getSuccDependencies(task, rels).forEach((dep) =>
+    updateDependency(dep, nodes, rels)
+  );
 }
 
 function updateDependency(dependency, nodes, rels) {
   let source;
-  nodes.forEach( node => {
+  nodes.forEach((node) => {
     if (node.id == dependency.source) source = node;
   });
   dependency.sStartDate = source.startDate;
   dependency.sEndDate = source.endDate;
-  if (dependency.relationshipType == "ss") 
+  if (dependency.relationshipType == "ss")
     dependency.startDate = source.startDate;
   else dependency.startDate = source.endDate;
   let startDate = new Date(dependency.startDate);
-  startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
-  dependency.endDate =  new Date(startDate.getTime() + dependency.duration).toISOString().substring(0, 16);
+  startDate.setTime(
+    startDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+  );
+  dependency.endDate = new Date(startDate.getTime() + dependency.duration)
+    .toISOString()
+    .substring(0, 16);
 
   db.getSession()
     .run(
@@ -97,14 +110,14 @@ function updateDependency(dependency, nodes, rels) {
           endDate: datetime("${dependency.endDate}")
         }
       `
-    ).catch((err) => {
+    )
+    .catch((err) => {
       console.log(err);
     });
-    nodes.forEach( node => {
-      if (node.id == dependency.target) updateTask(node, nodes, rels);
-    });
+  nodes.forEach((node) => {
+    if (node.id == dependency.target) updateTask(node, nodes, rels);
+  });
 }
-
 
 function getPredDependencies(task, rels) {
   let dependencies = [];
@@ -130,7 +143,7 @@ function getSuccessors(id, nodes, rels) {
   let successors = [];
   rels.forEach((rel) => {
     if (rel.source == id) {
-      nodes.forEach( node => {
+      nodes.forEach((node) => {
         if (node.id == rel.target) successors.push(node);
       });
     }
@@ -138,15 +151,19 @@ function getSuccessors(id, nodes, rels) {
   return successors;
 }
 
-function datetimeToString(datetime){
+function datetimeToString(datetime) {
   let obj = {
     year: datetime.year.low,
-    month: datetime.month.low < 10 ? `0${datetime.month.low}` : datetime.month.low,
+    month:
+      datetime.month.low < 10 ? `0${datetime.month.low}` : datetime.month.low,
     day: datetime.day.low < 10 ? `0${datetime.day.low}` : datetime.day.low,
     hour: datetime.hour.low < 10 ? `0${datetime.hour.low}` : datetime.hour.low,
-    min: datetime.minute.low < 10 ? `0${datetime.minute.low}` : datetime.minute.low,
-  }
-  return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.min}`
+    min:
+      datetime.minute.low < 10
+        ? `0${datetime.minute.low}`
+        : datetime.minute.low,
+  };
+  return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.min}`;
 }
 
 module.exports = {
@@ -156,4 +173,6 @@ module.exports = {
   updateDependency,
   getSuccessors,
   datetimeToString,
+  getPredDependencies,
+  getSuccDependencies
 };

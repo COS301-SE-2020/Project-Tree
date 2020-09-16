@@ -111,33 +111,49 @@ function updateAssignedPeople(req, res) {
   let responsiblePersons = req.body.ut_resPersons;
   let resources = req.body.ut_resources;
 
-  if(!isEmpty(packageManagers) || !isEmpty(originalPackageManagers)){
-    let pacManAddStatus = updatePackageManager(taskId, packageManagers, originalPackageManagers);
+  if (!isEmpty(packageManagers) || !isEmpty(originalPackageManagers)) {
+    let pacManAddStatus = updatePackageManager(
+      taskId,
+      packageManagers,
+      originalPackageManagers
+    );
     if (pacManAddStatus === 400) res.sendStatus(400);
   }
 
-  if(!isEmpty(responsiblePersons) || !isEmpty(originalResponsiblePersons)){
-    let resPersonAddStatus = updateResponsiblePerson(taskId, responsiblePersons, originalResponsiblePersons);
+  if (!isEmpty(responsiblePersons) || !isEmpty(originalResponsiblePersons)) {
+    let resPersonAddStatus = updateResponsiblePerson(
+      taskId,
+      responsiblePersons,
+      originalResponsiblePersons
+    );
     if (resPersonAddStatus === 400) res.sendStatus(400);
   }
 
-  if(!isEmpty(resources) || !isEmpty(originalResources)){
-    let resourcesAddStatus = updateResources(taskId, resources, originalResources);
+  if (!isEmpty(resources) || !isEmpty(originalResources)) {
+    let resourcesAddStatus = updateResources(
+      taskId,
+      resources,
+      originalResources
+    );
     if (resourcesAddStatus === 400) res.sendStatus(400);
   }
 
-  for(var x=0; x<notificationOrigPacMan.length; x++){
-    packageManagers = packageManagers.filter( ( el ) => el.id !== notificationOrigPacMan[x].id );
+  for (var x = 0; x < notificationOrigPacMan.length; x++) {
+    packageManagers = packageManagers.filter(
+      (el) => el.id !== notificationOrigPacMan[x].id
+    );
   }
 
-  for(var x=0; x<notificationOrigResPer.length; x++){
-    responsiblePersons = responsiblePersons.filter( ( el ) => el.id !== notificationOrigResPer[x].id );
+  for (var x = 0; x < notificationOrigResPer.length; x++) {
+    responsiblePersons = responsiblePersons.filter(
+      (el) => el.id !== notificationOrigResPer[x].id
+    );
   }
 
-  for(var x=0; x<notificationOrigRes.length; x++){
-    resources = resources.filter( ( el ) => el.id !== notificationOrigRes[x].id );
+  for (var x = 0; x < notificationOrigRes.length; x++) {
+    resources = resources.filter((el) => el.id !== notificationOrigRes[x].id);
   }
-  
+
   let data = sendProjectNotification.formatAutoAssignData(
     packageManagers,
     responsiblePersons,
@@ -155,7 +171,7 @@ function updateAssignedPeople(req, res) {
   res.sendStatus(200);
 }
 
-async function updatePackageManager(taskId,persons,originalPackageManagers) {
+async function updatePackageManager(taskId, persons, originalPackageManagers) {
   var session = db.getSession();
 
   if (isEmpty(persons) && !isEmpty(originalPackageManagers)) {
@@ -243,7 +259,11 @@ async function updatePackageManager(taskId,persons,originalPackageManagers) {
   }
 }
 
-async function updateResponsiblePerson(taskId,persons,originalResponsiblePersons) {
+async function updateResponsiblePerson(
+  taskId,
+  persons,
+  originalResponsiblePersons
+) {
   var session = db.getSession();
 
   if (isEmpty(persons) && !isEmpty(originalResponsiblePersons)) {
@@ -331,7 +351,7 @@ async function updateResponsiblePerson(taskId,persons,originalResponsiblePersons
   }
 }
 
-async function updateResources(taskId,persons,originalResources) {
+async function updateResources(taskId, persons, originalResources) {
   var session = db.getSession();
 
   if (isEmpty(persons) && !isEmpty(originalResources)) {
@@ -447,7 +467,7 @@ async function getAllUsers(req, res) {
     });
 }
 
-async function getAssignedProjectUsers(req,res){
+async function getAssignedProjectUsers(req, res) {
   let session = db.getSession();
   var projID = parseInt(req.body.id);
   let usersArr = [];
@@ -491,5 +511,5 @@ module.exports = {
   assignPeople,
   updateAssignedPeople,
   getAllUsers,
-  getAssignedProjectUsers
+  getAssignedProjectUsers,
 };

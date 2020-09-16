@@ -70,21 +70,19 @@ function deleteTask(req, res) {
       `
     )
     .then(async () => {
-      req.body.nodes = req.body.nodes.filter((node)=>{
-        return node.id != req.body.changedInfo.id
+      req.body.nodes = req.body.nodes.filter((node) => {
+        return node.id != req.body.changedInfo.id;
       });
 
-      
-      req.body.rels = req.body.rels.filter((rel)=>{
-        return rel.target != req.body.changedInfo.id && rel.source != req.body.changedInfo.id
-      });
-
-      await successors.forEach(async succ => {
-        await updateProject.updateTask(
-          succ,
-          req.body.nodes,
-          req.body.rels
+      req.body.rels = req.body.rels.filter((rel) => {
+        return (
+          rel.target != req.body.changedInfo.id &&
+          rel.source != req.body.changedInfo.id
         );
+      });
+
+      await successors.forEach(async (succ) => {
+        await updateProject.updateTask(succ, req.body.nodes, req.body.rels);
       });
       res.send({
         nodes: req.body.nodes,
@@ -100,15 +98,18 @@ function deleteTask(req, res) {
     });
 }
 
-function updateTask(req, res) { //update a task with a certain ID with specified fields
+function updateTask(req, res) {
+  //update a task with a certain ID with specified fields
   let startDate = new Date(req.body.changedInfo.startDate);
   let endDate = new Date(req.body.changedInfo.endDate);
 
   let timeCompleteString;
-  if(req.body.changedInfo.timeComplete === null || req.body.changedInfo.timeComplete === undefined){
+  if (
+    req.body.changedInfo.timeComplete === null ||
+    req.body.changedInfo.timeComplete === undefined
+  ) {
     timeCompleteString = `timeComplete: ${null}`;
-  }
-  else{
+  } else {
     timeCompleteString = `timeComplete: datetime("${req.body.changedInfo.timeComplete}")`;
   }
 
@@ -154,7 +155,7 @@ function updateTask(req, res) { //update a task with a certain ID with specified
       await updateProject.updateCurTask(
         changedTask,
         req.body.nodes,
-        req.body.rels,
+        req.body.rels
       );
 
       res.send({
@@ -174,7 +175,7 @@ function updateTask(req, res) { //update a task with a certain ID with specified
 async function createClone(req, res) {
   db.getSession()
     .run(
-     `
+      `
       MATCH (b) 
       WHERE ID(b) = ${req.body.id}
       CREATE(a:View {
@@ -196,7 +197,7 @@ async function createClone(req, res) {
 }
 
 async function deleteClone(req, res) {
-  console.log(req.body)
+  console.log(req.body);
   db.getSession()
     .run(
       `
@@ -221,5 +222,5 @@ module.exports = {
   deleteTask,
   updateTask,
   createClone,
-  deleteClone
+  deleteClone,
 };

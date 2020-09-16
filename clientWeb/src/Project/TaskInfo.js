@@ -11,21 +11,26 @@ class TaskInfo extends React.Component {
     };
   }
 
-  datetimeToString(datetime){
+  datetimeToString(datetime) {
     let obj = {
       year: datetime.year.low,
-      month: datetime.month.low < 10 ? `0${datetime.month.low}` : datetime.month.low,
+      month:
+        datetime.month.low < 10 ? `0${datetime.month.low}` : datetime.month.low,
       day: datetime.day.low < 10 ? `0${datetime.day.low}` : datetime.day.low,
-      hour: datetime.hour.low < 10 ? `0${datetime.hour.low}` : datetime.hour.low,
-      min: datetime.minute.low < 10 ? `0${datetime.minute.low}` : datetime.minute.low,
-    }
-    return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.min}`
+      hour:
+        datetime.hour.low < 10 ? `0${datetime.hour.low}` : datetime.hour.low,
+      min:
+        datetime.minute.low < 10
+          ? `0${datetime.minute.low}`
+          : datetime.minute.low,
+    };
+    return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.min}`;
   }
 
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
     let endDate = new Date(ed);
-    return ms(endDate.getTime() - startDate.getTime(), {long: true});
+    return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
   createCriticalPath() {
@@ -79,7 +84,10 @@ class TaskInfo extends React.Component {
 
   createTaskList() {
     let list = [`No ${this.state.taskType} tasks to display`];
-    if (this.props.project.tasks.length !== 0 && this.props.project.criticalPath !== null) {
+    if (
+      this.props.project.tasks.length !== 0 &&
+      this.props.project.criticalPath !== null
+    ) {
       if (this.state.taskType === "Critical Path")
         list = this.createCriticalPath();
       else if (this.state.taskType === "Late") list = this.createLateList();
@@ -140,7 +148,7 @@ class TaskInfo extends React.Component {
               }
               break;
           }
-          let progressColor = "info"
+          let progressColor = "info";
           list[i] = (
             <Col
               key={i}
@@ -154,15 +162,11 @@ class TaskInfo extends React.Component {
               className="rounded border border-dark mr-2 align-items-center"
             >
               <Row>
-                <Col className="text-center">
-                  {el.name} 
-                </Col>
+                <Col className="text-center">{el.name}</Col>
               </Row>
               <hr />
-              <Row style={{height:"80px", overflow:"auto"}}>
-                <Col className="text-center">
-                  {el.description} 
-                </Col>
+              <Row style={{ height: "80px", overflow: "auto" }}>
+                <Col className="text-center">{el.description}</Col>
               </Row>
               <hr />
               <Row>
@@ -170,13 +174,19 @@ class TaskInfo extends React.Component {
                 <Col className="text-center">End:</Col>
               </Row>
               <Row>
-                <Col className="text-center">{el.startDate.replace("T", " ")}</Col>
-                <Col className="text-center">{el.endDate.replace("T", " ")}</Col>
+                <Col className="text-center">
+                  {el.startDate.replace("T", " ")}
+                </Col>
+                <Col className="text-center">
+                  {el.endDate.replace("T", " ")}
+                </Col>
               </Row>
               <Row>
-                <Col className="text-center">Duration: {this.CalcDiff(el.startDate, el.endDate)}</Col>
+                <Col className="text-center">
+                  Duration: {this.CalcDiff(el.startDate, el.endDate)}
+                </Col>
               </Row>
-              <hr/>
+              <hr />
               <Row className="mb-2">
                 <Col>
                   <ProgressBar

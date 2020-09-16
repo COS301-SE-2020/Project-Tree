@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconEntypo from 'react-native-vector-icons/Entypo';
@@ -13,7 +13,6 @@ import SettingsScreen from './Settings/SettingsScreen';
 import UserSettings from './Settings/UserSettings';
 import NoticeBoard from './NoticeBoard/NoticeBoardScreen';
 console.disableYellowBox = true;
-
 import AsyncStorage from '@react-native-community/async-storage';
 import SplashScreen from './User/SplashScreen';
 import LoginScreen from './User/LoginScreen';
@@ -135,8 +134,8 @@ export default class App extends Component {
   }
 
   async setSelectedProject(project) {
-    if(project === null){
-      this.setState({selectedProject:null});
+    if (project === null) {
+      this.setState({selectedProject: null});
       return;
     }
 
@@ -152,14 +151,17 @@ export default class App extends Component {
     }
 
     let data = JSON.stringify({token: tokenVal, project});
-    const response = await fetch('http://projecttree.herokuapp.com/user/checkpermission', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      'http://projecttree.herokuapp.com/user/checkpermission',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({data: data}),
       },
-      body: JSON.stringify({data: data}),
-    });
+    );
 
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
@@ -168,10 +170,13 @@ export default class App extends Component {
       update: body.update,
       delete: body.delete,
       project: body.project,
-    }
+    };
     try {
       await AsyncStorage.setItem('selectedProject', JSON.stringify(project));
-      await AsyncStorage.setItem('userPermissions', JSON.stringify(userPermissions));
+      await AsyncStorage.setItem(
+        'userPermissions',
+        JSON.stringify(userPermissions),
+      );
     } catch (e) {
       console.log('Could not set key');
     }
@@ -208,9 +213,11 @@ export default class App extends Component {
 
   async handleLogin(data) {
     try {
-      await AsyncStorage.setItem('sessionToken',JSON.stringify(data.sessionToken));
-    } 
-    catch (e) {
+      await AsyncStorage.setItem(
+        'sessionToken',
+        JSON.stringify(data.sessionToken),
+      );
+    } catch (e) {
       Alert.alert(
         'Error',
         'User details not found. Please ensure details are correct',
@@ -245,7 +252,6 @@ export default class App extends Component {
     });
 
     AsyncStorage.getItem('userPermissions').then((value) => {
-      console.log(value);
       if (value) this.setState({userPermissions: JSON.parse(value)});
     });
   }
@@ -328,12 +334,13 @@ export default class App extends Component {
             />
             <Tabs.Screen
               name="Project Tree"
-              children={() => 
-                <Graph 
-                  project={this.state.selectedProject} 
+              children={() => (
+                <Graph
+                  project={this.state.selectedProject}
                   userPermissions={this.state.userPermissions}
                   user={this.state.userInfo}
-                />}
+                />
+              )}
               options={{
                 tabBarIcon: ({focused, color}) => (
                   <EntypoTabBarIcon

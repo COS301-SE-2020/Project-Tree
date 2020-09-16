@@ -1,10 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableOpacity
-} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Icon} from 'native-base';
 
 class CloneTask extends Component {
@@ -26,36 +21,29 @@ class CloneTask extends Component {
   }
 
   async handleSubmit() {
-    await fetch("http://projecttree.herokuapp.com/task/createClone", {
-			method: "POST",
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ id: this.props.task.id })
-		});
+    await fetch('http://projecttree.herokuapp.com/task/createClone', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({id: this.props.task.id}),
+    });
 
-		await this.props.setProjectInfo(
-			undefined,
-			undefined,
-			undefined,
-		);
+    await this.props.setProjectInfo(undefined, undefined, undefined);
 
     this.props.toggleVisibility(true, false, null);
   }
 
   render() {
     return (
-        <TouchableOpacity
-            style={styles.cloneButton}
-            onPress={() => this.cloneConfirmation()}>
-            <Icon
-                type="FontAwesome"
-                name="clone"
-                style={{color: 'white'}}>
-                <Text>&nbsp;Clone</Text>
-            </Icon>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.cloneButton}
+        onPress={() => this.cloneConfirmation()}>
+        <Icon type="FontAwesome" name="clone" style={{color: 'white'}}>
+          <Text>&nbsp;Clone</Text>
+        </Icon>
+      </TouchableOpacity>
     );
   }
 }

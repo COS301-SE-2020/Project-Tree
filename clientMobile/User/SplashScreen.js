@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
@@ -40,17 +40,21 @@ class SplashScreen extends Component {
               onPress={() => {
                 this.props.switchScreen('Splash');
               }}
-              style={[styles.logger,
+              style={[
+                styles.logger,
                 {
                   borderColor: '#05375a',
                   borderWidth: 1,
                   marginTop: 15,
-                }]}>
+                },
+              ]}>
               <Text
-                style={[styles.textSign,
-                {
-                  color: 'black',
-                }]}>
+                style={[
+                  styles.textSign,
+                  {
+                    color: 'black',
+                  },
+                ]}>
                 Sign In
               </Text>
             </TouchableOpacity>
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     paddingVertical: 50,
     paddingHorizontal: 30,
-    flex: 1
+    flex: 1,
   },
   logo: {
     width: w_logo,
@@ -105,11 +109,11 @@ const styles = StyleSheet.create({
   },
   logger: {
     width: 150,
-    height: 40,  
+    height: 40,
     borderRadius: 46,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   textSign: {
     color: 'white',

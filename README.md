@@ -6,15 +6,15 @@ The project entails the development of a project management system. The system r
 
 ## Links
 
-| Document                 | Links                                                                                                                        |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| SRS                      | [Software Requirements Specification V3](https://drive.google.com/file/d/1xjLBOQCMQuwiLpBqkmlKaFXmSfa3HJSd/view?usp=sharing) |
-| Project management tool  | [Asana](https://app.asana.com/0/1175793006340426/board)                                                                      |
-| Project Tree Website | [Website](https://projecttree.herokuapp.com/)                                                                              |
-| Project Tree Mobile | [Mobile App](https://drive.google.com/file/d/1xgWt-K9mzN6L9JeMkQ-rF9eO_YAiVuRY/view?usp=sharing)                                                                              |
-| User Manual              | [User Manual](https://drive.google.com/file/d/1I-THn5WdSYVK8owDEb2rAukejthtZ-Cy/view?usp=sharing)                            |
-| Technical Installation Manual              | [Technical Installation Manual](https://drive.google.com/file/d/1ObufSIvrVCSqpog9ENT2ud-sVO8fbyo1/view?usp=sharing)                            |
-|Coding Standards              | [Coding Standards](https://drive.google.com/file/d/10XIZpqaFohxW8eiQM4hKsrCR_ZDSC-8K/view?usp=sharing)                            |
+| Document                      | Links                                                                                                                        |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| SRS                           | [Software Requirements Specification V3](https://drive.google.com/file/d/1xjLBOQCMQuwiLpBqkmlKaFXmSfa3HJSd/view?usp=sharing) |
+| Project management tool       | [Asana](https://app.asana.com/0/1175793006340426/board)                                                                      |
+| Project Tree Website          | [Website](https://projecttree.herokuapp.com/)                                                                                |
+| Project Tree Mobile           | [Mobile App](https://drive.google.com/file/d/1xgWt-K9mzN6L9JeMkQ-rF9eO_YAiVuRY/view?usp=sharing)                             |
+| User Manual                   | [User Manual](https://drive.google.com/file/d/1I-THn5WdSYVK8owDEb2rAukejthtZ-Cy/view?usp=sharing)                            |
+| Technical Installation Manual | [Technical Installation Manual](https://drive.google.com/file/d/1ObufSIvrVCSqpog9ENT2ud-sVO8fbyo1/view?usp=sharing)          |
+| Coding Standards              | [Coding Standards](https://drive.google.com/file/d/10XIZpqaFohxW8eiQM4hKsrCR_ZDSC-8K/view?usp=sharing)                       |
 
 ## Demos
 
@@ -22,7 +22,7 @@ The project entails the development of a project management system. The system r
 | ------ | ---------------------------------------------------------------------------------- |
 | Demo 1 | https://drive.google.com/file/d/17IvRjiCgk0UrZ-0tS3sZzuLqDuC2974h/view?usp=sharing |
 | Demo 2 | https://drive.google.com/file/d/1y-Tusz-JW2x_LZHjYNQ9Dgiep79vkA6B/view?usp=sharing |
-| Demo 3 | https://drive.google.com/file/d/1uGShoR3nrLJ55MSdohj2IJYRvHNAQEj0/view?usp=sharing                                                                                |
+| Demo 3 | https://drive.google.com/file/d/1uGShoR3nrLJ55MSdohj2IJYRvHNAQEj0/view?usp=sharing |
 | Demo 4 | N/A                                                                                |
 
 ## Group Members

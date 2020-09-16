@@ -8,21 +8,14 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
-  Modal
+  Modal,
 } from 'react-native';
-import {
-  Icon,
-  Label,
-  Form,
-  Item,
-  Input,
-} from 'native-base';
+import {Icon} from 'native-base';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { showMessage, hideMessage } from "react-native-flash-message";
 
 class UserSettings extends Component {
   constructor(props) {
@@ -51,17 +44,19 @@ class UserSettings extends Component {
       confirm_hiddenText: true,
       newPass: '',
       confirmNewPass: true,
-      passwordError: "",
-      passwordError2: "",
-      passwordError3: "",
-      passwordError4: ""
+      passwordError: '',
+      passwordError2: '',
+      passwordError3: '',
+      passwordError4: '',
     };
     this.textInputChange = this.textInputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleNewPasswordChange = this.handleNewPasswordChange.bind(this);
     this.updateSecureTextEntry = this.updateSecureTextEntry.bind(this);
-    this.updateConfirmSecureTextEntry = this.updateConfirmSecureTextEntry.bind(this);
+    this.updateConfirmSecureTextEntry = this.updateConfirmSecureTextEntry.bind(
+      this,
+    );
     this.handleEdit = this.handleEdit.bind(this);
     this.handleValidUser = this.handleValidUser.bind(this);
     this.snameInputChange = this.snameInputChange.bind(this);
@@ -75,30 +70,27 @@ class UserSettings extends Component {
   }
 
   password_validate(p) {
-    let str = "";
+    let str = '';
     let arr = [];
-   // let p = d.password;
-   /[A-Z]/.test(p) === false
-     ? arr.push("Must contain at least one Capital Letter \n")
-     : arr.push ("Must contain at least one Capital Letter ✓");
-   /[0-9]/.test(p) === false
-     ? arr.push("Must contain at least one number \n")
-     : arr.push("Must contain at least one number ✓");
-   /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
-     ? arr.push("Must contain at least one special character eg. #!@$ \n")
-     : arr.push("Must contain at least one special character eg. #!@$ ✓");
-   /^.{8,22}$/.test(p) === false
-     ? arr.push("Must be between 8 and 22 characters ")
-     : arr.push("Must be between 8 and 22 characters  ✓");
-   return arr;
- }
+    /[A-Z]/.test(p) === false
+      ? arr.push('Must contain at least one Capital Letter \n')
+      : arr.push('Must contain at least one Capital Letter ✓');
+    /[0-9]/.test(p) === false
+      ? arr.push('Must contain at least one number \n')
+      : arr.push('Must contain at least one number ✓');
+    /[~`!#$@%^&*_+=\-[\]\\';,/{}|\\":<>?]/g.test(p) === false
+      ? arr.push('Must contain at least one special character eg. #!@$ \n')
+      : arr.push('Must contain at least one special character eg. #!@$ ✓');
+    /^.{8,22}$/.test(p) === false
+      ? arr.push('Must be between 8 and 22 characters ')
+      : arr.push('Must be between 8 and 22 characters  ✓');
+    return arr;
+  }
 
-  updateHiddenText() 
-  {
+  updateHiddenText() {
     this.setState({
       hiddenText: !this.state.hiddenText,
     });
-    console.log(this.state.hiddenText)
   }
 
   updateConfirmHiddenText() {
@@ -108,7 +100,7 @@ class UserSettings extends Component {
   }
 
   onChange(event, selectedDate) {
-    if(event.type === 'dismissed') {
+    if (event.type === 'dismissed') {
       this.setState({startDatePickerVisible: false});
       return;
     }
@@ -125,16 +117,18 @@ class UserSettings extends Component {
     await AsyncStorage.getItem('sessionToken').then(async (value) => {
       token = JSON.parse(value);
       this.setState({token: token});
-      const response = await fetch('http://projecttree.herokuapp.com/user/get', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'http://projecttree.herokuapp.com/user/get',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({token: token}),
         },
-        body: JSON.stringify({token: token}),
-      });
+      );
       const body = await response.json();
-      console.log(body)
       this.setState({
         userName: body.user.name,
         sname: body.user.sname,
@@ -142,8 +136,10 @@ class UserSettings extends Component {
         initialEmail: body.user.email,
         profilepicture: body.user.profilepicture,
       });
-      if(body.user.birthday == '  '){}
-      else{this.setState({startDate: body.user.birthday})}
+      if (body.user.birthday == '  ') {
+      } else {
+        this.setState({startDate: body.user.birthday});
+      }
     });
   }
 
@@ -213,34 +209,38 @@ class UserSettings extends Component {
     }
   }
 
-
   handleNewPasswordChange(val) {
-      let arr = this.password_validate(val);
+    let arr = this.password_validate(val);
+    this.setState({
+      passwordError: arr[0],
+      passwordError2: arr[1],
+      passwordError3: arr[2],
+      passwordError4: arr[3],
+      isValidPassword: false,
+    });
+    if (
+      arr[0].indexOf('✓') != -1 &&
+      arr[1].indexOf('✓') != -1 &&
+      arr[2].indexOf('✓') != -1 &&
+      arr[3].indexOf('✓') != -1
+    ) {
       this.setState({
-        passwordError: arr[0],
-        passwordError2: arr[1], 
-        passwordError3: arr[2],
-        passwordError4: arr[3],
-        isValidPassword: false
-      })
-      if(arr[0].indexOf('✓') != -1 && arr[1].indexOf('✓') != -1 && arr[2].indexOf('✓') != -1 && arr[3].indexOf('✓') != -1)
-      {
-        this.setState({
-          newPass: val,
-          confirmNewPass: true,
-        });
-      } else {
-        this.setState({
-          confirmNewPass: true,
-        });    }
+        newPass: val,
+        confirmNewPass: true,
+      });
+    } else {
+      this.setState({
+        confirmNewPass: true,
+      });
     }
-
+  }
 
   handlePasswordChange(val) {
-        this.setState({
-          confirmPassword: val,
-          isValidPassword: true,
-    })}
+    this.setState({
+      confirmPassword: val,
+      isValidPassword: true,
+    });
+  }
 
   updateSecureTextEntry() {
     this.setState({
@@ -254,10 +254,7 @@ class UserSettings extends Component {
     });
   }
 
-  async handlePass(pass, passNew) 
-  {
-    console.log(passNew.trim().length, "        ", pass.trim().length)
-
+  async handlePass(pass, passNew) {
     if (pass.trim().length < 1) {
       alert('Please enter your password you wish to change');
       return;
@@ -268,41 +265,37 @@ class UserSettings extends Component {
       return;
     }
 
-    console.log(pass, passNew)
-    if(!this.state.confirmNewPass && !this.state.confirmNewPass)
-    {
-      alert("Invalid password")
-    }
-    else
-    {
+    if (!this.state.confirmNewPass && !this.state.confirmNewPass) {
+      alert('Invalid password');
+    } else {
       let data = {
         token: this.state.token,
         testPass: pass,
-        newPass: passNew
+        newPass: passNew,
       };
       data = JSON.stringify(data);
-      console.log(data)
-      const response = await fetch('http://projecttree.herokuapp.com/user/pass', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'http://projecttree.herokuapp.com/user/pass',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: data,
         },
-        body: data,
-      });
+      );
       const body = await response.json();
-      if(body.message === "wrong")
-      {
-        alert('Password entered does not match password registered with this account.');
-      }
-      else if(body.message === "success")
-      {
-        alert("Success")
+      if (body.message === 'wrong') {
+        alert(
+          'Password entered does not match password registered with this account.',
+        );
+      } else if (body.message === 'success') {
+        alert('Success');
         this.props.userScreen(false);
       }
-     }
+    }
   }
-
 
   async handleEdit(pass) {
     if (this.state.userName.trim().length < 1) {
@@ -317,10 +310,7 @@ class UserSettings extends Component {
       alert('Please enter a valid email address');
     }
 
-    if (
-      this.state.isValidUser &&
-      this.state.isValidEmail 
-    ) {
+    if (this.state.isValidUser && this.state.isValidEmail) {
       let data = {
         token: this.state.token,
         name: this.state.userName,
@@ -333,14 +323,17 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
 
-      const response = await fetch('http://projecttree.herokuapp.com/user/edit', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'http://projecttree.herokuapp.com/user/edit',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: data,
         },
-        body: data,
-      });
+      );
       const body = await response.json();
       this.props.userScreen(false);
     } else {
@@ -354,10 +347,10 @@ class UserSettings extends Component {
         <StatusBar backgroundColor="#EBB035" barStyle="light-content" />
         <View style={styleUser.header}>
           <TouchableOpacity
-                  style={styleUser.hideButton1}
-                  onPress={() => this.props.userScreen(false)}>
-                  <Icon type="FontAwesome" name="close" />
-           </TouchableOpacity>
+            style={styleUser.hideButton1}
+            onPress={() => this.props.userScreen(false)}>
+            <Icon type="FontAwesome" name="close" />
+          </TouchableOpacity>
           <Text style={styleUser.text_header}>User details</Text>
         </View>
         <Animatable.View animation="fadeInUp" style={styleUser.footer}>
@@ -387,7 +380,7 @@ class UserSettings extends Component {
                 </Text>
               </Animatable.View>
             )}
-              {this.state.startDatePickerVisible && (
+            {this.state.startDatePickerVisible && (
               <DateTimePicker
                 testID="dateTimePicker"
                 onChange={this.onChange}
@@ -473,123 +466,150 @@ class UserSettings extends Component {
               <View style={styleUser.centeredView}>
                 <View style={styleUser.modalView}>
                   <TouchableOpacity
-                  style={styleUser.hideButton}
-                  onPress={() => this.setModalVisible(false)}>
-                  <Icon type="FontAwesome" name="close" />
+                    style={styleUser.hideButton}
+                    onPress={() => this.setModalVisible(false)}>
+                    <Icon type="FontAwesome" name="close" />
                   </TouchableOpacity>
-                <View style={{alignItems: 'center'}}>
-                <Text style={{fontSize: 25, color: '#184D47'}}>Password Change</Text>
-                <View
-                  style={{
-                    backgroundColor: '#EEBB4D',
-                    height: 1,
-                    width: '60%',
-                    marginBottom: 10,
-                  }}></View>
-              </View>
-              <Text
-                style={[
-                  styles.text_footer,
-                  {
-                    marginTop: 35,
-                  },
-                ]}>
-                Current Password
-              </Text>
-            <View style={styles.mover}>
-              <Feather name="lock" color="#05375a" size={20} />
-              <TextInput
-                placeholder="Password"
-                secureTextEntry={this.state.hiddenText ? true : false}
-                style={styles.inputT}
-                autoCapitalize="none"
-                onChangeText={(val) => this.handlePasswordChange(val)}
-              />
-              <TouchableOpacity onPress={this.updateHiddenText}>
-                {this.state.hiddenText ? (
-                  <Feather name="eye-off" color="grey" size={20} />
-                ): 
-                (
-                  <Feather name="eye" color="grey" size={20} />
-                )}
-              </TouchableOpacity>
-            </View>
+                  <View style={{alignItems: 'center'}}>
+                    <Text style={{fontSize: 25, color: '#184D47'}}>
+                      Password Change
+                    </Text>
+                    <View
+                      style={{
+                        backgroundColor: '#EEBB4D',
+                        height: 1,
+                        width: '60%',
+                        marginBottom: 10,
+                      }}></View>
+                  </View>
+                  <Text
+                    style={[
+                      styles.text_footer,
+                      {
+                        marginTop: 35,
+                      },
+                    ]}>
+                    Current Password
+                  </Text>
+                  <View style={styles.mover}>
+                    <Feather name="lock" color="#05375a" size={20} />
+                    <TextInput
+                      placeholder="Password"
+                      secureTextEntry={this.state.hiddenText ? true : false}
+                      style={styles.inputT}
+                      autoCapitalize="none"
+                      onChangeText={(val) => this.handlePasswordChange(val)}
+                    />
+                    <TouchableOpacity onPress={this.updateHiddenText}>
+                      {this.state.hiddenText ? (
+                        <Feather name="eye-off" color="grey" size={20} />
+                      ) : (
+                        <Feather name="eye" color="grey" size={20} />
+                      )}
+                    </TouchableOpacity>
+                  </View>
 
-            <Text
-              style={[
-                styles.text_footer,
-                {
-                  marginTop: 35,
-                },
-              ]}>
-              New Password
-            </Text>
-            <View style={styles.mover}>
-              <Feather name="lock" color="#05375a" size={20} />
-              <TextInput
-                placeholder="Password"
-                secureTextEntry={this.state.hiddenText ? true : false}
-                style={styles.inputT}
-                autoCapitalize="none"
-                onChangeText={(val) => this.handleNewPasswordChange(val)}
-              />
-              <TouchableOpacity onPress={this.updateHiddenText}>
-                {this.state.hiddenText ? (
-                  <Feather name="eye-off" color="grey" size={20} />
-                ) : (
-                  <Feather name="eye" color="grey" size={20} />
-                )}
-              </TouchableOpacity>
-            </View>
-            {this.state.isValidPassword ? true : (
-              <Animatable.View animation="fadeInLeft" duration={500}>
-                <Text style={(this.state.passwordError.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError}</Text>
-                <Text style={(this.state.passwordError2.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError2}</Text>
-                <Text style={(this.state.passwordError3.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError3}</Text>
-                <Text style={(this.state.passwordError4.indexOf("✓") != -1) ? styleUser.green : styleUser.red}> {this.state.passwordError4}</Text>
-{/* 
-                <Text style={styles.errorMsg}>
-                {"\n"}
-                {this.state.passwordError}{"\n"}
-                {this.state.passwordError2}{"\n"}
-                {this.state.passwordError3}{"\n"}
-                {this.state.passwordError4}
-                </Text> */}
-               </Animatable.View>
-            )}
-            <View style={styleUser.buttonSign}>
-              <TouchableOpacity
-                onPress={() => {
-                  this.handlePass(
-                    this.state.confirmPassword,
-                    this.state.newPass
-                  );
-                }}
-                style={[
-                  styleUser.signIn,
-                  {
-                    borderColor: '#296d98',
-                    borderWidth: 2,
-                  },
-                ]}>
-                <Text
-                  style={[
-                    styleUser.textSign,
-                    {
-                      color: '#296d98',
-                    },
-                  ]}>
-                  Confirm Password Change
-                </Text>
-              </TouchableOpacity>
-            </View>           
-            </View>
-           </View>
-          </Modal>
+                  <Text
+                    style={[
+                      styles.text_footer,
+                      {
+                        marginTop: 35,
+                      },
+                    ]}>
+                    New Password
+                  </Text>
+                  <View style={styles.mover}>
+                    <Feather name="lock" color="#05375a" size={20} />
+                    <TextInput
+                      placeholder="Password"
+                      secureTextEntry={this.state.hiddenText ? true : false}
+                      style={styles.inputT}
+                      autoCapitalize="none"
+                      onChangeText={(val) => this.handleNewPasswordChange(val)}
+                    />
+                    <TouchableOpacity onPress={this.updateHiddenText}>
+                      {this.state.hiddenText ? (
+                        <Feather name="eye-off" color="grey" size={20} />
+                      ) : (
+                        <Feather name="eye" color="grey" size={20} />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                  {this.state.isValidPassword ? (
+                    true
+                  ) : (
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                      <Text
+                        style={
+                          this.state.passwordError.indexOf('✓') != -1
+                            ? styleUser.green
+                            : styleUser.red
+                        }>
+                        {' '}
+                        {this.state.passwordError}
+                      </Text>
+                      <Text
+                        style={
+                          this.state.passwordError2.indexOf('✓') != -1
+                            ? styleUser.green
+                            : styleUser.red
+                        }>
+                        {' '}
+                        {this.state.passwordError2}
+                      </Text>
+                      <Text
+                        style={
+                          this.state.passwordError3.indexOf('✓') != -1
+                            ? styleUser.green
+                            : styleUser.red
+                        }>
+                        {' '}
+                        {this.state.passwordError3}
+                      </Text>
+                      <Text
+                        style={
+                          this.state.passwordError4.indexOf('✓') != -1
+                            ? styleUser.green
+                            : styleUser.red
+                        }>
+                        {' '}
+                        {this.state.passwordError4}
+                      </Text>
+                    </Animatable.View>
+                  )}
+                  <View style={styleUser.buttonSign}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.handlePass(
+                          this.state.confirmPassword,
+                          this.state.newPass,
+                        );
+                      }}
+                      style={[
+                        styleUser.signIn,
+                        {
+                          borderColor: '#296d98',
+                          borderWidth: 2,
+                        },
+                      ]}>
+                      <Text
+                        style={[
+                          styleUser.textSign,
+                          {
+                            color: '#296d98',
+                          },
+                        ]}>
+                        Confirm Password Change
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
             <View style={styleUser.button}>
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({modalVisible: true})
+                  this.setState({modalVisible: true});
                 }}
                 style={[
                   styleUser.signIn,
@@ -606,7 +626,7 @@ class UserSettings extends Component {
                       color: '#296d98',
                     },
                   ]}>
-                  Change Password   
+                  Change Password
                 </Text>
               </TouchableOpacity>
             </View>
@@ -672,7 +692,7 @@ const styleUser = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     color: 'black',
-    marginTop: Platform.OS === 'ios' ? 0 : -12
+    marginTop: Platform.OS === 'ios' ? 0 : -12,
   },
   mover: {
     flexDirection: 'row',
@@ -806,9 +826,9 @@ const styleUser = StyleSheet.create({
     marginTop: 15,
   },
   green: {
-    color: '#008656'
+    color: '#008656',
   },
   red: {
-    color: '#ff0000'
-  }
+    color: '#ff0000',
+  },
 });

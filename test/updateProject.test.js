@@ -1,25 +1,48 @@
-const updateProject = require('../api/projectApi/updateProject');
+const updateProject = require("../api/projectApi/updateProject");
 
-test('Compares 2020-12-4 with 2020-11-10', () => {
-  expect(updateProject.compareDates(2020, 12, 4, 2020, 11, 10)).toBe(0);
+test("Coverts date obejct to date string", () => {
+  let datetime = {
+    year: { low: 1970, high: 0 },
+    month: { low: 1, high: 0 },
+    day: { low: 2, high: 0 },
+    hour: { low: 2, high: 0 },
+    minute: { low: 26, high: 0 },
+    second: { low: 0, high: 0 },
+    nanosecond: { low: 0, high: 0 },
+  };
+  expect(updateProject.datetimeToString(datetime)).toBe("1970-01-02T02:26");
 });
 
-test('Compares 2020-11-10 with 2020-12-4', () => {
-    expect(updateProject.compareDates(2020, 11, 10, 2020, 12, 4)).toBe(1);
+test("Finds all dependencies before of the task sent in", () => {
+  let task = { id: 1, };
+  let rels = [
+    { target: 1, },
+    { target: 1, },
+    { target: 3, },
+  ];
+  expect(updateProject.getPredDependencies(task, rels)).toStrictEqual([ { target: 1, }, { target: 1, }, ]);
 });
 
-test('Adds 5 days to 2020-06-04', () => {
-    expect(updateProject.addDays(2020, 6, 4, 5)).toStrictEqual([2020, 6, 9]);
+test("Finds all dependencies after of the task sent in", () => {
+  let task = { id: 1, };
+  let rels = [
+    { source: 1, },
+    { source: 1, },
+    { source: 3, },
+  ];
+  expect(updateProject.getSuccDependencies(task, rels)).toStrictEqual([ { source: 1, }, { source: 1, }, ]);
 });
 
-test('Adds 10 days to 2020-07-23 (Month Wrapping)', () => {
-    expect(updateProject.addDays(2020, 7, 23, 10)).toStrictEqual([2020, 8, 2]);
-});
-
-test('Subtract 5 days to 2020-06-06', () => {
-    expect(updateProject.addDays(2020, 6, 6, -5)).toStrictEqual([2020, 6, 1]);
-});
-
-test('Subtract 10 days to 2020-06-06 (Month Wrapping)', () => {
-    expect(updateProject.addDays(2020, 6, 6, -10)).toStrictEqual([2020, 5, 27]);
+test("Finds all successors the task sent in", () => {
+  let nodes = [
+    { id: 1, },
+    { id: 2, },
+    { id: 3, },
+  ];
+  let rels = [
+    { source: 1,  target: 2, },
+    { source: 1, target: 3, },
+    { source: 3, target: 2, },
+  ];
+  expect(updateProject.getSuccessors(1, nodes, rels)).toStrictEqual([ { id: 2 }, { id: 3 } ]);
 });

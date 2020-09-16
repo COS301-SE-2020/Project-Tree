@@ -1,5 +1,13 @@
 import React from "react";
-import { Form, Table, Modal, Button, OverlayTrigger,Tooltip, Spinner } from "react-bootstrap";
+import {
+  Form,
+  Table,
+  Modal,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+  Spinner,
+} from "react-bootstrap";
 import $ from "jquery";
 
 function stringifyFormData(fd) {
@@ -13,7 +21,11 @@ function stringifyFormData(fd) {
 class CreateProject extends React.Component {
   constructor() {
     super();
-    this.state = { show: false, token: localStorage.getItem("sessionToken"), isloading: false };
+    this.state = {
+      show: false,
+      token: localStorage.getItem("sessionToken"),
+      isloading: false,
+    };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,11 +40,11 @@ class CreateProject extends React.Component {
   }
 
   handleSubmit(event) {
-    this.setState({isloading: true});
+    this.setState({ isloading: true });
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
     $.post("/project/add", JSON.parse(data), (response) => {
-      this.setState({ show: false, isloading: false});
+      this.setState({ show: false, isloading: false });
       this.props.setProject(response);
     }).fail(() => {
       alert("Unable to create project");
@@ -44,14 +56,17 @@ class CreateProject extends React.Component {
       <React.Fragment>
         <Button
           className="my-2"
-          style={{ borderColor: "#EEBB4D", backgroundColor: "#EEBB4D", width: "170px", color: "black"}}
+          style={{
+            borderColor: "#EEBB4D",
+            backgroundColor: "#EEBB4D",
+            width: "170px",
+            color: "black",
+          }}
           onClick={() => {
             this.showModal();
           }}
         >
-          <i
-            className="fa fa-plus" 
-          ></i>  Create Project{" "}
+          <i className="fa fa-plus"></i> Create Project{" "}
         </Button>
         <Modal
           show={this.state.show}
@@ -103,9 +118,45 @@ class CreateProject extends React.Component {
                   </tr>
                   <tr>
                     <td></td>
-                    <td className="text-center">Create <OverlayTrigger overlay={<Tooltip>Users assigned to the project can create tasks and dependencies for the project</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
-                    <td className="text-center">Delete <OverlayTrigger overlay={<Tooltip>Users assigned to the project can delete and it's tasks and dependencies</Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
-                    <td className="text-center">Edit <OverlayTrigger overlay={<Tooltip>Users assigned to the project can edit it's task's and dependency information </Tooltip>}><i className="fa fa-info-circle"></i></OverlayTrigger></td>
+                    <td className="text-center">
+                      Create{" "}
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip>
+                            Users assigned to the project can create tasks and
+                            dependencies for the project
+                          </Tooltip>
+                        }
+                      >
+                        <i className="fa fa-info-circle"></i>
+                      </OverlayTrigger>
+                    </td>
+                    <td className="text-center">
+                      Delete{" "}
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip>
+                            Users assigned to the project can delete and it's
+                            tasks and dependencies
+                          </Tooltip>
+                        }
+                      >
+                        <i className="fa fa-info-circle"></i>
+                      </OverlayTrigger>
+                    </td>
+                    <td className="text-center">
+                      Edit{" "}
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip>
+                            Users assigned to the project can edit it's task's
+                            and dependency information{" "}
+                          </Tooltip>
+                        }
+                      >
+                        <i className="fa fa-info-circle"></i>
+                      </OverlayTrigger>
+                    </td>
                   </tr>
                 </thead>
                 <tbody>
@@ -157,16 +208,21 @@ class CreateProject extends React.Component {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="dark" style={{width: "100px"}}
-              disabled={this.state.isloading}
+              <Button
+                type="submit"
+                variant="dark"
+                style={{ width: "100px" }}
+                disabled={this.state.isloading}
               >
-                {this.state.isloading ? 
+                {this.state.isloading ? (
                   <Spinner
                     animation="border"
                     variant="success"
                     size="sm"
-                  ></Spinner> 
-                : "Create" } 
+                  ></Spinner>
+                ) : (
+                  "Create"
+                )}
               </Button>
             </Modal.Footer>
           </Form>

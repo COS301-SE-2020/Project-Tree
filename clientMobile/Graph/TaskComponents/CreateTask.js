@@ -7,15 +7,9 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import {
-  Icon,
-  Label,
-  Form,
-  Item,
-  Input
-} from 'native-base';
+import {Icon, Label, Form, Item, Input} from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import ms from "ms";
+import ms from 'ms';
 
 class CreateTask extends Component {
   constructor(props) {
@@ -96,16 +90,16 @@ class CreateTaskForm extends Component {
     this.state = {
       name: '',
       description: '',
-      startDate: new Date().toISOString().substring(0,16),
-      endDate: new Date().toISOString().substring(0,16),
+      startDate: new Date().toISOString().substring(0, 16),
+      endDate: new Date().toISOString().substring(0, 16),
       duration: '0 ms',
       dateTimePicker: false,
-      dateTimeType: { type: 'date', for: 'start', value: new Date() },
+      dateTimeType: {type: 'date', for: 'start', value: new Date()},
       error: null,
       people: [...this.props.allUsers],
-      pacManSearchTerm: "",
-      resourcesSearchTerm: "",
-      resPersonSearchTerm: "",
+      pacManSearchTerm: '',
+      resourcesSearchTerm: '',
+      resPersonSearchTerm: '',
       pacManList: [],
       resourcesList: [],
       resPersonList: [],
@@ -121,44 +115,49 @@ class CreateTaskForm extends Component {
   }
 
   handleDateTimeSelect(event, selectedDate, type) {
-    if(event.type === 'dismissed') {
+    if (event.type === 'dismissed') {
       this.setState({dateTimePicker: false});
       return;
     }
-    let date = new Date(new Date(selectedDate).getTime() - new Date().getTimezoneOffset()*60*1000).toISOString().substring(0,16);
+    let date = new Date(
+      new Date(selectedDate).getTime() -
+        new Date().getTimezoneOffset() * 60 * 1000,
+    )
+      .toISOString()
+      .substring(0, 16);
     if (type.for === 'start') {
-        if (this.state.endDate < date) 
-          this.setState({
-            error: "You cannot set the start date/time after the end date/time.",
-            startDate: date, 
-            endDate: date, 
-            dateTimePicker: false
-          });
-        else
+      if (this.state.endDate < date)
         this.setState({
-          error: null,
-          startDate: date, 
-          dateTimePicker: false
-        });
-    } else {
-      if (this.state.startDate > date) 
-        this.setState({
-          error: "You cannot set the end date/time before the start date/time.",
-          startDate: date, 
-          endDate: date, 
-          dateTimePicker: false
+          error: 'You cannot set the start date/time after the end date/time.',
+          startDate: date,
+          endDate: date,
+          dateTimePicker: false,
         });
       else
-      this.setState({
-        error: null,
-        endDate: date, 
-        dateTimePicker: false
-      });
+        this.setState({
+          error: null,
+          startDate: date,
+          dateTimePicker: false,
+        });
+    } else {
+      if (this.state.startDate > date)
+        this.setState({
+          error: 'You cannot set the end date/time before the start date/time.',
+          startDate: date,
+          endDate: date,
+          dateTimePicker: false,
+        });
+      else
+        this.setState({
+          error: null,
+          endDate: date,
+          dateTimePicker: false,
+        });
     }
   }
 
   formatValidateInput() {
-    if(this.checkFormData('all') === false) return null;
+    if (this.checkFormData('all') === false) return null;
 
     let data = {
       name: this.state.name,
@@ -196,14 +195,16 @@ class CreateTaskForm extends Component {
     let assignedPeople = this.assignPeople(newTask);
 
     let timestamp = new Date();
-    timestamp.setTime(timestamp.getTime() - new Date().getTimezoneOffset()*60*1000);
+    timestamp.setTime(
+      timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
     timestamp = timestamp.toISOString();
 
-    await fetch("http://projecttree.herokuapp.com/people/assignPeople", {
-      method: "POST",
+    await fetch('http://projecttree.herokuapp.com/people/assignPeople', {
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         ct_taskId: newTask,
@@ -215,7 +216,7 @@ class CreateTaskForm extends Component {
           projName: this.props.project.name,
           projID: this.props.project.id,
           taskName: this.state.name,
-          type: "auto",
+          type: 'auto',
           mode: 2,
         },
       }),
@@ -237,9 +238,9 @@ class CreateTaskForm extends Component {
   }
 
   updateSearch(value, mode) {
-    if (mode === 0) this.setState({ pacManSearchTerm: value });
-    if (mode === 1) this.setState({ resPersonSearchTerm: value });
-    if (mode === 2) this.setState({ resourcesSearchTerm: value });
+    if (mode === 0) this.setState({pacManSearchTerm: value});
+    if (mode === 1) this.setState({resPersonSearchTerm: value});
+    if (mode === 2) this.setState({resourcesSearchTerm: value});
   }
 
   addPacMan(person) {
@@ -255,7 +256,7 @@ class CreateTaskForm extends Component {
       }
     }
 
-    this.setState({ pacManList: tempPacManList, pacManSearchTerm: "" });
+    this.setState({pacManList: tempPacManList, pacManSearchTerm: ''});
   }
 
   addResPerson(person) {
@@ -273,7 +274,7 @@ class CreateTaskForm extends Component {
 
     this.setState({
       resPersonList: tempResPersonList,
-      resPersonSearchTerm: "",
+      resPersonSearchTerm: '',
     });
   }
 
@@ -290,7 +291,7 @@ class CreateTaskForm extends Component {
       }
     }
 
-    this.setState({ resourceList: tempResourceList, resourcesSearchTerm: "" });
+    this.setState({resourceList: tempResourceList, resourcesSearchTerm: ''});
   }
 
   removeAssignedPerson(person, mode) {
@@ -328,67 +329,70 @@ class CreateTaskForm extends Component {
       }
     }
     peopleList.push(person);
-    this.setState({ usablePeople: peopleList });
+    this.setState({usablePeople: peopleList});
   }
 
   /*
-  * Assigns people to tasks
-  */
-  assignPeople(newTask){
+   * Assigns people to tasks
+   */
+  assignPeople(newTask) {
     let peopleArray = this.props.assignedProjUsers;
-    for(let x = 0; x < this.state.pacManList.length; x++){
+    for (let x = 0; x < this.state.pacManList.length; x++) {
       let user = this.state.pacManList[x];
       let relationship = {
         start: this.state.pacManList[x].id,
         end: newTask,
-        type: "PACKAGE_MANAGER"
-      }
-      let userRel = [user,relationship];
+        type: 'PACKAGE_MANAGER',
+      };
+      let userRel = [user, relationship];
       peopleArray.push(userRel);
     }
 
-    for(let x = 0; x < this.state.resPersonList.length; x++){
+    for (let x = 0; x < this.state.resPersonList.length; x++) {
       let user = this.state.resPersonList[x];
       let relationship = {
         start: this.state.resPersonList[x].id,
         end: newTask,
-        type: "RESPONSIBLE_PERSON"
-      }
-      let userRel = [user,relationship];
+        type: 'RESPONSIBLE_PERSON',
+      };
+      let userRel = [user, relationship];
       peopleArray.push(userRel);
     }
 
-    for(let x = 0; x < this.state.resourcesList.length; x++){
+    for (let x = 0; x < this.state.resourcesList.length; x++) {
       let user = this.state.resourcesList[x];
       let relationship = {
         start: this.state.resourcesList[x].id,
         end: newTask,
-        type: "RESOURCE"
-      }
-      let userRel = [user,relationship];
+        type: 'RESOURCE',
+      };
+      let userRel = [user, relationship];
       peopleArray.push(userRel);
     }
     return peopleArray;
   }
 
-  checkFormData(check){
-    if(check === "name" || check === "all"){
+  checkFormData(check) {
+    if (check === 'name' || check === 'all') {
       let name = this.state.name;
-      if(name === null || !name.trim().length){
-        this.setState({error:"Please enter a task name"});
+      if (name === null || !name.trim().length) {
+        this.setState({error: 'Please enter a task name'});
         return false;
-      }
-      else{
-        this.setState({error:null});
+      } else {
+        this.setState({error: null});
       }
     }
   }
-  
+
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
-    startDate.setTime( startDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    startDate.setTime(
+      startDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
     let endDate = new Date(ed);
-    endDate.setTime( endDate.getTime() - new Date().getTimezoneOffset()*60*1000 );
+    endDate.setTime(
+      endDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
@@ -423,16 +427,18 @@ class CreateTaskForm extends Component {
 
     return (
       <React.Fragment>
-        <ScrollView style={{height:650}}>
+        <ScrollView style={{height: 650}}>
           <Form>
-            <Text style={{color:'red', alignSelf:'center'}}>{this.state.error}</Text>
-              <Item floatingLabel>
-                <Label>Name of Task</Label>
-                <Input 
-                  onChangeText={(val) => this.setState({name: val})}
-                  onEndEditing={()=>this.checkFormData("name")} 
-                />
-              </Item>
+            <Text style={{color: 'red', alignSelf: 'center'}}>
+              {this.state.error}
+            </Text>
+            <Item floatingLabel>
+              <Label>Name of Task</Label>
+              <Input
+                onChangeText={(val) => this.setState({name: val})}
+                onEndEditing={() => this.checkFormData('name')}
+              />
+            </Item>
             <Item floatingLabel>
               <Label>Description of Task</Label>
               <Input
@@ -447,12 +453,12 @@ class CreateTaskForm extends Component {
                 name="calendar-o"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'date', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'date',
                       for: 'start',
                       value: this.state.startDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -465,12 +471,12 @@ class CreateTaskForm extends Component {
                 name="clock"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'time', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'time',
                       for: 'start',
                       value: this.state.startDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -483,12 +489,12 @@ class CreateTaskForm extends Component {
                 name="calendar-o"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'date', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'date',
                       for: 'end',
                       value: this.state.endDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -501,12 +507,12 @@ class CreateTaskForm extends Component {
                 name="clock"
                 onPress={() => {
                   this.setState({
-                    dateTimePicker: true, 
-                    dateTimeType: { 
-                      type: 'time', 
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'time',
                       for: 'end',
                       value: this.state.endDate,
-                    }
+                    },
                   });
                 }}
               />
@@ -524,33 +530,37 @@ class CreateTaskForm extends Component {
                 onChangeText={(val) => this.updateSearch(val, 0)}
               />
             </Item>
-            <View style={{flexDirection: 'row', flex:1}}>
+            <View style={{flexDirection: 'row', flex: 1}}>
               {this.state.pacManSearchTerm.length >= 2 ? (
-                <View style={{flex:0.5}}>
+                <View style={{flex: 0.5}}>
                   {filteredPacMan.map((person) => {
                     return (
                       <TouchableOpacity
                         type="button"
                         onPress={() => this.addPacMan(person)}
                         key={person.id}
-                        style={styles.peopleButtons}
-                      >
-                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                        style={styles.peopleButtons}>
+                        <Text style={{color: 'white'}}>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-              ) : <View style={{flex:0.5}}></View>}
-              <View style={{flex:0.5}}>
+              ) : (
+                <View style={{flex: 0.5}}></View>
+              )}
+              <View style={{flex: 0.5}}>
                 {this.state.pacManList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
                       onPress={() => this.removeAssignedPerson(person, 0)}
                       key={person.id}
-                      style={styles.selectedPeopleButtons}
-                    >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      style={styles.selectedPeopleButtons}>
+                      <Text>
+                        {person.name}&nbsp;{person.surname}
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -563,33 +573,37 @@ class CreateTaskForm extends Component {
                 onChangeText={(val) => this.updateSearch(val, 1)}
               />
             </Item>
-            <View style={{flexDirection: 'row', flex:1}}>
+            <View style={{flexDirection: 'row', flex: 1}}>
               {this.state.resPersonSearchTerm.length >= 2 ? (
-                <View style={{flex:0.5}}>
+                <View style={{flex: 0.5}}>
                   {filteredResPerson.map((person) => {
                     return (
                       <TouchableOpacity
                         type="button"
                         onPress={() => this.addResPerson(person)}
                         key={person.id}
-                        style={styles.peopleButtons}
-                      >
-                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                        style={styles.peopleButtons}>
+                        <Text style={{color: 'white'}}>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-              ) : <View style={{flex:0.5}}></View>}
-              <View style={{flex:0.5}}>
+              ) : (
+                <View style={{flex: 0.5}}></View>
+              )}
+              <View style={{flex: 0.5}}>
                 {this.state.resPersonList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
                       onPress={() => this.removeAssignedPerson(person, 1)}
                       key={person.id}
-                      style={styles.selectedPeopleButtons}
-                    >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      style={styles.selectedPeopleButtons}>
+                      <Text>
+                        {person.name}&nbsp;{person.surname}
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -602,33 +616,37 @@ class CreateTaskForm extends Component {
                 onChangeText={(val) => this.updateSearch(val, 2)}
               />
             </Item>
-            <View style={{flexDirection: 'row', flex:1}}>
+            <View style={{flexDirection: 'row', flex: 1}}>
               {this.state.resourcesSearchTerm.length >= 2 ? (
-                <View style={{flex:0.5}}>
+                <View style={{flex: 0.5}}>
                   {filteredResources.map((person) => {
                     return (
                       <TouchableOpacity
                         type="button"
                         onPress={() => this.addResource(person)}
                         key={person.id}
-                        style={styles.peopleButtons}
-                      >
-                        <Text style={{color:'white'}}>{person.name}&nbsp;{person.surname}</Text>
+                        style={styles.peopleButtons}>
+                        <Text style={{color: 'white'}}>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-              ) : <View style={{flex:0.5}}></View>}
-              <View style={{flex:0.5}}>
+              ) : (
+                <View style={{flex: 0.5}}></View>
+              )}
+              <View style={{flex: 0.5}}>
                 {this.state.resourcesList.map((person) => {
                   return (
                     <TouchableOpacity
                       type="button"
                       onPress={() => this.removeAssignedPerson(person, 2)}
                       key={person.id}
-                      style={styles.selectedPeopleButtons}
-                    >
-                      <Text>{person.name}&nbsp;{person.surname}</Text>
+                      style={styles.selectedPeopleButtons}>
+                      <Text>
+                        {person.name}&nbsp;{person.surname}
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -638,11 +656,22 @@ class CreateTaskForm extends Component {
           {this.state.dateTimePicker && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={new Date(new Date(this.state.dateTimeType.value).getTime() + new Date().getTimezoneOffset()*60*1000)}
+              value={
+                new Date(
+                  new Date(this.state.dateTimeType.value).getTime() +
+                    new Date().getTimezoneOffset() * 60 * 1000,
+                )
+              }
               mode={this.state.dateTimeType.type}
               is24Hour={true}
               display="default"
-              onChange={(event, selectedDate) => this.handleDateTimeSelect(event, selectedDate, this.state.dateTimeType)}
+              onChange={(event, selectedDate) =>
+                this.handleDateTimeSelect(
+                  event,
+                  selectedDate,
+                  this.state.dateTimeType,
+                )
+              }
             />
           )}
         </ScrollView>
@@ -653,7 +682,7 @@ class CreateTaskForm extends Component {
             <Text style={{color: 'white'}}>Submit</Text>
           </TouchableOpacity>
         </View>
-     </React.Fragment>
+      </React.Fragment>
     );
   }
 }
@@ -681,7 +710,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height:'100%',
+    height: '100%',
     width: 350,
   },
   openButton: {
@@ -788,7 +817,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
     margin: 3,
-  }
+  },
 });
 
 export default CreateTask;

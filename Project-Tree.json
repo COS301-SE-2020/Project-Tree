@@ -1,0 +1,2131 @@
+{
+	"info": {
+		"_postman_id": "763975ad-816a-4510-b584-e24ce72f67bd",
+		"name": "Project-Tree Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.expect(response.message).to.eql(\"duplicate\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "0ce9223a-e57e-4060-9233-2d40c339df9d"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"thebteam.project@gmail.com\",\r\n    \"password\": \"theB-Team123\",\r\n    \"name\": \"TheB\",\r\n    \"sname\": \"Team\",\r\n    \"um_date\": \" \",\r\n    \"type\": \"webToken\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/register",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "da3ea197-0e3e-45ad-a3f7-1015b7c2d777"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"u18076514@tuks.co.za\",\r\n    \"password\": \"theB-Team123\",\r\n    \"name\": \"Dummy\",\r\n    \"sname\": \"One\",\r\n    \"um_date\": \" \",\r\n    \"type\": \"webToken\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/register",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "7a9fdea8-092f-4a3a-9896-d471b44b0afc"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"damianventer1@gmail.com\",\r\n    \"password\": \"theB-Team123\",\r\n    \"name\": \"Dummy\",\r\n    \"sname\": \"Two\",\r\n    \"um_date\": \" \",\r\n    \"type\": \"webToken\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/register",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.globals.set(\"sessionToken\", response.sessionToken );\r",
+							"    pm.expect(response.sessionToken).to.match(/^[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.?[A-Za-z0-9-_.+/=]*$/);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "e5c11c26-89ac-4593-8347-8a522f9945aa"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"thebteam.project@gmail.com\",\r\n    \"password\": \"theB-Team123\",\r\n    \"type\": \"webToken\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/login",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let user = pm.response.json().user;\r",
+							"    pm.globals.set(\"user\", JSON.stringify(user) );\r",
+							"    pm.expect(user.name).to.eql(\"TheB\");\r",
+							"    pm.expect(user.sname).to.eql(\"Team\");\r",
+							"    pm.expect(user.email).to.eql(\"thebteam.project@gmail.com\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "c79af7f5-7efb-4d5a-ad11-7a62ff9054bb"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"{{sessionToken}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/user/get",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"user",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let user = pm.response.json().user;\r",
+							"    pm.globals.set(\"user\", JSON.stringify(user) );\r",
+							"    pm.expect(user.name).to.eql(\"TheB\");\r",
+							"    pm.expect(user.sname).to.eql(\"Team\");\r",
+							"    pm.expect(user.email).to.eql(\"thebteam.project@gmail.com\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "b852179e-da4a-420e-a891-dc44ac36808b"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.set(\"userId\",JSON.parse(pm.globals.get(\"user\")).id);"
+						],
+						"id": "bd0da8d5-8b5f-4e80-97b4-385f1ca5cbd5"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": {{userId}},\r\n    \"token\": \"{{sessionToken}}\",\r\n    \"name\":\"TheB\",\r\n    \"sname\":\"Team\",\r\n    \"email\":\"thebteam.project@gmail.com\",\r\n    \"bday\": \"null\",\r\n    \"profilepicture\": \"https://i.ibb.co/37MF1qH/user-2935527-640.png\",\r\n    \"oldprofile\": \"undefined\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/user/edit",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"user",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"pm.globals.set(\"users\", JSON.stringify(response.users));\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "a4266b95-bbc4-4d07-8192-8f655158e053"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/people/getAllUsers",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"people",
+						"getAllUsers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4314e61b-0e65-40be-8c81-d6cab67b3978",
+						"exec": [
+							"pm.test(\"responds with 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    pm.expect(pm.response.json()).to.eql({\r",
+							"        \"status\": false,\r",
+							"        \"message\": \"wrong\"\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"{{sessionToken}}\",\r\n    \"testPass\": \"testPassword\",\r\n    \"newPass\": \"newPassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/user/pass",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"user",
+						"pass"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    let nodes = [];",
+							"    let rels = [];",
+							"    pm.globals.set(\"project\", JSON.stringify(response) );",
+							"    pm.globals.set(\"nodes\", JSON.stringify(nodes) );",
+							"    pm.globals.set(\"rels\", JSON.stringify(rels) );",
+							"    pm.expect(response.name).to.eql(\"PostmanProject\");",
+							"    pm.expect(response.description).to.eql(\"This is a postman test project\");",
+							"    pm.expect(response.permissions).to.eql([",
+							"        true,",
+							"        true,",
+							"        true,",
+							"        false,",
+							"        true,",
+							"        true,",
+							"        false,",
+							"        false,",
+							"        true",
+							"    ]);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 5s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});"
+						],
+						"id": "b3ea20c9-b27b-4673-a806-430c3eee37f9"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"token\":\"{{sessionToken}}\",\n    \"cp_Name\":\"PostmanProject\",\n    \"cp_Description\":\"This is a postman test project\",\n    \"cp_pm_Create\":true,\n    \"cp_pm_Delete\":true,\n    \"cp_pm_Update\":true,\n    \"cp_rp_Delete\":true,\n    \"cp_rp_Update\":true,\n    \"cp_r_Update\":true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/project/add",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"project",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Projects",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    pm.expect(response.ownedProjects).to.eql([JSON.parse(pm.globals.get(\"project\"))]);",
+							"    pm.expect(response.otherProjects).to.eql([]);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 5s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});"
+						],
+						"id": "5387572c-217d-40a8-8922-65d323e395ed"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\":\"{{sessionToken}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/project/get",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"project",
+						"get"
+					]
+				},
+				"description": "Deletes task"
+			},
+			"response": []
+		},
+		{
+			"name": "getProject",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "30dd4588-044d-4274-951a-ad2d2a986ede"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)"
+						],
+						"id": "3960ba64-447e-40b2-a60b-f8d0039daf25"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{projectId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/getProject",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"getProject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Permissions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.expect(response.create).to.eql(true);\r",
+							"    pm.expect(response.update).to.eql(true);\r",
+							"    pm.expect(response.delete).to.eql(true);\r",
+							"    pm.expect(response.project).to.eql(true);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 5s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"id": "75dece35-87ae-4472-9ced-b5225cb8e091"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var data = {};\r",
+							"data.project = JSON.parse(pm.globals.get(\"project\"));\r",
+							"data.token = pm.globals.get(\"sessionToken\");\r",
+							"pm.globals.set(\"data\",JSON.stringify(JSON.stringify(data)));"
+						],
+						"id": "380a5879-f1e7-47b2-864e-d0eb75417b99"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"data\": {{data}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/user/checkpermission",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"user",
+						"checkpermission"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.expect(response.name).to.eql(\"Postman project updated\");\r",
+							"    pm.expect(response.description).to.eql(\"update\");\r",
+							"    pm.expect(response.permissions).to.eql([\r",
+							"        true,\r",
+							"        true,\r",
+							"        true,\r",
+							"        true,\r",
+							"        true,\r",
+							"        true,\r",
+							"        false,\r",
+							"        false,\r",
+							"        false\r",
+							"    ]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "0d6045fc-201a-4aa7-87c5-603bd4f120e3"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)"
+						],
+						"id": "01a217d5-2183-49a8-a6ac-72965df918d6"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\":\"{{sessionToken}}\",\r\n    \"up_id\": \"{{projectId}}\",\r\n    \"up_name\": \"Postman project updated\",\r\n    \"up_description\": \"update\",\r\n    \"up_pm_Create\": true,\r\n    \"up_pm_Delete\": true,\r\n    \"up_pm_Update\": true,\r\n    \"up_rp_Create\": true,\r\n    \"up_rp_Delete\": true,\r\n    \"up_rp_Update\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/project/update",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"project",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Task 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes));",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels));",
+							"    pm.expect(response.nodes[response.nodes.length-1].name).to.eql(\"Unit test\");",
+							"    pm.expect(response.nodes[response.nodes.length-1].startDate).to.eql(\"2020-08-21T08:00\");",
+							"    pm.expect(response.nodes[response.nodes.length-1].endDate).to.eql(\"2020-08-25T09:00\");",
+							"    pm.expect(response.nodes[response.nodes.length-1].duration).to.eql(349200000);",
+							"    pm.expect(response.nodes[response.nodes.length-1].description).to.eql(\"Unit testing from postman demo 3\");",
+							"    pm.expect(response.nodes[response.nodes.length-1].progress).to.eql(0);",
+							"    pm.expect(response.nodes[response.nodes.length-1].type).to.eql(\"Incomplete\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
+						],
+						"id": "39fefa01-96ee-4f29-bb06-b65beff497d2"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)"
+						],
+						"id": "70608285-33ae-416c-b1ec-884bc48b294f"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"changedInfo\": {\n        \"name\": \"Unit test\",\n        \"startDate\": \"2020-08-21T08:00\",\n        \"endDate\": \"2020-08-25T09:00\",\n        \"description\": \"Unit testing from postman demo 3\",\n        \"project\": {\n            \"id\": \"{{projectId}}\"\n        }\n    },\n    \"nodes\": {{nodes}},\n    \"rels\": {{rels}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/task/add",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"task",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Project Tasks",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    pm.expect(response.tasks).to.eql(JSON.parse(pm.globals.get(\"nodes\")));",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 5s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});"
+						],
+						"id": "596b40ed-46b2-453e-a3fc-c69e455bdc12"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)"
+						],
+						"id": "12459c1d-2a24-4864-ab95-87023655e312"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"projId\":\"{{projectId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/project/projecttasks",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"project",
+						"projecttasks"
+					]
+				},
+				"description": "Deletes task"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Task 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes) );",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels) );",
+							"    pm.expect(response.nodes[response.nodes.length-1].name).to.eql(\"Unit test 2\");",
+							"    pm.expect(response.nodes[response.nodes.length-1].startDate).to.eql(\"2020-09-10T08:00\");",
+							"    pm.expect(response.nodes[response.nodes.length-1].endDate).to.eql(\"2020-09-15T09:00\");",
+							"    pm.expect(response.nodes[response.nodes.length-1].duration).to.eql(435600000);",
+							"    pm.expect(response.nodes[response.nodes.length-1].description).to.eql(\"Unit testing 2 from postman demo 3\");",
+							"    pm.expect(response.nodes[response.nodes.length-1].progress).to.eql(0);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
+						],
+						"id": "518cb6a7-ae01-4db8-abb1-cb5d598a661d"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)"
+						],
+						"id": "1a1c509a-1f6f-4e7c-a423-0abe3bf47d0a"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"changedInfo\": {\n        \"name\": \"Unit test 2\",\n        \"startDate\": \"2020-09-10T08:00\",\n        \"endDate\": \"2020-09-15T09:00\",\n        \"description\": \"Unit testing 2 from postman demo 3\",\n        \"project\": {\n            \"id\": \"{{projectId}}\"\n        }\n    },\n    \"nodes\": {{nodes}},\n    \"rels\": {{rels}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/task/add",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"task",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Dependency",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes));",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels));",
+							"    pm.expect(response.rels[response.rels.length-1].relationshipType).to.eql(\"ss\");",
+							"    pm.expect(response.rels[response.rels.length-1].sStartDate).to.eql(\"2020-08-21T08:00\");",
+							"    pm.expect(response.rels[response.rels.length-1].sEndDate).to.eql(\"2020-08-25T09:00\");",
+							"    pm.expect(response.rels[response.rels.length-1].startDate).to.eql(\"2020-08-21T08:00\");",
+							"    pm.expect(response.rels[response.rels.length-1].endDate).to.eql(\"2020-09-10T08:00\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
+						],
+						"id": "bedfab98-c89f-4c30-9e93-af86444f7d30"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.set(\"node1\", JSON.parse(pm.globals.get(\"nodes\"))[0].id);\r",
+							"pm.globals.set(\"node2\", JSON.parse(pm.globals.get(\"nodes\"))[1].id);\r",
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)"
+						],
+						"id": "770aedec-ae52-47ad-b6c1-0da6b467d313"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"changedInfo\":{\n        \"fid\": {{node1}},\n        \"sid\": {{node2}},\n        \"projId\": \"{{projectId}}\",\n        \"relationshipType\":\"ss\",\n        \"sStartDate\": \"2020-08-21T08:00\",\n        \"sEndDate\": \"2020-08-25T09:00\",\n        \"startDate\": \"2020-08-21T08:00\",\n        \"endDate\": \"2020-09-10T08:00\",\n        \"cd_viewId_source\": null,\n        \"cd_viewId_target\": null\n    },\n    \"nodes\":{{nodes}},\n    \"rels\":{{rels}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/dependency/add",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"dependency",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Project Critical Path",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 5s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});"
+						],
+						"id": "b385130c-dc76-4a55-9404-640bb6e83d72"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)"
+						],
+						"id": "bcc2ad35-b449-4ff5-9200-7a76a12d241a"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"projId\":\"{{projectId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/project/criticalpath",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"project",
+						"criticalpath"
+					]
+				},
+				"description": "Deletes task"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Task 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes) );\r",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels) );\r",
+							"    pm.expect(response.nodes[0].name).to.eql(\"Unit test updated\");\r",
+							"    pm.expect(response.nodes[0].startDate).to.eql(\"2020-08-22T12:00\");\r",
+							"    pm.expect(response.nodes[0].endDate).to.eql(\"2020-08-27T14:25\");\r",
+							"    pm.expect(response.nodes[0].description).to.eql(\"Unit testing from postman demo 3 again\");\r",
+							"    pm.expect(response.nodes[0].progress).to.eql(100);\r",
+							"    pm.expect(response.nodes[0].type).to.eql(\"Complete\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "a8ca34a6-9629-49c8-bd3c-b3a59508f2c1"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.set(\"node\", JSON.parse(pm.globals.get(\"nodes\"))[0].id );"
+						],
+						"id": "77e03452-c68c-4419-bc47-ad4b72ef9b08"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"changedInfo\":{\r\n        \"id\": {{node}},\r\n        \"name\":\"Unit test updated\",\r\n        \"startDate\":\"2020-08-22T12:00\",\r\n        \"endDate\":\"2020-08-27T14:25\",\r\n        \"description\":\"Unit testing from postman demo 3 again\",\r\n        \"progress\":100,\r\n        \"type\":\"Complete\"\r\n    },\r\n    \"nodes\":{{nodes}},\r\n    \"rels\":{{rels}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/task/update",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"task",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Task 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes) );\r",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels) );\r",
+							"    pm.expect(response.nodes[1].name).to.eql(\"Unit test 2 updated\");\r",
+							"    pm.expect(response.nodes[1].startDate).to.eql(\"2020-09-12T08:30\");\r",
+							"    pm.expect(response.nodes[1].endDate).to.eql(\"2020-09-17T15:00\");\r",
+							"    pm.expect(response.nodes[1].description).to.eql(\"Unit testing from postman demo 3 again\");\r",
+							"    pm.expect(response.nodes[1].progress).to.eql(50);\r",
+							"    pm.expect(response.nodes[1].type).to.eql(\"Issue\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "cd02ec8e-8d03-453c-8610-9c7ec4fdf055"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.set(\"node\", JSON.parse(pm.globals.get(\"nodes\"))[1].id );"
+						],
+						"id": "6d34d066-70aa-48ec-8e84-9f5cde600007"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"changedInfo\":{\r\n        \"id\": {{node}},\r\n        \"name\":\"Unit test 2 updated\",\r\n        \"startDate\":\"2020-09-12T08:30\",\r\n        \"endDate\":\"2020-09-17T15:00\",\r\n        \"description\":\"Unit testing from postman demo 3 again\",\r\n        \"progress\":50,\r\n        \"type\":\"Issue\"\r\n    },\r\n    \"nodes\":{{nodes}},\r\n    \"rels\":{{rels}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/task/update",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"task",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create View",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "5a9935fa-3b63-4d8c-87a4-7bad18213c35"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.set(\"node\", JSON.parse(pm.globals.get(\"nodes\"))[0].id );"
+						],
+						"id": "0427b48c-f465-41a7-8b44-8e634270e902"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{node}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/task/createClone",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"task",
+						"createClone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProjectViews",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "90f4d1b3-c26a-4117-a8b0-2f7841e9f3ae",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"let response = pm.response.json();\r",
+							"pm.globals.set(\"views\", JSON.stringify(response.views));\r",
+							"\r",
+							"pm.test(\"Response time is less than 5s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3bd53eff-b5f8-4bdb-8ef5-c05731c3d40a",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"{{projectId}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/getProjectViews",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"getProjectViews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete View",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bcc2acf4-ead6-4827-9e4e-4bfe0f92c3d8",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 5s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1cdf0689-48f6-48d0-a3ad-60683ede768a",
+						"exec": [
+							"pm.globals.set(\"view\", JSON.parse(pm.globals.get(\"views\"))[0].id );"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"changedInfo\":{\r\n        \"viewId\": {{view}}\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/task/deleteClone",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"task",
+						"deleteClone"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign People",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49451ef4-5238-4502-8e0e-3b5a03ee920a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f4ecf0f3-5a33-4a64-ab1b-e4933625429f",
+						"exec": [
+							"pm.globals.set(\"node\", JSON.parse(pm.globals.get(\"nodes\"))[0].id);\r",
+							"pm.environment.set(\"user1\", JSON.stringify(JSON.parse(pm.globals.get(\"users\"))[0]));\r",
+							"pm.environment.set(\"user2\", JSON.stringify(JSON.parse(pm.globals.get(\"users\"))[1]));\r",
+							"pm.environment.set(\"projName\", JSON.stringify(JSON.parse(pm.globals.get(\"project\")).name));\r",
+							"pm.environment.set(\"projId\", JSON.stringify(JSON.parse(pm.globals.get(\"project\")).id));\r",
+							"let timestamp = new Date();\r",
+							"timestamp.setTime(timestamp.getTime() - new Date().getTimezoneOffset()*60*1000);\r",
+							"pm.environment.set(\"timestamp\",JSON.stringify(timestamp = timestamp.toISOString()));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ct_taskId\":{{node}},\r\n    \"ct_pacMans\":[{{user1}},{{user2}}],\r\n    \"ct_resPersons\":[],\r\n    \"ct_resources\":[],\r\n    \"auto_notification\": {\r\n        \"timestamp\": {{timestamp}},\r\n        \"projName\": {{projName}},\r\n        \"projID\": {{projId}},\r\n        \"taskName\": \"task\",\r\n        \"type\": \"auto\",\r\n        \"mode\": 2\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/people/assignPeople",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"people",
+						"assignPeople"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Assigned People",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d204fe46-3685-4224-bc3d-2b25a58490f1",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.expect(response.projectUsers.length).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6b780c20-a54a-43ca-b7e3-ba45a65f683a",
+						"exec": [
+							"pm.environment.set(\"projId\", JSON.stringify(JSON.parse(pm.globals.get(\"project\")).id));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":{{projId}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/people/assignedProjectUsers",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"people",
+						"assignedProjectUsers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Assigned People",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "53e95341-393b-46fe-a00f-b17f14fb3f86",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4326dba4-7fa9-4c88-a71d-e039dda3e87c",
+						"exec": [
+							"pm.globals.set(\"node\", JSON.parse(pm.globals.get(\"nodes\"))[0].id);\r",
+							"pm.environment.set(\"user1\", JSON.stringify(JSON.parse(pm.globals.get(\"users\"))[0]));\r",
+							"pm.environment.set(\"user2\", JSON.stringify(JSON.parse(pm.globals.get(\"users\"))[1]));\r",
+							"pm.environment.set(\"projName\", JSON.stringify(JSON.parse(pm.globals.get(\"project\")).name));\r",
+							"pm.environment.set(\"projId\", JSON.stringify(JSON.parse(pm.globals.get(\"project\")).id));\r",
+							"let timestamp = new Date();\r",
+							"timestamp.setTime(timestamp.getTime() - new Date().getTimezoneOffset()*60*1000);\r",
+							"pm.environment.set(\"timestamp\",JSON.stringify(timestamp = timestamp.toISOString()));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ut_taskId\":{{node}},\r\n    \"ut_pacMans\":[],\r\n    \"ut_resources\":[],\r\n    \"ut_resPersons\":[],\r\n    \"ut_originalPacMans\":[{{user1}},{{user2}}],\r\n    \"ut_originalResPersons\":[],\r\n    \"ut_originalResources\":[],\r\n    \"auto_notification\": {\r\n        \"timestamp\": {{timestamp}},\r\n        \"projName\": {{projName}},\r\n        \"projID\": {{projId}},\r\n        \"taskName\": \"task\",\r\n        \"type\": \"auto\",\r\n        \"mode\": 2\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/people/updateAssignedPeople",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"people",
+						"updateAssignedPeople"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Dependency",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0ae84198-608f-4ae9-aab6-49d0c5b86cb9",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes));\r",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels));\r",
+							"    pm.expect(response.rels[0].relationshipType).to.eql(\"fs\");\r",
+							"    pm.expect(response.rels[0].sStartDate).to.eql(\"2020-08-21T08:00\");\r",
+							"    pm.expect(response.rels[0].sEndDate).to.eql(\"2020-08-25T09:00\");\r",
+							"    pm.expect(response.rels[0].startDate).to.eql(\"2020-08-25T09:00\");\r",
+							"    pm.expect(response.rels[0].endDate).to.eql(\"2020-09-14T08:00\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6c8b244b-ee07-4497-8ed3-88d67fa5f62a",
+						"exec": [
+							"pm.globals.set(\"rel1\", JSON.parse(pm.globals.get(\"rels\"))[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"changedInfo\":{\r\n        \"id\": {{rel1}},\r\n        \"relationshipType\":\"fs\",\r\n        \"sStartDate\": \"2020-08-21T08:00\",\r\n        \"sEndDate\": \"2020-08-25T09:00\",\r\n        \"startDate\": \"2020-08-25T09:00\",\r\n        \"endDate\": \"2020-09-14T08:00\",\r\n        \"cd_viewId_source\": null,\r\n        \"cd_viewId_target\": null\r\n    },\r\n    \"nodes\":{{nodes}},\r\n    \"rels\":{{rels}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/dependency/update",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"dependency",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Project Notification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.expect(response.response).to.eql(\"okay\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "29321e9d-37d0-46f6-84de-d3a6d5cc28d2"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)\r",
+							"pm.environment.set(\"projectName\",JSON.stringify(JSON.parse(pm.globals.get(\"project\")).name))\r",
+							"\r",
+							"let user = JSON.parse(pm.globals.get(\"user\")).name + \" \" + JSON.parse(pm.globals.get(\"user\")).sname\r",
+							"pm.environment.set(\"fromUser\", JSON.stringify(user))\r",
+							"\r",
+							"let timestamp = new Date();\r",
+							"timestamp.setHours(timestamp.getHours() + 2);\r",
+							"timestamp = timestamp.toISOString();\r",
+							"pm.environment.set(\"timestamp\", JSON.stringify(timestamp))"
+						],
+						"id": "9f243c4b-0b17-47b2-ab6f-36e46db73330"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\":\"project\",\r\n    \"fromName\":{{fromUser}},\r\n    \"recipients\":[],\r\n    \"timestamp\": {{timestamp}},\r\n    \"message\": \"hello\",\r\n    \"projName\": {{projectName}},\r\n    \"projId\": {{projectId}},\r\n    \"mode\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/sendNotification",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"sendNotification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Task Notification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"has correct body\", () => {\r",
+							"    let response = pm.response.json();\r",
+							"    pm.expect(response.response).to.eql(\"okay\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "a9a35725-e723-4d99-9231-b88be069b94d"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)\r",
+							"pm.environment.set(\"projectName\",JSON.stringify(JSON.parse(pm.globals.get(\"project\")).name))\r",
+							"pm.environment.set(\"taskName\",JSON.stringify(JSON.parse(pm.globals.get(\"nodes\"))[0].name))\r",
+							"\r",
+							"\r",
+							"let user = JSON.parse(pm.globals.get(\"user\")).name + \" \" + JSON.parse(pm.globals.get(\"user\")).sname\r",
+							"pm.environment.set(\"fromUser\", JSON.stringify(user))\r",
+							"\r",
+							"let timestamp = new Date();\r",
+							"timestamp.setHours(timestamp.getHours() + 2);\r",
+							"timestamp = timestamp.toISOString();\r",
+							"pm.environment.set(\"timestamp\", JSON.stringify(timestamp))"
+						],
+						"id": "a2b9c877-9ee6-4ac0-ab7d-67abd87e30f7"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\":\"task\",\r\n    \"fromName\":{{fromUser}},\r\n    \"recipients\":\"[]\",\r\n    \"timestamp\": {{timestamp}},\r\n    \"message\": \"hello\",\r\n    \"taskName\": {{taskName}},\r\n    \"projName\": {{projectName}},\r\n    \"projId\": {{projectId}},\r\n    \"mode\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/sendNotification",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"sendNotification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Notifications",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 2s\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});"
+						],
+						"id": "42c137e8-1aa7-4d9e-a906-1b6231790f5c"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"projectId\",JSON.parse(pm.globals.get(\"project\")).id)\r",
+							"pm.environment.set(\"userId\",JSON.parse(pm.globals.get(\"user\")).id)"
+						],
+						"id": "d5ea78c4-8173-4385-b491-d972f6bf3c66"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userID\":{{userId}},\r\n    \"projID\":{{projectId}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/retrieveNotifications",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"retrieveNotifications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Dependency",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d30b4f9-aa01-4f65-82d6-1c8328ad78ed",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes));",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels));",
+							"    pm.expect(response.displayRel).to.eql(null);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 5s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "aafeaa22-8fc6-4664-839b-5844c3f80e3a",
+						"exec": [
+							"pm.globals.set(\"rel1\", JSON.parse(pm.globals.get(\"rels\"))[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"changedInfo\":\r\n    {\r\n        \"dd_did\": {{rel1}},\r\n        \"sourceView\": \"\",\r\n        \"targetView\": \"\"\r\n    } ,\r\n    \"nodes\":{{nodes}},\r\n    \"rels\":{{rels}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/dependency/delete",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"dependency",
+						"delete"
+					]
+				},
+				"description": "deletes dependency between 2 nodes"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Task 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes) );",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels) );",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
+						],
+						"id": "27a4d121-16f9-4d3a-a426-4a94ad42dc37"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.set(\"node\", JSON.parse(pm.globals.get(\"nodes\"))[0].id );"
+						],
+						"id": "a90eef58-ffa2-425d-8cab-a8ccf40f803e"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"changedInfo\":{\r\n        \"id\": {{node}}\r\n    },\r\n    \"nodes\":{{nodes}},\r\n    \"rels\":{{rels}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/task/delete",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"task",
+						"delete"
+					]
+				},
+				"description": "Deletes task"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Task 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let response = pm.response.json();",
+							"    pm.globals.set(\"nodes\", JSON.stringify(response.nodes) );",
+							"    pm.globals.set(\"rels\", JSON.stringify(response.rels) );",
+							"",
+							"pm.test(\"Response time is less than 2s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
+						],
+						"id": "25eec81e-ff7f-48e0-a46f-7ee377f4d0ad"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.globals.set(\"node\", JSON.parse(pm.globals.get(\"nodes\"))[0].id );"
+						],
+						"id": "b50530cb-722d-4ad4-bf97-ef72a15654fa"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"changedInfo\":{\r\n        \"id\": {{node}}\r\n    },\r\n    \"nodes\":{{nodes}},\r\n    \"rels\":{{rels}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/task/delete",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"task",
+						"delete"
+					]
+				},
+				"description": "Deletes task"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"responds with 200 OK\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"has correct body\", () => {",
+							"    let response = pm.response.json();",
+							"    pm.expect(response.delete).to.eql(JSON.parse(pm.globals.get(\"project\")).id);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 5s\", () => {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});"
+						],
+						"id": "76e8efb2-ae35-452f-9814-4d47d5cc0571"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var data = {};\r",
+							"data.project = JSON.parse(pm.globals.get(\"project\"));\r",
+							"data.token = pm.globals.get(\"sessionToken\");\r",
+							"pm.globals.set(\"data\",JSON.stringify(JSON.stringify(data)));"
+						],
+						"id": "f3f39547-dbe4-4bd5-b64e-cefb0de98b04"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"data\": {{data}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://projecttree.herokuapp.com/project/delete",
+					"protocol": "https",
+					"host": [
+						"projecttree",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"project",
+						"delete"
+					]
+				},
+				"description": "Deletes task"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
