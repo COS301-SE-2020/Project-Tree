@@ -12,3 +12,37 @@ test("Coverts date obejct to date string", () => {
   };
   expect(updateProject.datetimeToString(datetime)).toBe("1970-01-02T02:26");
 });
+
+test("Finds all dependencies before of the task sent in", () => {
+  let task = { id: 1, };
+  let rels = [
+    { target: 1, },
+    { target: 1, },
+    { target: 3, },
+  ];
+  expect(updateProject.getPredDependencies(task, rels)).toStrictEqual([ { target: 1, }, { target: 1, }, ]);
+});
+
+test("Finds all dependencies after of the task sent in", () => {
+  let task = { id: 1, };
+  let rels = [
+    { source: 1, },
+    { source: 1, },
+    { source: 3, },
+  ];
+  expect(updateProject.getSuccDependencies(task, rels)).toStrictEqual([ { source: 1, }, { source: 1, }, ]);
+});
+
+test("Finds all successors the task sent in", () => {
+  let nodes = [
+    { id: 1, },
+    { id: 2, },
+    { id: 3, },
+  ];
+  let rels = [
+    { source: 1,  target: 2, },
+    { source: 1, target: 3, },
+    { source: 3, target: 2, },
+  ];
+  expect(updateProject.getSuccessors(1, nodes, rels)).toStrictEqual([ { id: 2 }, { id: 3 } ]);
+});
