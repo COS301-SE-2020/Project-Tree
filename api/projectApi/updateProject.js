@@ -173,4 +173,6 @@ module.exports = {
   updateDependency,
   getSuccessors,
   datetimeToString,
+  getPredDependencies,
+  getSuccDependencies
 };
