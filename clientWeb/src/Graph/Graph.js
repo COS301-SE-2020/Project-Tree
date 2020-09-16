@@ -23,9 +23,9 @@ function makeLink(edge, criticalPathLinks) {
     id: "l" + edge.id,
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
-    connector: { name: "rounded" },
-    router: { name: "manhattan" },
-    // connector: { name: 'smooth' },
+    // connector: { name: "rounded" },
+    // router: { name: "manhattan" },
+    connector: { name: 'smooth' },
     attrs: {
       type: "link",
       line: { stroke: strokeColor },

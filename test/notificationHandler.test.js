@@ -30,7 +30,7 @@ test("Should return emails of recipients sent to function as an array (Epmty arr
   expect(notificationHandler.getEmails(data)).toStrictEqual("");
 });
 
-test("x", () => {
+test("Format recipient data", () => {
   let packMan = [
     {
       id: 312,
@@ -114,6 +114,136 @@ test("x", () => {
       projID: 303,
       projName: "Project William_",
       recipients: [{ email: "u1816@", id: 299 }],
+      taskName: "Task check",
+      timestamp: "2020-08-18T10:20:40.700Z",
+      type: "auto",
+    },
+  });
+});
+
+test("Format recipient data and return empty resource array", () => {
+  let packMan = [
+    {
+      id: 312,
+      name: "William",
+      surname: "Agar",
+      email: "wda199@",
+      profilePicture: "storage/default.jpg",
+    },
+  ];
+
+  let resPer = [
+    {
+      id: 299,
+      name: "Amber",
+      surname: "Grill",
+      email: "u1816@",
+      profilePicture: "storage/default.jpg",
+    },
+  ];
+
+  let res = [];
+
+  let data = {
+    timestamp: "2020-08-18T10:20:40.700Z",
+    projName: "Project William_",
+    projID: 303,
+    taskName: "Task check",
+    type: "auto",
+    mode: 0,
+  };
+
+  expect(
+    notificationHandler.formatAutoAssignData(packMan, resPer, res, data)
+  ).toStrictEqual({
+    packMan: {
+      fromName: "Project Tree",
+      message:
+        "You have been assigned as a package manager to task: Task check",
+      mode: 2,
+      projID: 303,
+      projName: "Project William_",
+      recipients: [{ email: "wda199@", id: 312 }],
+      taskName: "Task check",
+      timestamp: "2020-08-18T10:20:40.700Z",
+      type: "auto",
+    },
+    res: {
+      fromName: "Project Tree",
+      message: "You have been assigned as a resource to task: Task check",
+      mode: 2,
+      projID: 303,
+      projName: "Project William_",
+      recipients: [],
+      taskName: "Task check",
+      timestamp: "2020-08-18T10:20:40.700Z",
+      type: "auto",
+    },
+    resPer: {
+      fromName: "Project Tree",
+      message:
+        "You have been assigned as a responsible person to task: Task check",
+      mode: 2,
+      projID: 303,
+      projName: "Project William_",
+      recipients: [{ email: "u1816@", id: 299 }],
+      taskName: "Task check",
+      timestamp: "2020-08-18T10:20:40.700Z",
+      type: "auto",
+    },
+  });
+});
+
+test("Format recipient data and return empty resource, package manager and resposnible person array", () => {
+  let packMan = [];
+
+  let resPer = [];
+
+  let res = [];
+
+  let data = {
+    timestamp: "2020-08-18T10:20:40.700Z",
+    projName: "Project William_",
+    projID: 303,
+    taskName: "Task check",
+    type: "auto",
+    mode: 0,
+  };
+
+  expect(
+    notificationHandler.formatAutoAssignData(packMan, resPer, res, data)
+  ).toStrictEqual({
+    packMan: {
+      fromName: "Project Tree",
+      message:
+        "You have been assigned as a package manager to task: Task check",
+      mode: 2,
+      projID: 303,
+      projName: "Project William_",
+      recipients: [],
+      taskName: "Task check",
+      timestamp: "2020-08-18T10:20:40.700Z",
+      type: "auto",
+    },
+    res: {
+      fromName: "Project Tree",
+      message: "You have been assigned as a resource to task: Task check",
+      mode: 2,
+      projID: 303,
+      projName: "Project William_",
+      recipients: [],
+      taskName: "Task check",
+      timestamp: "2020-08-18T10:20:40.700Z",
+      type: "auto",
+    },
+    resPer: {
+      fromName: "Project Tree",
+      message:
+        "You have been assigned as a responsible person to task: Task check",
+      mode: 2,
+      projID: 303,
+      projName: "Project William_",
+      recipients: [],
       taskName: "Task check",
       timestamp: "2020-08-18T10:20:40.700Z",
       type: "auto",
