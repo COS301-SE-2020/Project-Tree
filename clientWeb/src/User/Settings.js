@@ -183,7 +183,7 @@ class Settings extends React.Component {
       });
     } else {
       this.setState({
-        confirmNewPass: true,
+        confirmNewPass: false,
       });
     }
   }
