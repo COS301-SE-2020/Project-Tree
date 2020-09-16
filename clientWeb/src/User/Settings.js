@@ -163,17 +163,17 @@ handleNewPasswordChange(val)
   console.log(arr[0].indexOf('✓'))
 
   if(arr[0].indexOf('✓') != -1 && arr[1].indexOf('✓') != -1 && arr[2].indexOf('✓') != -1 && arr[3].indexOf('✓') != -1)
-      {
-        console.log("POP")
-        this.setState({
-          confirmPassword: val,
-          confirmNewPass: true,
-        });
-      } else {
-        this.setState({
-          confirmNewPass: true,
-        });    
-      }
+  {
+    console.log("POP")
+    this.setState({
+      confirmPassword: val,
+      confirmNewPass: true,
+    });
+  } else {
+    this.setState({
+      confirmNewPass: false,
+    });    
+  }
   }
   // let arr = this.password_validate(val);
   // this.setState({
