@@ -208,10 +208,7 @@ function deleteDependency(req, res) {
         let rel = {};
 
         req.body.rels = req.body.rels.filter((el) => {
-          if (
-            el.target != req.body.changedInfo.dd_did &&
-            el.source != req.body.changedInfo.dd_did
-          ) {
+          if (el.id == req.body.changedInfo.dd_did) {
             rel = el;
             return false;
           } else {
@@ -256,10 +253,7 @@ function deleteDependency(req, res) {
         let rel = {};
 
         req.body.rels = req.body.rels.filter((el) => {
-          if (
-            el.target != req.body.changedInfo.dd_did &&
-            el.source != req.body.changedInfo.dd_did
-          ) {
+          if (el.id == req.body.changedInfo.dd_did) {
             rel = el;
             return false;
           } else {
@@ -311,10 +305,7 @@ function deleteDependency(req, res) {
         let rel = {};
 
         req.body.rels = req.body.rels.filter((el) => {
-          if (
-            el.target != req.body.changedInfo.dd_did &&
-            el.source != req.body.changedInfo.dd_did
-          ) {
+          if (el.id == req.body.changedInfo.dd_did) {
             rel = el;
             return false;
           } else {
@@ -357,10 +348,7 @@ function deleteDependency(req, res) {
         let rel = {};
 
         req.body.rels = req.body.rels.filter((el) => {
-          if (
-            el.target != req.body.changedInfo.dd_did &&
-            el.source != req.body.changedInfo.dd_did
-          ) {
+          if (el.id == req.body.changedInfo.dd_did) {
             rel = el;
             return false;
           } else {
