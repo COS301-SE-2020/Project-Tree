@@ -97,18 +97,23 @@ class Dashboard extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Container fluid className="mt-2">
+        <Container fluid className="mt-2" id="top">
           <Row>
+            <Col className="p-1" style={{position:"fixed", zIndex:"90"}}>
+              <a href="#top">
+                <Button variant="warning">Jump To Top</Button>
+              </a>
+            </Col>
             <Col></Col>
             <Col xl={4} xs={3} className="text-center">
               <h1 style={{ fontWeight: "bold" }}>Project Dashboard</h1>
             </Col>
             <Col>
               <Row>
-                <Col sm={12} xl={6} className="text-center p-1">
+                <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"90"}}>
                   {this.MakeDropdown()}
                 </Col>
-                <Col sm={12} xl={6} className="text-center p-1">
+                <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"90"}}>
                   <a href="#calendar">
                     <Button variant="warning">Jump To Calendar</Button>
                   </a>
@@ -116,10 +121,10 @@ class Dashboard extends React.Component {
               </Row>
             </Col>
           </Row>
-          <Row>
+          <Row style={{width:"100%"}}>
             <Container fluid className="p-0">
               <Row>{this.ProjectAnalyticList()}</Row>
-              <Row style={{ marginBottom: "10em", marginTop: "2em" }}>
+              <Row style={{ marginTop: "2em", marginBottom: "2em" }}>
                 <Col className="text-center">
                   <h1 id="calendar">Calendar</h1>
                   <hr style={{ backgroundColor: "#EEBB4D", width: "50%" }} />
