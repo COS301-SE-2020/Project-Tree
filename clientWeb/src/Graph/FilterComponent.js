@@ -6,7 +6,6 @@ import {
   Col,
   ToggleButtonGroup,
   ToggleButton,
-  ButtonGroup,
 } from "react-bootstrap";
 import Autosuggest from "react-autosuggest";
 import "./FilterComponent.css";
@@ -285,6 +284,63 @@ export default class FilterComponent extends React.Component {
     }
   }
 
+  getTaskPersonOption(){
+    if(this.state.filterTaskOption !== null){
+      return 'task'
+    }
+
+    else return 'people'
+  }
+
+  getSubOption(){
+    let data = '';
+    if(this.state.filterTaskOption !== null){
+      data = this.state.filterTaskOption;
+      data = data.replace('task','');
+    }
+
+    else{
+      data = this.state.filterPeopleOption;
+      data = data.replace('people', '');
+
+      if(data === 'PackMan'){
+        data = 'package manager'
+      }
+
+      else if(data === 'ResPer'){
+        data = 'responsible person'
+      }
+    }
+
+    data = data.toLowerCase();
+
+    return data;
+  }
+
+  getSearchValue(){
+    if(this.state.searchValue === null) return null;
+
+    if(this.state.filterTaskOption !== null){
+      return(
+        <Col>
+          <Button>
+            {this.state.searchValue.name}
+          </Button>
+        </Col>
+      )    
+    }
+
+    else{
+      return(
+        <Col>
+          <Button>
+            {this.state.searchValue.name + " " + this.state.searchValue.surname}
+          </Button>
+        </Col>
+      ) 
+    }
+  }
+
   render() {
     if (this.props.filterOn) {
       return (
@@ -302,6 +358,26 @@ export default class FilterComponent extends React.Component {
               </Button>
             </Col>
           </Row>
+          <Row>
+            <Col>
+                <Button>
+                  {this.state.filterMode}
+                </Button>
+            </Col>
+            <Col>
+                <Button>
+                  {this.getTaskPersonOption()}
+                </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+                <Button>
+                  {this.getSubOption()}
+                </Button>
+            </Col>
+            {this.getSearchValue()}
+          </Row>
           <hr />
         </Container>
       );
@@ -309,20 +385,6 @@ export default class FilterComponent extends React.Component {
 
     return (
       <Container className="p-2">
-        {/* <Row>
-                    <Col className="text-center">
-                        <h4>Search for my tasks</h4>
-                    </Col>
-                </Row>
-                <Row className="m-0">
-                    <Col className="m-0">
-                        <ToggleButtonGroup name="Mytasks" >
-                            <ToggleButton variant="outline-dark" value="FilterMy" onClick={()=>this.quickSearch("filter")}>Filter my tasks</ToggleButton>
-                            <ToggleButton variant="outline-dark" value="HighlightMy" onClick={()=>this.quickSearch("highlight")}>Highlight my tasks</ToggleButton>
-                        </ToggleButtonGroup>
-                    </Col>
-                </Row>
-                <hr/> */}
         <Row>
           <Col className="text-center">
             <h4>Search</h4>
