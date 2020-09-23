@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
       <React.Fragment>
         <Container fluid className="mt-2" id="top">
           <Row>
-            <Col className="p-1" style={{position:"fixed", zIndex:"90"}}>
+            <Col className="p-1" style={{position:"fixed", zIndex:"8"}}>
               <a href="#top">
                 <Button variant="warning">Jump To Top</Button>
               </a>

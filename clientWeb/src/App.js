@@ -298,7 +298,7 @@ class App extends Component {
               position: "fixed",
               height: "87px",
               width: "100%",
-              zIndex: "90",
+              zIndex: "9",
             }}
           >
             <Nav className="form-inline ">
