@@ -7,6 +7,8 @@ import {
   Col,
   InputGroup,
   Spinner,
+  Tooltip,
+  OverlayTrigger,
 } from "react-bootstrap";
 import ms from "ms";
 
@@ -578,6 +580,15 @@ class UpdateTask extends React.Component {
                 </Form.Group>
               :
                 <Form.Group>
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip>
+                        This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
+                      </Tooltip>
+                    }
+                  >
+                    <i className="fa fa-question-circle"></i>
+                  </OverlayTrigger>
                   <Form.Label>Start date of task</Form.Label>
                   <Form.Control
                     required
@@ -586,6 +597,15 @@ class UpdateTask extends React.Component {
                     value={this.state.startDate.substring(0, 10)}
                     onChange={(e) => {}}
                   />
+                  <OverlayTrigger
+                    overlay={
+                      <Tooltip>
+                        This task is dependent on another task, to edit the start time of this task please update either a previous task or dependency.
+                      </Tooltip>
+                    }
+                  >
+                    <i className="fa fa-question-circle"></i>
+                  </OverlayTrigger>
                   <Form.Label>Start Time of task</Form.Label>
                   <Form.Control
                     required
