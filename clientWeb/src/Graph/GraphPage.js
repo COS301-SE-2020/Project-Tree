@@ -227,6 +227,7 @@ class GraphPage extends React.Component {
               {this.state.task !== null ? (
                 <TaskSidebar
                   task={this.state.task}
+                  rels={this.state.links}
                   userPermission={this.props.userPermission}
                   toggleSidebar={this.toggleSidebar}
                   setTaskInfo={this.setTaskInfo}
@@ -444,6 +445,7 @@ class TaskSidebar extends React.Component {
               <Col xs={12} className="text-center">
                 <UpdateTask
                   task={this.props.task}
+                  rels={this.props.rels}
                   setTaskInfo={this.props.setTaskInfo}
                   getProjectInfo={this.props.getProjectInfo}
                   toggleSidebar={this.props.toggleSidebar}

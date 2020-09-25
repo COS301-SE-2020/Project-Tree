@@ -166,6 +166,11 @@ function datetimeToString(datetime) {
   return `${obj.year}-${obj.month}-${obj.day}T${obj.hour}:${obj.min}`;
 }
 
+function checkProjectDuration(task, dep, project, nodes, rels) {
+  if (task)
+  return true;
+}
+
 module.exports = {
   updateCurTask,
   updateCurDependency,
@@ -174,5 +179,6 @@ module.exports = {
   getSuccessors,
   datetimeToString,
   getPredDependencies,
-  getSuccDependencies
+  getSuccDependencies,
+  checkProjectDuration,
 };

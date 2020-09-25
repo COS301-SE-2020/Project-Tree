@@ -407,6 +407,14 @@ class UpdateTask extends React.Component {
     return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
+  updateStart() {
+    let check = true;
+    this.props.rels.forEach(el => {
+      if (el.target === this.state.id) check = false;
+    });
+    return check;
+  }
+
   render() {
     /*
      * Filters the list of people to only show people matching the search term
@@ -483,90 +491,111 @@ class UpdateTask extends React.Component {
                   }}
                 />
               </Form.Group>
-              <Form.Group>
-                <Form.Label>Start date of task</Form.Label>
-                <Form.Control
-                  required
-                  type="date"
-                  value={this.state.startDate.substring(0, 10)}
-                  onChange={(e) => {
-                    if (isNaN(Date.parse(e.target.value))) return;
-                    let value = this.state.startDate;
-                    value = `${e.target.value}T${this.state.startDate.substring(
-                      11,
-                      16
-                    )}`;
-                    let startDate = new Date(value);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let endDate = new Date(this.state.endDate);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the start date/time after the end date/time."
+              {this.updateStart() ? 
+                <Form.Group>
+                  <Form.Label>Start date of task</Form.Label>
+                  <Form.Control
+                    required
+                    type="date"
+                    value={this.state.startDate.substring(0, 10)}
+                    onChange={(e) => {
+                      if (isNaN(Date.parse(e.target.value))) return;
+                      let value = this.state.startDate;
+                      value = `${e.target.value}T${this.state.startDate.substring(
+                        11,
+                        16
+                      )}`;
+                      let startDate = new Date(value);
+                      startDate.setTime(
+                        startDate.getTime() -
+                          new Date().getTimezoneOffset() * 60 * 1000
                       );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        startDate: value,
-                        duration: this.CalcDiff(value, this.state.endDate),
-                      });
-                    }
-                    this.value = this.state.startDate;
-                  }}
-                />
-                <Form.Label>Start Time of task</Form.Label>
-                <Form.Control
-                  required
-                  type="time"
-                  value={this.state.startDate.substring(11, 16)}
-                  onChange={(e) => {
-                    if (
-                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
-                    )
-                      return;
-                    let value = this.state.startDate;
-                    value = `${this.state.startDate.substring(0, 10)}T${
-                      e.target.value
-                    }`;
-                    let startDate = new Date(value);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let endDate = new Date(this.state.endDate);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the start date/time after the end date/time."
+                      let endDate = new Date(this.state.endDate);
+                      endDate.setTime(
+                        endDate.getTime() -
+                          new Date().getTimezoneOffset() * 60 * 1000
                       );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        startDate: value,
-                        duration: this.CalcDiff(value, this.state.endDate),
-                      });
-                    }
-                    this.value = this.state.startDate;
-                  }}
-                />
-              </Form.Group>
+                      if (endDate < startDate) {
+                        alert(
+                          "You cannot make the start date/time after the end date/time."
+                        );
+                        this.setState({
+                          startDate: value,
+                          endDate: value,
+                          duration: this.CalcDiff(value, value),
+                        });
+                      } else {
+                        this.setState({
+                          startDate: value,
+                          duration: this.CalcDiff(value, this.state.endDate),
+                        });
+                      }
+                      this.value = this.state.startDate;
+                    }}
+                  />
+                  <Form.Label>Start Time of task</Form.Label>
+                  <Form.Control
+                    required
+                    type="time"
+                    value={this.state.startDate.substring(11, 16)}
+                    onChange={(e) => {
+                      if (
+                        !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
+                      )
+                        return;
+                      let value = this.state.startDate;
+                      value = `${this.state.startDate.substring(0, 10)}T${
+                        e.target.value
+                      }`;
+                      let startDate = new Date(value);
+                      startDate.setTime(
+                        startDate.getTime() -
+                          new Date().getTimezoneOffset() * 60 * 1000
+                      );
+                      let endDate = new Date(this.state.endDate);
+                      endDate.setTime(
+                        endDate.getTime() -
+                          new Date().getTimezoneOffset() * 60 * 1000
+                      );
+                      if (endDate < startDate) {
+                        alert(
+                          "You cannot make the start date/time after the end date/time."
+                        );
+                        this.setState({
+                          startDate: value,
+                          endDate: value,
+                          duration: this.CalcDiff(value, value),
+                        });
+                      } else {
+                        this.setState({
+                          startDate: value,
+                          duration: this.CalcDiff(value, this.state.endDate),
+                        });
+                      }
+                      this.value = this.state.startDate;
+                    }}
+                  />
+                </Form.Group>
+              :
+                <Form.Group>
+                  <Form.Label>Start date of task</Form.Label>
+                  <Form.Control
+                    required
+                    disabled
+                    type="date"
+                    value={this.state.startDate.substring(0, 10)}
+                    onChange={(e) => {}}
+                  />
+                  <Form.Label>Start Time of task</Form.Label>
+                  <Form.Control
+                    required
+                    disabled
+                    type="time"
+                    value={this.state.startDate.substring(11, 16)}
+                    onChange={(e) => {}}
+                  />
+                </Form.Group>
+              }
               <Form.Group>
                 <Form.Label>End date of task</Form.Label>
                 <Form.Control
