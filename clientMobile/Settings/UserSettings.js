@@ -16,6 +16,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import ImagePicker from 'react-native-image-crop-picker';
+
 
 class UserSettings extends Component {
   constructor(props) {
@@ -655,7 +657,7 @@ class UserSettings extends Component {
                       color: '#296d98',
                     },
                   ]}>
-                  Edit Details
+                  Submit Details
                 </Text>
               </TouchableOpacity>
             </View>

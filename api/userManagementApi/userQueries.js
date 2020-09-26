@@ -391,6 +391,32 @@ async function verify(token) {
   return value;
 }
 
+async function deleteUser(req, res) {
+  console.log("token:", req.body.token)
+  let userId = await verify(req.body.token);
+  console.log("USERID:", userId)
+  if (userId != null) {
+      db.getSession()
+        .run(
+          `MATCH (n) where id(n) = ${userId}
+          DETACH DELETE n`
+        )
+        .then((result) => {
+          console.log(result)
+          res.status(200);
+          res.send({ message: "User deleted", status: true});
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(400);
+          res.send({ message: err, status: false });
+        });
+    } else {
+      res.status(400);
+      res.send({ message: "Can't delete user", status: false });
+    }
+}
+
 module.exports = {
   login,
   register,
@@ -400,4 +426,5 @@ module.exports = {
   checkPermission,
   checkPermissionInternal,
   editPassword,
+  deleteUser
 };

@@ -7,14 +7,25 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  Modal
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-community/async-storage';
+import ImagePicker from 'react-native-image-crop-picker';
 
 export default class SettingsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {pfp: 'https://i.ibb.co/MRpbpHN/default.png'};
+    this.state = {pfp: 'https://i.ibb.co/MRpbpHN/default.png',  modalVisible: false};
+
+    this.setModalVisible = this.setModalVisible.bind(this);
+    this.takePhotoFromCamera = this.takePhotoFromCamera.bind(this);
+    this.choosePhotoFromLibrary = this.choosePhotoFromLibrary.bind(this);
+
+  }
+
+  async setModalVisible(visible) {
+    this.setState({modalVisible: visible});
   }
 
   async componentDidMount() {
@@ -42,6 +53,34 @@ export default class SettingsScreen extends Component {
     });
   }
 
+  takePhotoFromCamera() {
+    // ImagePicker.openCamera({
+    //   compressImageMaxWidth: 300,
+    //   compressImageMaxHeight: 300,
+    //   cropping: true,
+    //   compressImageQuality: 0.7
+    // }).then(image => {
+    //   console.log(image);
+    //   setImage(image.path);
+    //   this.bs.current.snapTo(1);
+    // });
+    console.log("HELLO")
+  }
+
+  choosePhotoFromLibrary(){
+    // ImagePicker.openPicker({
+    //   width: 300,
+    //   height: 300,
+    //   cropping: true,
+    //   compressImageQuality: 0.7
+    // }).then(image => {
+    //   console.log(image);
+    //   setImage(image.path);
+    //   this.bs.current.snapTo(1);
+    // });
+    console.log("hi")
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -62,6 +101,30 @@ export default class SettingsScreen extends Component {
           <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
+                this.setState({modalVisible: true});
+              }}
+              style={[
+                styles.signIn,
+                {
+                  borderColor: '#184D47',
+                  borderWidth: 2,
+                  marginTop: 40,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.textSign,
+                  {
+                    color: '#008656',
+                  },
+                ]}>
+                Change PFP
+              </Text>
+            </TouchableOpacity>
+          </View>  
+          <View style={styles.button}>
+            <TouchableOpacity
+              onPress={() => {
                 this.props.userScreen(true);
               }}
               style={[
@@ -69,7 +132,7 @@ export default class SettingsScreen extends Component {
                 {
                   borderColor: '#184D47',
                   borderWidth: 2,
-                  marginTop: 185,
+                  marginTop: 20,
                 },
               ]}>
               <Text
@@ -106,7 +169,36 @@ export default class SettingsScreen extends Component {
                 Logout
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> 
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => this.setModalVisible(false)}
+          >
+              <View style={styles.panel}>
+              <View style={{alignItems: 'center'}}>
+                <Text style={styles.panelTitle}>Upload Photo</Text>
+                <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+              </View>
+              <TouchableOpacity style={styles.panelButton} onPress=
+              {
+                    this.props.userScreen(false)              
+              }>
+              <Text style={styles.panelButtonTitle}>Take Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity styles={styles.panelButton} onPress={
+                    this.props.userScreen(false)
+              }>
+                <Text style={styles.panelButtonTitle}>Choose From Library</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.panelButton}
+                onPress={this.props.userScreen(false)}>
+                <Text style={styles.panelButtonTitle}>Cancel</Text>
+              </TouchableOpacity>
+              </View>
+            </Modal>            
         </Animatable.View>
       </View>
     );
@@ -189,5 +281,48 @@ const styles = StyleSheet.create({
     height: 110,
     borderRadius: 100,
     marginBottom: 10,
+  },
+  panel: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 20,
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
+    // shadowColor: '#000000',
+    // shadowOffset: {width: 0, height: 0},
+    // shadowRadius: 5,
+    // shadowOpacity: 0.4,
+  },
+  panelHeader: {
+    alignItems: 'center',
+  },
+  panelHandle: {
+    width: 40,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#00000040',
+    marginBottom: 10,
+  },
+  panelTitle: {
+    fontSize: 27,
+    height: 35,
+  },
+  panelSubtitle: {
+    fontSize: 14,
+    color: 'gray',
+    height: 30,
+    marginBottom: 10,
+  },
+  panelButton: {
+    padding: 13,
+    borderRadius: 10,
+    backgroundColor: '#FF6347',
+    alignItems: 'center',
+    marginVertical: 7,
+  },
+  panelButtonTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });

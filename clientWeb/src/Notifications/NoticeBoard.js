@@ -68,9 +68,10 @@ class NotificationList extends React.Component {
         />
       );
     }
-
+  //  https://i.ibb.co/mvSrk9k/undraw-complete-task-u2c3.png
     for (var x = 0; x < users.length; x++) {
-      if (parseInt(users[x].id) === parseInt(profileId[0])) {
+      if (parseInt(users[x].id) === parseInt(profileId[0])) 
+      {
         return (
           <img
             class="circular"
@@ -78,6 +79,18 @@ class NotificationList extends React.Component {
             alt="user"
             width="70"
             height="70"
+          />
+        );
+      }
+      else if(x == users.length-1)
+      {
+        return (
+          <img
+            //class="circular"
+            src="https://i.ibb.co/QC8Fstg/undraw-profile-pic-ic5t.png"
+            alt="user"
+            width="80"
+            height="80"
           />
         );
       }

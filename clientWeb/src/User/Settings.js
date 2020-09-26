@@ -94,6 +94,7 @@ class Settings extends React.Component {
     this.handlePass = this.handlePass.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
     this.password_validate = this.password_validate.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
   }
 
   password_validate(p) {
@@ -147,6 +148,7 @@ class Settings extends React.Component {
       var jx = JSON.parse(response);
       global_pfp = jx.data.url;
     });
+    console.log(global_pfp)
     this.setState({ pfp: global_pfp });
   }
 
@@ -196,6 +198,25 @@ class Settings extends React.Component {
     this._isMounted = false;
     window.location.reload(false);
   }
+
+  deleteUser() {
+    console.log(localStorage.getItem("sessionToken"))
+    $.post(
+      "/user/delete",
+      { token: localStorage.getItem("sessionToken") },
+      (response) => {
+        if(response.status)
+        {
+          console.log("ssS")
+          this.handleLogout()
+        }
+      }
+    ).fail((response) => {
+      throw Error(response.message);
+    });
+  }
+
+ 
 
   openEdit() {
     this.setState({
@@ -599,9 +620,9 @@ class Settings extends React.Component {
                             block
                             variant="dark"
                             className="mb-2"
-                            onClick={() => this.handleLogout()}
+                            onClick={() => this.deleteUser()}
                           >
-                            <i className="fa fa-sign-out"> </i> Logout{" "}
+                            <i className="fa fa-sign-out"> </i> Delete User{" "}
                           </Button>
                         </Col>
                       </Row>

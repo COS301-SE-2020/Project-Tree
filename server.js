@@ -40,6 +40,7 @@ app.post("/getProjectViews", gq.getProjectViews);
 app.post("/login", um.login);
 app.post("/register", um.register);
 app.post("/verify", um.verify);
+app.post("/user/delete", um.deleteUser);
 app.post("/user/get", um.getUser);
 app.post("/user/edit", um.editUser);
 app.post("/user/pass", um.editPassword);
