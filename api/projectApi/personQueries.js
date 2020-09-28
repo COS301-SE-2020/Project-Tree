@@ -507,9 +507,109 @@ async function getAssignedProjectUsers(req, res) {
     });
 }
 
+async function addProjectManager(req, res) {
+  let user = parseInt(req.body.userId)
+  let project = parseInt(req.body.projId)
+
+  let session = db.getSession();
+
+  await session
+    .run(
+      `
+      MATCH (a:User), (b:Project) WHERE id(a)=${user} AND id(b)=${project} CREATE (a)-[:MANAGES]->(b)
+      `
+    )
+    .then(function (result) {
+      res.send({})
+      res.status(200);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+}
+
+async function getPendingMembers(req, res) {
+  let session = db.getSession();
+  let usersArr = [];
+  await session
+    .run(
+      `
+      MATCH (a), (b) WHERE id(a)=${req.body.projId} AND (b)-[:PENDING_MEMBER]->(a) RETURN b
+      `
+    )
+    .then(function (result) {
+      result.records.forEach(function (record) {
+        usersArr.push({
+          id: record._fields[0].identity.low,
+          name: record._fields[0].properties.name,
+          surname: record._fields[0].properties.sname,
+          email: record._fields[0].properties.email,
+          profilePicture: record._fields[0].properties.profilepicture,
+        });
+      });
+      res.send({ users: usersArr });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+}
+
+async function authoriseMember(req, res) {
+  let session = db.getSession();
+  let usersArr = [];
+  await session
+    .run(
+      `
+        MATCH (c:User)-[r:PENDING_MEMBER]->(d:Project)
+        WHERE id(c)=${req.body.user} and id(d)=${req.body.project}
+        DETACH DELETE r
+      `
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+
+    if(req.body.check == "true"){
+      db.getSession()
+      .run(
+        `
+          MATCH (c:User), (d:Project)
+          WHERE id(c)=${req.body.user} and id(d)=${req.body.project}
+          CREATE (c)-[:MEMBER]->(d)
+          RETURN c
+        `
+      )
+      .then(function (result) {
+        res.status(200);
+        res.send({ okay: "okay" });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send(err);
+      });
+    }
+
+    else{
+      res.status(200);
+      res.send({ okay: "okay" });
+    }
+}
+
+
+
 module.exports = {
   assignPeople,
   updateAssignedPeople,
   getAllUsers,
   getAssignedProjectUsers,
+  addProjectManager,
+  getPendingMembers,
+  authoriseMember
 };
