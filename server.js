@@ -90,6 +90,7 @@ app.post("/mobile", async (req, res) => {
   });
 });
 app.post("/people/getAllUsers", personQueries.getAllUsers);
+app.post("/people/getAllProjectMembers", personQueries.getAllProjectMembers);
 app.post("/people/assignPeople", personQueries.assignPeople);
 app.post("/people/updateAssignedPeople", personQueries.updateAssignedPeople);
 app.post("/people/assignedProjectUsers", personQueries.getAssignedProjectUsers);
