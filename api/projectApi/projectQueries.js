@@ -256,7 +256,7 @@ async function getProjects(req, res) {
       .getSession()
       .run(
         `
-          MATCH (user:User)-[r]->(m:Task)-[:PART_OF]->(j) 
+          MATCH (user:User)-[r:MEMBER]->(j) 
           WHERE ID(user) = ${userId}
           return DISTINCT j
         `
