@@ -349,6 +349,7 @@ export default class FilterComponent extends React.Component {
             <Col>
               <Button
                 variant="outline-danger"
+                className="mb-1"
                 onClick={() => {
                   this.props.setFilterOn(false);
                   this.props.setTaskInfo();
@@ -359,25 +360,51 @@ export default class FilterComponent extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col>
-                <Button>
-                  {this.state.filterMode}
-                </Button>
-            </Col>
-            <Col>
-                <Button>
-                  {this.getTaskPersonOption()}
-                </Button>
-            </Col>
+            <Col></Col>
+              <Col
+                className="text-center border rounded border-warning m-1 align-items-center"
+                xs={4}
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  height: "30px",
+                }}
+              >
+                {this.state.filterMode}
+              </Col>
+              <Col></Col>
           </Row>
           <Row>
-            <Col>
-                <Button>
-                  {this.getSubOption()}
-                </Button>
-            </Col>
-            {this.getSearchValue()}
+            <Col></Col>
+              <Col
+                className="text-center border rounded border-warning m-1 align-items-center"
+                xs={4}
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  height: "30px",
+                }}
+              >
+                {this.getTaskPersonOption()} 
+              </Col>
+              <Col></Col>
           </Row>
+          <Row>
+              <Col></Col>
+              <Col
+                className="text-center border rounded border-warning m-1 align-items-center"
+                xs={4}
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  height: "30px",
+                }}
+              >
+               {this.getSubOption()}
+              </Col>
+              <Col></Col>
+            </Row>
+            {this.getSearchValue()}          
           <hr />
         </Container>
       );
