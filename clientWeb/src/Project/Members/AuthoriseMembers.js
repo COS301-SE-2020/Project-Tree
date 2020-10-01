@@ -91,20 +91,17 @@ class PendingMember extends React.Component{
                 <Row>
                     <h4>Pending Members</h4>
                 </Row>
-                <Row>
-                    <img
-                        class="circular"
-                        src={this.props.user.profilePicture}
-                        alt="user"
-                        width="70"
-                        height="70"
-                    />
-                </Row>
-                <Row>
-                    {this.props.user.name + " " + this.props.user.surname}
-                </Row>
-                <Row>
+                <Row className="align-items-center">
                     <Col>
+                        <img
+                            class="circular"
+                            src={this.props.user.profilePicture}
+                            alt="user"
+                            width="40"
+                            height="40"
+                        />
+                    </Col>
+                    <Col>    
                         <Button variant="success" onClick={()=>this.handleClick(true)}>
                             Accept
                         </Button>
@@ -114,6 +111,9 @@ class PendingMember extends React.Component{
                             Decline
                         </Button>
                     </Col>
+                </Row>
+                <Row>
+                    {this.props.user.name + " " + this.props.user.surname}
                 </Row>
             </Container>
         )
