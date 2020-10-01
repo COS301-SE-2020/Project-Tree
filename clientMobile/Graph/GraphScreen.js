@@ -589,6 +589,7 @@ class WebViewWrapper extends Component {
   render() {
     return this.props.views !== null ? (
       <WebView
+        useWebKit={true}
         key={this.props.webKey}
         ref={(ref) => (this.myWebView = ref)}
         renderLoading={this.ActivityIndicatorLoadingView}
@@ -604,7 +605,7 @@ class WebViewWrapper extends Component {
             this.props.displayCriticalPath
           }&projId=${this.props.projID}&views=${JSON.stringify(
             this.props.views,
-          )}`,
+          )}`
         }}
         onMessage={(event) => this.handleOnMessage(event)}
       />

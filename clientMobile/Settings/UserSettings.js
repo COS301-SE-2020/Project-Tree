@@ -705,7 +705,7 @@ const styleUser = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 40,
-    fontFamily: 'sans-serif-medium',
+    //fontFamily: 'sans-serif-medium',
   },
   text_footer: {
     color: '#05375a',
