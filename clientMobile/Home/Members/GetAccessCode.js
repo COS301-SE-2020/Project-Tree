@@ -6,7 +6,6 @@ import Clipboard from '@react-native-community/clipboard';
 class GetAccessCode extends React.Component {
   setClipboard(){
     Clipboard.setString(this.props.project.accessCode)
-    alert('hello')
   }
 
   render() {

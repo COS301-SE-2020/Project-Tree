@@ -129,6 +129,11 @@ class SearchComponent extends React.Component {
       },
     );
 
+    const body = await response.json();
+    if(body.response !== "okay"){
+      alert(body.response);
+    }
+
     this.props.setModalVisible(false);
   }
 

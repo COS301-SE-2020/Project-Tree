@@ -381,7 +381,6 @@ function joinProject(req, res) {
       `
     )
     .then((result) => {
-      // res.status(200);
       if (result.records[0] != null){
         let project = result.records[0]._fields[0].low;
         db.getSession()

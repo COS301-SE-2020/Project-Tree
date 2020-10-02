@@ -541,7 +541,43 @@ async function addProjectManager(req, res) {
   let project = parseInt(req.body.projId)
 
   let session = db.getSession();
+  await session
+    .run(
+      `
+        MATCH (c:User)-[r:MANAGES]->(d:Project)
+        WHERE id(c)=${user} and id(d)=${project}
+        RETURN c
+      `
+    )
+    .then((result) => {
+      if (result.records[0] != null){
+        res.status(200);
+        res.send({response: "You are already a project manager for this project"});
+        return;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
 
+  // let session = db.getSession();
+  await session
+    .run(
+      `
+        MATCH (c:User)-[r:MEMBER]->(d:Project)
+        WHERE id(c)=${user} and id(d)=${project}
+        DETACH DELETE r
+      `
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+
+  // session = db.getSession();
   await session
     .run(
       `
@@ -549,7 +585,7 @@ async function addProjectManager(req, res) {
       `
     )
     .then(function (result) {
-      res.send({})
+      res.send({response:"okay"})
       res.status(200);
     })
     .catch((err) => {
@@ -557,6 +593,7 @@ async function addProjectManager(req, res) {
       res.status(400);
       res.send(err);
     });
+
 }
 
 async function getPendingMembers(req, res) {
