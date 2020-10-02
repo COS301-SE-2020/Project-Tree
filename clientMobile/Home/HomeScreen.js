@@ -35,7 +35,7 @@ function GoToTree() {
       <Icon
         type="FontAwesome"
         name="line-chart"
-        style={{color: 'white'}}></Icon>
+        style={{color: 'white', textAlign: 'center'}}></Icon>
     </TouchableOpacity>
   );
 }
@@ -365,7 +365,7 @@ class HomeScreen extends Component {
                     <Icon
                       type="FontAwesome"
                       name="edit"
-                      style={{color: 'white'}}></Icon>
+                      style={{color: 'white', textAlign: 'center'}}></Icon>
                   </TouchableOpacity>
                 ) : null}
               </CardItem>

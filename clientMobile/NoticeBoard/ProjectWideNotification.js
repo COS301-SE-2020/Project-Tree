@@ -33,7 +33,7 @@ export default class SendProjectWideNotificationWrapper extends Component {
           <Icon
             type="AntDesign"
             name="notification"
-            style={{color: 'white'}}></Icon>
+            style={{color: 'white', textAlign: 'center'}}></Icon>
         </TouchableHighlight>
         <SendNotificationModal
           project={this.props.project}
