@@ -128,6 +128,166 @@ class UpdateProject extends React.Component {
                   }}
                 />
               </Form.Group>
+              <Form.Group>
+                <Form.Label>Start date of project</Form.Label>
+                <Form.Control
+                  required
+                  name="up_StartDate"
+                  type="date"
+                  value={this.state.project.startDate.substring(0, 10)}
+                  onChange={(e) => {
+                    if (isNaN(Date.parse(e.target.value))) return;
+                    let project = this.state.project;
+                    let value = project.startDate;
+                    value = `${e.target.value}T${project.startDate.substring(
+                      11,
+                      16
+                    )}`;
+                    let startDate = new Date(value);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let endDate = new Date(this.state.project.endDate);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    if (endDate < startDate) {
+                      alert(
+                        "You cannot make the end date/time before the start date/time."
+                      );
+                      project.startDate = value;
+                      project.endDate = value;
+                      this.setState({ project: project });
+                    } else {
+                      project.startDate = value;
+                      this.setState({ project, });
+                    }
+                    this.value = this.state.project.startDate;
+                  }}
+                />
+                <Form.Label>Start Time of task</Form.Label>
+                <Form.Control
+                  required
+                  name="cu_StartTime"
+                  type="time"
+                  value={this.state.project.startDate.substring(11, 16)}
+                  onChange={(e) => {
+                    if (
+                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
+                    )
+                      return;
+                    let project = this.state.project;
+                    let value = project.startDate;
+                    value = `${project.startDate.substring(0, 10)}T${
+                      e.target.value
+                    }`;
+                    let startDate = new Date(value);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let endDate = new Date(project.endDate);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    if (endDate < startDate) {
+                      alert(
+                        "You cannot make the end date/time before the start date/time."
+                      );
+                      project.startDate = value;
+                      project.endDate = value;
+                      this.setState({ project: project });
+                    } else {
+                      project.startDate = value;
+                      this.setState({ project, });
+                    }
+                    this.value = this.state.project.startDate;
+                  }}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>End date of task</Form.Label>
+                <Form.Control
+                  required
+                  name="cu_EndDate"
+                  type="date"
+                  value={this.state.project.endDate.substring(0, 10)}
+                  onChange={(e) => {
+                    if (isNaN(Date.parse(e.target.value))) return;
+                    let project = this.state.project;
+                    let value = project.endDate;
+                    value = `${e.target.value}T${project.endDate.substring(
+                      11,
+                      16
+                    )}`;
+                    let endDate = new Date(value);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let startDate = new Date(project.startDate);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    if (endDate < startDate) {
+                      alert(
+                        "You cannot make the end date/time before the start date/time."
+                      );
+                      project.startDate = value;
+                      project.endDate = value;
+                      this.setState({ project: project });
+                    } else {
+                      project.endDate = value;
+                      this.setState({ project, });
+                    }
+                    this.value = this.state.project.endDate;
+                  }}
+                />
+                <Form.Label>End Time of task</Form.Label>
+                <Form.Control
+                  required
+                  name="cu_EndTime"
+                  type="time"
+                  value={this.state.project.endDate.substring(11, 16)}
+                  onChange={(e) => {
+                    if (
+                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
+                    )
+                      return;
+                    let project = this.state.project;
+                    let value = project.endDate;
+                    value = `${project.endDate.substring(0, 10)}T${
+                      e.target.value
+                    }`;
+                    let endDate = new Date(value);
+                    endDate.setTime(
+                      endDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    let startDate = new Date(project.startDate);
+                    startDate.setTime(
+                      startDate.getTime() -
+                        new Date().getTimezoneOffset() * 60 * 1000
+                    );
+                    if (endDate < startDate) {
+                      alert(
+                        "You cannot make the end date/time before the start date/time."
+                      );
+                      project.startDate = value;
+                      project.endDate = value;
+                      this.setState({ project: project });
+                    } else {
+                      project.endDate = value;
+                      this.setState({ project, });
+                    }
+                    this.value = this.state.project.endDate;
+                  }}
+                />
+              </Form.Group>
               <Table bordered striped hover>
                 <thead>
                   <tr>
