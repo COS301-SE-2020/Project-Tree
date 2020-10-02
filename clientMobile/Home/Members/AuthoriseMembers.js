@@ -33,15 +33,15 @@ class JoinProject extends React.Component {
 
     render() {
         if(this.state.users === null){
-            return(
+					return(
+						<View style={{justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}>
 							<Spinner />
-            )
+						</View>
+					)
         }
 
         else if(this.state.users.length === 0){
-            return(
-							<Text>No pending members</Text>
-            )
+					return(null)
         }
 
         return (
@@ -97,7 +97,7 @@ class PendingMember extends React.Component{
 						<Icon
 							type="FontAwesome"
 							name="check"
-							style={{color: 'white'}}></Icon>
+							style={{color: 'white', textAlign: 'center'}}/>
 						</TouchableOpacity>
 						<TouchableOpacity
 						style={styles.declineButton}
@@ -105,7 +105,7 @@ class PendingMember extends React.Component{
 						<Icon
 							type="FontAwesome"
 							name="remove"
-							style={{color: 'white'}}></Icon>
+							style={{color: 'white', textAlign: 'center'}}/>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -115,7 +115,7 @@ class PendingMember extends React.Component{
 	render(){
 		return(
 			<View>
-				<View>
+				<View style={{justifyContent: 'center', alignItems: 'center', alignContent: 'center'}}>
 					<Text style={{fontSize:18,fontWeight:'bold'}}>Pending Members</Text>
 				</View>
 				<View style={styles.container}>
@@ -125,6 +125,9 @@ class PendingMember extends React.Component{
 						showsHorizontalScrollIndicator={false}
 					>
 						<View style={{ flexDirection: 'row' }}>
+						{this.props.users.map((user, index) => (
+							this.pendingMemberViews(user, index)
+						))}
 						{this.props.users.map((user, index) => (
 							this.pendingMemberViews(user, index)
 						))}
@@ -195,32 +198,3 @@ const styles = StyleSheet.create({
 });  
 
 export default JoinProject;
-
-                {/* <View> */}
-                    {/* <img
-                        class="circular"
-                        src={this.props.user.profilePicture}
-                        alt="user"
-                        width="70"
-                        height="70"
-                    /> */}
-                {/* </View>
-                <View>
-                    <Text>{this.props.user.name + " " + this.props.user.surname}</Text>
-                </View>
-                <View style={{flexDirection:"row"}}>
-                    <TouchableHighlight onPress={()=>this.handleClick(true)}>
-                        <Text>Accept</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={()=>this.handleClick(false)}>
-                        <Text>Decline</Text>
-                    </TouchableHighlight>
-                </View> */}
-                {/* <ScrollView
-                    contentContainerStyle={styles.scrollViewContainerStyle}
-                    horizontal
-                    pagingEnabled
-                    showsHorizontalScrollIndicator={false}
-                >
-
-                </ScrollView> */}
