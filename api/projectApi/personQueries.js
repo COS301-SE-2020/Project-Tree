@@ -589,7 +589,6 @@ async function getPendingMembers(req, res) {
 
 async function authoriseMember(req, res) {
   let session = db.getSession();
-  let usersArr = [];
   await session
     .run(
       `
@@ -604,7 +603,7 @@ async function authoriseMember(req, res) {
       res.send(err);
     });
 
-    if(req.body.check == "true"){
+    if(req.body.check == "true" || req.body.check == true){
       db.getSession()
       .run(
         `

@@ -19,6 +19,8 @@ import {useNavigation} from '@react-navigation/native';
 import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
 import ProgressDashboard from './ProgressDashboard';
 import TopBar from '../TopBar';
+import MemberComponent from './Members/MemberWrapperComponent';
+import GetAccessCode from './Members/GetAccessCode'
 
 function GoToTree() {
   const navigation = useNavigation();
@@ -95,7 +97,7 @@ class Home extends Component {
     await AsyncStorage.getItem('sessionToken').then(async (value) => {
       token = JSON.parse(value);
       const response = await fetch(
-        'http://projecttree.herokuapp.com/project/get',
+        'http://10.0.2.2:5000/project/get',
         {
           method: 'POST',
           headers: {
@@ -165,6 +167,7 @@ class Home extends Component {
                 setCurrentProject={this.props.setSelectedProject}
                 setDrawerVisible={this.setDrawerVisible}
                 token={this.state.token}
+                user={this.props.user}
                 projects={this.state.projects}
                 otherProjects={this.state.otherProjects}
                 setProjectInfo={this.setProjectInfo}
@@ -372,6 +375,12 @@ class HomeScreen extends Component {
               </CardItem>
               <CardItem>
                 <Body>{this.settingPermissions(this.props.project)}</Body>
+              </CardItem>
+              <CardItem>
+                <GetAccessCode project={this.props.project} />
+              </CardItem>
+              <CardItem>
+                <MemberComponent project={this.props.project}/>
               </CardItem>
             </Card>
           </Content>
