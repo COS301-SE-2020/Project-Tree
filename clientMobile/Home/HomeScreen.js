@@ -21,6 +21,7 @@ import ProgressDashboard from './ProgressDashboard';
 import TopBar from '../TopBar';
 import MemberComponent from './Members/MemberWrapperComponent';
 import GetAccessCode from './Members/GetAccessCode'
+import AddProjectManagerModal from './Members/AddProjectManager'
 
 function GoToTree() {
   const navigation = useNavigation();
@@ -381,6 +382,9 @@ class HomeScreen extends Component {
               </CardItem>
               <CardItem>
                 <MemberComponent project={this.props.project}/>
+              </CardItem>
+              <CardItem>
+                <AddProjectManagerModal project={this.props.project}/>
               </CardItem>
             </Card>
           </Content>
