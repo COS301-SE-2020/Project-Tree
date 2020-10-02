@@ -128,9 +128,6 @@ class PendingMember extends React.Component{
 						{this.props.users.map((user, index) => (
 							this.pendingMemberViews(user, index)
 						))}
-						{this.props.users.map((user, index) => (
-							this.pendingMemberViews(user, index)
-						))}
 						</View>
 					</ScrollView>
 				</View>
