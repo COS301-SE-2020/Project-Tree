@@ -29,7 +29,7 @@ class JoinProject extends React.Component {
     }
 
     handleSubmit(){
-        if(this.state.code === null || this.state.code.length < 15){
+        if(this.state.code === null){
             alert("The code entered is invalid");
             return;
         }

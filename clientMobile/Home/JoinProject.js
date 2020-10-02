@@ -48,24 +48,29 @@ class JoinProjectModal extends Component {
         onRequestClose={() => this.props.setModalVisible(false)}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <TouchableOpacity
-              style={styles.hideButton}
-              onPress={() => this.props.setModalVisible(false)}>
-              <Icon type="FontAwesome" name="close" />
-            </TouchableOpacity>
-            <View style={{alignItems: 'center'}}>
-              <Text style={{fontSize: 25, color: '#184D47'}}>
-                Join Project
-              </Text>
-              <View
-                style={{
-                  backgroundColor: '#EEBB4D',
-                  height: 1,
-                  width: '60%',
-                  marginBottom: 10,
-                }}></View>
+            <View style={{flex:2}}>
+              <TouchableOpacity
+                style={styles.hideButton}
+                onPress={() => this.props.setModalVisible(false)}>
+                <Icon type="FontAwesome" name="close" />
+              </TouchableOpacity>
+              <View style={{alignItems: 'center'}}>
+                <Text style={{fontSize: 25, color: '#184D47'}}>
+                  Join Project
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: '#EEBB4D',
+                    height: 1,
+                    width: '60%',
+                    marginBottom: 10,
+                  }}></View>
+              </View>
             </View>
-            <JoinProjectForm setModalVisible={this.props.setModalVisible} user={this.props.user}/>
+
+            <View style={{flex:4}}>
+              <JoinProjectForm setModalVisible={this.props.setModalVisible} user={this.props.user}/>
+            </View>
           </View>
         </View>
       </Modal>
@@ -81,7 +86,7 @@ class JoinProjectForm extends Component {
   }
 
   async handleSubmit() {
-    if(this.state.code === null || this.state.code.length < 15){
+    if(this.state.code === null){
         alert("The code entered is invalid");
         return;
     }
@@ -113,15 +118,17 @@ class JoinProjectForm extends Component {
   render() {
     return (
       <React.Fragment>
-        <Form>
-          <Item floatingLabel>
-            <Label>Access Code</Label>
-            <Input
-              onChangeText={(val) => this.setState({code:val})}
-            />
-          </Item>
-        </Form>
-        <View styles={{padding: 10}}>
+        <View style={{flex:2}}>
+          <Form>
+            <Item floatingLabel>
+              <Label>Access Code</Label>
+              <Input
+                onChangeText={(val) => this.setState({code:val})}
+              />
+            </Item>
+          </Form>
+        </View>
+        <View style={{flex:1}}>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={this.handleSubmit}>
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 500,
+    height: 220,
     width: 350,
   },
   textStyle: {
@@ -218,7 +225,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   hideButton: {
-    flex: 0.15,
     backgroundColor: '#fff',
     alignItems: 'flex-end',
     marginRight: 10,

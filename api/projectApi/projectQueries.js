@@ -59,7 +59,7 @@ async function createProject(req, res) {
               resourceCT:${cp_r_Create}, 
               resourceDT:${cp_r_Delete}, 
               resourceUT:${cp_r_Update},
-              accessCode:"${uuid.v4()}"
+              accessCode:"${uuid.v4().substring(9, 23)}"
           }),
           (b)-[x:MANAGES]->(n)
           RETURN n
