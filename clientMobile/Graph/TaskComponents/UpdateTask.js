@@ -10,6 +10,8 @@ import {
   Switch,
 } from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
+import {Tooltip} from 'react-native-elements';
+import IconEntypo from 'react-native-vector-icons/Entypo';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ms from 'ms';
 
@@ -54,6 +56,7 @@ class UpdateTask extends Component {
               resources={this.props.resources}
               allUsers={this.props.allUsers}
               assignedProjUsers={this.props.assignedProjUsers}
+              rels={this.props.rels}
             />
           </View>
         </View>
@@ -463,6 +466,14 @@ class UpdateTaskForm extends Component {
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
+  updateStart() {
+    let check = true;
+    this.props.rels.forEach(el => {
+      if (el.target === this.props.task.id) check = false;
+    });
+    return check;
+  }
+
   render() {
     /*
      * Filters the list of people to only show people matching the search term
@@ -489,6 +500,8 @@ class UpdateTaskForm extends Component {
       );
     });
 
+    let start = this.updateStart();
+
     return (
       <React.Fragment>
         <ScrollView style={{height: 650}}>
@@ -511,42 +524,86 @@ class UpdateTaskForm extends Component {
                 onChangeText={(val) => this.setState({description: val})}
               />
             </Item>
-            <Item floatingLabel disabled>
-              <Label>Start Date</Label>
-              <Input value={this.state.startDate.substring(0, 10)} />
-              <Icon
-                type="FontAwesome"
-                name="calendar-o"
-                onPress={() => {
-                  this.setState({
-                    dateTimePicker: true,
-                    dateTimeType: {
-                      type: 'date',
-                      for: 'start',
-                      value: this.state.startDate,
-                    },
-                  });
-                }}
-              />
-            </Item>
-            <Item floatingLabel disabled>
-              <Label>Start Time</Label>
-              <Input value={this.state.startDate.substring(11, 16)} />
-              <Icon
-                type="SimpleLineIcons"
-                name="clock"
-                onPress={() => {
-                  this.setState({
-                    dateTimePicker: true,
-                    dateTimeType: {
-                      type: 'time',
-                      for: 'start',
-                      value: this.state.startDate,
-                    },
-                  });
-                }}
-              />
-            </Item>
+            {start ? 
+              <Item floatingLabel disabled>
+                <Label>Start Date</Label>
+                <Input value={this.state.startDate.substring(0, 10)} />
+                <Icon
+                  type="FontAwesome"
+                  name="calendar-o"
+                  onPress={() => {
+                    this.setState({
+                      dateTimePicker: true,
+                      dateTimeType: {
+                        type: 'date',
+                        for: 'start',
+                        value: this.state.startDate,
+                      },
+                    });
+                  }}
+                />
+              </Item>
+            :
+              <Item floatingLabel disabled>
+                <Label>Start Date
+                  <Tooltip
+                    popover={
+                      <Text style={{color: 'white'}}>
+                        This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
+                      </Text>
+                    }
+                    height={150}
+                    width={250}
+                    skipAndroidStatusBar={true}
+                    backgroundColor={'rgba(0, 0, 0, 1)'}>
+                    <View style={styles.tooltipButton}>
+                      <IconEntypo name="help" size={25} />
+                    </View>
+                  </Tooltip>
+                </Label>
+                <Input value={this.state.startDate.substring(0, 10)} />
+              </Item>
+            }
+            {start ? 
+              <Item floatingLabel disabled>
+                <Label>Start Time</Label>
+                <Input value={this.state.startDate.substring(11, 16)} />
+                <Icon
+                  type="SimpleLineIcons"
+                  name="clock"
+                  onPress={() => {
+                    this.setState({
+                      dateTimePicker: true,
+                      dateTimeType: {
+                        type: 'time',
+                        for: 'start',
+                        value: this.state.startDate,
+                      },
+                    });
+                  }}
+                />
+              </Item>
+            :
+              <Item floatingLabel disabled>
+                <Label>Start Time
+                  <Tooltip
+                    popover={
+                      <Text style={{color: 'white'}}>
+                        This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
+                      </Text>
+                    }
+                    height={150}
+                    width={250}
+                    skipAndroidStatusBar={true}
+                    backgroundColor={'rgba(0, 0, 0, 1)'}>
+                    <View style={styles.tooltipButton}>
+                      <IconEntypo name="help" size={25} />
+                    </View>
+                  </Tooltip>
+                </Label>
+                <Input value={this.state.startDate.substring(11, 16)} />
+              </Item>
+            }
             <Item floatingLabel disabled>
               <Label>End Date</Label>
               <Input value={this.state.endDate.substring(0, 10)} />

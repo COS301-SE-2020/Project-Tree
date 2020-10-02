@@ -461,6 +461,7 @@ class GraphScreen extends Component {
           assignedProjUsers={this.state.assignedProjUsers}
           allUsers={this.state.allUsers}
           user={this.props.user}
+          rels={this.state.links}
         />
         <DependencyModal
           project={this.props.project}

@@ -137,6 +137,7 @@ class TaskModal extends Component {
           resources={taskResources}
           allUsers={this.props.allUsers}
           assignedProjUsers={this.props.assignedProjUsers}
+          rels={this.props.rels}
         />
         <Modal
           animationType="fade"
