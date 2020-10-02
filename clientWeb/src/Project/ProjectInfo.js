@@ -12,7 +12,7 @@ class ProjectInfo extends React.Component {
       <React.Fragment>
         <Container
           className="block-example border rounded border-secondary"
-          style={{ height: "40em" }}
+          style={{ height: "35em" }}
         >
           <Row className="align-items-center bg-secondary py-2">
             <Col>
@@ -151,7 +151,9 @@ class ProjectInfo extends React.Component {
             </Col>
           </Row>
           <Row>
-            <MemberWrapperComponent project={this.props.project.projectInfo}/>
+            <Col>
+              <MemberWrapperComponent project={this.props.project.projectInfo}/>
+            </Col>
           </Row>
         </Container>
       </React.Fragment>

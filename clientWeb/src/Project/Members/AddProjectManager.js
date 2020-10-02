@@ -67,13 +67,16 @@ class AddProjectManager extends React.Component {
     return (
       <React.Fragment>
         <Button
-          className="btn-warning"
-          style={{ width: "100px" }}
+          className="btn-warning mt-3"
+          style={{
+            width: "205px",
+            color: "black",
+          }}
           onClick={() => {
             this.showModal();
           }}
         >
-          <i className="fa fa-plus"> </i> Add Project Manager{" "}
+          <i className="fa fa-group"></i> Add Project Manager{" "}
         </Button>
         <Modal
           show={this.state.show}

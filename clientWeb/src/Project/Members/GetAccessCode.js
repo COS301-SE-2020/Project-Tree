@@ -31,13 +31,16 @@ class GetAccessCode extends React.Component {
     return (
       <React.Fragment>
         <Button
-          className="btn-warning"
-          style={{ width: "100px" }}
+          className="btn-warning mt-4"
+          style={{
+            width: "205px",
+            color: "black",
+          }}
           onClick={() => {
             this.showModal();
           }}
         >
-          <i className="fa fa-plus"> </i> Get Access Code{" "}
+          <i className="fa fa-link"></i> Get Access Code{" "}
         </Button>
         <Modal
           show={this.state.show}

@@ -51,14 +51,19 @@ class JoinProject extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Button
-          className="btn-warning"
-          style={{ width: "100px" }}
+         <Button
+          className="my-2 ml-3"
+          style={{
+            borderColor: "#EEBB4D",
+            backgroundColor: "#EEBB4D",
+            width: "170px",
+            color: "black",
+          }}
           onClick={() => {
             this.showModal();
           }}
         >
-          <i className="fa fa-plus"> </i> Join Project{" "}
+          <i className="fa fa-group"></i> Join Project{" "}
         </Button>
         <Modal
           show={this.state.show}
