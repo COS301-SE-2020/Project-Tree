@@ -81,13 +81,13 @@ class ProjectInfo extends React.Component {
           <Row className="align-items-center">
             <Col
               className="align-items-center text-center"
-              style={{ fontSize: "20px", }}
+              style={{ fontSize: "20px" }}
             >
               {`${this.props.project.projectInfo.startDate.substring(0, 10)} ${this.props.project.projectInfo.startDate.substring(11, 16)}`}
             </Col>
             <Col
               className="align-items-center text-center"
-              style={{ fontSize: "20px", }}
+              style={{ fontSize: "20px" }}
             >
               {`${this.props.project.projectInfo.endDate.substring(0, 10)} ${this.props.project.projectInfo.endDate.substring(11, 16)}`}
             </Col>
