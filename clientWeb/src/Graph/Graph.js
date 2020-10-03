@@ -15,6 +15,7 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
+import "./style.scss";
 
 function makeLink(edge, criticalPathLinks) {
   let strokeColor = "#000";
@@ -206,6 +207,7 @@ class Graph extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.drawGraph = this.drawGraph.bind(this);
     this.addTask = this.addTask.bind(this);
+    this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.zoomIn = this.zoomIn.bind(this);
     this.zoomOut = this.zoomOut.bind(this);
@@ -433,6 +435,10 @@ class Graph extends React.Component {
     });
   }
 
+  showModal() {
+    this.setState({ createTask: true });
+  }
+
   hideModal() {
     this.setState({ createTask: false });
   }
@@ -478,16 +484,30 @@ class Graph extends React.Component {
                   style={{ fontSize: "27px" }}
                 >
                   <OverlayTrigger
+                    placement='auto'
                     overlay={
-                      <Tooltip>
+                      <Tooltip className="helpTooltip">
                         Double click on an empty space to create a new task or
                         right click on two tasks to create a dependency
+                        <LegendSidebar />
                       </Tooltip>
                     }
                   >
                     <i className="fa fa-question-circle"></i>
                   </OverlayTrigger>
                 </Col>
+                {this.props.userPermission["create"] === true ?
+                  <Col className="text-center">
+                    <Button
+                      onClick={()=>this.showModal()}
+                      block
+                      variant="outline-secondary"
+                      size="sm"
+                      style={{ overflow: "hidden" }}
+                    >
+                      Create Task
+                    </Button>
+                  </Col>:null}
                 {dependency != null ? (
                   <Col className="text-center">
                     <Button
@@ -614,6 +634,115 @@ class Graph extends React.Component {
             assignedProjUsers={this.props.assignedProjUsers}
           />
         ) : null}
+      </React.Fragment>
+    );
+  }
+}
+
+class LegendSidebar extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        <Container
+          className="text-black text-center mb-3"
+        >
+          <Row>
+            <Col className="text-center">
+              <h5>Graph key</h5>
+            </Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Incomplete
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1"
+              xs={6}
+              style={{
+                backgroundColor: "#77dd77",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Complete
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1"
+              xs={6}
+              style={{
+                backgroundColor: "#ff6961",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Overdue
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1"
+              xs={6}
+              style={{
+                backgroundColor: "#ffae42",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Issue
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-primary m-1 align-items-center"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Critical Path
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-info m-1 align-items-center "
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+                boxShadow: "0 0 10px #009999",
+              }}
+            >
+              Highlight
+            </Col>
+            <Col></Col>
+          </Row>
+        </Container>
       </React.Fragment>
     );
   }
