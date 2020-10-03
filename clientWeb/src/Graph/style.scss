@@ -1,9 +1,9 @@
 .circular {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   overflow: hidden;
-  border-radius: 50%;
+  border-radius: 100%;
   margin-bottom: 10px;
 }
 
@@ -14,4 +14,8 @@
 
 .helpTooltip > .tooltip-inner {
   max-width: 20em;
+}
+
+.card-title {
+  margin-top: 28;
 }

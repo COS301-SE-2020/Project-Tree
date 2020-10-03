@@ -1,5 +1,5 @@
 import React from "react";
-import { ProgressBar, Button, Container, Row, Col } from "react-bootstrap";
+import { ProgressBar, Button, Container, Row, Col, Tooltip, OverlayTrigger, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
@@ -339,23 +339,51 @@ class TaskSidebar extends React.Component {
     let list = [];
     for (let x = 0; x < people.length; x++) {
       list.push(
-        <Row className="justify-content-md-center">
-          <Col className="justify-content-md-center">
-            <img
-              class="circular"
-              src={people[x].profilePicture}
-              alt="user"
-              width="50"
-              height="50"
-            />
-          </Col>
-          <Col key={people[x].id} xs={8} className="text-left">
-            {people[x].name}&nbsp;{people[x].surname}
-          </Col>
-          <Row>
-            <br />
-          </Row>
-        </Row>
+        // <Row className="justify-content-md-center">
+        //   <Col className="justify-content-md-center">
+        //   <OverlayTrigger
+        //     placement='auto'
+        //     trigger="click"
+        //     overlay={
+        //       <Tooltip>
+        //         <a href="https://www.w3schools.com" target="_blank">Send me an email</a>
+        //       </Tooltip>
+        //     }
+        //   >
+        //     <img
+        //       class="circular"
+        //       src={people[x].profilePicture}
+        //       alt="user"
+        //       width="50"
+        //       height="50"
+        //     />
+        //   </OverlayTrigger>
+        //   </Col>
+        //   <Col key={people[x].id} xs={8} className="text-left">
+        //     {people[x].name}&nbsp;{people[x].surname}
+        //   </Col>
+        //   <Row>
+        //     <br />
+        //   </Row>
+          
+        // </Row>
+        <Card>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img class="circular"
+                src={people[x].profilePicture}
+                alt="user"
+              />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                {/* <h4 class="card-title">{people[x].name}&nbsp;{people[x].surname}</h4> */}
+                <h4>{people[x].name}&nbsp;{people[x].surname}</h4>
+                <a href="https://www.w3schools.com" target="_blank">Send me an email</a>
+              </div>
+            </div>
+          </div>
+        </Card>
       );
     }
     return list;
