@@ -299,6 +299,7 @@ class TaskSidebar extends React.Component {
   constructor(props) {
     super(props);
     this.classifyExistingUsers = this.classifyExistingUsers.bind(this);
+    this.updateType = this.updateType.bind(this);
   }
 
   // Classifies users on the project according to role if they are part of this task
@@ -337,7 +338,6 @@ class TaskSidebar extends React.Component {
   }
 
   printUsers(people) {
-    console.log(people);
     let list = [];
     for (let x = 0; x < people.length; x++) {
       list.push(
@@ -369,12 +369,30 @@ class TaskSidebar extends React.Component {
     return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
+  updateType(pac, resp, reso){
+    if(this.props.userPermission["update"]) return "update";
+    let check = false;
+    pac.forEach(person => {
+      if (person.id = this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    resp.forEach(person => {
+      if (person.id = this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    reso.forEach(person => {
+      if (person.id = this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    return "none";
+  }
+
   render() {
     let taskUsers = this.classifyExistingUsers();
     let taskPacMans = taskUsers[0];
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
-
+    let updateType = this.updateType(taskPacMans, taskResPersons, taskResources)
     let progressColor = "info";
 
     return (
@@ -440,7 +458,7 @@ class TaskSidebar extends React.Component {
               />
             </Col>
           </Row>
-          {this.props.userPermission["update"] === true ? (
+          {updateType !== "none" ? (
             <Row className="my-2">
               <Col xs={12} className="text-center">
                 <UpdateTask
@@ -452,7 +470,9 @@ class TaskSidebar extends React.Component {
                   pacMans={taskPacMans}
                   resPersons={taskResPersons}
                   resources={taskResources}
+                  user={this.props.user}
                   allUsers={this.props.allUsers}
+                  updateType={updateType}
                   assignedProjUsers={this.props.assignedProjUsers}
                   updateAssignedPeople={this.props.updateAssignedPeople}
                   project={this.props.project}
