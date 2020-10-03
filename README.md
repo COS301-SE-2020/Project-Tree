@@ -1,20 +1,26 @@
-# Project Management Tree
+# Project Management Tree 
+[![Build Status](https://travis-ci.org/COS301-SE-2020/Project-Tree.svg?branch=master)](https://travis-ci.org/COS301-SE-2020/Project-Tree)
+<a href="https://www.statuscake.com/" title="Website Uptime Monitoring"><img src="https://app.statuscake.com/button/index.php?Track=5661201&Days=1&Design=4" /></a>
 
 <img src="group photo.jpg" width=300/>
 
 The project entails the development of a project management system. The system represents a project visually as a tree structure, with each “leaf” being a project task, and each branch being a task dependency. The core idea of the system is to allow for all task dependencies to be captured accurately and clearly, to ensure effective project management.
 
+
 ## Links
 
 | Document                      | Links                                                                                                                        |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| SRS                           | [Software Requirements Specification V3](https://drive.google.com/file/d/1xjLBOQCMQuwiLpBqkmlKaFXmSfa3HJSd/view?usp=sharing) |
-| Project management tool       | [Asana](https://app.asana.com/0/1175793006340426/board)                                                                      |
+| SRS V3                        | [Software Requirements Specification V3](https://drive.google.com/file/d/1xjLBOQCMQuwiLpBqkmlKaFXmSfa3HJSd/view?usp=sharing) |
+| SRS V4 (Demo 4)               | [Software Requirements Specification V4](https://drive.google.com/file/d/1YYFLu-B00LBTEbkfmsM_Xz6z15AyEqzO/view?usp=sharing) |
+| Project Management tool       | [Asana](https://app.asana.com/0/1175793006340426/board)                                                                      |
 | Project Tree Website          | [Website](https://projecttree.herokuapp.com/)                                                                                |
 | Project Tree Mobile           | [Mobile App](https://drive.google.com/file/d/1xgWt-K9mzN6L9JeMkQ-rF9eO_YAiVuRY/view?usp=sharing)                             |
 | User Manual                   | [User Manual](https://drive.google.com/file/d/1I-THn5WdSYVK8owDEb2rAukejthtZ-Cy/view?usp=sharing)                            |
+| User Manual V3 (Demo 4)       | [User Manual V3](https://drive.google.com/file/d/12UmHMPX538FCQwrbB4613TAVp9qVN6Tr/view?usp=sharing)                         |
 | Technical Installation Manual | [Technical Installation Manual](https://drive.google.com/file/d/1ObufSIvrVCSqpog9ENT2ud-sVO8fbyo1/view?usp=sharing)          |
 | Coding Standards              | [Coding Standards](https://drive.google.com/file/d/10XIZpqaFohxW8eiQM4hKsrCR_ZDSC-8K/view?usp=sharing)                       |
+| Testing Policy Document       | [Testing Policy](https://drive.google.com/file/d/1sprpHY_Br0TLddgdWWLBVPwRhalveE-_/view?usp=sharing)                         |
 
 ## Demos
 
@@ -23,7 +29,7 @@ The project entails the development of a project management system. The system r
 | Demo 1 | https://drive.google.com/file/d/17IvRjiCgk0UrZ-0tS3sZzuLqDuC2974h/view?usp=sharing |
 | Demo 2 | https://drive.google.com/file/d/1y-Tusz-JW2x_LZHjYNQ9Dgiep79vkA6B/view?usp=sharing |
 | Demo 3 | https://drive.google.com/file/d/1uGShoR3nrLJ55MSdohj2IJYRvHNAQEj0/view?usp=sharing |
-| Demo 4 | N/A                                                                                |
+| Demo 4 | https://drive.google.com/file/d/1wSgDRLw-UbudgaqTl1loSJ0CG66HElew/view?usp=sharing |
 
 ## Group Members
 
@@ -60,6 +66,13 @@ I am currently a Computer Science Student at The University of Pretoria
   - Implemented mobile client handling of notifications
   
 </details>
+<details><summary> What I did for Demo 4</summary>
+  
+  - Implemented project dashboard
+  - Implemented search and filter 
+  - Implemented Gantt Chart
+  
+</details>
 
 ### Damian Venter (u18076514)
 
@@ -91,6 +104,12 @@ Undergraduate student studying BIT at the University of Pretoria.
   
   - Caught up mobile app in terms of previous website functionality
   - Implemented functionality to assign people to tasks on the website
+  
+</details>
+<details><summary> What I did for Demo 4</summary>
+  
+  - Implemented task views
+  - Implemented assigning people mobile
   
 </details>
 
@@ -128,6 +147,12 @@ Final year undergraduate student studying Computer Science at The University of 
   - Implemented edit user preferences for mobile app
   
 </details>
+<details><summary> What I did for Demo 4</summary>
+  
+  - Implemented profile pictures
+  - Session management
+  
+</details>
 
 ### Brandon Robinson (u18021353)
 
@@ -163,6 +188,13 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
   - Implemented permissions throughout website
   
 </details>
+<details><summary> What I did for Demo 4</summary>
+  
+  - Implemented project and task duration
+  - Web Styling
+  - Implemented user permissions mobile
+  
+</details>
 
 ### Amber Grill (u18164022)
 
@@ -193,5 +225,11 @@ Final year student studying BSc IT at the University of Pretoria.
   
   - Redesign of the website  
   - Implemented web client handling of notifications
+  
+</details>
+<details><summary> What I did for Demo 4</summary>
+  
+  - Implemented Calendar
+  - Styling and Design Web
   
 </details>

@@ -213,7 +213,7 @@ class GraphScreen extends Component {
       this.setState({nodes: body.tasks, links: body.rels});
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllUsers',
+      'http://projecttree.herokuapp.com/people/getAllProjectMembers',
       {
         method: 'POST',
         headers: {

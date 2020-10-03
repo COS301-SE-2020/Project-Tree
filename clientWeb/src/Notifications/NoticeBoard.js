@@ -208,7 +208,7 @@ class NotificationList extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col style={{ height: "23em", overflowY: "auto" }}>
+          <Col style={{ height: "31em", overflowY: "auto" }}>
             {messageComponents}
           </Col>
         </Row>

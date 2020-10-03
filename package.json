@@ -18,6 +18,7 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.0",
+    "copy-to-clipboard": "^3.3.1",
     "d3": "^5.16.0",
     "dagre": "^0.8.5",
     "dagre-d3": "^0.6.4",
@@ -47,7 +48,8 @@
     "react-scripts": "^3.4.1",
     "react-scroll": "^1.8.1",
     "storm-react-diagrams": "^5.2.1",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "concurrently": "^4.1.2",

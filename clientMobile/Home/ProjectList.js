@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import CreateProject from './CreateProject';
+import JoinProject from './JoinProject';
 
 class ProjectListDrawer extends Component {
   _isMounted = false;
@@ -92,6 +93,9 @@ class ProjectListDrawer extends Component {
             setDrawerVisible={this.props.setDrawerVisible}
             setCurrentProject={this.props.setCurrentProject}
           />
+        </View>
+        <View style={{flex: 1}}>
+          <JoinProject setDrawerVisible={this.props.setDrawerVisible} user={this.props.user}/>
         </View>
         <View style={{height: 20}}></View>
       </View>

@@ -298,7 +298,7 @@ class App extends Component {
               position: "fixed",
               height: "87px",
               width: "100%",
-              zIndex: "90",
+              zIndex: "9",
             }}
           >
             <Nav className="form-inline ">
@@ -353,6 +353,7 @@ class App extends Component {
                     ownedProjects={this.state.ownedProjects}
                     otherProjects={this.state.otherProjects}
                     setProject={(project) => this.setProject(project)}
+                    user={this.state.user}
                   />
                 </Col>
               ) : null}
