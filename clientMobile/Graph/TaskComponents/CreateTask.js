@@ -129,7 +129,13 @@ class CreateTaskForm extends Component {
       .toISOString()
       .substring(0, 16);
     if (type.for === 'start') {
-      if (this.state.endDate < date)
+      if (date < this.props.project.startDate) {
+        this.setState({
+          error: 'You cannot make the start date/time before the project date/time.',
+          startDate: this.props.project.startDate,
+          dateTimePicker: false,
+        });
+      } else if (this.state.endDate < date)
         this.setState({
           error: 'You cannot set the start date/time after the end date/time.',
           startDate: date,

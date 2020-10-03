@@ -45,6 +45,7 @@ class UpdateTask extends Component {
                 }}></View>
             </View>
             <UpdateTaskForm
+              updateType={this.props.updateType}
               task={this.props.task}
               toggleVisibility={this.props.toggleVisibility}
               getProjectInfo={this.props.getProjectInfo}
@@ -96,6 +97,7 @@ class UpdateTaskForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formatValidateInput = this.formatValidateInput.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
+    this.updateStart = this.updateStart.bind(this);
     this.addPacMan = this.addPacMan.bind(this);
     this.addResPerson = this.addResPerson.bind(this);
     this.addResource = this.addResource.bind(this);
@@ -115,7 +117,13 @@ class UpdateTaskForm extends Component {
       .toISOString()
       .substring(0, 16);
     if (type.for === 'start') {
-      if (this.state.endDate < date)
+      if (date < this.props.project.startDate) {
+        this.setState({
+          error: 'You cannot make the start date/time before the project date/time.',
+          startDate: this.props.project.startDate       ,
+          dateTimePicker: false,
+        });
+      } else if (this.state.endDate < date)
         this.setState({
           error: 'You cannot set the start date/time after the end date/time.',
           startDate: date,

@@ -537,6 +537,7 @@ class GraphScreen extends Component {
               setProjectInfo={this.setProjectInfo}
               assignedProjUsers={this.state.assignedProjUsers}
               allUsers={this.state.allUsers}
+              rels={this.state.links}
             />
           ) : null}
         </View>
