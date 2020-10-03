@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {
+  Modal, 
+  StyleSheet, 
   Text, 
   View, 
   TouchableOpacity,
@@ -341,8 +343,7 @@ class CreateProjectForm extends Component {
                 />
               </Item>
           </Form>
-        </ScrollView>
-        {this.state.dateTimePicker && (
+          {this.state.dateTimePicker && (
             <DateTimePicker
               testID="dateTimePicker"
               value={
@@ -363,17 +364,18 @@ class CreateProjectForm extends Component {
               }
             />
           )}
-        <PermissionsTable
-          tableFormData={this.state.tableFormData}
-          setElementClicked={this.setElementClicked}
-        />
-        <View styles={{padding: 10}}>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={this.handleSubmit}>
-            <Text style={{color: 'white'}}>Submit</Text>
-          </TouchableOpacity>
-        </View>
+          <PermissionsTable
+            tableFormData={this.state.tableFormData}
+            setElementClicked={this.setElementClicked}
+          />
+          <View styles={{padding: 10}}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={this.handleSubmit}>
+              <Text style={{color: 'white'}}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </React.Fragment>
     );
   }
@@ -457,7 +459,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 500,
+    height: '100%',
     width: 350,
   },
   textStyle: {
@@ -517,7 +519,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   hideButton: {
-    flex: 0.15,
     backgroundColor: '#fff',
     alignItems: 'flex-end',
     marginRight: 10,
