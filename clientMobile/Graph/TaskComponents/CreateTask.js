@@ -87,11 +87,11 @@ class CreateTaskModal extends Component {
 class CreateTaskForm extends Component {
   constructor(props) {
     super(props);
+    now = now.toISOString().substring(0, 16);
     this.state = {
       name: '',
       description: '',
-      startDate: new Date().toISOString().substring(0, 16),
-      endDate: new Date().toISOString().substring(0, 16),
+      startDate: now,
       duration: '0 ms',
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
@@ -180,7 +180,7 @@ class CreateTaskForm extends Component {
     projectData.changedInfo = input;
     projectData = JSON.stringify(projectData);
 
-    const response = await fetch('http://projecttree.herokuapp.com/task/add', {
+    const response = await fetch('http://10.0.2.2:5000/task/add', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -200,7 +200,7 @@ class CreateTaskForm extends Component {
     );
     timestamp = timestamp.toISOString();
 
-    await fetch('http://projecttree.herokuapp.com/people/assignPeople', {
+    await fetch('http://10.0.2.2:5000/people/assignPeople', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

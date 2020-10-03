@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
-import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  Text, 
+  View, 
+  TouchableOpacity,
+  ScrollView
+} from 'react-native';
 import {Label, Form, Item, Input, Icon} from 'native-base';
 import {Table, TableWrapper, Row, Rows} from 'react-native-table-component';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import ms from 'ms';
 
 class CreateProject extends Component {
   constructor(props) {
@@ -83,14 +90,74 @@ class CreateProjectModal extends Component {
 class CreateProjectForm extends Component {
   constructor(props) {
     super(props);
+    let now = new Date();
+    now.setTime(now.getTime() - new Date().getTimezoneOffset() * 60 * 1000);
+    now = now.toISOString().substring(0, 16);
     this.state = {
       projName: null,
       projDescription: null,
       tableFormData: ['', '', '', '', '', '', '', '', ''],
+      startDate: now,
+      endDate: now,
       error: null,
     };
+    this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
     this.setElementClicked = this.setElementClicked.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleDateTimeSelect(event, selectedDate, type) {
+    if (event.type === 'dismissed') {
+      this.setState({dateTimePicker: false});
+      return;
+    }
+    let date = new Date(
+      new Date(selectedDate).getTime() -
+        new Date().getTimezoneOffset() * 60 * 1000,
+    )
+      .toISOString()
+      .substring(0, 16);
+    if (type.for === 'start') {
+      if (this.state.endDate < date)
+        this.setState({
+          error: 'You cannot set the start date/time after the end date/time.',
+          startDate: date,
+          endDate: date,
+          dateTimePicker: false,
+        });
+      else
+        this.setState({
+          error: null,
+          startDate: date,
+          dateTimePicker: false,
+        });
+    } else {
+      if (this.state.startDate > date)
+        this.setState({
+          error: 'You cannot set the end date/time before the start date/time.',
+          startDate: date,
+          endDate: date,
+          dateTimePicker: false,
+        });
+      else
+        this.setState({
+          error: null,
+          endDate: date,
+          dateTimePicker: false,
+        });
+    }
+  }
+  
+  CalcDiff(sd, ed) {
+    let startDate = new Date(sd);
+    startDate.setTime(
+      startDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
+    let endDate = new Date(ed);
+    endDate.setTime(
+      endDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+    );
+    return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
   setElementClicked(index) {
@@ -115,6 +182,10 @@ class CreateProjectForm extends Component {
       token: this.props.token,
       cp_Name: this.state.projName,
       cp_Description: this.state.projDescription,
+      cp_StartDate: this.state.startDate.substring(0,10),
+      cp_StartTime: this.state.startDate.substring(11,16),
+      cp_EndDate: this.state.endDate.substring(0,10),
+      cp_EndTime: this.state.endDate.substring(11,16),
       cp_pm_Create: permissions[0],
       cp_pm_Delete: permissions[1],
       cp_pm_Update: permissions[2],
@@ -129,7 +200,7 @@ class CreateProjectForm extends Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/project/add',
+      'http://10.0.2.2:5000/project/add',
       {
         method: 'POST',
         headers: {
@@ -172,25 +243,126 @@ class CreateProjectForm extends Component {
   render() {
     return (
       <React.Fragment>
-        <Form>
-          <Text style={{color: 'red', alignSelf: 'center'}}>
-            {this.state.error}
-          </Text>
-          <Item floatingLabel>
-            <Label>Name of project</Label>
-            <Input
-              onChangeText={(val) => this.setState({projName: val})}
-              onEndEditing={() => this.checkFormData('name')}
+        <ScrollView style={{height: 650}}>
+          <Form>
+            <Text style={{color: 'red', alignSelf: 'center'}}>
+              {this.state.error}
+            </Text>
+            <Item floatingLabel>
+              <Label>Name of project</Label>
+              <Input
+                onChangeText={(val) => this.setState({projName: val})}
+                onEndEditing={() => this.checkFormData('name')}
+              />
+            </Item>
+            <Item floatingLabel>
+              <Label>Description of project</Label>
+              <Input
+                onChangeText={(val) => this.setState({projDescription: val})}
+                onEndEditing={() => this.checkFormData('description')}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+                <Label>Start Date</Label>
+                <Input value={this.state.startDate.substring(0, 10)} />
+                <Icon
+                  type="FontAwesome"
+                  name="calendar-o"
+                  onPress={() => {
+                    this.setState({
+                      dateTimePicker: true,
+                      dateTimeType: {
+                        type: 'date',
+                        for: 'start',
+                        value: this.state.startDate,
+                      },
+                    });
+                  }}
+                />
+              </Item>
+              <Item floatingLabel disabled>
+                <Label>Start Time</Label>
+                <Input value={this.state.startDate.substring(11, 16)} />
+                <Icon
+                  type="SimpleLineIcons"
+                  name="clock"
+                  onPress={() => {
+                    this.setState({
+                      dateTimePicker: true,
+                      dateTimeType: {
+                        type: 'time',
+                        for: 'start',
+                        value: this.state.startDate,
+                      },
+                    });
+                  }}
+                />
+              </Item>
+              <Item floatingLabel disabled>
+                <Label>End Date</Label>
+                <Input value={this.state.endDate.substring(0, 10)} />
+                <Icon
+                  type="FontAwesome"
+                  name="calendar-o"
+                  onPress={() => {
+                    this.setState({
+                      dateTimePicker: true,
+                      dateTimeType: {
+                        type: 'date',
+                        for: 'end',
+                        value: this.state.endDate,
+                      },
+                    });
+                  }}
+                />
+              </Item>
+              <Item floatingLabel disabled>
+                <Label>End Time</Label>
+                <Input value={this.state.endDate.substring(11, 16)} />
+                <Icon
+                  type="SimpleLineIcons"
+                  name="clock"
+                  onPress={() => {
+                    this.setState({
+                      dateTimePicker: true,
+                      dateTimeType: {
+                        type: 'time',
+                        for: 'end',
+                        value: this.state.endDate,
+                      },
+                    });
+                  }}
+                />
+              </Item>
+              <Item floatingLabel disabled>
+                <Label>Duration</Label>
+                <Input
+                  value={this.CalcDiff(this.state.startDate, this.state.endDate)}
+                />
+              </Item>
+          </Form>
+        </ScrollView>
+        {this.state.dateTimePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={
+                new Date(
+                  new Date(this.state.dateTimeType.value).getTime() +
+                    new Date().getTimezoneOffset() * 60 * 1000,
+                )
+              }
+              mode={this.state.dateTimeType.type}
+              is24Hour={true}
+              display="default"
+              onChange={(event, selectedDate) =>
+                this.handleDateTimeSelect(
+                  event,
+                  selectedDate,
+                  this.state.dateTimeType,
+                )
+              }
             />
-          </Item>
-          <Item floatingLabel>
-            <Label>Description of project</Label>
-            <Input
-              onChangeText={(val) => this.setState({projDescription: val})}
-              onEndEditing={() => this.checkFormData('description')}
-            />
-          </Item>
-        </Form>
+          )}
         <PermissionsTable
           tableFormData={this.state.tableFormData}
           setElementClicked={this.setElementClicked}
