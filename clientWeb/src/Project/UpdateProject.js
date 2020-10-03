@@ -170,7 +170,7 @@ class UpdateProject extends React.Component {
                 <Form.Label>Start Time of task</Form.Label>
                 <Form.Control
                   required
-                  name="cu_StartTime"
+                  name="up_StartTime"
                   type="time"
                   value={this.state.project.startDate.substring(11, 16)}
                   onChange={(e) => {
@@ -212,7 +212,7 @@ class UpdateProject extends React.Component {
                 <Form.Label>End date of task</Form.Label>
                 <Form.Control
                   required
-                  name="cu_EndDate"
+                  name="up_EndDate"
                   type="date"
                   value={this.state.project.endDate.substring(0, 10)}
                   onChange={(e) => {
@@ -250,7 +250,7 @@ class UpdateProject extends React.Component {
                 <Form.Label>End Time of task</Form.Label>
                 <Form.Control
                   required
-                  name="cu_EndTime"
+                  name="up_EndTime"
                   type="time"
                   value={this.state.project.endDate.substring(11, 16)}
                   onChange={(e) => {

@@ -38,8 +38,8 @@ async function createProject(req, res) {
       ? (cp_r_Update = true)
       : (cp_r_Update = false);
 
-    let startDate = `${req.body.cu_StartDate}T${req.body.cu_StartTime}`;
-    let endDate = `${req.body.cu_EndDate}T${req.body.cu_EndTime}`;
+    let startDate = `${req.body.cp_StartDate}T${req.body.cp_StartTime}`;
+    let endDate = `${req.body.cp_EndDate}T${req.body.cp_EndTime}`;
 
     db.getSession()
       .run(

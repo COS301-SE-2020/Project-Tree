@@ -183,7 +183,7 @@ class CreateProject extends React.Component {
                         endDate: value,
                       });
                     } else {
-                      this.setState({ endDate: value, });
+                      this.setState({ startDate: value, });
                     }
                     this.value = this.state.startDate;
                   }}
