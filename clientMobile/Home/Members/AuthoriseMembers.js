@@ -17,7 +17,7 @@ class JoinProject extends React.Component {
 
     async componentDidMount(){
         const response = await fetch(
-            'http://10.0.2.2:5000/people/getpendingmembers',
+            'http://projecttree.herokuapp.com/people/getpendingmembers',
             {
                 method: 'POST',
                 headers: {
@@ -68,7 +68,7 @@ class PendingMember extends React.Component{
 		data = JSON.stringify(data);
 
 		const response = await fetch(
-			'http://10.0.2.2:5000/people/authorisemember',
+			'http://projecttree.herokuapp.com/people/authorisemember',
 			{
 				method: 'POST',
 				headers: {

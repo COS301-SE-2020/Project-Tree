@@ -94,7 +94,7 @@ class SearchComponent extends React.Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://10.0.2.2:5000/people/getAllProjectMembers',
+      'http://projecttree.herokuapp.com/people/getAllProjectMembers',
       {
           method: 'POST',
           headers: {
@@ -118,7 +118,7 @@ class SearchComponent extends React.Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://10.0.2.2:5000/people/addProjectManager',
+      'http://projecttree.herokuapp.com/people/addProjectManager',
       {
           method: 'POST',
           headers: {

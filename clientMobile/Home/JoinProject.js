@@ -94,7 +94,7 @@ class JoinProjectForm extends Component {
     let data = JSON.stringify({userId: this.props.user.id , accessCode: this.state.code });
 
     const response = await fetch(
-      'http://10.0.2.2:5000/project/joinproject',
+      'http://projecttree.herokuapp.com/project/joinproject',
       {
         method: 'POST',
         headers: {
