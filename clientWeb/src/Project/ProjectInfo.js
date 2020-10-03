@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
 import DeleteProject from "./DeleteProject";
+import MemberWrapperComponent from "./Members/MemberWrapperComponent"
 
 class ProjectInfo extends React.Component {
   render() {
@@ -11,7 +12,7 @@ class ProjectInfo extends React.Component {
       <React.Fragment>
         <Container
           className="block-example border rounded border-secondary"
-          style={{ height: "27em" }}
+          style={{ height: "35em" }}
         >
           <Row className="align-items-center bg-secondary py-2">
             <Col>
@@ -147,6 +148,11 @@ class ProjectInfo extends React.Component {
                   </tr>
                 </tbody>
               </Table>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <MemberWrapperComponent project={this.props.project.projectInfo}/>
             </Col>
           </Row>
         </Container>

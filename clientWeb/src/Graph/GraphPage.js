@@ -51,7 +51,7 @@ class GraphPage extends React.Component {
     });
 
     // Gets all the users in the database, might update to be all users assigned to the project
-    $.post("/people/getAllUsers", { id: this.state.project.id }, (response) => {
+    $.post("/people/getAllProjectMembers", { id: this.state.project.id }, (response) => {
       this.setState({ allUsers: response.users });
     }).fail((err) => {
       throw Error(err);

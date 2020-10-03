@@ -27,6 +27,7 @@ app.post("/project/delete", pq.deleteProject);
 app.post("/project/update", pq.updateProject);
 app.post("/project/projecttasks", pq.getProjectTasks);
 app.post("/project/criticalpath", pq.getCriticalPath);
+app.post("/project/joinproject", pq.joinProject);
 app.post("/task/add", tq.createTask);
 app.post("/task/update", tq.updateTask);
 app.post("/task/delete", tq.deleteTask);
@@ -89,9 +90,13 @@ app.post("/mobile", async (req, res) => {
   });
 });
 app.post("/people/getAllUsers", personQueries.getAllUsers);
+app.post("/people/getAllProjectMembers", personQueries.getAllProjectMembers);
 app.post("/people/assignPeople", personQueries.assignPeople);
 app.post("/people/updateAssignedPeople", personQueries.updateAssignedPeople);
 app.post("/people/assignedProjectUsers", personQueries.getAssignedProjectUsers);
+app.post("/people/addProjectManager", personQueries.addProjectManager);
+app.post("/people/getpendingmembers", personQueries.getPendingMembers);
+app.post("/people/authorisemember", personQueries.authoriseMember);
 app.post("/sendNotification", nh.sendNotification);
 app.post("/retrieveNotifications", nh.retrieveNotifications);
 

@@ -6,6 +6,7 @@ const {
 } = require("../userManagementApi/userQueries");
 
 const up = require("./updateProject");
+const uuid = require('uuid');
 
 async function createProject(req, res) {
   let userId = await uq.verify(req.body.token);
@@ -57,7 +58,8 @@ async function createProject(req, res) {
               resPerUT:${cp_rp_Update}, 
               resourceCT:${cp_r_Create}, 
               resourceDT:${cp_r_Delete}, 
-              resourceUT:${cp_r_Update}
+              resourceUT:${cp_r_Update},
+              accessCode:"${uuid.v4().substring(9, 23)}"
           }),
           (b)-[x:MANAGES]->(n)
           RETURN n
@@ -230,6 +232,7 @@ async function getProjects(req, res) {
             id: record._fields[0].identity.low,
             name: record._fields[0].properties.name,
             description: record._fields[0].properties.description,
+            accessCode: record._fields[0].properties.accessCode,
             permissions: [
               record._fields[0].properties.packManCT,
               record._fields[0].properties.packManDT,
@@ -253,7 +256,7 @@ async function getProjects(req, res) {
       .getSession()
       .run(
         `
-          MATCH (user:User)-[r]->(m:Task)-[:PART_OF]->(j) 
+          MATCH (user:User)-[r:MEMBER]->(j) 
           WHERE ID(user) = ${userId}
           return DISTINCT j
         `
@@ -264,6 +267,7 @@ async function getProjects(req, res) {
             id: record._fields[0].identity.low,
             name: record._fields[0].properties.name,
             description: record._fields[0].properties.description,
+            accessCode: record._fields[0].properties.accessCode,
             permissions: [
               record._fields[0].properties.packManCT,
               record._fields[0].properties.packManDT,
@@ -369,6 +373,66 @@ function getCriticalPath(req, res) {
     });
 }
 
+function joinProject(req, res) {
+  db.getSession()
+    .run(
+      `
+      MATCH (n:Project) WHERE n.accessCode = "${req.body.accessCode}" RETURN id(n)
+      `
+    )
+    .then((result) => {
+      if (result.records[0] != null){
+        let project = result.records[0]._fields[0].low;
+        db.getSession()
+          .run(
+            `
+            MATCH (a:User), (b:Project)
+            WHERE (a)-[]->(b) AND id(a)=${req.body.userId} AND id(b)=${project}
+            RETURN (b)
+            `
+          )
+          .then((result) => {
+            if (result.records[0] == null){
+              db.getSession()
+                .run(
+                  `
+                    MATCH (a:User), (b:Project)
+                    WHERE id(a)=${req.body.userId} AND id(b)=${project}
+                    CREATE (a)-[:PENDING_MEMBER]->(b)        
+                  `
+                )
+                .then((result) => {
+                  res.status(200);
+                  res.send({ response:"okay" });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  res.status(400);
+                  res.send({ message: err });
+                });
+            }
+
+            else res.send({ response: "You are already a member of this project or are pending approval" });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send({ message: err });
+          });
+
+      }
+
+      else res.send({ response: "The access code you have provided doesn't exist" });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send({ message: err });
+    });
+}
+
+
+
 function getAllInfo(req, res) {}
 
 module.exports = {
@@ -378,4 +442,5 @@ module.exports = {
   getProjects,
   getProjectTasks,
   getCriticalPath,
+  joinProject
 };

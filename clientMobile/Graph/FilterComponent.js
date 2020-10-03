@@ -925,23 +925,3 @@ const styles = StyleSheet.create({
   text: {margin: 6, textAlign: 'center'},
 });
 
-{
-  /* <View style={{flexDirection:'row'}}>
-    <TouchableHighlight 
-        style={styles.SelectedButtonStyle}
-        onPress={()=>this.quickSearch("filter")}
-    >
-        <Text style={styles.SelectedTextStyle}>
-            Filter my tasks
-        </Text>
-    </TouchableHighlight>
-    <TouchableHighlight
-        style={styles.SelectedButtonStyle}
-        onPress={()=>this.quickSearch("higlight")}
-    >
-        <Text style={styles.SelectedTextStyle}>
-            Highlight my tasks
-        </Text>
-    </TouchableHighlight>
-</View> */
-}

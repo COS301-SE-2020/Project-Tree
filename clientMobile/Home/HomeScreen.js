@@ -19,6 +19,9 @@ import {useNavigation} from '@react-navigation/native';
 import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
 import ProgressDashboard from './ProgressDashboard';
 import TopBar from '../TopBar';
+import MemberComponent from './Members/MemberWrapperComponent';
+import GetAccessCode from './Members/GetAccessCode'
+import AddProjectManagerModal from './Members/AddProjectManager'
 
 function GoToTree() {
   const navigation = useNavigation();
@@ -32,7 +35,7 @@ function GoToTree() {
       <Icon
         type="FontAwesome"
         name="line-chart"
-        style={{color: 'white'}}></Icon>
+        style={{color: 'white', textAlign: 'center'}}></Icon>
     </TouchableOpacity>
   );
 }
@@ -165,6 +168,7 @@ class Home extends Component {
                 setCurrentProject={this.props.setSelectedProject}
                 setDrawerVisible={this.setDrawerVisible}
                 token={this.state.token}
+                user={this.props.user}
                 projects={this.state.projects}
                 otherProjects={this.state.otherProjects}
                 setProjectInfo={this.setProjectInfo}
@@ -361,7 +365,7 @@ class HomeScreen extends Component {
                     <Icon
                       type="FontAwesome"
                       name="edit"
-                      style={{color: 'white'}}></Icon>
+                      style={{color: 'white', textAlign: 'center'}}></Icon>
                   </TouchableOpacity>
                 ) : null}
               </CardItem>
@@ -372,6 +376,15 @@ class HomeScreen extends Component {
               </CardItem>
               <CardItem>
                 <Body>{this.settingPermissions(this.props.project)}</Body>
+              </CardItem>
+              <CardItem>
+                <GetAccessCode project={this.props.project} />
+              </CardItem>
+              <CardItem>
+                <MemberComponent project={this.props.project}/>
+              </CardItem>
+              <CardItem>
+                <AddProjectManagerModal project={this.props.project}/>
               </CardItem>
             </Card>
           </Content>
