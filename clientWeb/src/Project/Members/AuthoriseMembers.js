@@ -69,13 +69,12 @@ class PendingMember extends React.Component{
 
     handleClick(value){
         let data={
-            user: this.props.user.id,
-            project: this.props.project.id,
+            user: JSON.stringify(this.props.user),
+            project: JSON.stringify(this.props.project),
             check: value
         }
 
-        data = JSON.stringify(data);
-        $.post("/people/authorisemember", JSON.parse(data), (response) => {
+        $.post("/people/authorisemember", data, (response) => {
             return 
         }).fail(() => {
             alert("Unable to authorise member");

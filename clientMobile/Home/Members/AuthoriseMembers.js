@@ -58,10 +58,10 @@ class PendingMember extends React.Component{
 		this.state = {}
 	}
 
-	async handleClick(value){
+	async handleClick(value, user){
 		let data={
-			user: this.props.user.id,
-			project: this.props.project.id,
+			user: JSON.stringify(user),
+			project: JSON.stringify(this.props.project),
 			check: value
 		}
 
@@ -93,7 +93,7 @@ class PendingMember extends React.Component{
 				<View style={{flexDirection:"row"}}>
 					<TouchableOpacity
 						style={styles.acceptButton}
-						onPress={() => {this.handleClick(true)}}>
+						onPress={() => {this.handleClick(true, user)}}>
 						<Icon
 							type="FontAwesome"
 							name="check"
@@ -101,7 +101,7 @@ class PendingMember extends React.Component{
 						</TouchableOpacity>
 						<TouchableOpacity
 						style={styles.declineButton}
-						onPress={() => {this.handleClick(false)}}>
+						onPress={() => {this.handleClick(false, user)}}>
 						<Icon
 							type="FontAwesome"
 							name="remove"

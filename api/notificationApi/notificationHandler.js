@@ -21,6 +21,7 @@ async function sendNotification(req, res) {
 
   if (data.mode === 0) {
     let emails = getEmails(data.recipients);
+    
     emailHandler.sendEmailNotification(
       data.fromName,
       data.taskName,
@@ -230,6 +231,10 @@ function getIds(data) {
 }
 
 function getEmails(data) {
+  if(data.length == 1){
+    return data[0];
+  }
+
   let emails = "";
   for (let count = 0; count < data.length; count++) {
     if (count === data.length - 1) {
