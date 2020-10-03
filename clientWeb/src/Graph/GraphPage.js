@@ -263,7 +263,6 @@ class GraphPage extends React.Component {
                   user={this.props.user}
                 />
               ) : null}
-              <LegendSidebar />
             </Col>
             <Col
               xs={9}
@@ -636,122 +635,6 @@ class DependencySidebar extends React.Component {
             </Col>
           </Row>
           <hr />
-        </Container>
-      </React.Fragment>
-    );
-  }
-}
-
-class LegendSidebar extends React.Component {
-  render() {
-    return (
-      <React.Fragment>
-        <Container
-          className="text-black text-center mb-3"
-          style={{ fontSize: "20px" }}
-        >
-          <Row>
-            <Col className="text-center">
-              <h4>Graph key</h4>
-            </Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-dark m-1"
-              xs={6}
-              style={{
-                backgroundColor: "white",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Incomplete
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-dark m-1"
-              xs={6}
-              style={{
-                backgroundColor: "#77dd77",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Complete
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-dark m-1"
-              xs={6}
-              style={{
-                backgroundColor: "#ff6961",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Overdue
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-dark m-1"
-              xs={6}
-              style={{
-                backgroundColor: "#ffae42",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Issue
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-primary m-1 align-items-center"
-              xs={6}
-              style={{
-                backgroundColor: "white",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Critical Path
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-info m-1 align-items-center "
-              xs={6}
-              style={{
-                backgroundColor: "white",
-                color: "black",
-                width: "120px",
-                height: "30px",
-                boxShadow: "0 0 10px #009999",
-              }}
-            >
-              Highlight
-            </Col>
-            <Col></Col>
-          </Row>
         </Container>
       </React.Fragment>
     );
