@@ -392,7 +392,7 @@ class TaskSidebar extends React.Component {
     let taskPacMans = taskUsers[0];
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
-    let updateType = this.updateType(taskPacMans, taskResPersons, taskResources)
+    let updateType = this.updateType(taskPacMans, taskResPersons, taskResources);
     let progressColor = "info";
 
     return (

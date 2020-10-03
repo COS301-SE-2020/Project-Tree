@@ -503,31 +503,112 @@ class UpdateTaskForm extends Component {
     let start = this.updateStart();
 
     return (
-      <React.Fragment>
-        <ScrollView style={{height: 650}}>
-          <Form>
-            <Text style={{color: 'red', alignSelf: 'center'}}>
-              {this.state.error}
-            </Text>
-            <Item floatingLabel>
-              <Label>Name of Task</Label>
-              <Input
-                value={this.state.name}
-                onChangeText={(val) => this.setState({name: val})}
-                onEndEditing={() => this.checkFormData('name')}
-              />
-            </Item>
-            <Item floatingLabel>
-              <Label>Description of Task</Label>
-              <Input
-                value={this.state.description}
-                onChangeText={(val) => this.setState({description: val})}
-              />
-            </Item>
-            {start ? 
+    this.props.updateType === "update" ?
+      (
+        <React.Fragment>
+          <ScrollView style={{height: 650}}>
+            <Form>
+              <Text style={{color: 'red', alignSelf: 'center'}}>
+                {this.state.error}
+              </Text>
+              <Item floatingLabel>
+                <Label>Name of Task</Label>
+                <Input
+                  value={this.state.name}
+                  onChangeText={(val) => this.setState({name: val})}
+                  onEndEditing={() => this.checkFormData('name')}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>Description of Task</Label>
+                <Input
+                  value={this.state.description}
+                  onChangeText={(val) => this.setState({description: val})}
+                />
+              </Item>
+              {start ? 
+                <Item floatingLabel disabled>
+                  <Label>Start Date</Label>
+                  <Input value={this.state.startDate.substring(0, 10)} />
+                  <Icon
+                    type="FontAwesome"
+                    name="calendar-o"
+                    onPress={() => {
+                      this.setState({
+                        dateTimePicker: true,
+                        dateTimeType: {
+                          type: 'date',
+                          for: 'start',
+                          value: this.state.startDate,
+                        },
+                      });
+                    }}
+                  />
+                </Item>
+              :
+                <Item floatingLabel disabled>
+                  <Label>Start Date
+                    <Tooltip
+                      popover={
+                        <Text style={{color: 'white'}}>
+                          This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
+                        </Text>
+                      }
+                      height={150}
+                      width={250}
+                      skipAndroidStatusBar={true}
+                      backgroundColor={'rgba(0, 0, 0, 1)'}>
+                      <View style={styles.tooltipButton}>
+                        <IconEntypo name="help" size={25} />
+                      </View>
+                    </Tooltip>
+                  </Label>
+                  <Input value={this.state.startDate.substring(0, 10)} />
+                </Item>
+              }
+              {start ? 
+                <Item floatingLabel disabled>
+                  <Label>Start Time</Label>
+                  <Input value={this.state.startDate.substring(11, 16)} />
+                  <Icon
+                    type="SimpleLineIcons"
+                    name="clock"
+                    onPress={() => {
+                      this.setState({
+                        dateTimePicker: true,
+                        dateTimeType: {
+                          type: 'time',
+                          for: 'start',
+                          value: this.state.startDate,
+                        },
+                      });
+                    }}
+                  />
+                </Item>
+              :
+                <Item floatingLabel disabled>
+                  <Label>Start Time
+                    <Tooltip
+                      popover={
+                        <Text style={{color: 'white'}}>
+                          This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
+                        </Text>
+                      }
+                      height={150}
+                      width={250}
+                      skipAndroidStatusBar={true}
+                      backgroundColor={'rgba(0, 0, 0, 1)'}>
+                      <View style={styles.tooltipButton}>
+                        <IconEntypo name="help" size={25} />
+                      </View>
+                    </Tooltip>
+                  </Label>
+                  <Input value={this.state.startDate.substring(11, 16)} />
+                </Item>
+              }
               <Item floatingLabel disabled>
-                <Label>Start Date</Label>
-                <Input value={this.state.startDate.substring(0, 10)} />
+                <Label>End Date</Label>
+                <Input value={this.state.endDate.substring(0, 10)} />
                 <Icon
                   type="FontAwesome"
                   name="calendar-o"
@@ -536,38 +617,16 @@ class UpdateTaskForm extends Component {
                       dateTimePicker: true,
                       dateTimeType: {
                         type: 'date',
-                        for: 'start',
-                        value: this.state.startDate,
+                        for: 'end',
+                        value: this.state.endDate,
                       },
                     });
                   }}
                 />
               </Item>
-            :
               <Item floatingLabel disabled>
-                <Label>Start Date
-                  <Tooltip
-                    popover={
-                      <Text style={{color: 'white'}}>
-                        This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
-                      </Text>
-                    }
-                    height={150}
-                    width={250}
-                    skipAndroidStatusBar={true}
-                    backgroundColor={'rgba(0, 0, 0, 1)'}>
-                    <View style={styles.tooltipButton}>
-                      <IconEntypo name="help" size={25} />
-                    </View>
-                  </Tooltip>
-                </Label>
-                <Input value={this.state.startDate.substring(0, 10)} />
-              </Item>
-            }
-            {start ? 
-              <Item floatingLabel disabled>
-                <Label>Start Time</Label>
-                <Input value={this.state.startDate.substring(11, 16)} />
+                <Label>End Time</Label>
+                <Input value={this.state.endDate.substring(11, 16)} />
                 <Icon
                   type="SimpleLineIcons"
                   name="clock"
@@ -576,287 +635,315 @@ class UpdateTaskForm extends Component {
                       dateTimePicker: true,
                       dateTimeType: {
                         type: 'time',
-                        for: 'start',
-                        value: this.state.startDate,
+                        for: 'end',
+                        value: this.state.endDate,
                       },
                     });
                   }}
                 />
               </Item>
-            :
               <Item floatingLabel disabled>
-                <Label>Start Time
-                  <Tooltip
-                    popover={
-                      <Text style={{color: 'white'}}>
-                        This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
-                      </Text>
-                    }
-                    height={150}
-                    width={250}
-                    skipAndroidStatusBar={true}
-                    backgroundColor={'rgba(0, 0, 0, 1)'}>
-                    <View style={styles.tooltipButton}>
-                      <IconEntypo name="help" size={25} />
-                    </View>
-                  </Tooltip>
-                </Label>
-                <Input value={this.state.startDate.substring(11, 16)} />
+                <Label>Duration</Label>
+                <Input
+                  value={this.CalcDiff(this.state.startDate, this.state.endDate)}
+                />
               </Item>
-            }
-            <Item floatingLabel disabled>
-              <Label>End Date</Label>
-              <Input value={this.state.endDate.substring(0, 10)} />
-              <Icon
-                type="FontAwesome"
-                name="calendar-o"
-                onPress={() => {
-                  this.setState({
-                    dateTimePicker: true,
-                    dateTimeType: {
-                      type: 'date',
-                      for: 'end',
-                      value: this.state.endDate,
-                    },
-                  });
-                }}
-              />
-            </Item>
-            <Item floatingLabel disabled>
-              <Label>End Time</Label>
-              <Input value={this.state.endDate.substring(11, 16)} />
-              <Icon
-                type="SimpleLineIcons"
-                name="clock"
-                onPress={() => {
-                  this.setState({
-                    dateTimePicker: true,
-                    dateTimeType: {
-                      type: 'time',
-                      for: 'end',
-                      value: this.state.endDate,
-                    },
-                  });
-                }}
-              />
-            </Item>
-            <Item floatingLabel disabled>
-              <Label>Duration</Label>
-              <Input
-                value={this.CalcDiff(this.state.startDate, this.state.endDate)}
-              />
-            </Item>
-            <View style={{flex: 1, marginBottom: 15}}>
-              <Text style={styles.text}>{String(this.state.progress)}</Text>
-              <Slider
-                step={1}
-                maximumValue={100}
-                value={this.state.progress}
-                onValueChange={(value) => {
-                  if (parseInt(value) === 100) {
-                    this.setState({issue: false});
-                  }
-                  this.setState({progress: value});
-                  this.value = this.state.progress;
-                }}
-              />
-            </View>
+              <View style={{flex: 1, marginBottom: 15}}>
+                <Text style={styles.text}>{String(this.state.progress)}</Text>
+                <Slider
+                  step={1}
+                  maximumValue={100}
+                  value={this.state.progress}
+                  onValueChange={(value) => {
+                    if (parseInt(value) === 100) {
+                      this.setState({issue: false});
+                    }
+                    this.setState({progress: value});
+                    this.value = this.state.progress;
+                  }}
+                />
+              </View>
 
-            <View
-              style={
-                (styles.modalText,
-                {
-                  flex: 1,
-                  flexDirection: 'row',
-                  paddingTop: 20,
-                  paddingLeft: 24,
-                })
-              }>
-              <Text style={{alignItems: 'flex-start', fontSize: 16}}>
-                There is an issue with this task:{' '}
+              <View
+                style={
+                  (styles.modalText,
+                  {
+                    flex: 1,
+                    flexDirection: 'row',
+                    paddingTop: 20,
+                    paddingLeft: 24,
+                  })
+                }>
+                <Text style={{alignItems: 'flex-start', fontSize: 16}}>
+                  There is an issue with this task:{' '}
+                </Text>
+                <Switch
+                  trackColor={{false: '#767577', true: '#81b0ff'}}
+                  thumbColor={this.state.issue ? '#f5dd4b' : '#f4f3f4'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={(value) => {
+                    if (parseInt(this.state.progress) === 100) {
+                      this.setState({
+                        error:
+                          'You cannot specify that a complete task has an issue.',
+                        issue: false,
+                      });
+                      this.value = false;
+                    } else {
+                      this.setState({issue: value});
+                      this.value = this.state.issue;
+                    }
+                  }}
+                  value={this.state.issue}
+                  style={{alignItems: 'flex-end'}}
+                />
+              </View>
+              <Item floatingLabel>
+                <Label>Package Manager</Label>
+                <Input
+                  value={this.state.pacManSearchTerm}
+                  onChangeText={(val) => this.updateSearch(val, 0)}
+                />
+              </Item>
+
+              <View style={{flexDirection: 'row', flex: 1}}>
+                {this.state.pacManSearchTerm.length >= 2 ? (
+                  <View style={{flex: 0.5}}>
+                    {filteredPacMan.map((person) => {
+                      return (
+                        <TouchableOpacity
+                          type="button"
+                          onPress={() => this.addPacMan(person)}
+                          key={person.id}
+                          style={styles.peopleButtons}>
+                          <Text style={{color: 'white'}}>
+                            {person.name}&nbsp;{person.surname}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <View style={{flex: 0.5}}></View>
+                )}
+                <View style={{flex: 0.5}}>
+                  {this.state.pacManList.map((person) => {
+                    return (
+                      <TouchableOpacity
+                        type="button"
+                        onPress={() => this.removeAssignedPerson(person, 0)}
+                        key={person.id}
+                        style={styles.selectedPeopleButtons}>
+                        <Text>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+              <Item floatingLabel>
+                <Label>Responsible Person</Label>
+                <Input
+                  value={this.state.resPersonSearchTerm}
+                  onChangeText={(val) => this.updateSearch(val, 1)}
+                />
+              </Item>
+              <View style={{flexDirection: 'row', flex: 1}}>
+                {this.state.resPersonSearchTerm.length >= 2 ? (
+                  <View style={{flex: 0.5}}>
+                    {filteredResPerson.map((person) => {
+                      return (
+                        <TouchableOpacity
+                          type="button"
+                          onPress={() => this.addResPerson(person)}
+                          key={person.id}
+                          style={styles.peopleButtons}>
+                          <Text style={{color: 'white'}}>
+                            {person.name}&nbsp;{person.surname}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <View style={{flex: 0.5}}></View>
+                )}
+                <View style={{flex: 0.5}}>
+                  {this.state.resPersonList.map((person) => {
+                    return (
+                      <TouchableOpacity
+                        type="button"
+                        onPress={() => this.removeAssignedPerson(person, 1)}
+                        key={person.id}
+                        style={styles.selectedPeopleButtons}>
+                        <Text>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+              <Item floatingLabel>
+                <Label>Resource(s)</Label>
+                <Input
+                  value={this.state.resourcesSearchTerm}
+                  onChangeText={(val) => this.updateSearch(val, 2)}
+                />
+              </Item>
+              <View style={{flexDirection: 'row', flex: 1}}>
+                {this.state.resourcesSearchTerm.length >= 2 ? (
+                  <View style={{flex: 0.5}}>
+                    {filteredResources.map((person) => {
+                      return (
+                        <TouchableOpacity
+                          type="button"
+                          onPress={() => this.addResource(person)}
+                          key={person.id}
+                          style={styles.peopleButtons}>
+                          <Text style={{color: 'white'}}>
+                            {person.name}&nbsp;{person.surname}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <View style={{flex: 0.5}}></View>
+                )}
+                <View style={{flex: 0.5}}>
+                  {this.state.resourcesList.map((person) => {
+                    return (
+                      <TouchableOpacity
+                        type="button"
+                        onPress={() => this.removeAssignedPerson(person, 2)}
+                        key={person.id}
+                        style={styles.selectedPeopleButtons}>
+                        <Text>
+                          {person.name}&nbsp;{person.surname}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+            </Form>
+            {this.state.dateTimePicker && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={
+                  new Date(
+                    new Date(this.state.dateTimeType.value).getTime() +
+                      new Date().getTimezoneOffset() * 60 * 1000,
+                  )
+                }
+                mode={this.state.dateTimeType.type}
+                is24Hour={true}
+                display="default"
+                onChange={(event, selectedDate) =>
+                  this.handleDateTimeSelect(
+                    event,
+                    selectedDate,
+                    this.state.dateTimeType,
+                  )
+                }
+              />
+            )}
+          </ScrollView>
+          <View styles={{padding: 20}}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={this.handleSubmit}>
+              <Text style={{color: 'white'}}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </React.Fragment>
+      )
+    :
+      (
+        <React.Fragment>
+          <ScrollView style={{height: 650}}>
+            <Form>
+              <Text style={{color: 'red', alignSelf: 'center'}}>
+                {this.state.error}
               </Text>
-              <Switch
-                trackColor={{false: '#767577', true: '#81b0ff'}}
-                thumbColor={this.state.issue ? '#f5dd4b' : '#f4f3f4'}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={(value) => {
-                  if (parseInt(this.state.progress) === 100) {
-                    this.setState({
-                      error:
-                        'You cannot specify that a complete task has an issue.',
-                      issue: false,
-                    });
-                    this.value = false;
-                  } else {
-                    this.setState({issue: value});
-                    this.value = this.state.issue;
-                  }
-                }}
-                value={this.state.issue}
-                style={{alignItems: 'flex-end'}}
-              />
-            </View>
-            <Item floatingLabel>
-              <Label>Package Manager</Label>
-              <Input
-                value={this.state.pacManSearchTerm}
-                onChangeText={(val) => this.updateSearch(val, 0)}
-              />
-            </Item>
+              <Item floatingLabel disabled>
+                <Label>Name of Task</Label>
+                <Input
+                  value={this.state.name}
+                  onChangeText={() => {}}
+                  onEndEditing={() => {}}
+                />
+              </Item>
+              <Item floatingLabel disabled>
+                <Label>Description of Task</Label>
+                <Input
+                  value={this.state.description}
+                  onChangeText={() => {}}
+                />
+              </Item>
+              <View style={{flex: 1, marginBottom: 15}}>
+                <Text style={styles.text}>{String(this.state.progress)}</Text>
+                <Slider
+                  step={1}
+                  maximumValue={100}
+                  value={this.state.progress}
+                  onValueChange={(value) => {
+                    if (parseInt(value) === 100) {
+                      this.setState({issue: false});
+                    }
+                    this.setState({progress: value});
+                    this.value = this.state.progress;
+                  }}
+                />
+              </View>
 
-            <View style={{flexDirection: 'row', flex: 1}}>
-              {this.state.pacManSearchTerm.length >= 2 ? (
-                <View style={{flex: 0.5}}>
-                  {filteredPacMan.map((person) => {
-                    return (
-                      <TouchableOpacity
-                        type="button"
-                        onPress={() => this.addPacMan(person)}
-                        key={person.id}
-                        style={styles.peopleButtons}>
-                        <Text style={{color: 'white'}}>
-                          {person.name}&nbsp;{person.surname}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              ) : (
-                <View style={{flex: 0.5}}></View>
-              )}
-              <View style={{flex: 0.5}}>
-                {this.state.pacManList.map((person) => {
-                  return (
-                    <TouchableOpacity
-                      type="button"
-                      onPress={() => this.removeAssignedPerson(person, 0)}
-                      key={person.id}
-                      style={styles.selectedPeopleButtons}>
-                      <Text>
-                        {person.name}&nbsp;{person.surname}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              <View
+                style={
+                  (styles.modalText,
+                  {
+                    flex: 1,
+                    flexDirection: 'row',
+                    paddingTop: 20,
+                    paddingLeft: 24,
+                  })
+                }>
+                <Text style={{alignItems: 'flex-start', fontSize: 16}}>
+                  There is an issue with this task:{' '}
+                </Text>
+                <Switch
+                  trackColor={{false: '#767577', true: '#81b0ff'}}
+                  thumbColor={this.state.issue ? '#f5dd4b' : '#f4f3f4'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={(value) => {
+                    if (parseInt(this.state.progress) === 100) {
+                      this.setState({
+                        error:
+                          'You cannot specify that a complete task has an issue.',
+                        issue: false,
+                      });
+                      this.value = false;
+                    } else {
+                      this.setState({issue: value});
+                      this.value = this.state.issue;
+                    }
+                  }}
+                  value={this.state.issue}
+                  style={{alignItems: 'flex-end'}}
+                />
               </View>
-            </View>
-            <Item floatingLabel>
-              <Label>Responsible Person</Label>
-              <Input
-                value={this.state.resPersonSearchTerm}
-                onChangeText={(val) => this.updateSearch(val, 1)}
-              />
-            </Item>
-            <View style={{flexDirection: 'row', flex: 1}}>
-              {this.state.resPersonSearchTerm.length >= 2 ? (
-                <View style={{flex: 0.5}}>
-                  {filteredResPerson.map((person) => {
-                    return (
-                      <TouchableOpacity
-                        type="button"
-                        onPress={() => this.addResPerson(person)}
-                        key={person.id}
-                        style={styles.peopleButtons}>
-                        <Text style={{color: 'white'}}>
-                          {person.name}&nbsp;{person.surname}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              ) : (
-                <View style={{flex: 0.5}}></View>
-              )}
-              <View style={{flex: 0.5}}>
-                {this.state.resPersonList.map((person) => {
-                  return (
-                    <TouchableOpacity
-                      type="button"
-                      onPress={() => this.removeAssignedPerson(person, 1)}
-                      key={person.id}
-                      style={styles.selectedPeopleButtons}>
-                      <Text>
-                        {person.name}&nbsp;{person.surname}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-            <Item floatingLabel>
-              <Label>Resource(s)</Label>
-              <Input
-                value={this.state.resourcesSearchTerm}
-                onChangeText={(val) => this.updateSearch(val, 2)}
-              />
-            </Item>
-            <View style={{flexDirection: 'row', flex: 1}}>
-              {this.state.resourcesSearchTerm.length >= 2 ? (
-                <View style={{flex: 0.5}}>
-                  {filteredResources.map((person) => {
-                    return (
-                      <TouchableOpacity
-                        type="button"
-                        onPress={() => this.addResource(person)}
-                        key={person.id}
-                        style={styles.peopleButtons}>
-                        <Text style={{color: 'white'}}>
-                          {person.name}&nbsp;{person.surname}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              ) : (
-                <View style={{flex: 0.5}}></View>
-              )}
-              <View style={{flex: 0.5}}>
-                {this.state.resourcesList.map((person) => {
-                  return (
-                    <TouchableOpacity
-                      type="button"
-                      onPress={() => this.removeAssignedPerson(person, 2)}
-                      key={person.id}
-                      style={styles.selectedPeopleButtons}>
-                      <Text>
-                        {person.name}&nbsp;{person.surname}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-          </Form>
-          {this.state.dateTimePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={
-                new Date(
-                  new Date(this.state.dateTimeType.value).getTime() +
-                    new Date().getTimezoneOffset() * 60 * 1000,
-                )
-              }
-              mode={this.state.dateTimeType.type}
-              is24Hour={true}
-              display="default"
-              onChange={(event, selectedDate) =>
-                this.handleDateTimeSelect(
-                  event,
-                  selectedDate,
-                  this.state.dateTimeType,
-                )
-              }
-            />
-          )}
-        </ScrollView>
-        <View styles={{padding: 20}}>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={this.handleSubmit}>
-            <Text style={{color: 'white'}}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </React.Fragment>
+            </Form>
+          </ScrollView>
+          <View styles={{padding: 20}}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={this.handleSubmit}>
+              <Text style={{color: 'white'}}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </React.Fragment>
+      )
     );
   }
 }
