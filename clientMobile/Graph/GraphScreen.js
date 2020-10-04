@@ -587,6 +587,7 @@ class WebViewWrapper extends Component {
   }
 
   render() {
+    //return null;
     return this.props.views !== null ? (
       <WebView
         useWebKit={true}
@@ -596,16 +597,17 @@ class WebViewWrapper extends Component {
         startInLoadingState={true}
         source={{
           uri: 'http://projecttree.herokuapp.com/mobile',
-          method: 'POST',
-          body: `nodes=${JSON.stringify(
-            this.props.nodes,
+           method: 'POST',
+           headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+           body: `nodes=${JSON.stringify(
+            this.props.nodes
           )}&links=${JSON.stringify(
-            this.props.links,
+            this.props.links
           )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
             this.props.displayCriticalPath
           }&projId=${this.props.projID}&views=${JSON.stringify(
-            this.props.views,
-          )}`
+            this.props.views
+          )}`,
         }}
         onMessage={(event) => this.handleOnMessage(event)}
       />
