@@ -33,6 +33,8 @@ function getProjectTasks(req, res) {
                   record._fields[0].properties.timeComplete
                 )
               : null,
+          positionX: record._fields[0].properties.positionX.low,
+          positionY: record._fields[0].properties.positionY.low,
         });
       });
       db.getSession()

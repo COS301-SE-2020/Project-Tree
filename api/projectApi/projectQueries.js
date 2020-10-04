@@ -71,6 +71,7 @@ async function createProject(req, res) {
           id: result.records[0]._fields[0].identity.low,
           name: result.records[0]._fields[0].properties.name,
           description: result.records[0]._fields[0].properties.description,
+          accessCode: result.records[0]._fields[0].properties.accessCode,
           permissions: [
             result.records[0]._fields[0].properties.packManCT,
             result.records[0]._fields[0].properties.packManDT,
@@ -188,6 +189,7 @@ async function updateProject(req, res) {
           id: result.records[0]._fields[0].identity.low,
           name: result.records[0]._fields[0].properties.name,
           description: result.records[0]._fields[0].properties.description,
+          accessCode: result.records[0]._fields[0].properties.accessCode,
           permissions: [
             result.records[0]._fields[0].properties.packManCT,
             result.records[0]._fields[0].properties.packManDT,

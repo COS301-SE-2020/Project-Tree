@@ -335,7 +335,6 @@ class TaskSidebar extends React.Component {
   }
 
   printUsers(people) {
-    console.log(people);
     let list = [];
     for (let x = 0; x < people.length; x++) {
       list.push(

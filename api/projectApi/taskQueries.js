@@ -17,7 +17,9 @@ function createTask(req, res) {
           description: "${req.body.changedInfo.description}", 
           projId: ${req.body.changedInfo.project.id}, 
           type: "Incomplete",
-          progress: 0
+          progress: 0,
+          positionX: ${req.body.changedInfo.positionX},
+          positionY: ${req.body.changedInfo.positionY}
         })-[n:PART_OF]->(b) 
         RETURN a
       `
@@ -36,6 +38,8 @@ function createTask(req, res) {
         duration: parseInt(result.records[0]._fields[0].properties.duration),
         type: result.records[0]._fields[0].properties.type,
         progress: result.records[0]._fields[0].properties.progress.low,
+        positionX: result.records[0]._fields[0].properties.positionX.low,
+        positionY: result.records[0]._fields[0].properties.positionY.low,
       };
       req.body.nodes.push(task);
       res.status(200);
@@ -145,6 +149,8 @@ function updateTask(req, res) {
           result.records[0]._fields[0].properties.endDate
         ),
         duration: parseInt(result.records[0]._fields[0].properties.duration),
+        positionX: result.records[0]._fields[0].properties.positionX.low,
+        positionY: result.records[0]._fields[0].properties.positionY.low,
       };
       for (var x = 0; x < req.body.nodes.length; x++) {
         if (req.body.nodes[x].id == changedTask.id) {

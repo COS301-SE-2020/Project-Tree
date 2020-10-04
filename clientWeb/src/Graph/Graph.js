@@ -98,8 +98,8 @@ function makeElement(node, criticalPathNodes) {
   }
 
   else{
-    xVal = node.xval;
-    yVal = node.yval;
+    xVal = node.positionX;
+    yVal = node.positionY;
   }
 
   return new joint.shapes.standard.Rectangle({
@@ -215,7 +215,8 @@ class Graph extends React.Component {
       viewId_source: null,
       viewId_target: null,
       displayCriticalPath: true,
-      savePosition: false
+      savePosition: false,
+      newPosition: {x:0, y:0}
     };
     this.handleClick = this.handleClick.bind(this);
     this.drawGraph = this.drawGraph.bind(this);
@@ -361,9 +362,9 @@ class Graph extends React.Component {
     }
   }
 
-  addTask() {
+  addTask(cell) {
     if (this.props.userPermission["create"] === true)
-      this.setState({ createTask: true });
+      this.setState({ createTask: true, newPosition: {x:cell.offsetX, y:cell.offsetY} });
     else alert("You do not have the permission to create a task");
   }
 
@@ -395,7 +396,9 @@ class Graph extends React.Component {
         this.props.nodes[x].changedY=center.y
       }
     }
-    this.setState({savePosition:true})
+    if(this.state.savePosition !== true){
+      this.setState({savePosition:true});
+    }
   }
 
   saveChanges(){
@@ -434,13 +437,6 @@ class Graph extends React.Component {
       model: graph,
       linkPinning: false,
     });
-
-    for(let x = 0; x < this.props.nodes.length; x++){
-      let xval = Math.floor((Math.random() * 600));
-      let yval = Math.floor((Math.random() * 600));
-      this.props.nodes[x].xval = xval;
-      this.props.nodes[x].yval = yval;
-    }
 
     paper.on("element:contextmenu", this.toggleCreateDependency);
 
@@ -502,7 +498,7 @@ class Graph extends React.Component {
   }
 
   hideModal() {
-    this.setState({ createTask: false });
+    this.setState({ createTask: false, newPosition: {x:0, y:0} });
   }
 
   openCreateDependency() {
@@ -716,6 +712,7 @@ class Graph extends React.Component {
           <CreateTask
             hideModal={this.hideModal}
             project={this.props.project}
+            position={this.state.newPosition}
             getProjectInfo={this.props.getProjectInfo}
             setTaskInfo={this.props.setTaskInfo}
             toggleSidebar={this.props.toggleSidebar}

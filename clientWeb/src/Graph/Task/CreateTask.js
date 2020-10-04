@@ -195,6 +195,8 @@ class CreateTask extends React.Component {
       startDate: this.state.startDate,
       duration: this.state.duration,
       endDate: this.state.endDate,
+      positionX: this.props.position.x,
+      positionY: this.props.position.y,
     };
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
