@@ -26,7 +26,7 @@ const axios = require('axios').default;
 export default class SettingsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {pfp: 'https://i.ibb.co/MRpbpHN/default.png',  modalVisible: false};
+    this.state = {pfp: 'https://i.ibb.co/MRpbpHN/default.png',  modalVisible: false, token:''};
 
     this.setModalVisible = this.setModalVisible.bind(this);
     this.takePhotoFromCamera = this.takePhotoFromCamera.bind(this);
@@ -78,6 +78,7 @@ export default class SettingsScreen extends Component {
   }
 
   choosePhotoFromLibrary(){
+    console.log(this.state.token)
     ImagePicker.openPicker({
       width: 300,
       height: 300,
@@ -92,46 +93,9 @@ export default class SettingsScreen extends Component {
 
   async fileChange(file) 
   {
-    // let data = {
-    //   token: file
-    // };
-    // data = JSON.stringify(data);
-    // const response = await fetch(
-    //   'http://10.0.2.2:5000/user/change',
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       Accept: 'application/json',
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: data,
-    //   },
-    // );
-    // const body = await response.json();
-    // console.log(body)  
-
-    // let body = new FormData()
-    // body.append('image', file)
-    // const test1 =  axios({
-    //   method: 'post',
-    //   url: 'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
-    // })
-    // console.log(test1)
-
-    // const response = await fetch(
-    //   'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
-    //   {
-    //     method: 'POST',
-    //     data: {image: file.data}
-    //   },
-    // );
-    // console.log("SAD")
-    // let x = await response.json();
-    // console.log(x)  
-
+    let tok = this.state.token
     let body = new FormData()
     body.append('image', file.data)
-
     await axios({
       method: 'post',
       url: 'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
@@ -141,12 +105,30 @@ export default class SettingsScreen extends Component {
       contentType: false,
       data: body
     }) .then(function (response) {
-      let x = (response.data.url)
-      console.log(x)
+      let x = (response.data.data.url)
+      global_pfp= (response.data.data.url)
+      let data = {
+        token: tok,
+        profilepicture: x
+      }
+      data = JSON.stringify(data)
+
+       const res =  fetch(
+        'http://10.0.2.2:5000/user/change',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: data
+        },
+      )
     })
     .catch(function (error) {
-      console.log(error);
-    });
+      console.log(error)
+    })
+    this.setState({pfp: global_pfp})
   }
 
   hideModal() 
@@ -159,7 +141,11 @@ export default class SettingsScreen extends Component {
       <View style={styles.container}>
         <StatusBar backgroundColor="#008656" barStyle="light-content" />
         <View style={styles.header}>
-          <Image style={styles.logo} source={{uri: this.state.pfp}} />
+        <TouchableOpacity
+              onPress={() => {
+                this.choosePhotoFromLibrary();
+              }}>
+          <Image style={styles.logo} source={{uri: this.state.pfp}} /></TouchableOpacity>
           <Text style={styles.text_header}>User Details</Text>
         </View>
         <Animatable.View
@@ -174,14 +160,14 @@ export default class SettingsScreen extends Component {
           <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
-                this.setState({modalVisible: true});
+                this.choosePhotoFromLibrary();
               }}
               style={[
                 styles.signIn,
                 {
                   borderColor: '#184D47',
                   borderWidth: 2,
-                  marginTop: 40,
+                  marginTop: 180,
                 },
               ]}>
               <Text
@@ -191,7 +177,7 @@ export default class SettingsScreen extends Component {
                     color: '#008656',
                   },
                 ]}>
-                Change PFP
+                Change Profile Picture
               </Text>
             </TouchableOpacity>
           </View>  
@@ -205,7 +191,7 @@ export default class SettingsScreen extends Component {
                 {
                   borderColor: '#184D47',
                   borderWidth: 2,
-                  marginTop: 20,
+                  marginTop: 10,
                 },
               ]}>
               <Text
@@ -229,7 +215,7 @@ export default class SettingsScreen extends Component {
                 {
                   borderColor: '#184D47',
                   borderWidth: 2,
-                  marginTop: 20,
+                  marginTop: 10,
                 },
               ]}>
               <Text
@@ -243,7 +229,7 @@ export default class SettingsScreen extends Component {
               </Text>
             </TouchableOpacity>
           </View> 
-          <Modal
+          {/* <Modal
             animationType="fade"
             transparent={true}
             visible={this.state.modalVisible}
@@ -279,7 +265,7 @@ export default class SettingsScreen extends Component {
             </TouchableOpacity>
                 </View>
               </View>
-            </Modal>         
+            </Modal>          */}
         </Animatable.View>
       </View>
     );
@@ -375,12 +361,12 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#FFFFFF',
     paddingTop: 20,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
-    // shadowRadius: 5,
-    // shadowOpacity: 0.4,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 0},
+    shadowRadius: 5,
+    shadowOpacity: 0.4,
   },
   panelHeader: {
     alignItems: 'center',

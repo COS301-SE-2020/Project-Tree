@@ -6,6 +6,7 @@ var imgbbUploader = require('imgbb-uploader');
 
 
 async function editUser(req, res) {
+  console.log(req.body)
   let pfp = req.body.profilepicture;
   if (pfp == "") {
     pfp = req.body.oldprofile;
@@ -453,9 +454,35 @@ async function verify(token) {
 
 async function changePictureMobile(req, res) 
 {
-  // imgbbUploader("your-imgbb-api-key-string", "home/absolute/path/to/your/image/image.png")
-  // .then(response => console.log(response))
-  // .catch(error => console.error(1))
+  let pfp = req.body.profilepicture
+  let userId = await verify(req.body.token);
+  if (userId != null) {
+    db.getSession()
+      .run(
+        `
+          MATCH (a) 
+          WHERE ID(a) = ${userId}
+          SET a += {
+            profilepicture:"${pfp}"
+          } 
+          RETURN a
+        `
+      )
+      .then((result) => {
+        res.status(200);
+        res.send({ msg: "Profile Changed", pic: pfp });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err });
+      });
+  } else {
+    res.status(400);
+    res.send({
+      message: "Invalid User",
+    });
+  }
 }
 
 module.exports = {
