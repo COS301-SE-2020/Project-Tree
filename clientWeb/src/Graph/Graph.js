@@ -91,10 +91,21 @@ function makeElement(node, criticalPathNodes) {
     };
   }
 
+  let xVal, yVal;
+  if(node.changedX !== undefined){
+    xVal = node.changedX;
+    yVal = node.changedY;
+  }
+
+  else{
+    xVal = node.xval;
+    yVal = node.yval;
+  }
+
   return new joint.shapes.standard.Rectangle({
     id: `${node.id}`,
     size: { width: width, height: height },
-    position: { x: node.xval, y: node.yval},
+    position: { x: xVal, y: yVal },
     attrs: {
       type: "node",
       body: {
@@ -380,11 +391,37 @@ class Graph extends React.Component {
     var id = cell.id
     for(let x = 0; x < this.props.nodes.length; x++){
       if(this.props.nodes[x].id === parseInt(id)){
-        this.props.nodes[x].xval=center.x
-        this.props.nodes[x].yval=center.y
+        this.props.nodes[x].changedX=center.x
+        this.props.nodes[x].changedY=center.y
       }
     }
     this.setState({savePosition:true})
+  }
+
+  saveChanges(){
+    let changedNodes = [];
+    let nodes = [...this.props.nodes]
+
+    for(let x=0; x<nodes.length; x++){
+      if(nodes[x].changedX !== undefined){
+        changedNodes.push(nodes[x]);
+      }
+    }
+
+    console.log(changedNodes)
+  }
+
+  clearChanges(){
+    let nodes = this.props.nodes;
+
+    for(let x=0; x<nodes.length; x++){
+      if(nodes[x].changedX !== undefined){
+        nodes[x].changedX = undefined;
+        nodes[x].changedY = undefined;
+      }
+    }
+
+    this.setState({savePosition:false});
   }
 
   componentDidMount() {
@@ -449,7 +486,7 @@ class Graph extends React.Component {
     var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
     cells = createViews(cells, this.props.views);
     this.state.graph.resetCells(cells);
-    console.log(this.state.graph.toJSON())
+    // console.log(this.state.graph.toJSON())
     // joint.layout.DirectedGraph.layout(this.state.graph, {
     //   dagre: dagre,
     //   graphlib: graphlib,
@@ -522,16 +559,30 @@ class Graph extends React.Component {
                   </OverlayTrigger>
                 </Col>
                 {this.state.savePosition === true ? (
+                  <React.Fragment>
+                    <Col className="text-center">
+                    <Button
+                      block
+                      variant="outline-secondary"
+                      size="sm"
+                      style={{ overflow: "hidden" }}
+                      onClick={()=>this.saveChanges()}
+                    >
+                      Save Graph
+                    </Button>
+                  </Col>
                   <Col className="text-center">
                     <Button
                       block
                       variant="outline-secondary"
                       size="sm"
                       style={{ overflow: "hidden" }}
+                      onClick={()=>this.clearChanges()}
                     >
-                      Save Graph
+                      Clear Changes
                     </Button>
                   </Col>
+                  </React.Fragment>
                 ): null}
                 {this.props.userPermission["create"] === true ? (
                   <Col className="text-center">
