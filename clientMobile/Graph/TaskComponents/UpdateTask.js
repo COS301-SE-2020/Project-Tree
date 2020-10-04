@@ -10,7 +10,7 @@ import {
   Switch,
 } from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "react-native-modal-datetime-picker";
 import ms from 'ms';
 
 class UpdateTask extends Component {
@@ -100,11 +100,7 @@ class UpdateTaskForm extends Component {
     this.removeAssignedPerson = this.removeAssignedPerson.bind(this);
   }
 
-  handleDateTimeSelect(event, selectedDate, type) {
-    if (event.type === 'dismissed') {
-      this.setState({dateTimePicker: false});
-      return;
-    }
+  handleDateTimeSelect(selectedDate, type) {
     let date = new Date(
       new Date(selectedDate).getTime() -
         new Date().getTimezoneOffset() * 60 * 1000,
@@ -770,27 +766,26 @@ class UpdateTaskForm extends Component {
               </View>
             </View>
           </Form>
-          {this.state.dateTimePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={
-                new Date(
-                  new Date(this.state.dateTimeType.value).getTime() +
-                    new Date().getTimezoneOffset() * 60 * 1000,
-                )
-              }
-              mode={this.state.dateTimeType.type}
-              is24Hour={true}
-              display="default"
-              onChange={(event, selectedDate) =>
-                this.handleDateTimeSelect(
-                  event,
-                  selectedDate,
-                  this.state.dateTimeType,
-                )
-              }
-            />
-          )}
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={
+              new Date(
+                new Date(this.state.dateTimeType.value).getTime() +
+                  new Date().getTimezoneOffset() * 60 * 1000,
+              )
+            }
+            mode={this.state.dateTimeType.type}
+            is24Hour={true}
+            display="default"
+            isVisible={this.state.dateTimePicker}
+            onCancel={()=>(this.setState({dateTimePicker: false}))}
+            onConfirm={(selectedDate) =>
+              this.handleDateTimeSelect(
+                selectedDate,
+                this.state.dateTimeType,
+              )
+            }
+          />
         </ScrollView>
         <View styles={{padding: 20}}>
           <TouchableOpacity

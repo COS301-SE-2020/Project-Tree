@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "react-native-modal-datetime-picker";
 import ms from 'ms';
 
 class CreateDependency extends Component {
