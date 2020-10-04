@@ -94,6 +94,7 @@ function makeElement(node, criticalPathNodes) {
   return new joint.shapes.standard.Rectangle({
     id: `${node.id}`,
     size: { width: width, height: height },
+    position: { x: node.xval, y: node.yval},
     attrs: {
       type: "node",
       body: {
@@ -203,6 +204,7 @@ class Graph extends React.Component {
       viewId_source: null,
       viewId_target: null,
       displayCriticalPath: true,
+      savePosition: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.drawGraph = this.drawGraph.bind(this);
@@ -217,6 +219,7 @@ class Graph extends React.Component {
     this.closeCreateDependency = this.closeCreateDependency.bind(this);
     this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
     this.clearDependency = this.clearDependency.bind(this);
+    this.moveNode = this.moveNode.bind(this);
   }
 
   recDepCheck(curr, target) {
@@ -372,6 +375,18 @@ class Graph extends React.Component {
     this.paperScale(graphScale, graphScale);
   }
 
+  moveNode(cell){
+    var center = cell.getBBox().center();
+    var id = cell.id
+    for(let x = 0; x < this.props.nodes.length; x++){
+      if(this.props.nodes[x].id === parseInt(id)){
+        this.props.nodes[x].xval=center.x
+        this.props.nodes[x].yval=center.y
+      }
+    }
+    this.setState({savePosition:true})
+  }
+
   componentDidMount() {
     let graph = new joint.dia.Graph();
     paper = new joint.dia.Paper({
@@ -382,6 +397,13 @@ class Graph extends React.Component {
       model: graph,
       linkPinning: false,
     });
+
+    for(let x = 0; x < this.props.nodes.length; x++){
+      let xval = Math.floor((Math.random() * 600));
+      let yval = Math.floor((Math.random() * 600));
+      this.props.nodes[x].xval = xval;
+      this.props.nodes[x].yval = yval;
+    }
 
     paper.on("element:contextmenu", this.toggleCreateDependency);
 
@@ -406,6 +428,8 @@ class Graph extends React.Component {
       paper.scale(graphScale, graphScale);
     });
 
+    graph.on('change:position', this.moveNode);
+
     $("#paper").mousemove(function (event) {
       if (dragStartPosition)
         paper.translate(
@@ -425,14 +449,15 @@ class Graph extends React.Component {
     var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
     cells = createViews(cells, this.props.views);
     this.state.graph.resetCells(cells);
-    joint.layout.DirectedGraph.layout(this.state.graph, {
-      dagre: dagre,
-      graphlib: graphlib,
-      setLinkVertices: false,
-      rankDir: "TB",
-      nodeSep: 100,
-      rankSep: 100,
-    });
+    console.log(this.state.graph.toJSON())
+    // joint.layout.DirectedGraph.layout(this.state.graph, {
+    //   dagre: dagre,
+    //   graphlib: graphlib,
+    //   setLinkVertices: false,
+    //   rankDir: "TB",
+    //   nodeSep: 100,
+    //   rankSep: 100,
+    // });
   }
 
   showModal() {
@@ -496,7 +521,19 @@ class Graph extends React.Component {
                     <i className="fa fa-question-circle"></i>
                   </OverlayTrigger>
                 </Col>
-                {this.props.userPermission["create"] === true ?
+                {this.state.savePosition === true ? (
+                  <Col className="text-center">
+                    <Button
+                      block
+                      variant="outline-secondary"
+                      size="sm"
+                      style={{ overflow: "hidden" }}
+                    >
+                      Save Graph
+                    </Button>
+                  </Col>
+                ): null}
+                {this.props.userPermission["create"] === true ? (
                   <Col className="text-center">
                     <Button
                       onClick={()=>this.showModal()}
@@ -507,7 +544,8 @@ class Graph extends React.Component {
                     >
                       Create Task
                     </Button>
-                  </Col>:null}
+                  </Col>
+                ): null}
                 {dependency != null ? (
                   <Col className="text-center">
                     <Button
