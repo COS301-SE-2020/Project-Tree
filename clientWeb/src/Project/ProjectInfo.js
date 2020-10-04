@@ -38,7 +38,7 @@ class ProjectInfo extends React.Component {
                 {this.props.userPermission["project"] === true ? (
                   <Col className="text-center my-1">
                     <UpdateProject
-                      project={this.props.project.projectInfo}
+                      project={this.props.project}
                       setProject={(project) => {
                         this.props.setProject(project);
                       }}
