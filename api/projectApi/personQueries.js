@@ -1,7 +1,6 @@
 const db = require("../DB");
 const { isEmpty } = require("lodash");
 const sendProjectNotification = require("../notificationApi/notificationHandler");
-const notificationHandler = require("../notificationApi/notificationHandler");
 
 function assignPeople(req, res) {
   let taskId = req.body.ct_taskId;
@@ -625,12 +624,37 @@ async function getPendingMembers(req, res) {
 }
 
 async function authoriseMember(req, res) {
+
+  let user = JSON.parse(req.body.user);
+  let project = JSON.parse(req.body.project);
+  
+  let notification = null;
+  if(req.body.check == "true" || req.body.check == true){
+    notification = "Your request to join has been accepted"
+  }
+
+  else{
+    notification = "Your request to join has been declined"
+  }
+  
+  let notificationData = {
+    type: 'auto',
+    fromName: 'Project Tree',
+    recipients: [user.email],
+    projName: project.name,
+    projID: project.id,
+    mode: 0,
+    message: notification
+  }
+
+  sendProjectNotification.sendNotification({body:notificationData});
+
   let session = db.getSession();
   await session
     .run(
       `
         MATCH (c:User)-[r:PENDING_MEMBER]->(d:Project)
-        WHERE id(c)=${req.body.user} and id(d)=${req.body.project}
+        WHERE id(c)=${user.id} and id(d)=${project.id}
         DETACH DELETE r
       `
     )
@@ -645,7 +669,7 @@ async function authoriseMember(req, res) {
       .run(
         `
           MATCH (c:User), (d:Project)
-          WHERE id(c)=${req.body.user} and id(d)=${req.body.project}
+          WHERE id(c)=${user.id} and id(d)=${project.id}
           CREATE (c)-[:MEMBER]->(d)
           RETURN c
         `
