@@ -232,6 +232,7 @@ class Graph extends React.Component {
     this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
     this.clearDependency = this.clearDependency.bind(this);
     this.moveNode = this.moveNode.bind(this);
+    this.autoPosition = this.autoPosition.bind(this);
   }
 
   recDepCheck(curr, target) {
@@ -388,7 +389,7 @@ class Graph extends React.Component {
   }
 
   moveNode(cell){
-    var center = cell.getBBox().center();
+    var center = cell.getBBox().topLeft();
     var id = cell.id
     for(let x = 0; x < this.props.nodes.length; x++){
       if(this.props.nodes[x].id === parseInt(id)){
@@ -401,7 +402,7 @@ class Graph extends React.Component {
     }
   }
 
-  saveChanges(){
+  async saveChanges(){
     let changedNodes = [];
     let nodes = [...this.props.nodes]
 
@@ -411,7 +412,26 @@ class Graph extends React.Component {
       }
     }
 
-    console.log(changedNodes)
+    let data = {
+      changedNodes: changedNodes
+    };
+
+    this.setState({savePosition:false})
+
+    data = JSON.stringify(data);
+    const response = await fetch("/task/savePositions", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: data,
+    });
+    
+    const body = await response.json();
+    if(body.message !== "ok"){
+      alert("Graph positions could not be saved")
+    }
   }
 
   clearChanges(){
@@ -427,13 +447,25 @@ class Graph extends React.Component {
     this.setState({savePosition:false});
   }
 
+  autoPosition(){
+    joint.layout.DirectedGraph.layout(this.state.graph, {
+      dagre: dagre,
+      graphlib: graphlib,
+      setLinkVertices: false,
+      rankDir: "TB",
+      nodeSep: 100,
+      rankSep: 100,
+    });
+    this.setState({savePosition:true});
+  }
+
   componentDidMount() {
     let graph = new joint.dia.Graph();
     paper = new joint.dia.Paper({
       el: $("#paper"),
       width: "100%",
       height: "93%",
-      gridSize: 50,
+      gridSize: 1,
       model: graph,
       linkPinning: false,
     });
@@ -482,15 +514,6 @@ class Graph extends React.Component {
     var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
     cells = createViews(cells, this.props.views);
     this.state.graph.resetCells(cells);
-    // console.log(this.state.graph.toJSON())
-    // joint.layout.DirectedGraph.layout(this.state.graph, {
-    //   dagre: dagre,
-    //   graphlib: graphlib,
-    //   setLinkVertices: false,
-    //   rankDir: "TB",
-    //   nodeSep: 100,
-    //   rankSep: 100,
-    // });
   }
 
   showModal() {
@@ -559,18 +582,18 @@ class Graph extends React.Component {
                     <Col className="text-center">
                     <Button
                       block
-                      variant="outline-secondary"
+                      variant="success"
                       size="sm"
                       style={{ overflow: "hidden" }}
                       onClick={()=>this.saveChanges()}
                     >
-                      Save Graph
+                      Save Changes
                     </Button>
                   </Col>
                   <Col className="text-center">
                     <Button
                       block
-                      variant="outline-secondary"
+                      variant="danger"
                       size="sm"
                       style={{ overflow: "hidden" }}
                       onClick={()=>this.clearChanges()}
@@ -626,7 +649,6 @@ class Graph extends React.Component {
                       block
                       xs={2}
                       size="sm"
-                      style={{ height: "31px", overflow: "hidden" }}
                       onClick={() => {
                         this.setState({
                           displayCriticalPath: !this.state.displayCriticalPath,
@@ -675,6 +697,16 @@ class Graph extends React.Component {
                     onClick={this.resetZoom}
                   >
                     <i className="fa fa-repeat"></i>
+                  </Button>
+                </Col>
+                <Col className="text-center">
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    block
+                    onClick={this.autoPosition}
+                  >
+                    Auto Postion Tasks
                   </Button>
                 </Col>
               </Row>

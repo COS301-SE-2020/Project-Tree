@@ -223,10 +223,35 @@ async function deleteClone(req, res) {
     });
 }
 
+async function savePositions(req,res){
+  for(let x = 0; x < req.body.changedNodes.length; x++){
+    await db
+      .getSession()
+      .run(
+        `
+        MATCH (a)
+        WHERE ID(a) = ${req.body.changedNodes[x].id}
+        SET a += {
+          positionX: ${req.body.changedNodes[x].changedX},
+          positionY: ${req.body.changedNodes[x].changedY}
+        }
+      `
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err });
+      });
+  }
+  res.status(200);
+  res.send({ message: "ok" });
+}
+
 module.exports = {
   createTask,
   deleteTask,
   updateTask,
   createClone,
   deleteClone,
+  savePositions
 };
