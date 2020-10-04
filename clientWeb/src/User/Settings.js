@@ -133,6 +133,7 @@ class Settings extends React.Component {
   async fileChange() {
     var file = document.getElementById("input_img");
     var form = new FormData();
+    console.log(file.files[0])
     form.append("image", file.files[0]);
     var settings = {
       url:

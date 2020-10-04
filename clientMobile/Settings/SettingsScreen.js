@@ -6,12 +6,22 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
+  TextInput,
+  ScrollView,
   Image,
   Modal
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-community/async-storage';
+import {Icon} from 'native-base';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
 import ImagePicker from 'react-native-image-crop-picker';
+import DocumentPicker from 'react-native-document-picker';
+
+
+let global_pfp = "";
+const axios = require('axios').default;
 
 export default class SettingsScreen extends Component {
   constructor(props) {
@@ -21,7 +31,7 @@ export default class SettingsScreen extends Component {
     this.setModalVisible = this.setModalVisible.bind(this);
     this.takePhotoFromCamera = this.takePhotoFromCamera.bind(this);
     this.choosePhotoFromLibrary = this.choosePhotoFromLibrary.bind(this);
-
+    this.fileChange = this.fileChange.bind(this);
   }
 
   async setModalVisible(visible) {
@@ -68,17 +78,80 @@ export default class SettingsScreen extends Component {
   }
 
   choosePhotoFromLibrary(){
-    // ImagePicker.openPicker({
-    //   width: 300,
-    //   height: 300,
-    //   cropping: true,
-    //   compressImageQuality: 0.7
-    // }).then(image => {
-    //   console.log(image);
-    //   setImage(image.path);
-    //   this.bs.current.snapTo(1);
-    // });
+    ImagePicker.openPicker({
+      width: 300,
+      height: 300,
+      cropping: true,
+      compressImageQuality: 0.7,
+      includeBase64: true
+    }).then(image => {
+      this.fileChange(image);
+    });
     console.log("hi")
+  }
+
+  async fileChange(file) 
+  {
+    // let data = {
+    //   token: file
+    // };
+    // data = JSON.stringify(data);
+    // const response = await fetch(
+    //   'http://10.0.2.2:5000/user/change',
+    //   {
+    //     method: 'POST',
+    //     headers: {
+    //       Accept: 'application/json',
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: data,
+    //   },
+    // );
+    // const body = await response.json();
+    // console.log(body)  
+
+    // let body = new FormData()
+    // body.append('image', file)
+    // const test1 =  axios({
+    //   method: 'post',
+    //   url: 'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
+    // })
+    // console.log(test1)
+
+    // const response = await fetch(
+    //   'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
+    //   {
+    //     method: 'POST',
+    //     data: {image: file.data}
+    //   },
+    // );
+    // console.log("SAD")
+    // let x = await response.json();
+    // console.log(x)  
+
+    let body = new FormData()
+    body.append('image', file.data)
+
+    await axios({
+      method: 'post',
+      url: 'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
+      timeout: 0,
+      processData: false,
+      mimeType: "multipart/form-data",
+      contentType: false,
+      data: body
+    }) .then(function (response) {
+      let x = (response.data.url)
+      console.log(x)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  hideModal() 
+  {
+    this.setState({ show: false });
   }
 
   render() {
@@ -174,31 +247,39 @@ export default class SettingsScreen extends Component {
             animationType="fade"
             transparent={true}
             visible={this.state.modalVisible}
-            onRequestClose={() => this.setModalVisible(false)}
-          >
-              <View style={styles.panel}>
-              <View style={{alignItems: 'center'}}>
-                <Text style={styles.panelTitle}>Upload Photo</Text>
-                <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+            onRequestClose={() => this.setModalVisible(false)}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <TouchableOpacity
+                    style={styles.hideButton}
+                    onPress={() => this.setModalVisible(false)}>
+                    <Icon type="FontAwesome" name="close" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.choosePhotoFromLibrary();
+                    }}
+                    style={[
+                      styles.signIn,
+                      {
+                        borderColor: '#184D47',
+                        borderWidth: 2,
+                        marginTop: 20,
+                      },
+                    ]}>
+                <Text
+                  style={[
+                    styles.textSign,
+                    {
+                      color: '#008656',
+                    },
+                  ]}>
+                  Open Gallery
+                </Text>
+            </TouchableOpacity>
+                </View>
               </View>
-              <TouchableOpacity style={styles.panelButton} onPress=
-              {
-                    this.props.userScreen(false)              
-              }>
-              <Text style={styles.panelButtonTitle}>Take Photo</Text>
-              </TouchableOpacity>
-              <TouchableOpacity styles={styles.panelButton} onPress={
-                    this.props.userScreen(false)
-              }>
-                <Text style={styles.panelButtonTitle}>Choose From Library</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.panelButton}
-                onPress={this.props.userScreen(false)}>
-                <Text style={styles.panelButtonTitle}>Cancel</Text>
-              </TouchableOpacity>
-              </View>
-            </Modal>            
+            </Modal>         
         </Animatable.View>
       </View>
     );
@@ -206,6 +287,7 @@ export default class SettingsScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#008656',
@@ -246,6 +328,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#FF0000',
     paddingBottom: 5,
+  },
+  hideButton: {
+    backgroundColor: '#fff',
+    alignItems: 'flex-end',
+    marginRight: 10,
+    marginTop: 0,
+    bottom: 0,
   },
   textInput: {
     flex: 1,
@@ -324,5 +413,55 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     color: 'white',
+  },
+  centeredView: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(100,100,100, 0.8)',
+    padding: 20,
+  },
+  modalView: {
+    margin: 80,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 100,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    width: 350,
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  floatinBtn: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    right: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
   },
 });

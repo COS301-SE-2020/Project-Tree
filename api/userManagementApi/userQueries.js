@@ -2,6 +2,9 @@ const db = require("../DB");
 const { JWT } = require("jose");
 const bcrypt = require("bcrypt");
 
+var imgbbUploader = require('imgbb-uploader');
+
+
 async function editUser(req, res) {
   let pfp = req.body.profilepicture;
   if (pfp == "") {
@@ -418,6 +421,43 @@ async function deleteUser(req, res) {
     }
 }
 
+async function verify(token) {
+  let value = null;
+  try {
+    let user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    await db
+      .getSession()
+      .run(
+        `
+          Match (n:User { email: "${user.email}"})
+          WHERE n.mobileToken = "${token}" or n.webToken= "${token}"
+          RETURN n
+        `
+      )
+      .then((result) => {
+        if (user.password == result.records[0]._fields[0].properties.hash) {
+          value = result.records[0]._fields[0].identity.low;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        return null;
+      });
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+  return value;
+}
+
+async function changePictureMobile(req, res) 
+{
+  // imgbbUploader("your-imgbb-api-key-string", "home/absolute/path/to/your/image/image.png")
+  // .then(response => console.log(response))
+  // .catch(error => console.error(1))
+}
+
 module.exports = {
   login,
   register,
@@ -427,5 +467,6 @@ module.exports = {
   checkPermission,
   checkPermissionInternal,
   editPassword,
-  deleteUser
+  deleteUser,
+  changePictureMobile
 };

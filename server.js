@@ -46,6 +46,7 @@ app.post("/user/get", um.getUser);
 app.post("/user/edit", um.editUser);
 app.post("/user/pass", um.editPassword);
 app.post("/user/checkpermission", um.checkPermission);
+app.post("/user/change", um.changePictureMobile);
 app.post("/mobile", async (req, res) => {
   taskArr = req.body.nodes;
   relArr = req.body.links;
