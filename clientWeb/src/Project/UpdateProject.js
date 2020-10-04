@@ -107,7 +107,6 @@ class UpdateProject extends React.Component {
       value : this.state.project.startDate;
     let endDate = type.substring(0,1) === "s" ? 
       this.state.project.endDate : value;
-      console.log(this.state.lastTask.endDate);
     if (startDate > this.state.firstTask.startDate){
       alert("The start date of the project cannot be any latter then the current date as it would be after the start of a task, if you want it to be any later then change the task first");
       value = this.state.firstTask.startDate;
