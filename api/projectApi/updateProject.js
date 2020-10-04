@@ -1,30 +1,6 @@
 const db = require("../DB");
 
 function updateCurTask(task, nodes, rels) {
-  //needed for future development
-  /* getPredDependencies(task, rels)
-    .forEach(dep => {
-      if (task.startDate != dep.endDate) {
-        dep.endDate = task.startDate;
-        let startDate = new Date(dep.startDate);
-        let endDate = new Date(dep.endDate);
-        dep.duration = endDate.getTime() - startDate.getTime();
-        db.getSession()
-          .run(
-            `
-              MATCH (a)-[r]->(b) 
-              WHERE ID(r) = ${dep.id}
-              SET r += {  
-                endDate: datetime("${dep.endDate}"), 
-                duration:${dep.duration},
-              }
-            `
-          ).catch((err) => {
-            console.log(err);
-          });
-        
-      }
-    }); */
   getSuccDependencies(task, rels).forEach((dep) =>
     updateDependency(dep, nodes, rels)
   );

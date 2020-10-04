@@ -290,9 +290,15 @@ class CreateTask extends React.Component {
       }`;
     if (value < this.props.project.startDate) {
       alert(
-        "You cannot make the start date/time before the project date/time."
+        "You cannot make the task before the project date/time."
       );
       value = this.props.project.startDate;
+    }
+    if (value > this.props.project.endDate) {
+      alert(
+        "You cannot make the start date/time before the project date/time."
+      );
+      value = this.props.project.endDate;
     }
     let startDate = type.substring(0,1) === "s" ? 
       value : this.state.task.startDate;
