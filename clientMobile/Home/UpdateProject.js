@@ -66,11 +66,6 @@ class UpdateProject extends Component {
 class UpdateProjectForm extends Component {
   constructor(props) {
     super(props);
-
-    let now = new Date();
-    now.setTime(now.getTime() - new Date().getTimezoneOffset() * 60 * 1000);
-    now = now.toISOString().substring(0, 16);
-
     const tempArr = [];
     for (let x = 0; x < this.props.project.permissions.length; x++) {
       if (this.props.project.permissions[x] === true) {
@@ -84,14 +79,86 @@ class UpdateProjectForm extends Component {
       projName: this.props.project.name,
       projDescription: this.props.project.description,
       tableFormData: tempArr,
-      startDate: now,
-      endDate: now,
+      startDate: this.props.project.startDate,
+      endDate: this.props.project.endDate,
+      firstTask: null,
+      lastTask: null,
       error: null,
     };
     this.setElementClicked = this.setElementClicked.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.project.id === this.props.project.id) return;
+
+    this._isMounted = true;
+
+    var response = await fetch(
+      'http://10.0.2.2:5000/project/projecttasks',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({projId: this.props.project.id}),
+      },
+    );
+
+    var body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    else {
+      if (this._isMounted === true) { 
+        let firstTask = null;
+        let lastTask = null;
+        body.tasks.forEach(task => {
+          if ( firstTask === null || firstTask.startDate > task.startDate )
+            firstTask = task;
+          if ( lastTask === null || lastTask.endDate < task.endDate )
+            lastTask = task;
+        });
+        this.setState({firstTask, lastTask});
+      }
+    }
+  }
+
+  async componentDidMount() {
+    this._isMounted = true;
+
+    var response = await fetch(
+      'http://10.0.2.2:5000/project/projecttasks',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({projId: this.props.project.id}),
+      },
+    );
+
+    var body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    else {
+      if (this._isMounted === true) { 
+        let firstTask = null;
+        let lastTask = null;
+        body.tasks.forEach(task => {
+          if ( firstTask === null || firstTask.startDate > task.startDate )
+            firstTask = task;
+          if ( lastTask === null || lastTask.endDate < task.endDate )
+            lastTask = task;
+        });
+        this.setState({firstTask, lastTask});
+      }
+    }
+  }
   
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   handleDateTimeSelect(event, selectedDate, type) {
     if (event.type === 'dismissed') {
       this.setState({dateTimePicker: false});
@@ -104,6 +171,10 @@ class UpdateProjectForm extends Component {
       .toISOString()
       .substring(0, 16);
     if (type.for === 'start') {
+      if (date > this.state.firstTask.startDate){
+        alert("The start date of the project cannot be any latter then the current date as it would be after the start of a task, if you want it to be any later then change the task first");
+        date = this.state.firstTask.startDate;
+      }
       if (this.state.endDate < date)
         this.setState({
           error: 'You cannot set the start date/time after the end date/time.',
@@ -118,6 +189,10 @@ class UpdateProjectForm extends Component {
           dateTimePicker: false,
         });
     } else {
+      if (date < this.state.lastTask.endDate){
+        alert("The end date of the project cannot be any earlier then the current date as it would be before a end of a task, if you want it to be any earlier then change the task first");
+        date = this.state.lastTask.endDate;
+      }
       if (this.state.startDate > date)
         this.setState({
           error: 'You cannot set the end date/time before the start date/time.',
