@@ -36,6 +36,7 @@ class CreateProject extends React.Component {
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.changeDate = this.changeDate.bind(this);
   }
 
   showModal() {
@@ -90,14 +91,13 @@ class CreateProject extends React.Component {
       );
       project.startDate = value;
       project.endDate = value;
-      this.setState({ project: project });
     } else {
       if (type.substring(0,1) === "s") 
         project.startDate = value;
       else
         project.endDate = value;
-      this.setState({ project });
     }
+    this.setState({ project });
     if (type.substring(0,1) === "s") 
       return this.state.project.startDate;
     else
