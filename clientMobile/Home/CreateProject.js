@@ -104,6 +104,8 @@ class CreateProjectForm extends Component {
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
       error: null,
+      dateTimePicker: false,
+      dateTimeType: {type: 'date', for: 'start', value: new Date()},
     };
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
     this.setElementClicked = this.setElementClicked.bind(this);

@@ -195,7 +195,7 @@ class GraphScreen extends Component {
     }
 
     const response = await fetch(
-      'http://10.0.2.2:5000/getProject',
+      'http://projecttree.herokuapp.com/getProject',
       {
         method: 'POST',
         headers: {
@@ -213,7 +213,7 @@ class GraphScreen extends Component {
       this.setState({nodes: body.tasks, links: body.rels});
 
     const response2 = await fetch(
-      'http://10.0.2.2:5000/people/getAllUsers',
+      'http://projecttree.herokuapp.com/people/getAllUsers',
       {
         method: 'POST',
         headers: {
@@ -230,7 +230,7 @@ class GraphScreen extends Component {
     this.setState({allUsers: body2.users});
 
     const response3 = await fetch(
-      'http://10.0.2.2:5000/people/assignedProjectUsers',
+      'http://projecttree.herokuapp.com/people/assignedProjectUsers',
       {
         method: 'POST',
         headers: {
@@ -247,7 +247,7 @@ class GraphScreen extends Component {
     this.setState({assignedProjUsers: body3.projectUsers});
 
     const response4 = await fetch(
-      'http://10.0.2.2:5000/getProjectViews',
+      'http://projecttree.herokuapp.com/getProjectViews',
       {
         method: 'POST',
         headers: {
@@ -298,7 +298,7 @@ class GraphScreen extends Component {
       }
     } else {
       const response = await fetch(
-        'http://10.0.2.2:5000/getProject',
+        'http://projecttree.herokuapp.com/getProject',
         {
           method: 'POST',
           headers: {
@@ -315,7 +315,7 @@ class GraphScreen extends Component {
     }
 
     const response2 = await fetch(
-      'http://10.0.2.2:5000/getProjectViews',
+      'http://projecttree.herokuapp.com/getProjectViews',
       {
         method: 'POST',
         headers: {
