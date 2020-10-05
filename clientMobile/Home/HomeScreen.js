@@ -152,12 +152,12 @@ class Home extends Component {
 
   render() {
     if (this.state.projects === null) {
-      return <Spinner />;
+      return <View style={{backgroundColor: 'white', flex: 1}}><Spinner /></View>;
     }
 
     return (
       <Screen>
-        <Drawer
+        <Drawer 
           type="overlay"
           open={this.state.drawerVisible}
           content={
@@ -181,7 +181,7 @@ class Home extends Component {
               opacity: (2 - ratio) / 2,
             },
           })}>
-          <TopBar useMenu={true} setDrawerVisible={this.setDrawerVisible} />
+          <TopBar useMenu={true} setDrawerVisible={this.setDrawerVisible}/>
           <HomeScreen
             project={this.props.project}
             user={this.props.user}
@@ -464,10 +464,13 @@ const styles = StyleSheet.create({
   },
   row: {
     height: 40,
+    flexDirection: 'row',
   },
   text: {
-    margin: 6,
+    margin: 5,
     textAlign: 'center',
+    flex: 1,
+    flexWrap: 'wrap'
   },
   editButton: {
     backgroundColor: '#184D47',

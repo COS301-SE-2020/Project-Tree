@@ -543,7 +543,7 @@ const styles = StyleSheet.create({
   wrapper: {flexDirection: 'row'},
   title: {flex: 1, backgroundColor: '#f6f8fa'},
   row: {height: 40},
-  text: {margin: 6, textAlign: 'center'},
+  text: {margin: 2, textAlign: 'center'},
   hideButton: {
     backgroundColor: '#fff',
     alignItems: 'flex-end',
@@ -551,6 +551,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   submitButton: {
+    marginTop: 20,
     backgroundColor: '#184D47',
     alignItems: 'center',
     justifyContent: 'center',

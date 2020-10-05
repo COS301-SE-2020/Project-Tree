@@ -18,6 +18,7 @@ import SplashScreen from './User/SplashScreen';
 import LoginScreen from './User/LoginScreen';
 import RegisterScreen from './User/RegisterScreen';
 import {SafeAreaProvider, SafeAreaView, useSafeArea} from 'react-native-safe-area-context';
+import DeviceInfo from 'react-native-device-info';
 
 const Tabs = AnimatedTabBarNavigator();
 
@@ -291,10 +292,15 @@ export default class App extends Component {
   render() {
     if (this.state.loggedInStatus === true) {
       this.setUserInfo();
-      if (Platform.OS === 'ios') { 
+      let isIphoneX = DeviceInfo.hasNotch();
+      if (Platform.OS === 'ios' &&
+      !Platform.isPad &&
+      !Platform.iosTVOS 
+      ) { 
+        if(isIphoneX === true ){
         return (
         <SafeAreaProvider>
-          <SafeAreaView style={{flex: 1, paddingBottom: 0, marginBottom: -20, marginTop: -10 }} forceInset={{ top: 'always', bottom:'always'}}>
+          <SafeAreaView style={{backgroundColor: '#96BB7C', flex: 1, paddingBottom: 0, marginBottom: -20, marginTop: -10 }} forceInset={{ top: 'always', bottom:'always'}}>
             <NavigationContainer>
               <Tabs.Navigator
                 tabBarOptions={{
@@ -393,6 +399,103 @@ export default class App extends Component {
           </SafeAreaView>
         </SafeAreaProvider>
       )} else {
+        return (
+              <NavigationContainer>
+                <Tabs.Navigator
+                  tabBarOptions={{
+                    activeTintColor: 'black',
+                    inactiveTintColor: 'white',
+                    activeBackgroundColor: '#96BB7C',
+                    labelStyle: {
+                      fontWeight: 'bold',
+                    },
+                    tabStyle: {
+                      height: 60,
+                    },
+                  }}
+                  appearence={{
+                    floating: false,
+                    topPadding: 5,
+                    bottomPadding: 0,
+                    horizontalPadding: 10,
+                    shadow: true,
+                    tabBarBackground: '#184D47',
+                  }}
+                  initialRouteName="Home">
+                  <Tabs.Screen
+                    name="Home"
+                    children={() => (
+                      <Home
+                        user={this.state.userInfo}
+                        project={this.state.selectedProject}
+                        userPermissions={this.state.userPermissions}
+                        setSelectedProject={this.setSelectedProject}
+                      />
+                    )}
+                    options={{
+                      tabBarIcon: ({focused, color}) => (
+                        <FeatherTabBarIcon
+                          focused={focused}
+                          tintColor={color}
+                          name="home"
+                        />
+                      ),
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="Project Tree"
+                    children={() => (
+                      <Graph
+                        project={this.state.selectedProject}
+                        userPermissions={this.state.userPermissions}
+                        user={this.state.userInfo}
+                      />
+                    )}
+                    options={{
+                      tabBarIcon: ({focused, color}) => (
+                        <EntypoTabBarIcon
+                          focused={focused}
+                          tintColor={color}
+                          name="tree"
+                        />
+                      ),
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="Notice Board"
+                    children={() => (
+                      <NoticeBoard
+                        project={this.state.selectedProject}
+                        user={this.state.userInfo}
+                      />
+                    )}
+                    options={{
+                      tabBarIcon: ({focused, color}) => (
+                        <MaterialTabBarIcon
+                          focused={focused}
+                          tintColor={color}
+                          name="notifications"
+                        />
+                      ),
+                    }}
+                  />
+                  <Tabs.Screen
+                    name="Settings"
+                    children={() => <Settings setLogout={this.setLogout} />}
+                    options={{
+                      tabBarIcon: ({focused, color}) => (
+                        <FeatherTabBarIcon
+                          focused={focused}
+                          tintColor={color}
+                          name="settings"
+                        />
+                      ),
+                    }}
+                  />
+                </Tabs.Navigator> 
+              </NavigationContainer>
+        )}} 
+        else {
         return(
           <NavigationContainer>
             <Tabs.Navigator
