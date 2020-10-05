@@ -74,37 +74,6 @@ class UpdateProjectForm extends Component {
         tempArr.push('');
       }
     }
-    
-    this._isMounted = true;
-
-    var response = await fetch(
-      'http://projecttree.herokuapp.com/project/projecttasks',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({projId: this.props.project.id}),
-      },
-    );
-
-    let firstTask = null;
-    let lastTask = null;
-
-    var body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    else {
-      if (this._isMounted === true) { 
-        body.tasks.forEach(task => {
-          if ( firstTask === null || firstTask.startDate > task.startDate )
-            firstTask = task;
-          if ( lastTask === null || lastTask.endDate < task.endDate )
-            lastTask = task;
-        });
-        this.setState({firstTask, lastTask});
-      }
-    }
 
     this.state = {
       projName: this.props.project.name,
@@ -114,8 +83,8 @@ class UpdateProjectForm extends Component {
       endDate: this.props.project.endDate,
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
-      firstTask: firstTask,
-      lastTask: lastTask,
+      firstTask: this.props.project.startDate,
+      lastTask: this.props.project.endDate,
       error: null,
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
