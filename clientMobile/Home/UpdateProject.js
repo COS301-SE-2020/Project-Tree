@@ -84,6 +84,8 @@ class UpdateProjectForm extends Component {
       firstTask: null,
       lastTask: null,
       error: null,
+      dateTimePicker: false,
+      dateTimeType: {type: 'date', for: 'start', value: new Date()},
     };
     this.setElementClicked = this.setElementClicked.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);

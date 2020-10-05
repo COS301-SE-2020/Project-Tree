@@ -34,7 +34,7 @@ class DeleteDependency extends Component {
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
-      'http://10.0.2.2:5000/dependency/delete',
+      'http://projecttree.herokuapp.com/dependency/delete',
       {
         method: 'POST',
         headers: {

@@ -375,7 +375,7 @@ class UpdateTaskForm extends Component {
     projectData.changedInfo = input;
 
     const response = await fetch(
-      'http://10.0.2.2:5000/task/update',
+      'http://projecttree.herokuapp.com/task/update',
       {
         method: 'POST',
         headers: {
@@ -395,7 +395,7 @@ class UpdateTaskForm extends Component {
     timestamp = timestamp.toISOString();
 
     await fetch(
-      'http://10.0.2.2:5000/people/updateAssignedPeople',
+      'http://projecttree.herokuapp.com/people/updateAssignedPeople',
       {
         method: 'POST',
         headers: {
