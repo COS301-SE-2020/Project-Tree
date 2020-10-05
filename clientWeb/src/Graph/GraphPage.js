@@ -364,7 +364,7 @@ class TaskSidebar extends React.Component {
         //   <Row>
         //     <br />
         //   </Row> */}
-          <Card>
+          <Card style={{width:'100%', marginBottom:5}}>
             <div class="row no-gutters">
               <div class="col-auto">
                 <img class="circular"
