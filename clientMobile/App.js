@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import SplashScreen from './User/SplashScreen';
 import LoginScreen from './User/LoginScreen';
 import RegisterScreen from './User/RegisterScreen';
+import {SafeAreaProvider, SafeAreaView, useSafeArea} from 'react-native-safe-area-context';
 
 const Tabs = AnimatedTabBarNavigator();
 
@@ -291,7 +292,8 @@ export default class App extends Component {
     if (this.state.loggedInStatus === true) {
       this.setUserInfo();
       return (
-        <NavigationContainer>
+        <SafeAreaProvider>
+        <SafeAreaView style={{flex: 1, paddingBottom: 0, marginBottom: -20, marginTop: -10 }} forceInset={{ top: 'always', bottom:'always'}}><NavigationContainer>
           <Tabs.Navigator
             tabBarOptions={{
               activeTintColor: 'black',
@@ -301,12 +303,14 @@ export default class App extends Component {
                 fontWeight: 'bold',
               },
               tabStyle: {
-                height: 60,
+                height: 80,
+                marginBottom: -60
               },
             }}
             appearence={{
               floating: false,
               topPadding: 5,
+              //bottomPadding: 0,
               horizontalPadding: 10,
               shadow: true,
               tabBarBackground: '#184D47',
@@ -382,8 +386,11 @@ export default class App extends Component {
                 ),
               }}
             />
-          </Tabs.Navigator>
+           
+          </Tabs.Navigator> 
         </NavigationContainer>
+        </SafeAreaView>
+        </SafeAreaProvider>
       );
     } else {
       if (this.state.switchToLog) {

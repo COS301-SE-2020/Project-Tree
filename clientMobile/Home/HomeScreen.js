@@ -19,6 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
 import ProgressDashboard from './ProgressDashboard';
 import TopBar from '../TopBar';
+import { SafeAreaView } from 'react-native-safe-area-view';
 
 function GoToTree() {
   const navigation = useNavigation();
@@ -193,6 +194,7 @@ class Home extends Component {
           />
         </Drawer>
       </Screen>
+      
     );
   }
 }
