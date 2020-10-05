@@ -81,6 +81,8 @@ class UpdateProjectForm extends Component {
       tableFormData: tempArr,
       startDate: this.props.project.startDate,
       endDate: this.props.project.endDate,
+      dateTimePicker: false,
+      dateTimeType: {type: 'date', for: 'start', value: new Date()},
       firstTask: null,
       lastTask: null,
       error: null,

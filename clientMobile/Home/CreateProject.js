@@ -101,6 +101,8 @@ class CreateProjectForm extends Component {
       tableFormData: ['', '', '', '', '', '', '', '', ''],
       startDate: now,
       endDate: now,
+      dateTimePicker: false,
+      dateTimeType: {type: 'date', for: 'start', value: new Date()},
       error: null,
     };
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
