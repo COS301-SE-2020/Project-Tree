@@ -218,7 +218,16 @@ class GraphPage extends React.Component {
                     </Link>
                   </Col>
                   <Col xs={8} md={8} lg={8} xl={8} className="text-center m-1">
-                    <h2>{this.props.project.name}</h2>
+                    <h2>{this.props.project.name} {" "}
+                    <OverlayTrigger
+                      placement='auto'
+                      overlay={
+                      <Tooltip className="helpTooltip">
+                        Click on a task or dependency to view their information and perform actions.
+                      </Tooltip>
+                      } >
+                      <i className="fa fa-question-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                    </OverlayTrigger></h2>
                   </Col>
                   <Col></Col>
                 </Row>

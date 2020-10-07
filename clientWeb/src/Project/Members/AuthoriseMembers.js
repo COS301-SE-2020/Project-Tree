@@ -5,7 +5,9 @@ import {
   Spinner,
   Row,
   Col,
-  Carousel
+  Carousel,
+  OverlayTrigger,
+  Tooltip
 } from "react-bootstrap";
 import $ from "jquery"
 
@@ -126,8 +128,18 @@ class PendingMember extends React.Component{
             <Container className="align-items-center">
                 <Row className="p-0 m-0">
                     <h4>Pending Members</h4>
+                    <OverlayTrigger
+                        placement='auto'
+                        style={{ fontSize: "27px" }}
+                        overlay={
+                        <Tooltip className="helpTooltip">
+                            Acccept or decline members that have used the access code to join your project
+                        </Tooltip>
+                        } >
+                        <i className="fa fa-question-circle"></i>
+                     </OverlayTrigger>
                 </Row>
-                    <Carousel style={{width: "100%", height: "100%",padding: "5px", margin: 0}}>
+                    <Carousel interval={1000000} pauseOnHover={true} style={{width: "100%", height: "100%",padding: "5px", margin: 0}}>
                         {this.props.user.map((user, index) => (
                             this.pendingMemberViews(user, index)
                         ))}

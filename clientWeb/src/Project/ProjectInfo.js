@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, Container, Row, Col } from "react-bootstrap";
+import { Table, Button, Container, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
@@ -84,7 +84,17 @@ class ProjectInfo extends React.Component {
               >
                 <tbody>
                   <tr>
-                    <th colSpan="4">Project permissions</th>
+                    <th colSpan="4">Project permissions {" "}
+                      <OverlayTrigger
+                        placement='right'
+                        overlay={
+                        <Tooltip className="helpTooltip">
+                          Project managers may set project member role permissions that apply to tasks
+                        </Tooltip>
+                        } >
+                        <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                        </OverlayTrigger>
+                      </th>
                   </tr>
                   <tr>
                     <td></td>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Chart } from "react-google-charts";
 import image from "../Images/project_analytic_2.svg";
 
@@ -77,7 +77,16 @@ export default class DependencyPieChartsComponent extends React.Component {
         <Container fluid>
           <Row>
             <Col>
-              <h4>Dependency Info</h4>
+              <h4>Dependency Info {" "}
+              <OverlayTrigger
+                placement='right'
+                overlay={
+                <Tooltip className="helpTooltip">
+                  Depicts the number of dependencies per task in order to identify bottlenecks
+                </Tooltip>
+                } >
+                <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                </OverlayTrigger></h4>
             </Col>
           </Row>
           <Row className="align-items-center my-2">

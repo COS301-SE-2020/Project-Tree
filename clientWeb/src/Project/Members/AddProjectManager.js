@@ -7,6 +7,8 @@ import {
   Container,
   Row,
   Col,
+  OverlayTrigger,
+  Tooltip
 } from "react-bootstrap";
 import Autosuggest from "react-autosuggest";
 import $ from "jquery";
@@ -76,7 +78,7 @@ class AddProjectManager extends React.Component {
             this.showModal();
           }}
         >
-          <i className="fa fa-group"></i> Add Project Manager{" "}
+          <i className="fa fa-group"></i> Add Project Manager {" "}
         </Button>
         <Modal
           show={this.state.show}
@@ -90,7 +92,16 @@ class AddProjectManager extends React.Component {
             }}
           >
             <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
-              <Modal.Title>Add Project Manager</Modal.Title>
+              <Modal.Title>Add Project Manager {" "}
+              <OverlayTrigger
+                placement='right'
+                overlay={
+                <Tooltip className="helpTooltip">
+                  Only project managers may add project members or make project changes
+                </Tooltip>
+                } >
+                <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                </OverlayTrigger></Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {
