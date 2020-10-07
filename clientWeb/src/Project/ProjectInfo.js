@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import SendProjectNotification from "../Notifications/SendProjectNotification";
-import UpdateProject from "./UpdateProject";
+import UpdateProject from "./EditProject";
 import DeleteProject from "./DeleteProject";
 import MemberWrapperComponent from "./Members/MemberWrapperComponent"
 
