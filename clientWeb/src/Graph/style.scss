@@ -19,3 +19,33 @@
 .card-title {
   margin-top: 28;
 }
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 93%;
+  padding: 0;
+  margin: 0;
+}
+
+#zoomButtons{
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  padding-top: 10px;
+  width: 100px;
+}
+
+#increaseZoom{
+  margin-bottom: 5px;
+}
+
+#decreaseZoom{
+  margin-bottom: 5px;
+}
+
+#paper{
+  width: 100%;
+  height: 100%;
+}
