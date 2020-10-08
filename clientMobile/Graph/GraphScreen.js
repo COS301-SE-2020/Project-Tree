@@ -177,6 +177,7 @@ class GraphScreen extends Component {
       target_viewId: null,
       delDep_sourceViewId: null,
       delDep_targetViewId: null,
+      positionTasksMode: false,
     };
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.displayTaskDependency = this.displayTaskDependency.bind(this);
@@ -447,6 +448,7 @@ class GraphScreen extends Component {
             displayTaskDependency={this.displayTaskDependency}
             setCreateDependency={this.setCreateDependency}
             displayCriticalPath={this.props.displayCriticalPath}
+            positionTasksMode={this.state.positionTasksMode}
           />
         </View>
 
@@ -515,6 +517,13 @@ class GraphScreen extends Component {
               <IconMaterial name="clear" size={25} />
             </TouchableOpacity>
           )}
+
+          <TouchableOpacity
+            style={styles.floatinBtn3}
+            onPress={() => { this.setState({positionTasksMode:true})
+            }}>
+            <IconFeather name="move" size={25} />
+          </TouchableOpacity>
 
           <CreateDependency
             sourceCreateDependency={this.state.sourceCreateDependency}
@@ -594,10 +603,11 @@ class WebViewWrapper extends Component {
         renderLoading={this.ActivityIndicatorLoadingView}
         startInLoadingState={true}
         source={{
-          uri: 'http://projecttree.herokuapp.com/mobile',
-          method: 'POST',
-          body: `nodes=${JSON.stringify(
-            this.props.nodes,
+          uri: 'http://10.0.2.2:5000/mobile',
+           method: 'POST',
+          //  headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+           body: `nodes=${JSON.stringify(
+            this.props.nodes
           )}&links=${JSON.stringify(
             this.props.links,
           )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
@@ -638,6 +648,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 72,
     left: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
+  },
+  floatinBtn3: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    left: 150,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EEBB4D',
