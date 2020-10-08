@@ -184,6 +184,7 @@ class UpdateTask extends React.Component {
     };
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
+    projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
 
     const response = await fetch("/task/update", {
@@ -196,58 +197,62 @@ class UpdateTask extends React.Component {
     });
 
     const body = await response.json();
-
-    let timestamp = new Date();
-    timestamp.setTime(
-      timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000
-    );
-    timestamp = timestamp.toISOString();
-
-    await fetch("/people/updateAssignedPeople", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ut_taskId: this.state.id,
-        ut_pacMans: this.state.pacManList,
-        ut_resPersons: this.state.resPersonList,
-        ut_resources: this.state.resourcesList,
-        ut_originalPacMans: this.props.pacMans,
-        ut_originalResPersons: this.props.resPersons,
-        ut_originalResources: this.props.resources,
-        auto_notification: {
-          timestamp: timestamp,
-          projName: this.props.project.name,
-          projID: this.props.project.id,
-          taskName: data.name,
-          type: "auto",
-          mode: 2,
+    if ( body.message === "After Project End Date"){
+      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
+      this.setState({isloading: false}); 
+    } else {
+      let timestamp = new Date();
+      timestamp.setTime(
+        timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+      );
+      timestamp = timestamp.toISOString();
+  
+      await fetch("/people/updateAssignedPeople", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-      }),
-    });
-
-    await this.props.setTaskInfo(
-      body.nodes,
-      body.rels,
-      body.displayNode,
-      body.displayRel,
-      this.state.assignedProjUsers
-    );
-
-    // Resets the people list
-    for (let x = 0; x < this.state.pacManList.length; x++) {
-      this.state.people.push(this.state.pacManList[x]);
+        body: JSON.stringify({
+          ut_taskId: this.state.id,
+          ut_pacMans: this.state.pacManList,
+          ut_resPersons: this.state.resPersonList,
+          ut_resources: this.state.resourcesList,
+          ut_originalPacMans: this.props.pacMans,
+          ut_originalResPersons: this.props.resPersons,
+          ut_originalResources: this.props.resources,
+          auto_notification: {
+            timestamp: timestamp,
+            projName: this.props.project.name,
+            projID: this.props.project.id,
+            taskName: data.name,
+            type: "auto",
+            mode: 2,
+          },
+        }),
+      });
+  
+      await this.props.setTaskInfo(
+        body.nodes,
+        body.rels,
+        body.displayNode,
+        body.displayRel,
+        this.state.assignedProjUsers
+      );
+  
+      // Resets the people list
+      for (let x = 0; x < this.state.pacManList.length; x++) {
+        this.state.people.push(this.state.pacManList[x]);
+      }
+      for (let x = 0; x < this.state.resPersonList.length; x++) {
+        this.state.people.push(this.state.resPersonList[x]);
+      }
+      for (let x = 0; x < this.state.resourcesList.length; x++) {
+        this.state.people.push(this.state.resourcesList[x]);
+      }
+  
+      this.setState({ Show: false, isloading: false });
     }
-    for (let x = 0; x < this.state.resPersonList.length; x++) {
-      this.state.people.push(this.state.resPersonList[x]);
-    }
-    for (let x = 0; x < this.state.resourcesList.length; x++) {
-      this.state.people.push(this.state.resourcesList[x]);
-    }
-
-    this.setState({ Show: false, isloading: false });
   }
 
   updateSearch(event, mode) {
