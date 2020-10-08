@@ -60,13 +60,13 @@ class NoticeBoard extends Component {
     }
 
     return (
-      <React.Fragment>
+      <View style={{backgroundColor: "white", flex: 1}}>
         <TopBar useMenu={false} />
         <NoticeBoardScreen
           project={this.props.project}
           user={this.props.user}
         />
-      </React.Fragment>
+      </View>
     );
   }
 }
@@ -298,6 +298,7 @@ class NotificationList extends Component {
             paddingRight: 20,
             flex: 1,
             marginBottom: 60,
+            backgroundColor: "white"
           }}>
           <ScrollView>{messageComponents}</ScrollView>
         </View>

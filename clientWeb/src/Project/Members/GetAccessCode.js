@@ -3,7 +3,9 @@ import {
   Form,
   Modal,
   Button,
-  InputGroup
+  InputGroup,
+  OverlayTrigger,
+  Tooltip
 } from "react-bootstrap";
 import copy from "copy-to-clipboard";
 
@@ -54,7 +56,16 @@ class GetAccessCode extends React.Component {
             }}
           >
             <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
-              <Modal.Title>Get Access Code</Modal.Title>
+              <Modal.Title>Get Access Code {" "}
+              <OverlayTrigger
+                placement='right'
+                overlay={
+                <Tooltip className="helpTooltip">
+                  Send this code to people you would like to join this project. They will need to be accepted by project managers before they are added to the project.
+                </Tooltip>
+                } >
+                <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                </OverlayTrigger></Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form.Group>

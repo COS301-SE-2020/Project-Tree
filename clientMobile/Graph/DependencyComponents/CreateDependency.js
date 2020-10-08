@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "react-native-modal-datetime-picker";
 import ms from 'ms';
 
 class CreateDependency extends Component {
@@ -212,11 +212,7 @@ class CreateDependencyForm extends Component {
     this.updateIndex = this.updateIndex.bind(this);
   }
 
-  handleDateTimeSelect(event, selectedDate, type) {
-    if (event.type === 'dismissed') {
-      this.setState({dateTimePicker: false});
-      return;
-    }
+  handleDateTimeSelect(selectedDate, type) {
     let date = new Date(
       new Date(selectedDate).getTime() -
         new Date().getTimezoneOffset() * 60 * 1000,
@@ -403,8 +399,7 @@ class CreateDependencyForm extends Component {
             <Text style={{color: 'white'}}>Submit</Text>
           </TouchableOpacity>
         </View>
-        {this.state.dateTimePicker && (
-          <DateTimePicker
+        <DateTimePicker
             testID="dateTimePicker"
             value={
               new Date(
@@ -415,15 +410,15 @@ class CreateDependencyForm extends Component {
             mode={this.state.dateTimeType.type}
             is24Hour={true}
             display="default"
-            onChange={(event, selectedDate) =>
+            isVisible={this.state.dateTimePicker}
+            onCancel={()=>(this.setState({dateTimePicker: false}))}
+            onConfirm={(selectedDate) =>
               this.handleDateTimeSelect(
-                event,
                 selectedDate,
                 this.state.dateTimeType,
               )
             }
-          />
-        )}
+        />
       </View>
     );
   }

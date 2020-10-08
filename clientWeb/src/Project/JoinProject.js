@@ -4,7 +4,9 @@ import {
   Modal,
   Button,
   InputGroup,
-  Spinner
+  Spinner,
+  Row,
+  Col
 } from "react-bootstrap";
 import $ from "jquery"
 
@@ -82,11 +84,15 @@ class JoinProject extends React.Component {
             <Modal.Body>
                 <Form.Group>
                     <InputGroup>
-                        <Form.Label>Enter Access Code</Form.Label>
-                        <Form.Control
-                            type="text"
-                            onChange={(e)=>this.handleChange(e)}
-                        />
+                      <Row>
+                        <Col>
+                          <Form.Label>Enter Access Code</Form.Label>
+                          <Form.Control
+                              type="text"
+                              onChange={(e)=>this.handleChange(e)}
+                          />
+                        </Col>
+                      </Row>
                     </InputGroup>
                 </Form.Group>
             </Modal.Body>

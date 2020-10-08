@@ -463,6 +463,7 @@ class GraphScreen extends Component {
           assignedProjUsers={this.state.assignedProjUsers}
           allUsers={this.state.allUsers}
           user={this.props.user}
+          rels={this.state.links}
         />
         <DependencyModal
           project={this.props.project}
@@ -545,6 +546,7 @@ class GraphScreen extends Component {
               setProjectInfo={this.setProjectInfo}
               assignedProjUsers={this.state.assignedProjUsers}
               allUsers={this.state.allUsers}
+              rels={this.state.links}
             />
           ) : null}
         </View>
@@ -596,8 +598,10 @@ class WebViewWrapper extends Component {
   }
 
   render() {
+    //return null;
     return this.props.views !== null ? (
       <WebView
+        useWebKit={true}
         key={this.props.webKey}
         ref={(ref) => (this.myWebView = ref)}
         renderLoading={this.ActivityIndicatorLoadingView}
@@ -609,11 +613,11 @@ class WebViewWrapper extends Component {
            body: `nodes=${JSON.stringify(
             this.props.nodes
           )}&links=${JSON.stringify(
-            this.props.links,
+            this.props.links
           )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
             this.props.displayCriticalPath
           }&projId=${this.props.projID}&views=${JSON.stringify(
-            this.props.views,
+            this.props.views
           )}`,
         }}
         onMessage={(event) => this.handleOnMessage(event)}

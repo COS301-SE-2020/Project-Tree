@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button, Spinner } from "react-bootstrap";
+import { Modal, Button, Spinner, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 class CloneTask extends React.Component {
   constructor(props) {
@@ -70,7 +70,16 @@ class CloneTask extends React.Component {
             closeButton
             style={{ backgroundColor: "#96BB7C", color: "white" }}
           >
-            <Modal.Title>Clone Task</Modal.Title>
+            <Modal.Title>Clone Task {" "}
+              <OverlayTrigger
+                placement='right'
+                overlay={
+                <Tooltip className="helpTooltip">
+                  A view is a copy of a task that may be used to stop the crossing of dependency lines. Editing a view will also edit the original task.
+                </Tooltip>
+                } >
+                <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                </OverlayTrigger></Modal.Title>
           </Modal.Header>
           <Modal.Body>
             Do you want to create a view of {this.props.task.name}?
