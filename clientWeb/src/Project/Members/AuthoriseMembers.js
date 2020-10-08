@@ -68,9 +68,9 @@ class PendingMember extends React.Component{
         this.state = {}
     }
 
-    handleClick(value){
+    handleClick(value, user){
         let data={
-            user: JSON.stringify(this.props.user),
+            user: JSON.stringify(user),
             project: JSON.stringify(this.props.project),
             check: value
         }
@@ -86,7 +86,6 @@ class PendingMember extends React.Component{
     }
 
     pendingMemberViews(user, index){
-        console.log(user.id)
         let pfp='https://i.ibb.co/MRpbpHN/default.png';
         if(user.profilePicture !== 'undefined'){
             pfp = user.profilePicture;
@@ -110,12 +109,12 @@ class PendingMember extends React.Component{
                         />
                     </Col>
                     <Col className="align-items-center p-1">    
-                        <Button variant="success" onClick={()=>this.handleClick(true)}>
+                        <Button variant="success" onClick={()=>this.handleClick(true, user)}>
                             Accept
                         </Button>
                     </Col>
                     <Col className="align-items-center p-1">
-                        <Button  variant="danger" onClick={()=>this.handleClick(false)}>
+                        <Button  variant="danger" onClick={()=>this.handleClick(false, user)}>
                             Decline
                         </Button>
                     </Col>
