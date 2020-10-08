@@ -397,6 +397,11 @@ class Graph extends React.Component {
         this.props.nodes[x].changedY=center.y
       }
     }
+
+    if(this.props.userPermission["update"]===false){
+      return;
+    }
+
     if(this.state.savePosition !== true){
       this.setState({savePosition:true});
     }

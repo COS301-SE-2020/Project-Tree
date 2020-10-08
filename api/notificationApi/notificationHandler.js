@@ -122,7 +122,7 @@ async function getProjectMembers(id) {
       `
             MATCH (a:Project), (b), (c)
             WHERE id(a) = ${id} AND (
-            (b)-[:MANAGES]->(a) OR 
+            (b)-[]->(a) OR 
             (b)-[:RESPONSIBLE_PERSON]->(c)-[:PART_OF]->(a) OR 
             (b)-[:PACKAGE_MANAGER]->(c)-[:PART_OF]->(a) OR 
             (b)-[:RESOURCE]->(c)-[:PART_OF]->(a))
