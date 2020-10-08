@@ -672,36 +672,6 @@ class Graph extends React.Component {
                 <Col className="text-center">
                   <Button
                     variant="outline-secondary"
-                    block
-                    size="sm"
-                    onClick={this.zoomIn}
-                  >
-                    <i className="fa fa-search-plus"></i>
-                  </Button>
-                </Col>
-                <Col className="text-center">
-                  <Button
-                    variant="outline-secondary"
-                    block
-                    size="sm"
-                    onClick={this.zoomOut}
-                  >
-                    <i className="fa fa-search-minus"></i>
-                  </Button>
-                </Col>
-                <Col className="text-center">
-                  <Button
-                    variant="dark"
-                    size="sm"
-                    block
-                    onClick={this.resetZoom}
-                  >
-                    <i className="fa fa-repeat"></i>
-                  </Button>
-                </Col>
-                <Col className="text-center">
-                  <Button
-                    variant="outline-secondary"
                     size="sm"
                     block
                     onClick={this.autoPosition}
@@ -725,7 +695,41 @@ class Graph extends React.Component {
             </Col>
           </Row>
         </Container>
-        <div id="paper" className="overflow-hidden user-select-none m-10"></div>
+        <div class="wrapper">
+          <div id="zoomButtons" className="overflow-hidden user-select-none m-10">
+            <Col id="increaseZoom" className="text-center">
+              <Button
+                variant="outline-secondary"
+                block
+                size="sm"
+                onClick={this.zoomIn}
+              >
+                <i className="fa fa-search-plus"></i>
+              </Button>
+            </Col>
+            <Col id="decreaseZoom" className="text-center">
+              <Button
+                variant="outline-secondary"
+                block
+                size="sm"
+                onClick={this.zoomOut}
+              >
+                <i className="fa fa-search-minus"></i>
+              </Button>
+            </Col>
+            <Col id="resetZoom" className="text-center">
+              <Button
+                variant="dark"
+                size="sm"
+                block
+                onClick={this.resetZoom}
+              >
+                <i className="fa fa-repeat"></i>
+              </Button>
+            </Col>
+          </div>
+          <div id="paper" className="overflow-hidden user-select-none m-10"></div>
+        </div>
         {this.state.createDependency ? (
           <CreateDependency
             closeModal={this.closeCreateDependency}
