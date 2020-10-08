@@ -13,7 +13,9 @@ class MemberWrapperComponent extends React.Component {
     render() {
         return (
             <View style={{width:'100%'}}>
+                <GetAccessCode project={this.props.project} />
                 <AuthoriseMembers project={this.props.project} />
+                <AddProjectManager project={this.props.project}/>
             </View>
         );
     }
