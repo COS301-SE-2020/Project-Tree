@@ -177,6 +177,9 @@ class GraphScreen extends Component {
       target_viewId: null,
       delDep_sourceViewId: null,
       delDep_targetViewId: null,
+      positionTasksMode: false,
+      savePosition: false,
+      autoPos: false,
     };
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.displayTaskDependency = this.displayTaskDependency.bind(this);
@@ -185,6 +188,7 @@ class GraphScreen extends Component {
     this.setCreateDependency = this.setCreateDependency.bind(this);
     this.setFilterVisibility = this.setFilterVisibility.bind(this);
     this.setFilterOn = this.setFilterOn.bind(this);
+    this.moveNode = this.moveNode.bind(this);
   }
 
   async componentDidMount() {
@@ -374,6 +378,53 @@ class GraphScreen extends Component {
     }
   }
 
+  async saveChanges(){
+    let changedNodes = [];
+    let nodes = [...this.state.nodes]
+
+    for(let x=0; x<nodes.length; x++){
+      if(nodes[x].changedX !== undefined){
+        changedNodes.push(nodes[x]);
+      }
+    }
+
+    let data = {
+      changedNodes: changedNodes
+    };
+
+    this.setState({savePosition:false, positionTasksMode:false, autoPos:false})
+
+    const response2 = await fetch(
+      'http://projecttree.herokuapp.com/task/savePositions',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      },
+    );
+  }
+
+  moveNode(message){
+    message = message.split(" ");
+    let id = message[1];
+    let xVal = message[2];
+    let yVal = message[3];
+
+    for(let x = 0; x < this.state.nodes.length; x++){
+      if(this.state.nodes[x].id === parseInt(id)){
+        this.state.nodes[x].changedX=parseInt(xVal)
+        this.state.nodes[x].changedY=parseInt(yVal)
+      }
+    }
+
+    if(this.state.savePosition !== true){
+			this.setState({savePosition:true});
+		}
+  }
+
   displayTaskDependency(
     taskID,
     dependencyID,
@@ -429,9 +480,47 @@ class GraphScreen extends Component {
     });
   }
 
+  filterButtonToggle(){
+    if(this.state.positionTasksMode){
+      return null;
+    }
+
+    else if(this.state.filterOn === false){
+      return(
+        <TouchableOpacity
+          style={styles.floatinBtn2}
+          onPress={() => {
+            this.setFilterVisibility(true);
+          }}>
+          <IconFeather name="search" size={25} />
+        </TouchableOpacity>
+      )
+    }
+
+    else{
+      return(
+        <TouchableOpacity
+          style={styles.floatinBtn2}
+          onPress={() => {
+            this.setFilterOn(false);
+            this.setProjectInfo();
+          }}>
+          <IconMaterial name="clear" size={25} />
+        </TouchableOpacity>
+      )
+    }
+  }
+
   render() {
     if (this.props.project === null) {
       return null;
+    }
+
+    let leftPos = 145
+    let color = '#EEBB4D'
+    if(this.state.positionTasksMode){
+      leftPos = 80;
+      color = '#96BB7C'
     }
 
     return this.state.nodes ? (
@@ -447,6 +536,9 @@ class GraphScreen extends Component {
             displayTaskDependency={this.displayTaskDependency}
             setCreateDependency={this.setCreateDependency}
             displayCriticalPath={this.props.displayCriticalPath}
+            positionTasksMode={this.state.positionTasksMode}
+            moveNode={this.moveNode}
+            autoPos={this.state.autoPos}
           />
         </View>
 
@@ -498,38 +590,68 @@ class GraphScreen extends Component {
             <IconEntypo name="menu-fold" size={25} />
           </TouchableOpacity>
 
-          {this.state.filterOn === false ? (
+          {this.filterButtonToggle()}
+          
+          {this.props.userPermissions["update"]?
             <TouchableOpacity
-              style={styles.floatinBtn2}
-              onPress={() => {
-                this.setFilterVisibility(true);
+              style={[styles.floatinBtn3, {left:leftPos, backgroundColor:color}]}
+              onPress={() => { this.setState({positionTasksMode:!this.state.positionTasksMode, savePosition:false, autoPos:false}); this.props.reload();
               }}>
-              <IconFeather name="search" size={25} />
+              <IconFeather name="move" size={25} />
             </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.floatinBtn2}
-              onPress={() => {
-                this.setFilterOn(false);
-                this.setProjectInfo();
-              }}>
-              <IconMaterial name="clear" size={25} />
-            </TouchableOpacity>
-          )}
+            :
+            null
+          }
+          
 
-          <CreateDependency
-            sourceCreateDependency={this.state.sourceCreateDependency}
-            targetCreateDependency={this.state.targetCreateDependency}
-            source_viewId={this.state.source_viewId}
-            target_viewId={this.state.target_viewId}
-            setCreateDependency={this.setCreateDependency}
-            getName={this.getName}
-            projID={this.props.project.id}
-            setProjectInfo={this.setProjectInfo}
-            getProjectInfo={this.getProjectInfo}
-            links={this.state.links}
-          />
-          {this.props.userPermissions['create'] === true ? (
+          {this.state.savePosition?
+            <React.Fragment>
+              <TouchableOpacity
+                style={styles.floatinBtn4}
+                onPress={() => {this.saveChanges()}}>
+                <IconFeather name="save" size={25} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.floatinBtn5}
+                onPress={() => {this.setState({savePosition:false, positionTasksMode:false, autoPos:false}); this.props.reload();}}>
+                <IconMaterial name="clear" size={25} />
+              </TouchableOpacity>
+            </React.Fragment>
+            :
+            null
+          }
+
+          {this.state.positionTasksMode?
+            <TouchableOpacity
+              onPress={()=>{this.setState({autoPos:true}); this.props.reload()}}
+              style={styles.autoPositionButton}>
+              <Text style={{textAlign:'center'}}>
+                Auto Position{'\n'}Tasks
+              </Text>
+            </TouchableOpacity>
+            :
+            null
+          }
+          
+          {this.state.positionTasksMode === false?
+            <CreateDependency
+              sourceCreateDependency={this.state.sourceCreateDependency}
+              targetCreateDependency={this.state.targetCreateDependency}
+              source_viewId={this.state.source_viewId}
+              target_viewId={this.state.target_viewId}
+              setCreateDependency={this.setCreateDependency}
+              getName={this.getName}
+              projID={this.props.project.id}
+              setProjectInfo={this.setProjectInfo}
+              getProjectInfo={this.getProjectInfo}
+              links={this.state.links}
+            />
+            :
+            null
+          }
+          
+
+          {this.props.userPermissions['create'] === true && this.state.positionTasksMode === false? (
             <CreateTask
               projectID={this.props.project.id}
               project={this.props.project}
@@ -557,7 +679,11 @@ class WebViewWrapper extends Component {
   handleOnMessage(event) {
     let message = event.nativeEvent.data;
 
-    if (message[0] === 'n') {
+    if (message[0] === 'm'){
+      this.props.moveNode(message)
+    }
+
+    else if (message[0] === 'n') {
       message = message.split(' ');
 
       let node = parseInt(message[0].substr(1));
@@ -598,9 +724,9 @@ class WebViewWrapper extends Component {
         renderLoading={this.ActivityIndicatorLoadingView}
         startInLoadingState={true}
         source={{
-          uri: 'http://projecttree.herokuapp.com/mobile',
+          uri: 'http://10.0.2.2:5000/mobile',
            method: 'POST',
-           headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+          //  headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
            body: `nodes=${JSON.stringify(
             this.props.nodes
           )}&links=${JSON.stringify(
@@ -609,7 +735,7 @@ class WebViewWrapper extends Component {
             this.props.displayCriticalPath
           }&projId=${this.props.projID}&views=${JSON.stringify(
             this.props.views
-          )}`,
+          )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
         }}
         onMessage={(event) => this.handleOnMessage(event)}
       />
@@ -643,6 +769,48 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 72,
     left: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
+  },
+  floatinBtn3: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  floatinBtn4: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    left: 148,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
+  },
+  floatinBtn5: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    left: 216,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
+  },
+  autoPositionButton: {
+    height: 50,
+    width:125,
+    borderRadius: 5,
+    position: 'absolute',
+    bottom: 72,
+    right: 12,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EEBB4D',
