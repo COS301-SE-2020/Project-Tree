@@ -346,13 +346,8 @@ class UserSettings extends Component {
   render() {
     return (
       <View style={styleUser.container}>
-        <StatusBar backgroundColor="#EBB035" barStyle="light-content" />
+        <StatusBar backgroundColor="96BB7C" barStyle="light-content" />
         <View style={styleUser.header}>
-          <TouchableOpacity
-            style={styleUser.hideButton1}
-            onPress={() => this.props.userScreen(false)}>
-            <Icon type="FontAwesome" name="close" />
-          </TouchableOpacity>
           <Text style={styleUser.text_header}>User details</Text>
         </View>
         <Animatable.View animation="fadeInUp" style={styleUser.footer}>
@@ -660,6 +655,28 @@ class UserSettings extends Component {
                   Submit Details
                 </Text>
               </TouchableOpacity>
+              </View>
+              <View style={styleUser.buttonSign}>
+              <TouchableOpacity
+                onPress={() => this.props.userScreen(false)}
+                style={[
+                  styleUser.signIn,
+                  {
+                    borderColor: '#296d98',
+                    borderWidth: 2,
+                    marginTop: -38,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styleUser.textSign,
+                    {
+                      color: '#296d98',
+                    },
+                  ]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>  
             </View>
           </ScrollView>
         </Animatable.View>
@@ -672,7 +689,7 @@ export default UserSettings;
 const styleUser = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EBB035',
+    backgroundColor: '#96BB7C',
     alignItems: 'center',
   },
   header: {
@@ -707,7 +724,7 @@ const styleUser = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 40,
-    fontFamily: 'sans-serif-medium',
+    //fontFamily: 'sans-serif-medium',
   },
   text_footer: {
     color: '#05375a',

@@ -1,12 +1,13 @@
 import React from "react";
 import {
-  Form,
-  Modal,
   Button,
   Container,
   Spinner,
   Row,
-  Col
+  Col,
+  Carousel,
+  OverlayTrigger,
+  Tooltip
 } from "react-bootstrap";
 import $ from "jquery"
 
@@ -55,7 +56,7 @@ class JoinProject extends React.Component {
 
         return (
             <React.Fragment>
-                <PendingMember user={this.state.users[0]} project={this.props.project} setUsers={this.setUsers}/>
+                <PendingMember user={this.state.users} project={this.props.project} setUsers={this.setUsers}/>
             </React.Fragment>
         );
     }
@@ -67,9 +68,9 @@ class PendingMember extends React.Component{
         this.state = {}
     }
 
-    handleClick(value){
+    handleClick(value, user){
         let data={
-            user: JSON.stringify(this.props.user),
+            user: JSON.stringify(user),
             project: JSON.stringify(this.props.project),
             check: value
         }
@@ -84,36 +85,64 @@ class PendingMember extends React.Component{
         this.props.setUsers();
     }
 
-    render(){
+    pendingMemberViews(user, index){
+        let pfp='https://i.ibb.co/MRpbpHN/default.png';
+        if(user.profilePicture !== 'undefined'){
+            pfp = user.profilePicture;
+        }
         return(
-            <Container className="align-items-center">
+            <Carousel.Item key={index}>
                 <Row>
-                    <h4>Pending Members</h4>
+                    <Col>
+                        {user.name + " " + user.surname}
+                    </Col>
                 </Row>
-                <Row className="align-items-center">
+                        
+                <Row className="align-items-center p-2">
                     <Col>
                         <img
                             class="circular"
-                            src={this.props.user.profilePicture}
+                            src={pfp}
                             alt="user"
                             width="40"
                             height="40"
                         />
                     </Col>
-                    <Col>    
-                        <Button variant="success" onClick={()=>this.handleClick(true)}>
+                    <Col className="align-items-center p-1">    
+                        <Button variant="success" onClick={()=>this.handleClick(true, user)}>
                             Accept
                         </Button>
                     </Col>
-                    <Col>
-                        <Button variant="danger" onClick={()=>this.handleClick(false)}>
+                    <Col className="align-items-center p-1">
+                        <Button  variant="danger" onClick={()=>this.handleClick(false, user)}>
                             Decline
                         </Button>
                     </Col>
                 </Row>
-                <Row>
-                    {this.props.user.name + " " + this.props.user.surname}
+            </Carousel.Item>
+        )
+    }
+    render(){
+        return(
+            <Container className="align-items-center">
+                <Row className="p-0 m-0">
+                    <h4>Pending Members</h4>
+                    <OverlayTrigger
+                        placement='auto'
+                        style={{ fontSize: "27px" }}
+                        overlay={
+                        <Tooltip className="helpTooltip">
+                            Acccept or decline members that have used the access code to join your project
+                        </Tooltip>
+                        } >
+                        <i className="fa fa-question-circle"></i>
+                     </OverlayTrigger>
                 </Row>
+                    <Carousel interval={1000000} pauseOnHover={true} style={{width: "100%", height: "100%",padding: "5px", margin: 0}}>
+                        {this.props.user.map((user, index) => (
+                            this.pendingMemberViews(user, index)
+                        ))}
+                    </Carousel>
             </Container>
         )
     }

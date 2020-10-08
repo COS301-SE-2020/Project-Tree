@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Button, Container, Row, Col } from "react-bootstrap";
+import { Table, Button, Container, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
@@ -8,11 +8,16 @@ import MemberWrapperComponent from "./Members/MemberWrapperComponent"
 
 class ProjectInfo extends React.Component {
   render() {
+    let h="30em";
+    if(this.props.userPermission["project"] === true){
+      h="40em";
+    }
+
     return (
       <React.Fragment>
         <Container
           className="block-example border rounded border-secondary"
-          style={{ height: "35em" }}
+          style={{ height: h }}
         >
           <Row className="align-items-center bg-secondary py-2">
             <Col>
@@ -39,7 +44,7 @@ class ProjectInfo extends React.Component {
                 {this.props.userPermission["project"] === true ? (
                   <Col className="text-center my-1">
                     <UpdateProject
-                      project={this.props.project.projectInfo}
+                      project={this.props.project}
                       setProject={(project) => {
                         this.props.setProject(project);
                       }}
@@ -65,7 +70,35 @@ class ProjectInfo extends React.Component {
               </Row>
             </Col>
           </Row>
-          <Row className="align-items-center py-2">
+          <Row className="align-items-center pt-1">
+            <Col
+              className="align-items-center text-center"
+              style={{ fontSize: "20px", }}
+            >
+              Start Date and Time
+            </Col>
+            <Col
+              className="align-items-center text-center"
+              style={{ fontSize: "20px", }}
+            >
+              End Date and Time
+            </Col>
+          </Row>
+          <Row className="align-items-center">
+            <Col
+              className="align-items-center text-center"
+              style={{ fontSize: "20px" }}
+            >
+              {`${this.props.project.projectInfo.startDate.substring(0, 10)} ${this.props.project.projectInfo.startDate.substring(11, 16)}`}
+            </Col>
+            <Col
+              className="align-items-center text-center"
+              style={{ fontSize: "20px" }}
+            >
+              {`${this.props.project.projectInfo.endDate.substring(0, 10)} ${this.props.project.projectInfo.endDate.substring(11, 16)}`}
+            </Col>
+          </Row>
+          <Row className="align-items-center py-1">
             <Col
               className="align-items-center text-center"
               style={{ fontSize: "20px", wordWrap: "break-word" }}
@@ -84,7 +117,17 @@ class ProjectInfo extends React.Component {
               >
                 <tbody>
                   <tr>
-                    <th colSpan="4">Project permissions</th>
+                    <th colSpan="4">Project permissions {" "}
+                      <OverlayTrigger
+                        placement='right'
+                        overlay={
+                        <Tooltip className="helpTooltip">
+                          Project managers may set project member role permissions that apply to tasks
+                        </Tooltip>
+                        } >
+                        <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                        </OverlayTrigger>
+                      </th>
                   </tr>
                   <tr>
                     <td></td>
@@ -150,11 +193,13 @@ class ProjectInfo extends React.Component {
               </Table>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <MemberWrapperComponent project={this.props.project.projectInfo}/>
-            </Col>
-          </Row>
+          {this.props.userPermission["project"] === true ? (
+            <Row>
+              <Col>
+                <MemberWrapperComponent project={this.props.project.projectInfo}/>
+              </Col>
+            </Row>       
+          ) : null}
         </Container>
       </React.Fragment>
     );

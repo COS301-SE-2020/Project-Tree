@@ -331,6 +331,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   createButton: {
+    marginTop: 20,
     backgroundColor: '#184D47',
     alignItems: 'center',
     justifyContent: 'center',

@@ -21,20 +21,44 @@ function stringifyFormData(fd) {
 class UpdateProject extends React.Component {
   constructor(props) {
     super(props);
+
+    let firstTask = null;
+    let lastTask = null;
+    this.props.project.tasks.forEach(task => {
+      if ( firstTask === null || firstTask.startDate > task.startDate )
+        firstTask = task;
+      if ( lastTask === null || lastTask.endDate < task.endDate )
+        lastTask = task;
+    });
+
     this.state = {
       show: false,
       isloading: false,
-      project: this.props.project,
+      project: this.props.project.projectInfo,
+      firstTask: firstTask,
+      lastTask: lastTask,
       token: localStorage.getItem("sessionToken"),
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.changeDate = this.changeDate.bind(this);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.project !== prevProps.project) {
-      this.setState({ project: this.props.project });
+    if (this.props.project.projectInfo !== prevProps.project.projectInfo) {
+      let firstTask = null;
+      let lastTask = null;
+      this.props.project.tasks.forEach(task => {
+        if ( firstTask === null || firstTask.startDate > task.startDate )
+          firstTask = task;
+        if ( lastTask === null || lastTask.endDate < task.endDate )
+          lastTask = task;
+      });
+      this.setState({ 
+        firstTask,
+        lastTask,
+        project: this.props.project.projectInfo });
     }
   }
 
@@ -56,6 +80,60 @@ class UpdateProject extends React.Component {
     }).fail(() => {
       alert("Unable to update project");
     });
+  }
+
+  changeDate(e, type) {
+    if(type.substring(type.length-4, type.length) === "Date") {
+      if (isNaN(Date.parse(e.target.value))) return;
+    } else if (
+        !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
+      ) return;
+    let project = this.state.project;
+    let value = type.substring(0,1) === "s" ? 
+      project.startDate : project.endDate;
+    if(type.substring(type.length-4, type.length) === "Date") 
+    value = `${e.target.value}T${
+        type.substring(0,1) === "s" ? 
+          project.startDate.substring(11,16) 
+        : 
+          project.endDate.substring(11,16)}`;
+    else value = `${type.substring(0,1) === "s" ? 
+        project.startDate.substring(0,10) 
+      : 
+        project.endDate.substring(0,10)}T${
+        e.target.value
+      }`;
+    let startDate = type.substring(0,1) === "s" ? 
+      value : this.state.project.startDate;
+    let endDate = type.substring(0,1) === "s" ? 
+      this.state.project.endDate : value;
+      console.log(this.state.lastTask.endDate);
+    if (startDate > this.state.firstTask.startDate){
+      alert("The start date of the project cannot be any latter then the current date as it would be after the start of a task, if you want it to be any later then change the task first");
+      value = this.state.firstTask.startDate;
+    }
+    if (endDate < this.state.lastTask.endDate){
+      alert("The end date of the project cannot be any earlier then the current date as it would be before a end of a task, if you want it to be any earlier then change the task first");
+      value = this.state.lastTask.endDate;
+    }
+    if (endDate < startDate) {
+      alert(
+        "You cannot make the end date/time before the start date/time."
+      );
+      project.startDate = value;
+      project.endDate = value;
+      this.setState({ project: project });
+    } else {
+      if (type.substring(0,1) === "s") 
+        project.startDate = value;
+      else
+        project.endDate = value;
+      this.setState({ project });
+    }
+    if (type.substring(0,1) === "s") 
+      return this.state.project.startDate;
+    else
+      return this.state.project.endDate;
   }
 
   render() {
@@ -126,6 +204,42 @@ class UpdateProject extends React.Component {
                     this.setState({ project: proj });
                     this.value = this.state.project.description;
                   }}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Start date of project</Form.Label>
+                <Form.Control
+                  required
+                  name="up_StartDate"
+                  type="date"
+                  value={this.state.project.startDate.substring(0, 10)}
+                  onChange={(e) => {this.value = this.changeDate(e, "startDate")}}
+                />
+                <Form.Label>Start Time of task</Form.Label>
+                <Form.Control
+                  required
+                  name="up_StartTime"
+                  type="time"
+                  value={this.state.project.startDate.substring(11, 16)}
+                  onChange={(e) => {this.value = this.changeDate(e, "startTime")}}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>End date of task</Form.Label>
+                <Form.Control
+                  required
+                  name="up_EndDate"
+                  type="date"
+                  value={this.state.project.endDate.substring(0, 10)}
+                  onChange={(e) => {this.value = this.changeDate(e, "endDate")}}
+                />
+                <Form.Label>End Time of task</Form.Label>
+                <Form.Control
+                  required
+                  name="up_EndTime"
+                  type="time"
+                  value={this.state.project.endDate.substring(11, 16)}
+                  onChange={(e) => {this.value = this.changeDate(e, "endTime")}}
                 />
               </Form.Group>
               <Table bordered striped hover>

@@ -39,6 +39,7 @@ class NoticeBoard extends Component {
       <NotificationList
         messages={this.props.messages}
         users={this.state.users}
+        userPermission={this.props.userPermission}
       />
     );
   }
@@ -197,7 +198,10 @@ class NotificationList extends React.Component {
   render() {
     let messages = this.sortMessages();
     let messageComponents = this.createMessageList(messages);
-
+    let h="26em";
+    if(this.props.userPermission["project"] === true){
+      h="36em";
+    }
     return (
       <Container>
         <Row>
@@ -208,7 +212,7 @@ class NotificationList extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col style={{ height: "31em", overflowY: "auto" }}>
+          <Col style={{ height: h, overflowY: "auto" }}>
             {messageComponents}
           </Col>
         </Row>

@@ -1,13 +1,8 @@
 import React from "react";
 import {
-  Form,
-  Modal,
-  Button,
-  InputGroup,
-  Spinner,
   Container,
   Row,
-  Col
+  Col,
 } from "react-bootstrap";
 import AddProjectManager from "./AddProjectManager"
 import GetAccessCode from "./GetAccessCode"
@@ -31,7 +26,7 @@ class MemberWrapperComponent extends React.Component {
                             <AddProjectManager project={this.props.project}/>
                         </Row>
                     </Col>
-                    <Col>
+                    <Col xs="8" className="align-items-center">
                         <AuthoriseMembers project={this.props.project} />
                     </Col>
                 </Row>

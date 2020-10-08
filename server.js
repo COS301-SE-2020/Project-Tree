@@ -33,6 +33,7 @@ app.post("/task/update", tq.updateTask);
 app.post("/task/delete", tq.deleteTask);
 app.post("/task/createClone", tq.createClone);
 app.post("/task/deleteClone", tq.deleteClone);
+app.post("/task/savePositions", tq.savePositions);
 app.post("/dependency/add", dq.createDependency);
 app.post("/dependency/update", dq.updateDependency);
 app.post("/dependency/delete", dq.deleteDependency);

@@ -218,7 +218,16 @@ class GraphPage extends React.Component {
                     </Link>
                   </Col>
                   <Col xs={8} md={8} lg={8} xl={8} className="text-center m-1">
-                    <h2>{this.props.project.name}</h2>
+                    <h2>{this.props.project.name} {" "}
+                    <OverlayTrigger
+                      placement='auto'
+                      overlay={
+                      <Tooltip className="helpTooltip">
+                        Click on a task or dependency to view their information and perform actions.
+                      </Tooltip>
+                      } >
+                      <i className="fa fa-question-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                    </OverlayTrigger></h2>
                   </Col>
                   <Col></Col>
                 </Row>
@@ -227,6 +236,7 @@ class GraphPage extends React.Component {
               {this.state.task !== null ? (
                 <TaskSidebar
                   task={this.state.task}
+                  rels={this.state.links}
                   userPermission={this.props.userPermission}
                   toggleSidebar={this.toggleSidebar}
                   setTaskInfo={this.setTaskInfo}
@@ -297,6 +307,7 @@ class TaskSidebar extends React.Component {
   constructor(props) {
     super(props);
     this.classifyExistingUsers = this.classifyExistingUsers.bind(this);
+    this.updateType = this.updateType.bind(this);
   }
 
   // Classifies users on the project according to role if they are part of this task
@@ -335,12 +346,11 @@ class TaskSidebar extends React.Component {
   }
 
   printUsers(people) {
-    console.log(people);
     let list = [];
     for (let x = 0; x < people.length; x++) {
       list.push(
-        // <Row className="justify-content-md-center">
-        //   <Col className="justify-content-md-center">
+        <Row className="justify-content-md-center">
+        {/* //   <Col className="justify-content-md-center">
         //   <OverlayTrigger
         //     placement='auto'
         //     trigger="click"
@@ -364,26 +374,25 @@ class TaskSidebar extends React.Component {
         //   </Col>
         //   <Row>
         //     <br />
-        //   </Row>
-          
-        // </Row>
-        <Card>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img class="circular"
-                src={people[x].profilePicture}
-                alt="user"
-              />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                {/* <h4 class="card-title">{people[x].name}&nbsp;{people[x].surname}</h4> */}
-                <h4>{people[x].name}&nbsp;{people[x].surname}</h4>
-                <a href="https://www.w3schools.com" target="_blank">Send me an email</a>
+        //   </Row> */}
+          <Card style={{width:'100%', marginBottom:5}}>
+            <div class="row no-gutters">
+              <div class="col-auto">
+                <img class="circular"
+                  src={people[x].profilePicture}
+                  alt="user"
+                />
+              </div>
+              <div class="col">
+                <div class="card-block px-2">
+                  {/* <h4 class="card-title">{people[x].name}&nbsp;{people[x].surname}</h4> */}
+                  <h4>{people[x].name}&nbsp;{people[x].surname}</h4>
+                  <a href="https://www.w3schools.com" target="_blank">Send me an email</a>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Row>
       );
     }
     return list;
@@ -395,12 +404,30 @@ class TaskSidebar extends React.Component {
     return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
+  updateType(pac, resp, reso){
+    if(this.props.userPermission["update"]) return "update";
+    let check = false;
+    pac.forEach(person => {
+      if (person.id = this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    resp.forEach(person => {
+      if (person.id = this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    reso.forEach(person => {
+      if (person.id = this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    return "none";
+  }
+
   render() {
     let taskUsers = this.classifyExistingUsers();
     let taskPacMans = taskUsers[0];
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
-
+    let updateType = this.updateType(taskPacMans, taskResPersons, taskResources);
     let progressColor = "info";
 
     return (
@@ -466,18 +493,21 @@ class TaskSidebar extends React.Component {
               />
             </Col>
           </Row>
-          {this.props.userPermission["update"] === true ? (
+          {updateType !== "none" ? (
             <Row className="my-2">
               <Col xs={12} className="text-center">
                 <UpdateTask
                   task={this.props.task}
+                  rels={this.props.rels}
                   setTaskInfo={this.props.setTaskInfo}
                   getProjectInfo={this.props.getProjectInfo}
                   toggleSidebar={this.props.toggleSidebar}
                   pacMans={taskPacMans}
                   resPersons={taskResPersons}
                   resources={taskResources}
+                  user={this.props.user}
                   allUsers={this.props.allUsers}
+                  updateType={updateType}
                   assignedProjUsers={this.props.assignedProjUsers}
                   updateAssignedPeople={this.props.updateAssignedPeople}
                   project={this.props.project}

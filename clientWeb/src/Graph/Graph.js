@@ -91,9 +91,21 @@ function makeElement(node, criticalPathNodes) {
     };
   }
 
+  let xVal, yVal;
+  if(node.changedX !== undefined){
+    xVal = node.changedX;
+    yVal = node.changedY;
+  }
+
+  else{
+    xVal = node.positionX;
+    yVal = node.positionY;
+  }
+
   return new joint.shapes.standard.Rectangle({
     id: `${node.id}`,
     size: { width: width, height: height },
+    position: { x: xVal, y: yVal },
     attrs: {
       type: "node",
       body: {
@@ -203,6 +215,8 @@ class Graph extends React.Component {
       viewId_source: null,
       viewId_target: null,
       displayCriticalPath: true,
+      savePosition: false,
+      newPosition: {x:0, y:0}
     };
     this.handleClick = this.handleClick.bind(this);
     this.drawGraph = this.drawGraph.bind(this);
@@ -217,6 +231,8 @@ class Graph extends React.Component {
     this.closeCreateDependency = this.closeCreateDependency.bind(this);
     this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
     this.clearDependency = this.clearDependency.bind(this);
+    this.moveNode = this.moveNode.bind(this);
+    this.autoPosition = this.autoPosition.bind(this);
   }
 
   recDepCheck(curr, target) {
@@ -347,9 +363,9 @@ class Graph extends React.Component {
     }
   }
 
-  addTask() {
+  addTask(cell) {
     if (this.props.userPermission["create"] === true)
-      this.setState({ createTask: true });
+      this.setState({ createTask: true, newPosition: {x:cell.offsetX, y:cell.offsetY} });
     else alert("You do not have the permission to create a task");
   }
 
@@ -372,13 +388,84 @@ class Graph extends React.Component {
     this.paperScale(graphScale, graphScale);
   }
 
+  moveNode(cell){
+    var center = cell.getBBox().topLeft();
+    var id = cell.id
+    for(let x = 0; x < this.props.nodes.length; x++){
+      if(this.props.nodes[x].id === parseInt(id)){
+        this.props.nodes[x].changedX=center.x
+        this.props.nodes[x].changedY=center.y
+      }
+    }
+    if(this.state.savePosition !== true){
+      this.setState({savePosition:true});
+    }
+  }
+
+  async saveChanges(){
+    let changedNodes = [];
+    let nodes = [...this.props.nodes]
+
+    for(let x=0; x<nodes.length; x++){
+      if(nodes[x].changedX !== undefined){
+        changedNodes.push(nodes[x]);
+      }
+    }
+
+    let data = {
+      changedNodes: changedNodes
+    };
+
+    this.setState({savePosition:false})
+
+    data = JSON.stringify(data);
+    const response = await fetch("/task/savePositions", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: data,
+    });
+    
+    const body = await response.json();
+    if(body.message !== "ok"){
+      alert("Graph positions could not be saved")
+    }
+  }
+
+  clearChanges(){
+    let nodes = this.props.nodes;
+
+    for(let x=0; x<nodes.length; x++){
+      if(nodes[x].changedX !== undefined){
+        nodes[x].changedX = undefined;
+        nodes[x].changedY = undefined;
+      }
+    }
+
+    this.setState({savePosition:false});
+  }
+
+  autoPosition(){
+    joint.layout.DirectedGraph.layout(this.state.graph, {
+      dagre: dagre,
+      graphlib: graphlib,
+      setLinkVertices: false,
+      rankDir: "TB",
+      nodeSep: 100,
+      rankSep: 100,
+    });
+    this.setState({savePosition:true});
+  }
+
   componentDidMount() {
     let graph = new joint.dia.Graph();
     paper = new joint.dia.Paper({
       el: $("#paper"),
       width: "100%",
       height: "93%",
-      gridSize: 50,
+      gridSize: 1,
       model: graph,
       linkPinning: false,
     });
@@ -406,6 +493,8 @@ class Graph extends React.Component {
       paper.scale(graphScale, graphScale);
     });
 
+    graph.on('change:position', this.moveNode);
+
     $("#paper").mousemove(function (event) {
       if (dragStartPosition)
         paper.translate(
@@ -425,14 +514,6 @@ class Graph extends React.Component {
     var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
     cells = createViews(cells, this.props.views);
     this.state.graph.resetCells(cells);
-    joint.layout.DirectedGraph.layout(this.state.graph, {
-      dagre: dagre,
-      graphlib: graphlib,
-      setLinkVertices: false,
-      rankDir: "TB",
-      nodeSep: 100,
-      rankSep: 100,
-    });
   }
 
   showModal() {
@@ -440,7 +521,7 @@ class Graph extends React.Component {
   }
 
   hideModal() {
-    this.setState({ createTask: false });
+    this.setState({ createTask: false, newPosition: {x:0, y:0} });
   }
 
   openCreateDependency() {
@@ -496,7 +577,33 @@ class Graph extends React.Component {
                     <i className="fa fa-question-circle"></i>
                   </OverlayTrigger>
                 </Col>
-                {this.props.userPermission["create"] === true ?
+                {this.state.savePosition === true ? (
+                  <React.Fragment>
+                    <Col className="text-center">
+                    <Button
+                      block
+                      variant="success"
+                      size="sm"
+                      style={{ overflow: "hidden" }}
+                      onClick={()=>this.saveChanges()}
+                    >
+                      Save Changes
+                    </Button>
+                  </Col>
+                  <Col className="text-center">
+                    <Button
+                      block
+                      variant="danger"
+                      size="sm"
+                      style={{ overflow: "hidden" }}
+                      onClick={()=>this.clearChanges()}
+                    >
+                      Clear Changes
+                    </Button>
+                  </Col>
+                  </React.Fragment>
+                ): null}
+                {this.props.userPermission["create"] === true ? (
                   <Col className="text-center">
                     <Button
                       onClick={()=>this.showModal()}
@@ -507,7 +614,8 @@ class Graph extends React.Component {
                     >
                       Create Task
                     </Button>
-                  </Col>:null}
+                  </Col>
+                ): null}
                 {dependency != null ? (
                   <Col className="text-center">
                     <Button
@@ -541,7 +649,6 @@ class Graph extends React.Component {
                       block
                       xs={2}
                       size="sm"
-                      style={{ height: "31px", overflow: "hidden" }}
                       onClick={() => {
                         this.setState({
                           displayCriticalPath: !this.state.displayCriticalPath,
@@ -592,6 +699,16 @@ class Graph extends React.Component {
                     <i className="fa fa-repeat"></i>
                   </Button>
                 </Col>
+                <Col className="text-center">
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    block
+                    onClick={this.autoPosition}
+                  >
+                    Auto Postion Tasks
+                  </Button>
+                </Col>
               </Row>
               {this.state.alert === 1 ? (
                 <Row style={{ color: "red" }}>
@@ -627,6 +744,7 @@ class Graph extends React.Component {
           <CreateTask
             hideModal={this.hideModal}
             project={this.props.project}
+            position={this.state.newPosition}
             getProjectInfo={this.props.getProjectInfo}
             setTaskInfo={this.props.setTaskInfo}
             toggleSidebar={this.props.toggleSidebar}

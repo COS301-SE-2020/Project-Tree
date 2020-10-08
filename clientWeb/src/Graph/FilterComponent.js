@@ -6,6 +6,8 @@ import {
   Col,
   ToggleButtonGroup,
   ToggleButton,
+  OverlayTrigger, 
+  Tooltip
 } from "react-bootstrap";
 import Autosuggest from "react-autosuggest";
 import "./FilterComponent.css";
@@ -414,7 +416,16 @@ export default class FilterComponent extends React.Component {
       <Container className="p-2">
         <Row>
           <Col className="text-center">
-            <h4>Search</h4>
+            <h4>Search <OverlayTrigger
+                  placement='auto'
+                  overlay={
+                  <Tooltip className="helpTooltip">
+                     Select the filter or highlight button then select tasks or people and search for specific tasks or people to display. Now click GO!
+                  </Tooltip>
+                  } >
+                  <i className="fa fa-question-circle"  style={{ color: "black", fontSize: "17px" }}></i>
+              </OverlayTrigger></h4>
+             
           </Col>
         </Row>
         <Row>

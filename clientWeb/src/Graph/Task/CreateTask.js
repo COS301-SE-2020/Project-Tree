@@ -195,6 +195,8 @@ class CreateTask extends React.Component {
       startDate: this.state.startDate,
       duration: this.state.duration,
       endDate: this.state.endDate,
+      positionX: this.props.position.x,
+      positionY: this.props.position.y,
     };
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
@@ -340,6 +342,12 @@ class CreateTask extends React.Component {
                       11,
                       16
                     )}`;
+                    if (value < this.props.project.startDate) {
+                      alert(
+                        "You cannot make the start date/time before the project date/time."
+                      );
+                      value = this.props.project.startDate;
+                    }
                     let startDate = new Date(value);
                     startDate.setTime(
                       startDate.getTime() -
@@ -382,6 +390,12 @@ class CreateTask extends React.Component {
                     value = `${this.state.startDate.substring(0, 10)}T${
                       e.target.value
                     }`;
+                    if (value < this.props.project.startDate) {
+                      alert(
+                        "You cannot make the start date/time before the project date/time."
+                      );
+                      value = this.props.project.startDate;
+                    }
                     let startDate = new Date(value);
                     startDate.setTime(
                       startDate.getTime() -

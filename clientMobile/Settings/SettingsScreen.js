@@ -139,7 +139,7 @@ export default class SettingsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="#008656" barStyle="light-content" />
+        <StatusBar backgroundColor="96BB7C" barStyle="light-content" />
         <View style={styles.header}>
         <TouchableOpacity
               onPress={() => {
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#008656',
+    backgroundColor: '#96BB7C',
   },
   header: {
     alignItems: 'center',
