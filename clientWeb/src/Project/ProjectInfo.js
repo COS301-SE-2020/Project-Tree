@@ -8,11 +8,16 @@ import MemberWrapperComponent from "./Members/MemberWrapperComponent"
 
 class ProjectInfo extends React.Component {
   render() {
+    let h="30em";
+    if(this.props.userPermission["project"] === true){
+      h="40em";
+    }
+
     return (
       <React.Fragment>
         <Container
           className="block-example border rounded border-secondary"
-          style={{ height: "36em" }}
+          style={{ height: h }}
         >
           <Row className="align-items-center bg-secondary py-2">
             <Col>
