@@ -39,7 +39,7 @@ class ProjectInfo extends React.Component {
                 {this.props.userPermission["project"] === true ? (
                   <Col className="text-center my-1">
                     <UpdateProject
-                      project={this.props.project.projectInfo}
+                      project={this.props.project}
                       setProject={(project) => {
                         this.props.setProject(project);
                       }}
@@ -65,7 +65,35 @@ class ProjectInfo extends React.Component {
               </Row>
             </Col>
           </Row>
-          <Row className="align-items-center py-2">
+          <Row className="align-items-center pt-1">
+            <Col
+              className="align-items-center text-center"
+              style={{ fontSize: "20px", }}
+            >
+              Start Date and Time
+            </Col>
+            <Col
+              className="align-items-center text-center"
+              style={{ fontSize: "20px", }}
+            >
+              End Date and Time
+            </Col>
+          </Row>
+          <Row className="align-items-center">
+            <Col
+              className="align-items-center text-center"
+              style={{ fontSize: "20px" }}
+            >
+              {`${this.props.project.projectInfo.startDate.substring(0, 10)} ${this.props.project.projectInfo.startDate.substring(11, 16)}`}
+            </Col>
+            <Col
+              className="align-items-center text-center"
+              style={{ fontSize: "20px" }}
+            >
+              {`${this.props.project.projectInfo.endDate.substring(0, 10)} ${this.props.project.projectInfo.endDate.substring(11, 16)}`}
+            </Col>
+          </Row>
+          <Row className="align-items-center py-1">
             <Col
               className="align-items-center text-center"
               style={{ fontSize: "20px", wordWrap: "break-word" }}

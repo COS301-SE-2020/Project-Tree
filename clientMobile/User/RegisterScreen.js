@@ -231,11 +231,11 @@ class RegisterScreen extends Component {
         </View>
         <Animatable.View animation="fadeInUp" style={styles.footer}>
           <ScrollView>
-            <Text style={styles.text_footer}>Username</Text>
+            <Text style={styles.text_footer}>First name</Text>
             <View style={styles.mover}>
               <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
-                placeholder="Username"
+                placeholder="First name"
                 style={styles.inputT}
                 autoCapitalize="none"
                 onChangeText={(val) => this.inputChange(val)}
@@ -252,7 +252,7 @@ class RegisterScreen extends Component {
             {this.state.validUser ? null : (
               <Animatable.View animation="rubberBand" duration={400}>
                 <Text style={styles.errorMsg}>
-                  Username must be at least be longer than 1 character.
+                  First name must be at least be longer than 1 character.
                 </Text>
               </Animatable.View>
             )}

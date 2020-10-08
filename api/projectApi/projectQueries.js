@@ -39,6 +39,9 @@ async function createProject(req, res) {
       ? (cp_r_Update = true)
       : (cp_r_Update = false);
 
+    let startDate = `${req.body.cp_StartDate}T${req.body.cp_StartTime}`;
+    let endDate = `${req.body.cp_EndDate}T${req.body.cp_EndTime}`;
+
     db.getSession()
       .run(
         `
@@ -47,7 +50,9 @@ async function createProject(req, res) {
           CREATE(n:Project {
               name:"${req.body.cp_Name}", 
               description:"${req.body.cp_Description}", 
-              projManCT:true, 
+              startDate: datetime("${startDate}"),
+              endDate: datetime("${endDate}"),
+              projManCT:true,
               projManDT:true, 
               projManUT:true, 
               packManCT:${cp_pm_Create}, 
@@ -72,6 +77,12 @@ async function createProject(req, res) {
           name: result.records[0]._fields[0].properties.name,
           description: result.records[0]._fields[0].properties.description,
           accessCode: result.records[0]._fields[0].properties.accessCode,
+          startDate: up.datetimeToString(
+            result.records[0]._fields[0].properties.startDate
+          ),
+          endDate: up.datetimeToString(
+            result.records[0]._fields[0].properties.endDate
+          ),
           permissions: [
             result.records[0]._fields[0].properties.packManCT,
             result.records[0]._fields[0].properties.packManDT,
@@ -159,6 +170,10 @@ async function updateProject(req, res) {
     req.body.up_r_Update != undefined
       ? (up_r_Update = true)
       : (up_r_Update = false);
+      
+    let startDate = `${req.body.up_StartDate}T${req.body.up_StartTime}`;
+    let endDate = `${req.body.up_EndDate}T${req.body.up_EndTime}`;
+
     db.getSession()
       .run(
         `
@@ -167,6 +182,8 @@ async function updateProject(req, res) {
           SET a += {
               name:"${req.body.up_name}",
               description:"${req.body.up_description}",
+              startDate: datetime("${startDate}"),
+              endDate: datetime("${endDate}"),
               projManCT:true, 
               projManDT:true, 
               projManUT:true, 
@@ -190,6 +207,12 @@ async function updateProject(req, res) {
           name: result.records[0]._fields[0].properties.name,
           description: result.records[0]._fields[0].properties.description,
           accessCode: result.records[0]._fields[0].properties.accessCode,
+          startDate: up.datetimeToString(
+            result.records[0]._fields[0].properties.startDate
+          ),
+          endDate: up.datetimeToString(
+            result.records[0]._fields[0].properties.endDate
+          ),
           permissions: [
             result.records[0]._fields[0].properties.packManCT,
             result.records[0]._fields[0].properties.packManDT,
@@ -235,6 +258,12 @@ async function getProjects(req, res) {
             name: record._fields[0].properties.name,
             description: record._fields[0].properties.description,
             accessCode: record._fields[0].properties.accessCode,
+            startDate: up.datetimeToString(
+              record._fields[0].properties.startDate
+            ),
+            endDate: up.datetimeToString(
+              record._fields[0].properties.endDate
+            ),
             permissions: [
               record._fields[0].properties.packManCT,
               record._fields[0].properties.packManDT,
@@ -270,6 +299,12 @@ async function getProjects(req, res) {
             name: record._fields[0].properties.name,
             description: record._fields[0].properties.description,
             accessCode: record._fields[0].properties.accessCode,
+            startDate: up.datetimeToString(
+              record._fields[0].properties.startDate
+            ),
+            endDate: up.datetimeToString(
+              record._fields[0].properties.endDate
+            ),
             permissions: [
               record._fields[0].properties.packManCT,
               record._fields[0].properties.packManDT,

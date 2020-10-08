@@ -14,7 +14,7 @@ export default class ProgressDashboardWrapper extends Component {
   async componentDidUpdate(prevProps) {
     if (prevProps.project.id === this.props.project.id) return;
 
-    this._isMounted = true;
+    this._isMounted = true;f
 
     var response = await fetch(
       'http://projecttree.herokuapp.com/project/projecttasks',
