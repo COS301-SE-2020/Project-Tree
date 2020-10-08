@@ -20,8 +20,6 @@ import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
 import ProgressDashboard from './ProgressDashboard';
 import TopBar from '../TopBar';
 import MemberComponent from './Members/MemberWrapperComponent';
-import GetAccessCode from './Members/GetAccessCode'
-import AddProjectManagerModal from './Members/AddProjectManager'
 
 function GoToTree() {
   const navigation = useNavigation();
@@ -377,15 +375,11 @@ class HomeScreen extends Component {
               <CardItem>
                 <Body>{this.settingPermissions(this.props.project)}</Body>
               </CardItem>
-              <CardItem>
-                <GetAccessCode project={this.props.project} />
-              </CardItem>
-              <CardItem>
-                <MemberComponent project={this.props.project}/>
-              </CardItem>
-              <CardItem>
-                <AddProjectManagerModal project={this.props.project}/>
-              </CardItem>
+              {this.props.userPermissions['project'] === true ? (
+                <CardItem>
+                  <MemberComponent project={this.props.project}/>
+                </CardItem>
+              ) : null}
             </Card>
           </Content>
         </View>

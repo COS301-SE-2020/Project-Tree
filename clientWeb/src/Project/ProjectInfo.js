@@ -160,11 +160,13 @@ class ProjectInfo extends React.Component {
               </Table>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <MemberWrapperComponent project={this.props.project.projectInfo}/>
-            </Col>
-          </Row>
+          {this.props.userPermission["project"] === true ? (
+            <Row>
+              <Col>
+                <MemberWrapperComponent project={this.props.project.projectInfo}/>
+              </Col>
+            </Row>       
+          ) : null}
         </Container>
       </React.Fragment>
     );
