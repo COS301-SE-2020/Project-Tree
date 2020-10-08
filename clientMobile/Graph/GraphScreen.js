@@ -715,6 +715,37 @@ class WebViewWrapper extends Component {
   }
 
   render() {
+    let s={
+      uri: 'http://projecttree.herokuapp.com/mobile',
+       method: 'POST',
+       // headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+       body: `nodes=${JSON.stringify(
+        this.props.nodes
+      )}&links=${JSON.stringify(
+        this.props.links
+      )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
+        this.props.displayCriticalPath
+      }&projId=${this.props.projID}&views=${JSON.stringify(
+        this.props.views
+      )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
+    }
+    
+    if (Platform.OS === 'ios') { 
+      s={
+        uri: 'http://projecttree.herokuapp.com/mobile',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+          body: `nodes=${JSON.stringify(
+          this.props.nodes
+        )}&links=${JSON.stringify(
+          this.props.links
+        )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
+          this.props.displayCriticalPath
+        }&projId=${this.props.projID}&views=${JSON.stringify(
+          this.props.views
+        )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
+      }
+    }
     //return null;
     return this.props.views !== null ? (
       <WebView
@@ -723,20 +754,7 @@ class WebViewWrapper extends Component {
         ref={(ref) => (this.myWebView = ref)}
         renderLoading={this.ActivityIndicatorLoadingView}
         startInLoadingState={true}
-        source={{
-          uri: 'http://10.0.2.2:5000/mobile',
-           method: 'POST',
-          //  headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-           body: `nodes=${JSON.stringify(
-            this.props.nodes
-          )}&links=${JSON.stringify(
-            this.props.links
-          )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
-            this.props.displayCriticalPath
-          }&projId=${this.props.projID}&views=${JSON.stringify(
-            this.props.views
-          )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
-        }}
+        source={s}
         onMessage={(event) => this.handleOnMessage(event)}
       />
     ) : (
