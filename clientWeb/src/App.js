@@ -199,10 +199,16 @@ class App extends Component {
 
       let project = {};
       this.state.ownedProjects.forEach((p) => {
-        if (p.projectInfo.id === proj.id) project = p;
+        if (p.projectInfo.id === proj.id){
+          p.projectInfo = proj;
+          project = p;
+        }
       });
       this.state.otherProjects.forEach((p) => {
-        if (p.projectInfo.id === proj.id) project = p;
+        if (p.projectInfo.id === proj.id){
+          p.projectInfo = proj;
+          project = p;
+        }
       });
       this.setState({ project: project });
       let data = {};

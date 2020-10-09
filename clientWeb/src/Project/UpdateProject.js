@@ -34,7 +34,7 @@ class UpdateProject extends React.Component {
     this.state = {
       show: false,
       isloading: false,
-      project: this.props.project.projectInfo,
+      project: {...this.props.project.projectInfo},
       firstTask: firstTask,
       lastTask: lastTask,
       token: localStorage.getItem("sessionToken"),
@@ -58,7 +58,7 @@ class UpdateProject extends React.Component {
       this.setState({ 
         firstTask,
         lastTask,
-        project: this.props.project.projectInfo });
+        project: {...this.props.project.projectInfo} });
     }
   }
 
