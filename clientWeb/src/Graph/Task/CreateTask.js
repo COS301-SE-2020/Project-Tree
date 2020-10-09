@@ -344,7 +344,7 @@ class CreateTask extends React.Component {
                     )}`;
                     if (value < this.props.project.startDate) {
                       alert(
-                        "You cannot make the start date/time before the project date/time."
+                        "Please choose a start date/time that does not affect the project start date"
                       );
                       value = this.props.project.startDate;
                     }
@@ -360,7 +360,7 @@ class CreateTask extends React.Component {
                     );
                     if (endDate < startDate) {
                       alert(
-                        "You cannot make the start date/time after the end date/time."
+                        "Please choose an end date/time that finishes after the start date/time."
                       );
                       this.setState({
                         startDate: value,
@@ -392,7 +392,7 @@ class CreateTask extends React.Component {
                     }`;
                     if (value < this.props.project.startDate) {
                       alert(
-                        "You cannot make the start date/time before the project date/time."
+                        "Please choose a start date/time that does not affect the project start date"
                       );
                       value = this.props.project.startDate;
                     }
@@ -408,7 +408,7 @@ class CreateTask extends React.Component {
                     );
                     if (endDate < startDate) {
                       alert(
-                        "You cannot make the start date/time after the end date/time."
+                        "Please choose an end date/time that finishes after the start date/time."
                       );
                       this.setState({
                         startDate: value,
@@ -450,7 +450,7 @@ class CreateTask extends React.Component {
                     );
                     if (endDate < startDate) {
                       alert(
-                        "You cannot make the end date/time before the start date/time."
+                        "Please choose an end date/time that finishes after the start date/time."
                       );
                       this.setState({
                         startDate: value,
@@ -492,7 +492,7 @@ class CreateTask extends React.Component {
                     );
                     if (endDate < startDate) {
                       alert(
-                        "You cannot make the end date/time before the start date/time."
+                        "Please choose an end date/time that finishes after the start date/time."
                       );
                       this.setState({
                         startDate: value,

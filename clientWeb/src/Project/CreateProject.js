@@ -137,7 +137,7 @@ class CreateProject extends React.Component {
                     );
                     if (endDate < startDate) {
                       alert(
-                        "You cannot make the end date/time before the start date/time."
+                        "Please choose an end date/time that finishes after the start date/time."
                       );
                       this.setState({
                         startDate: value,
@@ -149,7 +149,9 @@ class CreateProject extends React.Component {
                     this.value = this.state.startDate;
                   }}
                 />
-                <Form.Label>Start Time of task</Form.Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Start time of project</Form.Label>
                 <Form.Control
                   required
                   name="cp_StartTime"
@@ -176,7 +178,7 @@ class CreateProject extends React.Component {
                     );
                     if (endDate < startDate) {
                       alert(
-                        "You cannot make the end date/time before the start date/time."
+                        "Please choose an end date/time that finishes after the start date/time."
                       );
                       this.setState({
                         startDate: value,
@@ -190,7 +192,7 @@ class CreateProject extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>End date of task</Form.Label>
+                <Form.Label>End date of project</Form.Label>
                 <Form.Control
                   required
                   name="cp_EndDate"
@@ -215,7 +217,7 @@ class CreateProject extends React.Component {
                     );
                     if (endDate < startDate) {
                       alert(
-                        "You cannot make the end date/time before the start date/time."
+                        "Please choose an end date/time that finishes after the start date/time."
                       );
                       this.setState({
                         startDate: value,
@@ -227,7 +229,9 @@ class CreateProject extends React.Component {
                     this.value = this.state.endDate;
                   }}
                 />
-                <Form.Label>End Time of task</Form.Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>End time of project</Form.Label>
                 <Form.Control
                   required
                   name="cp_EndTime"
@@ -254,7 +258,7 @@ class CreateProject extends React.Component {
                     );
                     if (endDate < startDate) {
                       alert(
-                        "You cannot make the end date/time before the start date/time."
+                        "Please choose an end date/time that finishes after the start date/time."
                       );
                       this.setState({
                         startDate: value,

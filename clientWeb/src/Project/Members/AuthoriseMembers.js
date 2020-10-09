@@ -38,20 +38,30 @@ class JoinProject extends React.Component {
     render() {
         if(this.state.users === null){
             return(
-                <Spinner
-                animation="border"
-                variant="success"
-                size="sm"
-                ></Spinner>
+                    <Row>
+                        <Col className="text-center">
+                            <Spinner
+                                animation="border"
+                                variant="success"
+                                size="sm"
+                            >
+                            </Spinner>
+                        </Col>
+                    </Row>
             )
         }
 
         else if(this.state.users.length === 0){
             return(
-                <h4>
-                    No pending members
-                </h4>
+                <Row>
+                    <Col className="text-center">
+                        <h4>
+                            No pending members
+                        </h4>
+                    </Col>
+                </Row>
             )
+            
         }
 
         return (
@@ -126,17 +136,19 @@ class PendingMember extends React.Component{
         return(
             <Container className="align-items-center">
                 <Row className="p-0 m-0">
-                    <h4>Pending Members</h4>
-                    <OverlayTrigger
-                        placement='auto'
-                        style={{ fontSize: "27px" }}
-                        overlay={
-                        <Tooltip className="helpTooltip">
-                            Acccept or decline members that have used the access code to join your project
-                        </Tooltip>
-                        } >
-                        <i className="fa fa-question-circle"></i>
-                     </OverlayTrigger>
+                    <Col className="text-center">
+                        <h4>Pending Members {" "}
+                        <OverlayTrigger
+                            placement='auto'
+                            style={{fontSize: "20px" }}
+                            overlay={
+                            <Tooltip className="helpTooltip">
+                                Acccept or decline members that have used the access code to join your project
+                            </Tooltip>
+                            } >
+                            <i className="fa fa-question-circle"></i>
+                        </OverlayTrigger></h4>
+                     </Col>
                 </Row>
                     <Carousel interval={1000000} pauseOnHover={true} style={{width: "100%", height: "100%",padding: "5px", margin: 0}}>
                         {this.props.user.map((user, index) => (

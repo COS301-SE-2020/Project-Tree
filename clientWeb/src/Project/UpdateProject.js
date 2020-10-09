@@ -109,16 +109,16 @@ class UpdateProject extends React.Component {
       this.state.project.endDate : value;
 
     if (this.state.firstTask !== null && startDate > this.state.firstTask.startDate){
-      alert("The start date of the project cannot be any latter then the current date as it would be after the start of a task, if you want it to be any later then change the task first");
+      alert("Please change the start date of your project tasks before changing the start date of the project");
       value = this.state.firstTask.startDate;
-    }
+    } 
     if (this.state.lastTask !== null && endDate < this.state.lastTask.endDate){
-      alert("The end date of the project cannot be any earlier then the current date as it would be before a end of a task, if you want it to be any earlier then change the task first");
+      alert("Please change the end date of your project tasks before changing the end date of the project");
       value = this.state.lastTask.endDate;
     }
     if (endDate < startDate) {
       alert(
-        "You cannot make the end date/time before the start date/time."
+        "Please choose an end date/time that finishes after the start date/time."
       );
       project.startDate = value;
       project.endDate = value;
@@ -215,7 +215,9 @@ class UpdateProject extends React.Component {
                   value={this.state.project.startDate.substring(0, 10)}
                   onChange={(e) => {this.value = this.changeDate(e, "startDate")}}
                 />
-                <Form.Label>Start Time of task</Form.Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Start time of project</Form.Label>
                 <Form.Control
                   required
                   name="up_StartTime"
@@ -225,7 +227,7 @@ class UpdateProject extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>End date of task</Form.Label>
+                <Form.Label>End date of project</Form.Label>
                 <Form.Control
                   required
                   name="up_EndDate"
@@ -233,7 +235,9 @@ class UpdateProject extends React.Component {
                   value={this.state.project.endDate.substring(0, 10)}
                   onChange={(e) => {this.value = this.changeDate(e, "endDate")}}
                 />
-                <Form.Label>End Time of task</Form.Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>End time of project</Form.Label>
                 <Form.Control
                   required
                   name="up_EndTime"

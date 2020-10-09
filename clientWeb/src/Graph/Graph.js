@@ -581,7 +581,7 @@ class Graph extends React.Component {
                     overlay={
                       <Tooltip className="helpTooltip">
                         Double click on an empty space to create a new task or
-                        right click on two tasks to create a dependency
+                        right click on two tasks to create a dependency. Move your tasks by clicking and dragging them to create your own positioning and save, or use the auto position button to map your tasks automatically.
                         <LegendSidebar />
                       </Tooltip>
                     }
