@@ -40,7 +40,6 @@ class CreateDependency extends React.Component {
     let data = {
       fid: this.props.source.id,
       sid: this.props.target.id,
-      projId: this.props.project.id,
       relationshipType: this.state.relationshipType,
       sStartDate: this.props.source.startDate,
       sEndDate: this.props.source.endDate,
@@ -51,6 +50,7 @@ class CreateDependency extends React.Component {
     };
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
+    projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
 
     const response = await fetch("/dependency/add", {
@@ -62,16 +62,21 @@ class CreateDependency extends React.Component {
       body: projectData,
     });
     const body = await response.json();
+    if ( body.message === "After Project End Date"){
+      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
+      this.setState({isloading: false}); 
+    } else {
 
-    await this.props.setTaskInfo(
-      body.nodes,
-      body.rels,
-      body.displayNode,
-      body.displayRel
-    );
-    this.props.closeModal();
-    this.setState({ isloading: false });
-    this.props.clearDependency();
+      await this.props.setTaskInfo(
+        body.nodes,
+        body.rels,
+        body.displayNode,
+        body.displayRel
+      );
+      this.props.closeModal();
+      this.setState({ isloading: false });
+      this.props.clearDependency();
+    }
   }
 
   CalcDiff(sd, ed) {
