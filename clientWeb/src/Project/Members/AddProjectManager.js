@@ -26,10 +26,10 @@ class AddProjectManager extends React.Component {
 
   componentDidMount(){
     $.post(
-        "/people/assignedProjectUsers",
+        "/people/getAllProjectMembers",
         { id: this.props.project.id },
         (response) => {
-          this.setState({ users: response.projectUsers });
+          this.setState({ users: response.users });
         }
       ).fail((err) => {
         throw Error(err);
@@ -164,22 +164,7 @@ class Searchbar extends React.Component {
     }
   
     componentDidMount() {
-      let tempUsers = [];
-      let users = [];
-      for (var x = 0; x < this.props.users.length; x++) {
-        tempUsers.push(JSON.parse(JSON.stringify(this.props.users[x][0])));
-      }
-  
-      let check = true;
-      for (var y = 0; y < tempUsers.length; y++) {
-        for (var z = 0; z < users.length; z++) {
-          if (tempUsers[y].id === users[z].id) check = false;
-        }
-  
-        if (check) users.push(tempUsers[y]);
-        else check = true;
-      }
-      this.setState({ users: users });
+      this.setState({ users: this.props.users });
     }
   
     onChange = (event, { newValue }) => {
