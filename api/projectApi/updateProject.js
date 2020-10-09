@@ -1,4 +1,3 @@
-const { check } = require("prettier");
 const db = require("../DB");
 
 function updateCurTask(task, nodes, rels, queries) {
