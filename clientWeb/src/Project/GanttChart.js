@@ -257,8 +257,8 @@ class GanttChart extends React.Component {
           description: el.end.properties.description,
           type: el.end.properties.type,
           progress: el.end.properties.progress.low,
-          startDate: datetimeToString(el.start.properties.startDate),
-          endDate: datetimeToString(el.start.properties.endDate),
+          startDate: datetimeToString(el.end.properties.startDate),
+          endDate: datetimeToString(el.end.properties.endDate),
           duration: el.end.properties.duration.low,
         });
       });
