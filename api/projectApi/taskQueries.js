@@ -187,7 +187,9 @@ async function createClone(req, res) {
       CREATE(a:View {
         inDepArr:[],
         outDepArr:[],
-        originalNode: ${req.body.id}
+        originalNode: ${req.body.id},
+        positionX:0,
+        positionY:0
       })-[n:VIEW_OF]->(b)
      `
     )
