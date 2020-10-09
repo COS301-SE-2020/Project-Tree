@@ -170,6 +170,8 @@ class CreateTaskForm extends Component {
       endDate: this.state.endDate,
       description: this.state.description,
       project: this.props.project,
+      positionX: 0,
+      positionY: 0,
     };
 
     return data;

@@ -53,7 +53,8 @@ app.post("/mobile", async (req, res) => {
   relArr = req.body.links;
   views = req.body.views;
   direction = req.body.graphDir;
-
+  positionMode = req.body.positionMode;
+  autoPos = req.body.autoPos;
   let criticalPath = null;
   if (req.body.criticalPath === "true") {
     criticalPath = await db
@@ -90,6 +91,8 @@ app.post("/mobile", async (req, res) => {
     views: views,
     graphDirection: direction,
     criticalPath: JSON.stringify(criticalPath),
+    positionMode: positionMode,
+    autoPos: autoPos,
   });
 });
 app.post("/people/getAllUsers", personQueries.getAllUsers);

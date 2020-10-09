@@ -75,13 +75,13 @@ class ProjectInfo extends React.Component {
               className="align-items-center text-center"
               style={{ fontSize: "20px", }}
             >
-              Start Date and Time
+              Start date and time
             </Col>
             <Col
               className="align-items-center text-center"
               style={{ fontSize: "20px", }}
             >
-              End Date and Time
+              End date and time
             </Col>
           </Row>
           <Row className="align-items-center">
