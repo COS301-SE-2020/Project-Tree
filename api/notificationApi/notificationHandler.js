@@ -120,12 +120,11 @@ async function getProjectMembers(id) {
     .getSession()
     .run(
       `
-            MATCH (a:Project), (b), (c)
+            MATCH (a:Project), (b)
             WHERE id(a) = ${id} AND (
-            (b)-[]->(a) OR 
-            (b)-[:RESPONSIBLE_PERSON]->(c)-[:PART_OF]->(a) OR 
-            (b)-[:PACKAGE_MANAGER]->(c)-[:PART_OF]->(a) OR 
-            (b)-[:RESOURCE]->(c)-[:PART_OF]->(a))
+            (b)-[:MANAGES]->(a) OR 
+            (b)-[:MEMBER]->(a)
+            )
             RETURN DISTINCT b
         `
     )

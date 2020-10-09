@@ -248,6 +248,10 @@ class Graph extends React.Component {
   }
 
   toggleCreateDependency(clickedNode) {
+    if(this.state.savePosition === true){
+      return;
+    }
+
     if (this.props.userPermission["create"] !== true) {
       alert("You do not have the permission to create a dependency");
       return;
@@ -364,6 +368,7 @@ class Graph extends React.Component {
   }
 
   addTask(cell) {
+    if(this.state.savePosition === true) return;
     if (this.props.userPermission["create"] === true)
       this.setState({ createTask: true, newPosition: {x:cell.offsetX, y:cell.offsetY} });
     else alert("You do not have the permission to create a task");
@@ -389,6 +394,8 @@ class Graph extends React.Component {
   }
 
   moveNode(cell){
+    if(this.state.source!==null) return;
+
     var center = cell.getBBox().topLeft();
     var id = cell.id
     for(let x = 0; x < this.props.nodes.length; x++){
@@ -608,7 +615,7 @@ class Graph extends React.Component {
                   </Col>
                   </React.Fragment>
                 ): null}
-                {this.props.userPermission["create"] === true ? (
+                {this.props.userPermission["create"] === true && this.state.savePosition === false ? (
                   <Col className="text-center">
                     <Button
                       onClick={()=>this.showModal()}
