@@ -4,8 +4,6 @@ import { Row, Col, Container } from "react-bootstrap";
 import $ from "jquery";
 import "./style.css";
 
-let global_pfp = " ";
-
 class NoticeBoard extends Component {
   _isMounted = false;
 
@@ -58,7 +56,7 @@ class NotificationList extends React.Component {
 
   returnRandomUser(profileId, type) {
     let users = this.state.user.users;
-    if (type == "auto") {
+    if (type === "auto") {
       return (
         <img
           class="circular"
@@ -83,7 +81,7 @@ class NotificationList extends React.Component {
           />
         );
       }
-      else if(x == users.length-1)
+      else if(x === users.length-1)
       {
         return (
           <img

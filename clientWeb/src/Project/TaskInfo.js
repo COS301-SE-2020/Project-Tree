@@ -128,7 +128,7 @@ class TaskInfo extends React.Component {
         return list[0];
       } else {
         list.forEach((el, i) => {
-          let color;
+          /* let color;
           switch (el.type) {
             case "Complete":
               color = "#77dd77";
@@ -147,7 +147,7 @@ class TaskInfo extends React.Component {
                 color = "#ffae42";
               }
               break;
-          }
+          } */
           let progressColor = "info";
           list[i] = (
             <Col

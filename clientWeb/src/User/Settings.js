@@ -23,14 +23,14 @@ function stringifyFormData(fd) {
   return data;
 }
 
-function getBase64(file, onLoadCallback) {
+/* function getBase64(file, onLoadCallback) {
   var reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = onLoadCallback;
   reader.onerror = function (error) {
     console.log("Error when converting PDF file to base64: ", error);
   };
-}
+} */
 
 const FileUploader = (props) => {
   const hiddenFileInput = React.useRef(null);
@@ -98,7 +98,7 @@ class Settings extends React.Component {
   }
 
   password_validate(p) {
-    let str = "";
+    //let str = "";
     let arr = [];
     // let p = d.password;
     /[A-Z]/.test(p) === false
@@ -174,10 +174,10 @@ class Settings extends React.Component {
     });
 
     if (
-      arr[0].indexOf("✓") != -1 &&
-      arr[1].indexOf("✓") != -1 &&
-      arr[2].indexOf("✓") != -1 &&
-      arr[3].indexOf("✓") != -1
+      arr[0].indexOf("✓") !== -1 &&
+      arr[1].indexOf("✓") !== -1 &&
+      arr[2].indexOf("✓") !== -1 &&
+      arr[3].indexOf("✓") !== -1
     ) {
       console.log("POP");
       this.setState({
@@ -374,7 +374,6 @@ class Settings extends React.Component {
                           this.setState({ password: e.target.value });
                           this.value = this.state.password;
                         }}
-                        required
                       />
                     </Col>
                     <Col xs={1}>
@@ -400,7 +399,6 @@ class Settings extends React.Component {
                           this.value = this.state.confirmPassword;
                           console.log(this.state.confirmPassword);
                         }}
-                        required
                       />
                     </Col>
                     <Col xs={1}>
@@ -413,7 +411,7 @@ class Settings extends React.Component {
                       <p></p>
                       <p
                         style={
-                          this.state.passwordError.indexOf("✓") != -1
+                          this.state.passwordError.indexOf("✓") !== -1
                             ? { color: "green" }
                             : { color: "red" }
                         }
@@ -423,7 +421,7 @@ class Settings extends React.Component {
                       </p>
                       <p
                         style={
-                          this.state.passwordError2.indexOf("✓") != -1
+                          this.state.passwordError2.indexOf("✓") !== -1
                             ? { color: "green" }
                             : { color: "red" }
                         }
@@ -433,7 +431,7 @@ class Settings extends React.Component {
                       </p>
                       <p
                         style={
-                          this.state.passwordError3.indexOf("✓") != -1
+                          this.state.passwordError3.indexOf("✓") !== -1
                             ? { color: "green" }
                             : { color: "red" }
                         }
@@ -443,7 +441,7 @@ class Settings extends React.Component {
                       </p>
                       <p
                         style={
-                          this.state.passwordError4.indexOf("✓") != -1
+                          this.state.passwordError4.indexOf("✓") !== -1
                             ? { color: "green" }
                             : { color: "red" }
                         }

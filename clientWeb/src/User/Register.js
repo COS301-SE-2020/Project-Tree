@@ -66,7 +66,7 @@ export class Register extends React.Component {
     let arr = this.password_validate(x);
     if (arr.length === 0) {
       $.post("/register", JSON.parse(data), (response) => {
-        if (response.message == "duplicate") {
+        if (response.message === "duplicate") {
           alert(
             "User with this email already exists. Try with a different email."
           );

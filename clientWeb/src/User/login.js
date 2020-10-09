@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import {
-  Modal,
   Button,
   Col,
   Row,
-  Container,
   Form,
-  Spinner,
 } from "react-bootstrap";
 import $ from "jquery";
 import loginImg from "../Images/LoginImg.svg";
