@@ -104,11 +104,11 @@ class Dashboard extends React.Component {
                 <Button variant="warning">Jump To Top</Button>
               </a>
             </Col>
-            <Col></Col>
-            <Col xl={4} xs={3} className="text-center">
+            <Col sm={0}></Col>
+            <Col sm={12} md={4} className="text-center">
               <h1 style={{ fontWeight: "bold" }}>Project Dashboard</h1>
             </Col>
-            <Col>
+            <Col sm={12} md={4}>
               <Row>
                 <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"90"}}>
                   {this.MakeDropdown()}

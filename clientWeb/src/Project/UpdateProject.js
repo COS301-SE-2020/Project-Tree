@@ -122,14 +122,13 @@ class UpdateProject extends React.Component {
       );
       project.startDate = value;
       project.endDate = value;
-      this.setState({ project: project });
     } else {
       if (type.substring(0,1) === "s") 
         project.startDate = value;
       else
         project.endDate = value;
-      this.setState({ project });
     }
+    this.setState({ project });
     if (type.substring(0,1) === "s") 
       return this.state.project.startDate;
     else
