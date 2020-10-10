@@ -7,9 +7,7 @@ function updateCurTask(task, nodes, rels, queries) {
 }
 
 function updateCurDependency(dependency, nodes, rels, queries) {
-  nodes.forEach((node) => {
-    if (node.id == dependency.target) updateTask(node, nodes, rels, queries);
-  });
+  updateTask(findNode(nodes, dependency), nodes, rels, queries);
 }
 
 function updateTask(task, nodes, rels, queries) {
@@ -84,9 +82,13 @@ function updateDependency(dependency, nodes, rels, queries) {
         }
       `
     });
-  nodes.forEach((node) => {
-    if (node.id == dependency.target) updateTask(node, nodes, rels, queries);
-  });
+  updateTask(findNode(nodes, dependency), nodes, rels, queries);
+}
+
+function findNode(nodes, dependency) {
+  for (const x in nodes) {
+    if (nodes[x].id == dependency.target) return nodes[x];
+  }
 }
 
 function getPredDependencies(task, rels) {
@@ -129,9 +131,7 @@ async function runQueries(queries) {
 
 function CheckEndDate(queries, project) {
   let check = true;
-  console.log(queries);
   queries.forEach(query => {
-    console.log(query.endDate);
     if (query.endDate > project.endDate) check = false;
   });
   return check;
