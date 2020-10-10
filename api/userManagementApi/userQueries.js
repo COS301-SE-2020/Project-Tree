@@ -65,7 +65,7 @@ async function register(req, res) {
     .then((result) => {
       if (result.records.length != 0) {
         res.status(200);
-        res.send({ message: "duplicate" });
+        res.send({ message: "An account with that email has already been registered." });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           let token = JWT.sign(
