@@ -96,7 +96,6 @@ function makeElement(node, criticalPathNodes) {
     xVal = node.changedX;
     yVal = node.changedY;
   }
-
   else{
     xVal = node.positionX;
     yVal = node.positionY;
@@ -173,10 +172,21 @@ function createViews(allNodes, viewNodes) {
             }
           );
 
+          let xVal, yVal;
+          if(viewNodes[x].changedX !== undefined){
+            xVal = viewNodes[x].changedX;
+            yVal = viewNodes[x].changedY;
+          }
+          else{
+            xVal = viewNodes[x].positionX;
+            yVal = viewNodes[x].positionY;
+          }
+
           clonedNode.attributes.attrs.text.text = `${wraptext}`;
           clonedNode.attributes.attrs.originId = allNodes[y].id;
           clonedNode.attributes.id = `${viewNodes[x].id}`;
           clonedNode.id = `${viewNodes[x].id}`;
+          clonedNode.attributes.position = { x: xVal, y: yVal }
           clonedNodes.push(clonedNode);
         }
 
@@ -405,6 +415,13 @@ class Graph extends React.Component {
       }
     }
 
+    for(let y = 0; y < this.props.views.length; y++){
+      if(this.props.views[y].id === parseInt(id)){
+        this.props.views[y].changedX=center.x
+        this.props.views[y].changedY=center.y
+      }
+    }
+
     if(this.props.userPermission["update"]===false){
       return;
     }
@@ -417,10 +434,17 @@ class Graph extends React.Component {
   async saveChanges(){
     let changedNodes = [];
     let nodes = [...this.props.nodes]
+    let views = [...this.props.views]
 
     for(let x=0; x<nodes.length; x++){
       if(nodes[x].changedX !== undefined){
         changedNodes.push(nodes[x]);
+      }
+    }
+
+    for(let y=0; y<views.length; y++){
+      if(views[y].changedX !== undefined){
+        changedNodes.push(views[y]);
       }
     }
 
