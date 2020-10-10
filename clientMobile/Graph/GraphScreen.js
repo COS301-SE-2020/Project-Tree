@@ -641,7 +641,7 @@ class GraphScreen extends Component {
               target_viewId={this.state.target_viewId}
               setCreateDependency={this.setCreateDependency}
               getName={this.getName}
-              projID={this.props.project.id}
+              project={this.props.project}
               setProjectInfo={this.setProjectInfo}
               getProjectInfo={this.getProjectInfo}
               links={this.state.links}

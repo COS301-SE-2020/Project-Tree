@@ -44,6 +44,7 @@ class UpdateDependency extends Component {
 
             <View style={{flex: 6}}>
               <UpdateDependencyForm
+                project={this.props.project}
                 dependency={this.props.dependency}
                 toggleVisibility={this.props.toggleVisibility}
                 getProjectInfo={this.props.getProjectInfo}
@@ -147,8 +148,8 @@ class UpdateDependencyForm extends Component {
 
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = input;
+    projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
-
     const response = await fetch(
       'http://projecttree.herokuapp.com/dependency/update',
       {
@@ -162,9 +163,14 @@ class UpdateDependencyForm extends Component {
     );
 
     const body = await response.json();
-    this.props.toggleVisibility(true, false);
-    this.props.displayTaskDependency(null, null);
-    this.props.setProjectInfo(body.nodes, body.rels);
+    console.log(body);
+    if ( body.message === "After Project End Date"){
+      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
+    } else {
+      this.props.toggleVisibility(true, false);
+      this.props.displayTaskDependency(null, null);
+      this.props.setProjectInfo(body.nodes, body.rels);
+    }
   }
 
   CalcDiff(sd, ed) {
