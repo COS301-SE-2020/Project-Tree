@@ -465,13 +465,14 @@ class UpdateTask extends React.Component {
       );
       this.setState({ 
         startDate: value,
-        endDate: value
+        endDate: value,
+        duration: this.CalcDiff(value, value)
       });
     } else {
       if (type.substring(0,1) === "s") 
-      this.setState({ startDate: value });
+        this.setState({ startDate: value, duration: this.CalcDiff(value, this.state.endDate)});
       else
-        this.setState({ endDate: value });
+        this.setState({ endDate: value, duration: this.CalcDiff(this.state.startDate, value) });
     }
     if (type.substring(0,1) === "s") 
       return this.state.startDate;

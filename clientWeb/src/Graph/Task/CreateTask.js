@@ -318,7 +318,7 @@ class CreateTask extends React.Component {
       else
         task.endDate = value;
     }
-    this.setState({ task });
+    this.setState({ task, duration: this.CalcDiff(task.startDate, task.endDate)});
     if (type.substring(0,1) === "s") 
       return this.state.task.startDate;
     else
