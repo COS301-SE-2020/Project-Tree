@@ -538,6 +538,7 @@ async function getAssignedProjectUsers(req, res) {
 async function addProjectManager(req, res) {
   let user = parseInt(req.body.userId)
   let project = parseInt(req.body.projId)
+  let alreadyManager = false;
 
   let session = db.getSession();
   await session
@@ -550,9 +551,9 @@ async function addProjectManager(req, res) {
     )
     .then((result) => {
       if (result.records[0] != null){
+        alreadyManager = true;
         res.status(200);
         res.send({response: "You are already a project manager for this project"});
-        return;
       }
     })
     .catch((err) => {
@@ -561,7 +562,10 @@ async function addProjectManager(req, res) {
       res.send(err);
     });
 
-  // let session = db.getSession();
+  if(alreadyManager===true){
+    return;
+  }
+
   await session
     .run(
       `
@@ -576,7 +580,6 @@ async function addProjectManager(req, res) {
       res.send(err);
     });
 
-  // session = db.getSession();
   await session
     .run(
       `
@@ -640,7 +643,7 @@ async function authoriseMember(req, res) {
   let notificationData = {
     type: 'auto',
     fromName: 'Project Tree',
-    recipients: [user.email],
+    recipients: [{email:user.email}],
     projName: project.name,
     projID: project.id,
     mode: 0,
