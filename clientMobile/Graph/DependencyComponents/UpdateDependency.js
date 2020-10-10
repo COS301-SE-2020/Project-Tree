@@ -131,6 +131,8 @@ class UpdateDependencyForm extends Component {
 
   formatValidateInput() {
     let data = {
+      source: this.props.dependency.source,
+      target: this.props.dependency.target,
       id: this.props.dependency.id,
       relationshipType: this.state.relationshipType,
       sStartDate: this.state.sStartDate,
@@ -150,6 +152,7 @@ class UpdateDependencyForm extends Component {
     projectData.changedInfo = input;
     projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
+
     const response = await fetch(
       'http://projecttree.herokuapp.com/dependency/update',
       {
@@ -163,7 +166,6 @@ class UpdateDependencyForm extends Component {
     );
 
     const body = await response.json();
-    console.log(body);
     if ( body.message === "After Project End Date"){
       alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
     } else {
