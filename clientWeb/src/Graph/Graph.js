@@ -172,8 +172,6 @@ function createViews(allNodes, viewNodes) {
             }
           );
 
-          console.log(viewNodes[x])
-
           let xVal, yVal;
           if(viewNodes[x].changedX !== undefined){
             xVal = viewNodes[x].changedX;

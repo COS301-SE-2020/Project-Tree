@@ -222,10 +222,21 @@
 										height: height,
 									});
 
+									let xVal, yVal;
+									if(viewNodes[x].changedX !== undefined){
+										xVal = viewNodes[x].changedX;
+										yVal = viewNodes[x].changedY;
+									}
+									else{
+										xVal = viewNodes[x].positionX;
+										yVal = viewNodes[x].positionY;
+									}
+
 									clonedNode.attributes.attrs.text.text = `${wraptext}`
 									clonedNode.attributes.attrs.originId = allNodes[y].id;
 									clonedNode.attributes.id = `${viewNodes[x].id}`;
 									clonedNode.id = `${viewNodes[x].id}`;
+									clonedNode.attributes.position = { x: xVal, y: yVal }
 									clonedNodes.push(clonedNode);
 								}
 
@@ -330,7 +341,6 @@
 					xVal = node.changedX;
 					yVal = node.changedY;
 				}
-
 				else{
 					xVal = node.positionX;
 					yVal = node.positionY;
@@ -380,6 +390,7 @@
 				var autoPos = eval($('#autoPos').val());
             } catch (e) { alert(e); }
 
+						
 			var cells = buildGraph(dataList,criticalPath,views);
 			globalCells = cells;
 			graph.resetCells(cells);
