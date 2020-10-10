@@ -110,10 +110,10 @@ class Dashboard extends React.Component {
             </Col>
             <Col sm={12} md={4}>
               <Row>
-                <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"90"}}>
+                <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"8"}}>
                   {this.MakeDropdown()}
                 </Col>
-                <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"90"}}>
+                <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"8"}}>
                   <a href="#calendar">
                     <Button variant="warning">Jump To Calendar</Button>
                   </a>
