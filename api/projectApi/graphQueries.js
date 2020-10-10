@@ -99,6 +99,8 @@ function getProjectViews(req, res) {
           inDepArr: record._fields[0].properties.inDepArr,
           outDepArr: record._fields[0].properties.outDepArr,
           originalNode: record._fields[0].properties.originalNode.low,
+          positionX: record._fields[0].properties.positionX.low,
+          positionY: record._fields[0].properties.positionY.low,
         });
       });
       res.send({ views: viewsArr });
