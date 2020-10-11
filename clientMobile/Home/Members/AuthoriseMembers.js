@@ -11,7 +11,8 @@ class JoinProject extends React.Component {
 
     setUsers(){
         let users = [...this.state.users]
-        users.shift();
+		users.shift();
+		console.log("USERS:		",users)
         this.setState({users:users})
     }
 
