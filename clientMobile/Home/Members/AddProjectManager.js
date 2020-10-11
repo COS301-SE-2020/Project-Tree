@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     width: 200
   },
   hideButton: {
-    flex: 0.5,
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'flex-end',
     marginRight: 10,

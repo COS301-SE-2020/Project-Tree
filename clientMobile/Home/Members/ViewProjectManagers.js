@@ -54,7 +54,7 @@ class ViewManagerInfo extends React.Component{
 
     async componentDidMount(){
         const response = await fetch(
-            'http://10.0.2.2:5000/people/getProjectManagers',
+            'http://projecttree.herokuapp.com/people/getProjectManagers',
             {
             method: 'POST',
             headers: {
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
       width: '100%',
     },
     createButton: {
-      marginTop: 20,
+      marginTop: 0,
       backgroundColor: '#184D47',
       alignItems: 'center',
       justifyContent: 'center',
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
       width: 200
     },
     hideButton: {
-      flex: 0.5,
+      flex: 1,
       backgroundColor: '#fff',
       alignItems: 'flex-end',
       marginRight: 10,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     modalText: {
       marginBottom: 15,
       textAlign: 'center',
-      fontSize: 20,
+      fontSize: 25,
     },
     CreateDependencyBtn: {
       height: 50,
