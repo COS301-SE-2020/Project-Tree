@@ -20,6 +20,7 @@ import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
 import ProgressDashboard from './ProgressDashboard';
 import TopBar from '../TopBar';
 import MemberComponent from './Members/MemberWrapperComponent';
+import ViewProjectMangers from './Members/ViewProjectManagers';
 
 function GoToTree() {
   const navigation = useNavigation();
@@ -434,6 +435,9 @@ class HomeScreen extends Component {
                   <MemberComponent project={this.props.project}/>
                 </CardItem>
               ) : null}
+              <CardItem>
+                <ViewProjectMangers project={this.props.project} />
+              </CardItem>
             </Card>
           </Content>
         </View>
