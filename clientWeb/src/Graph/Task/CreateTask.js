@@ -396,7 +396,9 @@ class CreateTask extends React.Component {
                   value={this.state.task.startDate.substring(0, 10)}
                   onChange={(e) => {this.value = this.changeDate(e, "startDate")}}
                 />
-                <Form.Label>Start Time of task</Form.Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Start time of task</Form.Label>
                 <Form.Control
                   required
                   type="time"
@@ -412,7 +414,9 @@ class CreateTask extends React.Component {
                   value={this.state.task.endDate.substring(0, 10)}
                   onChange={(e) => {this.value = this.changeDate(e, "endDate")}}
                 />
-                <Form.Label>End Time of task</Form.Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>End time of task</Form.Label>
                 <Form.Control
                   required
                   type="time"

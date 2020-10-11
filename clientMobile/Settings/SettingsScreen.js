@@ -91,7 +91,7 @@ export default class SettingsScreen extends Component {
     }
     data = JSON.stringify(data)
      const res =  fetch(
-      'http://10.0.2.2:5000/user/delete',
+      'http://projecttree.herokuapp.com/user/delete',
       {
         method: 'POST',
         headers: {
@@ -152,7 +152,7 @@ export default class SettingsScreen extends Component {
       data = JSON.stringify(data)
 
        const res =  fetch(
-        'http://10.0.2.2:5000/user/change',
+        'http://projecttree.herokuapp.com/user/change',
         {
           method: 'POST',
           headers: {

@@ -81,6 +81,7 @@ class Settings extends React.Component {
       passwordError3: "",
       passwordError4: "",
       hidden: true,
+      deleteUserCheck: false,
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
@@ -154,7 +155,7 @@ class Settings extends React.Component {
   }
 
   hideModal() {
-    this.setState({ show: false });
+    this.setState({ show: false, deleteUserCheck:false });
   }
 
   handlePasswordChange(val) {
@@ -201,14 +202,17 @@ class Settings extends React.Component {
   }
 
   deleteUser() {
-    console.log(localStorage.getItem("sessionToken"))
+    if(this.state.deleteUserCheck === false){
+      this.setState({deleteUserCheck:true})
+      return;
+    }
+
     $.post(
       "/user/delete",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
         if(response.status)
         {
-          console.log("ssS")
           this.handleLogout()
         }
       }
@@ -236,7 +240,7 @@ class Settings extends React.Component {
       "/user/get",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
-        this.setState({ toggleEdit: false, user: response.user, pfp: "" });
+        this.setState({ toggleEdit: false, user: response.user, pfp: "", deleteUserCheck:false });
       }
     ).fail((response) => {
       throw Error(response.message);
@@ -302,6 +306,13 @@ class Settings extends React.Component {
   }
 
   render() {
+    let deleteColor = 'dark';
+    let deleteString = 'Delete User ';
+    if(this.state.deleteUserCheck){
+      deleteColor = 'danger';
+      deleteString = 'Are you sure? '
+    }
+
     return (
       <React.Fragment>
         <Button
@@ -617,11 +628,11 @@ class Settings extends React.Component {
                         <Col>
                           <Button
                             block
-                            variant="dark"
+                            variant={deleteColor}
                             className="mb-2"
                             onClick={() => this.deleteUser()}
                           >
-                            <i className="fa fa-sign-out"> </i> Delete User{" "}
+                            <i className="fa fa-sign-out"> </i> {deleteString}
                           </Button>
                         </Col>
                       </Row>

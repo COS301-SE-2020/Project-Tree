@@ -89,6 +89,22 @@ class UpdateDependencyForm extends Component {
     )
       .toISOString()
       .substring(0, 16);
+    if(type.type === "date") 
+      date = 
+        `${date.substring(0,10)}T${
+          type.for === "start" ? 
+            this.state.startDate.substring(11,16) 
+          : 
+          this.state.endDate.substring(11,16)
+        }`;
+    else 
+        date = 
+        `${type.for === "start" ? 
+            this.state.startDate.substring(0,10) 
+          : 
+            this.state.endDate.substring(0,10)}T${
+            date.substring(11,16)
+        }`;
     if (type.for === 'start') {
       if (this.state.endDate < date)
         this.setState({
@@ -122,10 +138,10 @@ class UpdateDependencyForm extends Component {
   updateIndex(selectedIndex) {
     if (selectedIndex == 0) {
       this.setState({selectedIndex: 0, relationshipType: 'ss'});
-      this.handleDateTimeSelect({}, this.state.sStartDate, {for: 'start'});
+      this.handleDateTimeSelect(this.state.sStartDate, {type: 'both', for: 'start',});
     } else {
       this.setState({selectedIndex: 1, relationshipType: 'fs'});
-      this.handleDateTimeSelect({}, this.state.sEndDate, {for: 'start'});
+      this.handleDateTimeSelect(this.state.sEndDate, {type: 'both', for: 'start',});
     }
   }
 

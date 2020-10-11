@@ -234,6 +234,8 @@ class CreateDependency extends React.Component {
                     this.value = this.state.target.startDate;
                   }}
                 />
+              </Form.Group>
+              <Form.Group>
                 <Form.Label>Start Time of Second Task</Form.Label>
                 <Form.Control
                   required
