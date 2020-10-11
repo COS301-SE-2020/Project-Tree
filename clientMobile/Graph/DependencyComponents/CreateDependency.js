@@ -213,13 +213,14 @@ class CreateDependencyForm extends Component {
   }
 
   handleDateTimeSelect(selectedDate, type) {
-    let date = new Date(
-      new Date(selectedDate).getTime() -
-        new Date().getTimezoneOffset() * 60 * 1000,
-    )
-      .toISOString()
-      .substring(0, 16);
+    let date = selectedDate;
     if (type.type !== 'both') {
+      let date = new Date(
+        new Date(date).getTime() -
+          new Date().getTimezoneOffset() * 60 * 1000,
+      )
+        .toISOString()
+        .substring(0, 16);
       if(type.type === "date") 
         date = 
           `${date.substring(0,10)}T${
