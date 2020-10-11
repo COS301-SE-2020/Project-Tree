@@ -134,6 +134,10 @@ class UpdateTask extends React.Component {
   }
 
   HideModal() {
+    let pacManList = [...this.props.pacMans];
+    let resourcesList = [...this.props.resources];
+    let resPersonList = [...this.props.resPersons];
+
     // Resets the people list
     for (let x = 0; x < this.state.pacManList.length; x++) {
       this.state.people.push(this.state.pacManList[x]);
@@ -145,7 +149,7 @@ class UpdateTask extends React.Component {
       this.state.people.push(this.state.resourcesList[x]);
     }
 
-    this.setState({ Show: false });
+    this.setState({ Show: false, pacManList: pacManList, resourceList: resourcesList, resPersonList: resPersonList });
   }
 
   async handleSubmit(event) {
