@@ -415,20 +415,14 @@ class GraphScreen extends Component {
     );
   }
 
-  clearChanges(){
-    let nodes = [...this.state.nodes]
-    let views = [...this.state.views]
-
-    for(let x=0; x<nodes.length; x++){
-      if(nodes[x].changedX !== undefined){
-        nodes[x].changedX = undefined;
-      }
+  clearChanges(val){
+    if(val){
+      this.setState({positionTasksMode:!this.state.positionTasksMode, savePosition:false, autoPos:false});
+      this.props.reload();
     }
-
-    for(let y=0; y<views.length; y++){
-      if(views[y].changedX !== undefined){
-        views[y].changedX = undefined;
-      }
+    else{
+      this.setState({savePosition:false, positionTasksMode:false, autoPos:false});
+      this.setProjectInfo();
     }
   }
 
@@ -627,8 +621,7 @@ class GraphScreen extends Component {
           {this.props.userPermissions["update"] || this.props.userPermissions["create"]?
             <TouchableOpacity
               style={[styles.floatinBtn3, {left:leftPos, backgroundColor:color}]}
-              onPress={() => { this.setState({positionTasksMode:!this.state.positionTasksMode, savePosition:false, autoPos:false}); this.props.reload();
-              }}>
+              onPress={() => { this.clearChanges(!this.state.savePosition); }}>
               <IconFeather name="move" size={25} />
             </TouchableOpacity>
             :
@@ -645,7 +638,7 @@ class GraphScreen extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.floatinBtn5}
-                onPress={() => {this.setState({savePosition:false, positionTasksMode:false, autoPos:false}); this.clearChanges(); this.props.reload();}}>
+                onPress={() => { this.clearChanges(false); }}>
                 <IconMaterial name="clear" size={25} />
               </TouchableOpacity>
             </React.Fragment>
@@ -658,7 +651,7 @@ class GraphScreen extends Component {
               onPress={()=>{this.setState({autoPos:true}); this.props.reload()}}
               style={styles.autoPositionButton}>
               <Text style={{textAlign:'center'}}>
-                Auto Position{'\n'}Tasks
+                Auto Position
               </Text>
             </TouchableOpacity>
             :
@@ -855,11 +848,11 @@ const styles = StyleSheet.create({
   },
   autoPositionButton: {
     height: 50,
-    width:125,
     borderRadius: 5,
     position: 'absolute',
     bottom: 72,
     right: 12,
+    left:278,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EEBB4D',
