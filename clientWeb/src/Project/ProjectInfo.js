@@ -24,7 +24,7 @@ class ProjectInfo extends React.Component {
   }
 
   render() {
-    let h="30em";
+    let h="32em";
     if(this.props.userPermission["project"] === true){
       h="40em";
     }
@@ -216,19 +216,37 @@ class ProjectInfo extends React.Component {
               </Col>
             </Row>       
           ) : null}
-          <Row>
-            <Col>
+          {this.props.userPermission["project"] === true ? (
+            <Row>
+            <Col className="p-3">
               <OverlayTrigger
+                placement='auto'
                 overlay={
-                  <Tooltip>
+                  <Tooltip style={{fontSize: "22px"}}>
                     {this.getProjectManagers()}
                   </Tooltip>
                 }
               >
-                <i className="fa fa-info-circle">Project Managers</i>
+                <i className="fa fa-info-circle">{" "}Project Managers</i>
               </OverlayTrigger>
             </Col>
+          </Row>   
+          ) : 
+          <Row>
+            <Col>
+            <OverlayTrigger
+              placement='auto'
+              overlay={
+                <Tooltip style={{fontSize: "22px"}}>
+                  {this.getProjectManagers()}
+                </Tooltip>
+              }
+            >
+              <i className="fa fa-info-circle">{" "}Project Managers</i>
+            </OverlayTrigger>
+            </Col>
           </Row>
+          }
         </Container>
       </React.Fragment>
     );
