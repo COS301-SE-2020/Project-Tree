@@ -87,14 +87,11 @@ class CreateTaskModal extends Component {
 class CreateTaskForm extends Component {
   constructor(props) {
     super(props);
-    let now = new Date();
-    now.setTime(now.getTime() - new Date().getTimezoneOffset() * 60 * 1000);
-    now = now.toISOString().substring(0, 16);
     this.state = {
       name: '',
       description: '',
-      startDate: now,
-      endDate: now,
+      startDate: this.props.project.startDate,
+      endDate: this.props.project.startDate,
       duration: '0 ms',
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
