@@ -44,6 +44,7 @@ class RegisterScreen extends Component {
     this.snameInputChange = this.snameInputChange.bind(this);
     this.handleValidSname = this.handleValidSname.bind(this);
     this.password_validate = this.password_validate.bind(this);
+    this.validateEmail = this.validateEmail.bind(this);
   }
 
   handleValidUser(val) {
@@ -69,6 +70,16 @@ class RegisterScreen extends Component {
       this.setState({
         userName: val,
       });
+    }
+  }
+
+  validateEmail(text){
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(text) === false) {
+      return false;
+    }
+    else {
+      return true
     }
   }
 
@@ -117,7 +128,7 @@ class RegisterScreen extends Component {
   }
 
   emailInputChange(val) {
-    if (val.length !== 0) {
+    if (this.validateEmail(val)) {
       this.setState({
         email: val,
         check_emailInputChange: true,
@@ -165,7 +176,7 @@ class RegisterScreen extends Component {
 
   async handleRegister(userName, password, email, sname) {
     if (userName.trim().length < 1) {
-      alert('Please enter a username');
+      alert('Please enter a name');
       return;
     }
 
@@ -179,7 +190,7 @@ class RegisterScreen extends Component {
       return;
     }
 
-    if (/@/g.test(email) === false) {
+    if (this.validateEmail(email) === false) {
       alert('Please enter a valid email address');
       return;
     }
