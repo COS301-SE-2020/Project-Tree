@@ -80,7 +80,7 @@ export default class GanttChartWrapper extends React.Component {
                   value="label"
                   style={{ fontWeight: "bold" }}
                 >
-                  Show tasks by
+                  Select tasks starting wihtin the next: 
                 </ToggleButton>
                 <ToggleButton
                   variant="secondary"
