@@ -495,6 +495,35 @@ async function getAllProjectMembers(req, res) {
     });
 }
 
+async function getProjectManagers(req, res) {
+  let session = db.getSession();
+  var projID = parseInt(req.body.id);
+  let usersArr = [];
+  await session
+    .run(
+      `
+      MATCH (n:User)-[r:MANAGES]->(j) WHERE ID(j)=${projID} RETURN n,r
+      `
+    )
+    .then(function (result) {
+      result.records.forEach(function (record) {
+        usersArr.push({
+          id: record._fields[0].identity.low,
+          name: record._fields[0].properties.name,
+          surname: record._fields[0].properties.sname,
+          email: record._fields[0].properties.email,
+          profilePicture: record._fields[0].properties.profilepicture,
+        });
+      });
+      res.send({ users: usersArr });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send(err);
+    });
+}
+
 async function getAssignedProjectUsers(req, res) {
   let session = db.getSession();
   var projID = parseInt(req.body.id);
@@ -704,5 +733,6 @@ module.exports = {
   getAssignedProjectUsers,
   addProjectManager,
   getPendingMembers,
-  authoriseMember
+  authoriseMember,
+  getProjectManagers
 };

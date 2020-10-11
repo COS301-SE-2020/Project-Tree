@@ -61,8 +61,8 @@ class AddProjectManager extends React.Component {
     $.post("/people/addProjectManager", JSON.parse(data), (response) => {
       if(response.response !== "okay"){
         alert(response.response)
-      
       }
+      this.props.setProjectManagers();
       this.setState({ show: false, isloading: false });
     }).fail(() => {
       alert("Unable to add project manager");

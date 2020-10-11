@@ -415,7 +415,6 @@ class GraphScreen extends Component {
   }
 
   moveNode(message){
-    console.log(message)
     message = message.split(" ");
     let id = message[1];
     let xVal = message[2];
