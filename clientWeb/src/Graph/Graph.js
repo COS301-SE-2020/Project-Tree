@@ -500,7 +500,7 @@ class Graph extends React.Component {
     paper = new joint.dia.Paper({
       el: $("#paper"),
       width: "100%",
-      height: "93%",
+      height: "100%",
       gridSize: 1,
       model: graph,
       linkPinning: false,

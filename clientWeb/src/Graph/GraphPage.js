@@ -58,10 +58,7 @@ class GraphPage extends React.Component {
     });
 
     // Gets all users already assigned to a task in a project
-    $.post(
-      "/people/assignedProjectUsers",
-      { id: this.state.project.id },
-      (response) => {
+    $.post("/people/assignedProjectUsers", { id: this.state.project.id }, (response) => {
         this.setState({ assignedProjUsers: response.projectUsers });
       }
     ).fail((err) => {
@@ -81,12 +78,28 @@ class GraphPage extends React.Component {
         throw Error(err);
       });
 
-      $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+      $.post("/getProjectViews", { id: this.props.project.id }, (response) => {
         this.setState({ views: response.views });
       }).fail((err) => {
         throw Error(err);
       });
       this.toggleSidebar(null, null, null, null, null);
+
+      // Gets all the users in the database, might update to be all users assigned to the project
+      $.post("/people/getAllProjectMembers", { id: this.props.project.id }, (response) => {
+        console.log(response.users)
+        this.setState({ allUsers: response.users });
+      }).fail((err) => {
+        throw Error(err);
+      });
+
+      // Gets all users already assigned to a task in a project
+      $.post("/people/assignedProjectUsers", { id: this.props.project.id }, (response) => {
+          this.setState({ assignedProjUsers: response.projectUsers });
+        }
+      ).fail((err) => {
+        throw Error(err);
+      });
     }
   }
 
