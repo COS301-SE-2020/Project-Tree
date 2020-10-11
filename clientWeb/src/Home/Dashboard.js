@@ -104,7 +104,7 @@ class Dashboard extends React.Component {
                 <Button variant="warning">Jump To Top</Button>
               </a>
             </Col>
-            <Col sm={0}></Col>
+            <Col ></Col>
             <Col sm={12} md={4} className="text-center">
               <h1 style={{ fontWeight: "bold" }}>Project Dashboard</h1>
             </Col>
