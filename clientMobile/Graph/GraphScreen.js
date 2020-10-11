@@ -608,7 +608,7 @@ class GraphScreen extends Component {
 
           {this.filterButtonToggle()}
           
-          {this.props.userPermissions["update"]?
+          {this.props.userPermissions["update"] || this.props.userPermissions["create"]?
             <TouchableOpacity
               style={[styles.floatinBtn3, {left:leftPos, backgroundColor:color}]}
               onPress={() => { this.setState({positionTasksMode:!this.state.positionTasksMode, savePosition:false, autoPos:false}); this.props.reload();

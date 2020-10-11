@@ -422,7 +422,7 @@ class Graph extends React.Component {
       }
     }
 
-    if(this.props.userPermission["update"]===false){
+    if(this.props.userPermission["update"]===false && this.props.userPermission["create"]===false){
       return;
     }
 

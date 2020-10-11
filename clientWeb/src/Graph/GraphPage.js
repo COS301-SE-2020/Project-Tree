@@ -99,6 +99,10 @@ class GraphPage extends React.Component {
   }
 
   setTaskInfo(nodes, rels, displayNode, displayRel, assignedPeople) {
+    if(displayNode===undefined && displayRel===undefined){
+      this.toggleSidebar(null, null);
+    }
+
     if (nodes !== undefined && rels !== undefined) {
       this.setState({ nodes: nodes, links: rels });
 

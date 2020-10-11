@@ -17,10 +17,8 @@ async function createDependency(req, res) {
     source: req.body.changedInfo.fid,
     target: req.body.changedInfo.sid,
   };
-  console.log(changedRel);
 
   req.body.rels.push(changedRel);
-  console.log(req.body.rels);
 
   let queries = [];
   await updateProject.updateCurDependency(
