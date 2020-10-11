@@ -558,7 +558,7 @@ class UpdateTask extends React.Component {
                       />
                     </Form.Group>
                     <Form.Group>
-                      <Form.Label>Start Time of task</Form.Label>
+                      <Form.Label>Start time of task</Form.Label>
                       <Form.Control
                         required
                         type="time"
@@ -617,6 +617,8 @@ class UpdateTask extends React.Component {
                     value={this.state.endDate.substring(0, 10)}
                     onChange={(e) => {this.value = this.changeDate(e, "endDate")}}
                   />
+                </Form.Group>
+                <Form.Group>
                   <Form.Label>End time of task</Form.Label>
                   <Form.Control
                     required
