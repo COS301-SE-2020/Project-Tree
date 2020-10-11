@@ -206,7 +206,7 @@ class CreateTaskForm extends Component {
     projectData.changedInfo = input;
     projectData = JSON.stringify(projectData);
 
-    const response = await fetch('http://projecttree.herokuapp.com/task/add', {
+    const response = await fetch('https://projecttree.herokuapp.com/task/add', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -226,7 +226,7 @@ class CreateTaskForm extends Component {
     );
     timestamp = timestamp.toISOString();
 
-    await fetch('http://projecttree.herokuapp.com/people/assignPeople', {
+    await fetch('https://projecttree.herokuapp.com/people/assignPeople', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

@@ -54,7 +54,7 @@ class ViewManagerInfo extends React.Component{
 
     async componentDidMount(){
         const response = await fetch(
-            'http://projecttree.herokuapp.com/people/getProjectManagers',
+            'https://projecttree.herokuapp.com/people/getProjectManagers',
             {
             method: 'POST',
             headers: {

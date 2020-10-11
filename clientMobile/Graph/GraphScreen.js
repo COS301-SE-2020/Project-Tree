@@ -199,7 +199,7 @@ class GraphScreen extends Component {
     }
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/getProject',
+      'https://projecttree.herokuapp.com/getProject',
       {
         method: 'POST',
         headers: {
@@ -217,7 +217,7 @@ class GraphScreen extends Component {
       this.setState({nodes: body.tasks, links: body.rels});
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllProjectMembers',
+      'https://projecttree.herokuapp.com/people/getAllProjectMembers',
       {
         method: 'POST',
         headers: {
@@ -234,7 +234,7 @@ class GraphScreen extends Component {
     this.setState({allUsers: body2.users});
 
     const response3 = await fetch(
-      'http://projecttree.herokuapp.com/people/assignedProjectUsers',
+      'https://projecttree.herokuapp.com/people/assignedProjectUsers',
       {
         method: 'POST',
         headers: {
@@ -251,7 +251,7 @@ class GraphScreen extends Component {
     this.setState({assignedProjUsers: body3.projectUsers});
 
     const response4 = await fetch(
-      'http://projecttree.herokuapp.com/getProjectViews',
+      'https://projecttree.herokuapp.com/getProjectViews',
       {
         method: 'POST',
         headers: {
@@ -302,7 +302,7 @@ class GraphScreen extends Component {
       }
     } else {
       const response = await fetch(
-        'http://projecttree.herokuapp.com/getProject',
+        'https://projecttree.herokuapp.com/getProject',
         {
           method: 'POST',
           headers: {
@@ -319,7 +319,7 @@ class GraphScreen extends Component {
     }
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/getProjectViews',
+      'https://projecttree.herokuapp.com/getProjectViews',
       {
         method: 'POST',
         headers: {
@@ -403,7 +403,7 @@ class GraphScreen extends Component {
     this.props.reload();
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/task/savePositions',
+      'https://projecttree.herokuapp.com/task/savePositions',
       {
         method: 'POST',
         headers: {
@@ -748,7 +748,7 @@ class WebViewWrapper extends Component {
 
   render() {
     let s={
-      uri: 'http://projecttree.herokuapp.com/mobile',
+      uri: 'https://projecttree.herokuapp.com/mobile',
        method: 'POST',
        body: `nodes=${JSON.stringify(
         this.props.nodes
@@ -763,7 +763,7 @@ class WebViewWrapper extends Component {
     
     if (Platform.OS === 'ios') { 
       s={
-        uri: 'http://projecttree.herokuapp.com/mobile',
+        uri: 'https://projecttree.herokuapp.com/mobile',
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
           body: `nodes=${JSON.stringify(

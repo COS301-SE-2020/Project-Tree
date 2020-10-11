@@ -212,7 +212,7 @@ class RegisterScreen extends Component {
       data = JSON.stringify(data);
 
       const response = await fetch(
-        'http://projecttree.herokuapp.com/register',
+        'https://projecttree.herokuapp.com/register',
         {
           method: 'POST',
           headers: {

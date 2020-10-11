@@ -164,7 +164,7 @@ export default class App extends Component {
 
     let data = JSON.stringify({token: tokenVal, project});
     const response = await fetch(
-      'http://projecttree.herokuapp.com/user/checkpermission',
+      'https://projecttree.herokuapp.com/user/checkpermission',
       {
         method: 'POST',
         headers: {
@@ -284,7 +284,7 @@ export default class App extends Component {
 
     let userToken = {token: tokenVal};
 
-    const response = await fetch('http://projecttree.herokuapp.com/user/get', {
+    const response = await fetch('https://projecttree.herokuapp.com/user/get', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

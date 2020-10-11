@@ -42,7 +42,7 @@ export default class SettingsScreen extends Component {
       token = JSON.parse(value);
       this.setState({token: token});
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/get',
+        'https://projecttree.herokuapp.com/user/get',
         {
           method: 'POST',
           headers: {
@@ -91,7 +91,7 @@ export default class SettingsScreen extends Component {
     }
     data = JSON.stringify(data)
      const res =  fetch(
-      'http://projecttree.herokuapp.com/user/delete',
+      'https://projecttree.herokuapp.com/user/delete',
       {
         method: 'POST',
         headers: {
@@ -152,7 +152,7 @@ export default class SettingsScreen extends Component {
       data = JSON.stringify(data)
 
        const res =  fetch(
-        'http://projecttree.herokuapp.com/user/change',
+        'https://projecttree.herokuapp.com/user/change',
         {
           method: 'POST',
           headers: {

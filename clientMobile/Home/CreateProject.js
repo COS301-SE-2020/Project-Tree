@@ -218,7 +218,7 @@ class CreateProjectForm extends Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/project/add',
+      'https://projecttree.herokuapp.com/project/add',
       {
         method: 'POST',
         headers: {
