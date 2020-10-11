@@ -196,7 +196,7 @@ class NotificationList extends React.Component {
   render() {
     let messages = this.sortMessages();
     let messageComponents = this.createMessageList(messages);
-    let h="26em";
+    let h="28em";
     if(this.props.userPermission["project"] === true){
       h="36em";
     }

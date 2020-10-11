@@ -94,7 +94,7 @@ class SearchComponent extends React.Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllProjectMembers',
+      'https://projecttree.herokuapp.com/people/getAllProjectMembers',
       {
           method: 'POST',
           headers: {
@@ -118,7 +118,7 @@ class SearchComponent extends React.Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/people/addProjectManager',
+      'https://projecttree.herokuapp.com/people/addProjectManager',
       {
           method: 'POST',
           headers: {
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     width: 200
   },
   hideButton: {
-    flex: 0.5,
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'flex-end',
     marginRight: 10,

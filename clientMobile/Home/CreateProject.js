@@ -218,7 +218,7 @@ class CreateProjectForm extends Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/project/add',
+      'https://projecttree.herokuapp.com/project/add',
       {
         method: 'POST',
         headers: {
@@ -361,7 +361,7 @@ class CreateProjectForm extends Component {
           </Form>
           <DateTimePicker
             testID="dateTimePicker"
-            value={
+            date={
               new Date(
                 new Date(this.state.dateTimeType.value).getTime() +
                   new Date().getTimezoneOffset() * 60 * 1000,

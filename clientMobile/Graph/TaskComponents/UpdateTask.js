@@ -399,7 +399,7 @@ class UpdateTaskForm extends Component {
 
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/task/update',
+      'https://projecttree.herokuapp.com/task/update',
       {
         method: 'POST',
         headers: {
@@ -421,7 +421,7 @@ class UpdateTaskForm extends Component {
       timestamp = timestamp.toISOString();
 
       await fetch(
-        'http://projecttree.herokuapp.com/people/updateAssignedPeople',
+        'https://projecttree.herokuapp.com/people/updateAssignedPeople',
         {
           method: 'POST',
           headers: {
@@ -590,7 +590,7 @@ class UpdateTaskForm extends Component {
                       skipAndroidStatusBar={true}
                       backgroundColor={'rgba(0, 0, 0, 1)'}>
                       <View style={styles.tooltipButton}>
-                        <IconEntypo name="help" size={25} />
+                        <IconEntypo name="help" size={13} />
                       </View>
                     </Tooltip>
                   </Label>
@@ -630,7 +630,7 @@ class UpdateTaskForm extends Component {
                       skipAndroidStatusBar={true}
                       backgroundColor={'rgba(0, 0, 0, 1)'}>
                       <View style={styles.tooltipButton}>
-                        <IconEntypo name="help" size={25} />
+                        <IconEntypo name="help" size={13} />
                       </View>
                     </Tooltip>
                   </Label>
@@ -862,7 +862,7 @@ class UpdateTaskForm extends Component {
             </Form>  
             <DateTimePicker
               testID="dateTimePicker"
-              value={
+              date={
                 new Date(
                   new Date(this.state.dateTimeType.value).getTime() +
                     new Date().getTimezoneOffset() * 60 * 1000,

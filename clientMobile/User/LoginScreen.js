@@ -67,7 +67,7 @@ class LoginScreen extends Component {
       };
       data = JSON.stringify(data);
 
-      const response = await fetch('http://projecttree.herokuapp.com/login', {
+      const response = await fetch('https://projecttree.herokuapp.com/login', {
         method: 'POST',
         headers: {
           Accept: 'application/json',

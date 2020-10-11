@@ -99,7 +99,7 @@ class UpdateProjectForm extends Component {
     this._isMounted = true;
 
     var response = await fetch(
-      'http://projecttree.herokuapp.com/project/projecttasks',
+      'https://projecttree.herokuapp.com/project/projecttasks',
       {
         method: 'POST',
         headers: {
@@ -131,7 +131,7 @@ class UpdateProjectForm extends Component {
     this._isMounted = true;
 
     var response = await fetch(
-      'http://projecttree.herokuapp.com/project/projecttasks',
+      'https://projecttree.herokuapp.com/project/projecttasks',
       {
         method: 'POST',
         headers: {
@@ -278,7 +278,7 @@ class UpdateProjectForm extends Component {
     data = JSON.stringify(data);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/project/update',
+      'https://projecttree.herokuapp.com/project/update',
       {
         method: 'POST',
         headers: {
@@ -423,7 +423,7 @@ class UpdateProjectForm extends Component {
           </Form>
           <DateTimePicker
             testID="dateTimePicker"
-            value={
+            date={
               new Date(
                 new Date(this.state.dateTimeType.value).getTime() +
                   new Date().getTimezoneOffset() * 60 * 1000,

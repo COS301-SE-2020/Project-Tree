@@ -102,7 +102,7 @@ class JoinProjectForm extends Component {
     let data = JSON.stringify({userId: this.props.user.id,token:this.state.token, accessCode: this.state.code });
 
     const response = await fetch(
-      'http://10.0.2.2:5000/project/joinproject',
+      'https://10.0.2.2:5000/project/joinproject',
       {
         method: 'POST',
         headers: {

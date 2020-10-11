@@ -89,7 +89,7 @@ class NoticeBoardScreen extends Component {
 
     data = JSON.stringify(data);
     const response = await fetch(
-      'http://projecttree.herokuapp.com/retrieveNotifications',
+      'https://projecttree.herokuapp.com/retrieveNotifications',
       {
         method: 'POST',
         headers: {
@@ -102,7 +102,7 @@ class NoticeBoardScreen extends Component {
     const body = await response.json();
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllUsers',
+      'https://projecttree.herokuapp.com/people/getAllUsers',
       {
         method: 'POST',
         headers: {

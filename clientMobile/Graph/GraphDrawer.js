@@ -51,7 +51,6 @@ export default class GraphDrawer extends Component {
   }
 
   render() {
-    let isEnabled = this.props.direction === 'TB' ? true : false;
     return (
       <ScrollView>
         <View
@@ -88,26 +87,6 @@ export default class GraphDrawer extends Component {
               marginBottom: 30,
               marginTop: 30,
             }}></View>
-
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 15,
-                width: 200,
-                paddingRight: 10,
-              }}>
-              Switch Graph Direction
-            </Text>
-            <Switch
-              trackColor={{false: '#184D47', true: '#EEBB4D'}}
-              thumbColor={isEnabled ? '#184D47' : '#EEBB4D'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={this.props.toggleDirection}
-              value={isEnabled}
-            />
-          </View>
-
           <View
             style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
             <Text
@@ -121,7 +100,7 @@ export default class GraphDrawer extends Component {
             </Text>
             <Switch
               trackColor={{false: '#767577', true: '#EEBB4D'}}
-              thumbColor={isEnabled ? '#184D47' : '#f4f3f4'}
+              thumbColor={'#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
               onValueChange={this.props.toggleCriticalPath}
               value={this.props.displayCriticalPath}

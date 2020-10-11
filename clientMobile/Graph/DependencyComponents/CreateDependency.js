@@ -215,8 +215,8 @@ class CreateDependencyForm extends Component {
   handleDateTimeSelect(selectedDate, type) {
     let date = selectedDate;
     if (type.type !== 'both') {
-      let date = new Date(
-        new Date(date).getTime() -
+      date = new Date(
+        new Date(selectedDate).getTime() -
           new Date().getTimezoneOffset() * 60 * 1000,
       )
         .toISOString()
@@ -227,10 +227,10 @@ class CreateDependencyForm extends Component {
             type.for === "start" ? 
               this.state.startDate.substring(11,16) 
             : 
-            this.state.endDate.substring(11,16)
+              this.state.endDate.substring(11,16)
           }`;
       else 
-          date = 
+        date = 
           `${type.for === "start" ? 
               this.state.startDate.substring(0,10) 
             : 
@@ -304,7 +304,7 @@ class CreateDependencyForm extends Component {
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/dependency/add',
+      'https://projecttree.herokuapp.com/dependency/add',
       {
         method: 'POST',
         headers: {
@@ -424,7 +424,7 @@ class CreateDependencyForm extends Component {
         </View>
         <DateTimePicker
             testID="dateTimePicker"
-            value={
+            date={
               new Date(
                 new Date(this.state.dateTimeType.value).getTime() +
                   new Date().getTimezoneOffset() * 60 * 1000,
