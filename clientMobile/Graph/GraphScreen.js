@@ -381,10 +381,17 @@ class GraphScreen extends Component {
   async saveChanges(){
     let changedNodes = [];
     let nodes = [...this.state.nodes]
+    let views = [...this.state.views]
 
     for(let x=0; x<nodes.length; x++){
       if(nodes[x].changedX !== undefined){
         changedNodes.push(nodes[x]);
+      }
+    }
+
+    for(let y=0; y<views.length; y++){
+      if(views[y].changedX !== undefined){
+        changedNodes.push(views[y]);
       }
     }
 
@@ -408,15 +415,24 @@ class GraphScreen extends Component {
   }
 
   moveNode(message){
+    console.log(message)
     message = message.split(" ");
     let id = message[1];
     let xVal = message[2];
     let yVal = message[3];
 
+    console.log(id,xVal,yVal)
     for(let x = 0; x < this.state.nodes.length; x++){
       if(this.state.nodes[x].id === parseInt(id)){
         this.state.nodes[x].changedX=parseInt(xVal)
         this.state.nodes[x].changedY=parseInt(yVal)
+      }
+    }
+
+    for(let y = 0; y < this.state.views.length; y++){
+      if(this.state.views[y].id === parseInt(id)){
+        this.state.views[y].changedX=parseInt(xVal)
+        this.state.views[y].changedY=parseInt(yVal)
       }
     }
 
@@ -641,7 +657,7 @@ class GraphScreen extends Component {
               target_viewId={this.state.target_viewId}
               setCreateDependency={this.setCreateDependency}
               getName={this.getName}
-              projID={this.props.project.id}
+              project={this.props.project}
               setProjectInfo={this.setProjectInfo}
               getProjectInfo={this.getProjectInfo}
               links={this.state.links}
@@ -718,7 +734,6 @@ class WebViewWrapper extends Component {
     let s={
       uri: 'http://projecttree.herokuapp.com/mobile',
        method: 'POST',
-       // headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
        body: `nodes=${JSON.stringify(
         this.props.nodes
       )}&links=${JSON.stringify(
@@ -746,7 +761,7 @@ class WebViewWrapper extends Component {
         )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
       }
     }
-    //return null;
+
     return this.props.views !== null ? (
       <WebView
         useWebKit={true}

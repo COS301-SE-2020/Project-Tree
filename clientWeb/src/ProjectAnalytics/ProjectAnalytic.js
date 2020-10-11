@@ -17,7 +17,7 @@ class ProjectAnalytic extends React.Component {
               xs={12}
               sm={12}
               md={6}
-              lg={4}
+              lg={5}
               xl={4}
               className="m-0 p-2 border"
             >
@@ -33,7 +33,7 @@ class ProjectAnalytic extends React.Component {
               xs={12}
               sm={12}
               md={6}
-              lg={8}
+              lg={7}
               xl={4}
               className="m-0 p-2 border"
             >

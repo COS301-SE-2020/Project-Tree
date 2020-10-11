@@ -285,7 +285,8 @@ class GanttChart extends React.Component {
   render() {
     if (
       this.props.project.tasks.length === 0 ||
-      this.props.project.tasks === null
+      this.props.project.tasks === null || 
+      (this.props.project.tasks.length === 1 && this.props.project.tasks[0].duration === 0)
     ) {
       return <p style={{ marginTop: "20px" }}>No tasks to display</p>;
     }

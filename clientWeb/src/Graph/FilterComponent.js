@@ -458,7 +458,7 @@ export default class FilterComponent extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col className="p-2">
+          <Col xs={12} lg={6} className="p-2">
             <Col>{"Select tasks"} </Col>
             <ToggleButtonGroup
               vertical
@@ -521,7 +521,7 @@ export default class FilterComponent extends React.Component {
               </ToggleButton>
             </ToggleButtonGroup>
           </Col>
-          <Col className="p-2">
+          <Col xs={12} lg={6} className="p-2">
             <Col>{"Select people"} </Col>
             <ToggleButtonGroup
               vertical

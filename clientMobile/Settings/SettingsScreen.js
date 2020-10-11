@@ -29,7 +29,7 @@ export default class SettingsScreen extends Component {
     this.state = {pfp: 'https://i.ibb.co/MRpbpHN/default.png',  modalVisible: false, token:''};
 
     this.setModalVisible = this.setModalVisible.bind(this);
-    this.takePhotoFromCamera = this.takePhotoFromCamera.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
     this.choosePhotoFromLibrary = this.choosePhotoFromLibrary.bind(this);
     this.fileChange = this.fileChange.bind(this);
   }
@@ -63,17 +63,25 @@ export default class SettingsScreen extends Component {
     });
   }
 
-  takePhotoFromCamera() {
-    // ImagePicker.openCamera({
-    //   compressImageMaxWidth: 300,
-    //   compressImageMaxHeight: 300,
-    //   cropping: true,
-    //   compressImageQuality: 0.7
-    // }).then(image => {
-    //   console.log(image);
-    //   setImage(image.path);
-    //   this.bs.current.snapTo(1);
-    // });
+  deleteUser() 
+  {
+    let tok = this.state.token
+    let data = {
+      token: tok,
+    }
+    data = JSON.stringify(data)
+     const res =  fetch(
+      'http://10.0.2.2:5000/user/delete',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data
+      },
+    )  
+    this.props.handleLogout();
     console.log("HELLO")
   }
 
@@ -139,7 +147,7 @@ export default class SettingsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="96BB7C" barStyle="light-content" />
+        <StatusBar backgroundColor="#96BB7C" barStyle="light-content" />
         <View style={styles.header}>
         <TouchableOpacity
               onPress={() => {
@@ -157,6 +165,30 @@ export default class SettingsScreen extends Component {
               marginBottom: 40,
             },
           ]}>
+            <View style={styles.button}>
+            <TouchableOpacity
+              onPress={() => {
+                this.deleteUser();
+              }}
+              style={[
+                styles.signIn,
+                {
+                  borderColor: '#184D47',
+                  borderWidth: 2,
+                  marginTop: 10,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.textSign,
+                  {
+                    color: '#008656',
+                  },
+                ]}>
+                Delete User
+              </Text>
+            </TouchableOpacity>
+          </View>  
           <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
@@ -167,7 +199,7 @@ export default class SettingsScreen extends Component {
                 {
                   borderColor: '#184D47',
                   borderWidth: 2,
-                  marginTop: 180,
+                  marginTop: 50,
                 },
               ]}>
               <Text
@@ -201,7 +233,7 @@ export default class SettingsScreen extends Component {
                     color: '#008656',
                   },
                 ]}>
-                Edit User Settings
+                Edit User Details
               </Text>
             </TouchableOpacity>
           </View>

@@ -133,7 +133,13 @@ class UpdateTaskForm extends Component {
           dateTimePicker: false,
         });
     } else {
-      if (this.state.startDate > date)
+      if (date > this.props.project.endDate) {
+        this.setState({
+          error: 'You cannot make the end date/time before the project date/time.',
+          endDate: this.props.project.endDate,
+          dateTimePicker: false,
+        });
+      } else if (this.state.startDate > date)
         this.setState({
           error: 'You cannot set the end date/time before the start date/time.',
           startDate: date,
@@ -373,6 +379,8 @@ class UpdateTaskForm extends Component {
 
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = input;
+    projectData.project = this.props.project;
+
 
     const response = await fetch(
       'http://projecttree.herokuapp.com/task/update',
@@ -387,59 +395,62 @@ class UpdateTaskForm extends Component {
     );
 
     const body = await response.json();
+    if ( body.message === "After Project End Date"){
+      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date"); 
+    } else {
+      let timestamp = new Date();
+      timestamp.setTime(
+        timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
+      );
+      timestamp = timestamp.toISOString();
 
-    let timestamp = new Date();
-    timestamp.setTime(
-      timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000,
-    );
-    timestamp = timestamp.toISOString();
-
-    await fetch(
-      'http://projecttree.herokuapp.com/people/updateAssignedPeople',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ut_taskId: this.props.task.id,
-          ut_pacMans: this.state.pacManList,
-          ut_resPersons: this.state.resPersonList,
-          ut_resources: this.state.resourcesList,
-          ut_originalPacMans: this.props.pacMans,
-          ut_originalResPersons: this.props.resPersons,
-          ut_originalResources: this.props.resources,
-          auto_notification: {
-            timestamp: timestamp,
-            projName: this.props.project.name,
-            projID: this.props.project.id,
-            taskName: this.state.name,
-            type: 'auto',
-            mode: 2,
+      await fetch(
+        'http://projecttree.herokuapp.com/people/updateAssignedPeople',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
           },
-        }),
-      },
-    );
+          body: JSON.stringify({
+            ut_taskId: this.props.task.id,
+            ut_pacMans: this.state.pacManList,
+            ut_resPersons: this.state.resPersonList,
+            ut_resources: this.state.resourcesList,
+            ut_originalPacMans: this.props.pacMans,
+            ut_originalResPersons: this.props.resPersons,
+            ut_originalResources: this.props.resources,
+            auto_notification: {
+              timestamp: timestamp,
+              projName: this.props.project.name,
+              projID: this.props.project.id,
+              taskName: this.state.name,
+              type: 'auto',
+              mode: 2,
+            },
+          }),
+        },
+      );
 
-    // Resets the people list
-    for (let x = 0; x < this.state.pacManList.length; x++) {
-      this.state.people.push(this.state.pacManList[x]);
-    }
-    for (let x = 0; x < this.state.resPersonList.length; x++) {
-      this.state.people.push(this.state.resPersonList[x]);
-    }
-    for (let x = 0; x < this.state.resourcesList.length; x++) {
-      this.state.people.push(this.state.resourcesList[x]);
-    }
+      // Resets the people list
+      for (let x = 0; x < this.state.pacManList.length; x++) {
+        this.state.people.push(this.state.pacManList[x]);
+      }
+      for (let x = 0; x < this.state.resPersonList.length; x++) {
+        this.state.people.push(this.state.resPersonList[x]);
+      }
+      for (let x = 0; x < this.state.resourcesList.length; x++) {
+        this.state.people.push(this.state.resourcesList[x]);
+      }
 
-    this.props.toggleVisibility(true, false);
-    this.props.displayTaskDependency(null, null);
-    this.props.setProjectInfo(
-      body.nodes,
-      body.rels,
-      this.state.assignedProjUsers,
-    );
+      this.props.toggleVisibility(true, false);
+      this.props.displayTaskDependency(null, null);
+      this.props.setProjectInfo(
+        body.nodes,
+        body.rels,
+        this.state.assignedProjUsers,
+      );
+    }
   }
 
   componentDidMount() {

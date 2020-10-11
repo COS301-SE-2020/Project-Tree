@@ -97,7 +97,7 @@ class CreateDependency extends Component {
           target={this.state.target}
           source_viewId={this.state.source_viewId}
           target_viewId={this.state.target_viewId}
-          projID={this.props.projID}
+          project={this.props.project}
           getProjectInfo={this.props.getProjectInfo}
           setProjectInfo={this.props.setProjectInfo}
         />
@@ -174,7 +174,7 @@ class CreateDependencyModal extends Component {
                 target={this.props.target}
                 source_viewId={this.props.source_viewId}
                 target_viewId={this.props.target_viewId}
-                projID={this.props.projID}
+                project={this.props.project}
               />
             </View>
           </View>
@@ -261,7 +261,6 @@ class CreateDependencyForm extends Component {
 
   formatValidateInput() {
     let data = {
-      projId: this.props.projID,
       fid: this.props.source.id,
       sid: this.props.target.id,
       cd_viewId_source: this.props.source_viewId,
@@ -282,6 +281,7 @@ class CreateDependencyForm extends Component {
 
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = input;
+    projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
@@ -297,8 +297,12 @@ class CreateDependencyForm extends Component {
     );
 
     const body = await response.json();
-    this.props.setCreateDependencyVisibility(false);
-    this.props.setProjectInfo(body.nodes, body.rels);
+    if ( body.message === "After Project End Date"){
+      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
+    } else {
+      this.props.setCreateDependencyVisibility(false);
+      this.props.setProjectInfo(body.nodes, body.rels);
+    }
   }
 
   CalcDiff(sd, ed) {

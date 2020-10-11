@@ -342,10 +342,9 @@ class App extends Component {
               {this.state.showSideBar !== false ? (
                 <Col
                   sm={12}
-                  md={6}
-                  lg={4}
-                  xl={4}
-                  xs={4}
+                  md={7}
+                  lg={5}
+                  xl={5}
                   className="border-right border-dark"
                   style={{
                     height: this.state.height,

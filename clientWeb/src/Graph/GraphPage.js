@@ -387,7 +387,6 @@ class TaskSidebar extends React.Component {
                 <div class="card-block px-2">
                   {/* <h4 class="card-title">{people[x].name}&nbsp;{people[x].surname}</h4> */}
                   <h4>{people[x].name}&nbsp;{people[x].surname}</h4>
-                  <a href="https://www.w3schools.com" target="_blank">Send me an email</a>
                 </div>
               </div>
             </div>

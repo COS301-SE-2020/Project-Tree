@@ -47,6 +47,7 @@ class DependencyModal extends Component {
     return (
       <React.Fragment>
         <UpdateDependency
+          project={this.props.project}
           dependency={this.props.selectedDependency}
           modalVisibility={this.state.displayUpdateModal}
           toggleVisibility={this.toggleVisibility}
