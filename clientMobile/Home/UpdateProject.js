@@ -423,7 +423,7 @@ class UpdateProjectForm extends Component {
           </Form>
           <DateTimePicker
             testID="dateTimePicker"
-            value={
+            date={
               new Date(
                 new Date(this.state.dateTimeType.value).getTime() +
                   new Date().getTimezoneOffset() * 60 * 1000,
