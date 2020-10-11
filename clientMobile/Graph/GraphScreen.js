@@ -72,12 +72,10 @@ class Graph extends Component {
     super(props);
     this.state = {
       drawerVisible: false,
-      direction: 'TB',
       key: 0,
       displayCriticalPath: false,
     };
     this.setDrawerVisible = this.setDrawerVisible.bind(this);
-    this.toggleDirection = this.toggleDirection.bind(this);
     this.reload = this.reload.bind(this);
     this.toggleCriticalPath = this.toggleCriticalPath.bind(this);
   }
@@ -88,16 +86,6 @@ class Graph extends Component {
 
   setDrawerVisible(mode) {
     this.setState({drawerVisible: mode});
-  }
-
-  toggleDirection() {
-    if (this.state.direction == 'TB') {
-      this.setState({direction: 'LR'});
-    } else {
-      this.setState({direction: 'TB'});
-    }
-
-    this.setState({key: this.state.key + 1});
   }
 
   toggleCriticalPath() {
@@ -122,8 +110,6 @@ class Graph extends Component {
               project={this.props.project}
               userPermissions={this.props.userPermissions}
               navigation={this.props.navigation}
-              direction={this.state.direction}
-              toggleDirection={this.toggleDirection}
               displayCriticalPath={this.state.displayCriticalPath}
               toggleCriticalPath={this.toggleCriticalPath}
             />
@@ -141,7 +127,6 @@ class Graph extends Component {
               userPermissions={this.props.userPermissions}
               navigation={this.props.navigation}
               setDrawerVisible={this.setDrawerVisible}
-              direction={this.state.direction}
               reloadKey={this.state.key}
               reload={this.reload}
               displayCriticalPath={this.state.displayCriticalPath}
@@ -562,7 +547,6 @@ class GraphScreen extends Component {
             nodes={this.state.nodes}
             links={this.state.links}
             views={this.state.views}
-            direction={this.props.direction}
             webKey={this.props.reloadKey}
             projID={this.props.project.id}
             displayTaskDependency={this.displayTaskDependency}
@@ -754,8 +738,7 @@ class WebViewWrapper extends Component {
         this.props.nodes
       )}&links=${JSON.stringify(
         this.props.links
-      )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
-        this.props.displayCriticalPath
+      )}&criticalPath=${this.props.displayCriticalPath
       }&projId=${this.props.projID}&views=${JSON.stringify(
         this.props.views
       )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
@@ -770,8 +753,7 @@ class WebViewWrapper extends Component {
           this.props.nodes
         )}&links=${JSON.stringify(
           this.props.links
-        )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
-          this.props.displayCriticalPath
+        )}&criticalPath=${this.props.displayCriticalPath
         }&projId=${this.props.projID}&views=${JSON.stringify(
           this.props.views
         )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,

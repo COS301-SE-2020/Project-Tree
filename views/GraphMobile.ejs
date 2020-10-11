@@ -30,9 +30,6 @@
                     "rels": <%= rels %>
                 }
             </textarea>
-            <textarea id="graphdirection">
-                <%= graphDirection %>
-			</textarea>
 			<textarea id="positionMode">
                 <%= positionMode %>
 			</textarea>
@@ -384,7 +381,6 @@
         function layout() {      
             try {
                 var dataList = eval('dataList = ' + $('#adjacency-list').val());
-				var graphDirection = eval($('#graphdirection').val());
                 var criticalPath = eval('criticalPath = ' + $('#criticalpath').val());
 				var views = eval('views = ' + $('#views').val());
 				var autoPos = eval($('#autoPos').val());
@@ -400,7 +396,6 @@
 					dagre: dagre,
 					graphlib: graphlib,
 					setLinkVertices: false,
-					rankDir: graphDirection,
 					nodeSep: 25,
 					rankSep: 50
 				});
