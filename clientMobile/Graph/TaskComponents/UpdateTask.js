@@ -90,6 +90,7 @@ class UpdateTaskForm extends Component {
       pacManList: [...this.props.pacMans],
       resourcesList: [...this.props.resources],
       resPersonList: [...this.props.resPersons],
+      ableToSubmit: false,
     };
 
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
@@ -390,6 +391,7 @@ class UpdateTaskForm extends Component {
   }
 
   async handleSubmit() {
+    this.setState({ableToSubmit: true});
     let input = this.formatValidateInput();
     if (input === null) return;
 
@@ -467,6 +469,7 @@ class UpdateTaskForm extends Component {
         this.state.assignedProjUsers,
       );
     }
+    this.setState({ableToSubmit: false});
   }
 
   componentDidMount() {
@@ -967,6 +970,7 @@ class UpdateTaskForm extends Component {
           </ScrollView>
           <View styles={{padding: 20}}>
             <TouchableOpacity
+              disabled={this.state.ableToSubmit}
               style={styles.submitButton}
               onPress={this.handleSubmit}>
               <Text style={{color: 'white'}}>Submit</Text>
