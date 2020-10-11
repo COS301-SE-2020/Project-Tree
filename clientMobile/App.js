@@ -81,6 +81,16 @@ class Settings extends Component {
   }
 
   async handleLogout() {
+    AsyncStorage.clear();
+    // AsyncStorage.getItem('sessionToken').then((sessionToken) => {
+    //   if(sessionToken){
+    //       console.log(sessionToken);
+    //   }
+    //   else
+    //   {
+    //     console.log("XXX")
+    //   }
+    // });
     try {
       const keys = await AsyncStorage.getAllKeys();
       await AsyncStorage.multiRemove(keys);

@@ -11,7 +11,6 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import ms from "ms";
-import { ImportsNotUsedAsValues } from "typescript";
 
 class UpdateTask extends React.Component {
   constructor(props) {
@@ -548,59 +547,67 @@ class UpdateTask extends React.Component {
                   />
                 </Form.Group>
                 {this.updateStart() ? 
-                  <Form.Group>
-                    <Form.Label>Start date of task</Form.Label>
-                    <Form.Control
-                      required
-                      type="date"
-                      value={this.state.startDate.substring(0, 10)}
-                      onChange={(e) => {this.value = this.changeDate(e, "startDate")}}
-                    />
-                    <Form.Label>Start Time of task</Form.Label>
-                    <Form.Control
-                      required
-                      type="time"
-                      value={this.state.startDate.substring(11, 16)}
-                      onChange={(e) => {this.value = this.changeDate(e, "startTime")}}
-                    />
-                  </Form.Group>
+                  <React.Fragment>
+                    <Form.Group>
+                      <Form.Label>Start date of task</Form.Label>
+                      <Form.Control
+                        required
+                        type="date"
+                        value={this.state.startDate.substring(0, 10)}
+                        onChange={(e) => {this.value = this.changeDate(e, "startDate")}}
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Start time of task</Form.Label>
+                      <Form.Control
+                        required
+                        type="time"
+                        value={this.state.startDate.substring(11, 16)}
+                        onChange={(e) => {this.value = this.changeDate(e, "startTime")}}
+                      />
+                    </Form.Group>
+                  </React.Fragment>
                 :
-                  <Form.Group>
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip>
-                          This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
-                        </Tooltip>
-                      }
-                    >
-                      <i className="fa fa-question-circle"></i>
-                    </OverlayTrigger>
-                    <Form.Label>Start date of task</Form.Label>
-                    <Form.Control
-                      required
-                      disabled
-                      type="date"
-                      value={this.state.startDate.substring(0, 10)}
-                      onChange={(e) => {}}
-                    />
-                    <OverlayTrigger
-                      overlay={
-                        <Tooltip>
-                          This task is dependent on another task, to edit the start time of this task please update either a previous task or dependency.
-                        </Tooltip>
-                      }
-                    >
-                      <i className="fa fa-question-circle"></i>
-                    </OverlayTrigger>
-                    <Form.Label>Start Time of task</Form.Label>
-                    <Form.Control
-                      required
-                      disabled
-                      type="time"
-                      value={this.state.startDate.substring(11, 16)}
-                      onChange={(e) => {}}
-                    />
-                  </Form.Group>
+                  <React.Fragment>
+                    <Form.Group>
+                      <Form.Label>Start date of task</Form.Label>{" "}
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip>
+                            This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
+                          </Tooltip>
+                        }
+                      >
+                        <i className="fa fa-question-circle"></i>
+                      </OverlayTrigger>
+                      <Form.Control
+                        required
+                        disabled
+                        type="date"
+                        value={this.state.startDate.substring(0, 10)}
+                        onChange={(e) => {}}
+                      />
+                    </Form.Group>
+                    <Form.Group>  
+                      <Form.Label>Start time of task</Form.Label>{" "}
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip>
+                            This task is dependent on another task, to edit the start time of this task please update either a previous task or dependency.
+                          </Tooltip>
+                        }
+                      >
+                        <i className="fa fa-question-circle"></i>
+                      </OverlayTrigger>
+                      <Form.Control
+                        required
+                        disabled
+                        type="time"
+                        value={this.state.startDate.substring(11, 16)}
+                        onChange={(e) => {}}
+                      />
+                    </Form.Group>
+                  </React.Fragment>
                 }
                 <Form.Group>
                   <Form.Label>End date of task</Form.Label>
@@ -610,7 +617,9 @@ class UpdateTask extends React.Component {
                     value={this.state.endDate.substring(0, 10)}
                     onChange={(e) => {this.value = this.changeDate(e, "endDate")}}
                   />
-                  <Form.Label>End Time of task</Form.Label>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>End time of task</Form.Label>
                   <Form.Control
                     required
                     type="time"
