@@ -7,6 +7,22 @@ import DeleteProject from "./DeleteProject";
 import MemberWrapperComponent from "./Members/MemberWrapperComponent"
 
 class ProjectInfo extends React.Component {
+  getProjectManagers(){
+    if(this.props.managers === null) return "";
+    
+    let tooltip = "";
+    for(let x=0; x<this.props.managers.length; x++){
+      if(x===this.props.managers.length-1){
+        tooltip+=this.props.managers[x].name + " " + this.props.managers[x].surname;
+        break;
+      }
+
+      tooltip+=this.props.managers[x].name + " " + this.props.managers[x].surname + ", "
+    }
+
+    return tooltip;
+  }
+
   render() {
     let h="30em";
     if(this.props.userPermission["project"] === true){
@@ -196,10 +212,23 @@ class ProjectInfo extends React.Component {
           {this.props.userPermission["project"] === true ? (
             <Row>
               <Col>
-                <MemberWrapperComponent project={this.props.project.projectInfo}/>
+                <MemberWrapperComponent project={this.props.project.projectInfo} setProjectManagers={this.props.setProjectManagers}/>
               </Col>
             </Row>       
           ) : null}
+          <Row>
+            <Col>
+              <OverlayTrigger
+                overlay={
+                  <Tooltip>
+                    {this.getProjectManagers()}
+                  </Tooltip>
+                }
+              >
+                <i className="fa fa-info-circle">Project Managers</i>
+              </OverlayTrigger>
+            </Col>
+          </Row>
         </Container>
       </React.Fragment>
     );
