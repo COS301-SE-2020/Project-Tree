@@ -235,8 +235,16 @@ class NotificationList extends Component {
             <Image source={Image_Http_URL} style={styles.profilePicture} />
           );
         }
-      }
-    }
+        else if(this.props.allUsers.length-1 == x)
+        {
+          let imgTemp = {
+            uri: 'https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture'
+          };
+          return (
+            <Image source={imgTemp} style={styles.profilePicture} />
+          );
+        }
+    }}
   }
 
   createDailyMessageList(messages) {

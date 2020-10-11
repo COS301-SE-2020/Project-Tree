@@ -48,7 +48,7 @@ class NotificationList extends React.Component {
     super(props);
     this.state = {
       user: this.props.users,
-      pfp: "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture",
+      pfp: "https://ibb.co/qdFDwjM",
       imageHash: Date.now(),
     };
     this.returnRandomUser = this.returnRandomUser.bind(this);
@@ -60,7 +60,7 @@ class NotificationList extends React.Component {
       return (
         <img
           class="circular"
-          src={this.state.pfp}
+          src="https://i.ibb.co/wRrd1gN/project-Tree.png"
           alt="user"
           width="70"
           height="70"
