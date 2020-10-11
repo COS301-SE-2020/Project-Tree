@@ -400,6 +400,7 @@ class GraphScreen extends Component {
     };
 
     this.setState({savePosition:false, positionTasksMode:false, autoPos:false})
+    this.props.reload();
 
     const response2 = await fetch(
       'http://projecttree.herokuapp.com/task/savePositions',
@@ -414,14 +415,29 @@ class GraphScreen extends Component {
     );
   }
 
+  clearChanges(){
+    let nodes = [...this.state.nodes]
+    let views = [...this.state.views]
+
+    for(let x=0; x<nodes.length; x++){
+      if(nodes[x].changedX !== undefined){
+        nodes[x].changedX = undefined;
+      }
+    }
+
+    for(let y=0; y<views.length; y++){
+      if(views[y].changedX !== undefined){
+        views[y].changedX = undefined;
+      }
+    }
+  }
+
   moveNode(message){
-    console.log(message)
     message = message.split(" ");
     let id = message[1];
     let xVal = message[2];
     let yVal = message[3];
 
-    console.log(id,xVal,yVal)
     for(let x = 0; x < this.state.nodes.length; x++){
       if(this.state.nodes[x].id === parseInt(id)){
         this.state.nodes[x].changedX=parseInt(xVal)
@@ -629,7 +645,7 @@ class GraphScreen extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.floatinBtn5}
-                onPress={() => {this.setState({savePosition:false, positionTasksMode:false, autoPos:false}); this.props.reload();}}>
+                onPress={() => {this.setState({savePosition:false, positionTasksMode:false, autoPos:false}); this.clearChanges(); this.props.reload();}}>
                 <IconMaterial name="clear" size={25} />
               </TouchableOpacity>
             </React.Fragment>
