@@ -110,7 +110,6 @@ class TaskModal extends Component {
   }
   
   updateType(pac, resp, reso){
-    console.log(this.props.user);
     if(this.props.userPermissions["update"]) return "update";
     let check = false;
     pac.forEach(person => {
