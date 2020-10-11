@@ -170,6 +170,22 @@ class UpdateProjectForm extends Component {
     )
       .toISOString()
       .substring(0, 16);
+    if(type.type === "date") 
+      date = 
+        `${date.substring(0,10)}T${
+          type.for === "start" ? 
+            this.state.startDate.substring(11,16) 
+          : 
+          this.state.endDate.substring(11,16)
+        }`;
+    else 
+        date = 
+        `${type.for === "start" ? 
+            this.state.startDate.substring(0,10) 
+          : 
+            this.state.endDate.substring(0,10)}T${
+            date.substring(11,16)
+        }`;
     if (type.for === 'start') {
       if (date > this.state.firstTask.startDate){
         alert("The start date of the project cannot be any latter then the current date as it would be after the start of a task, if you want it to be any later then change the task first");
