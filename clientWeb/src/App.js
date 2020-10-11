@@ -373,6 +373,7 @@ class App extends Component {
                         ownedProjects={this.state.ownedProjects}
                         otherProjects={this.state.otherProjects}
                         setProject={(project) => this.setProject(project)}
+                        user={this.state.user}
                       />
                     ) : (
                       <Redirect to="/" />
