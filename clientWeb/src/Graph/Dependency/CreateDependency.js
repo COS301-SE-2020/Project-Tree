@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Modal, Button, Spinner } from "react-bootstrap";
+import { Form, Modal, Button, Spinner, Tooltip, OverlayTrigger } from "react-bootstrap";
 import ms from "ms";
 
 class CreateDependency extends React.Component {
@@ -63,7 +63,7 @@ class CreateDependency extends React.Component {
     });
     const body = await response.json();
     if ( body.message === "After Project End Date"){
-      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
+      alert("Making these changes will move the project end Date. Please select a date that does not change the project duration");
       this.setState({isloading: false}); 
     } else {
 
@@ -108,7 +108,18 @@ class CreateDependency extends React.Component {
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
-                <Form.Label>Relationship Type</Form.Label>
+                <Form.Label>Relationship type {" "}
+                  <OverlayTrigger
+                      placement='auto'
+                      overlay={
+                      <Tooltip className="helpTooltip">
+                        Start-Start: The second task can start when the first task starts <br></br>
+                        Start-Finish: The second task can only start when the first task has finished
+                      </Tooltip>
+                      } >
+                      <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
+                    </OverlayTrigger>
+                  </Form.Label>
                 <Form.Control
                   required
                   as="select"
@@ -149,8 +160,8 @@ class CreateDependency extends React.Component {
                     this.value = this.state.relationshipType;
                   }}
                 >
-                  <option value="ss">Start-Start</option>
-                  <option value="fs">Finish-Start</option>
+                  <option value="ss">Start-Start </option> 
+                  <option value="fs">Finish-Start </option>
                 </Form.Control>
               </Form.Group>
               <Form.Group>
@@ -173,7 +184,7 @@ class CreateDependency extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Start Date of Second Task</Form.Label>
+                <Form.Label>Start date of second task</Form.Label>
                 <Form.Control
                   required
                   type="date"
@@ -187,7 +198,7 @@ class CreateDependency extends React.Component {
                     if (this.state.relationshipType === "ss") {
                       if (target.startDate < this.props.source.startDate) {
                         alert(
-                          "you can not make the second task earlier then the first"
+                          "Please choose a start date that is after the first task"
                         );
                         target.startDate = this.props.source.startDate;
                         this.setState({
@@ -210,7 +221,7 @@ class CreateDependency extends React.Component {
                     } else {
                       if (target.startDate < this.props.source.endDate) {
                         alert(
-                          "you can not make the second task earlier then the first"
+                          "Please choose a start date that is after the first task" 
                         );
                         target.startDate = this.props.source.endDate;
                         this.setState({
@@ -236,7 +247,7 @@ class CreateDependency extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Start Time of Second Task</Form.Label>
+                <Form.Label>Start time of second task</Form.Label>
                 <Form.Control
                   required
                   type="time"
@@ -254,7 +265,7 @@ class CreateDependency extends React.Component {
                     if (this.state.relationshipType === "ss") {
                       if (target.startDate < this.props.source.startDate) {
                         alert(
-                          "You cannot make the second task earlier then the first."
+                          "Please choose a start date that is after the first task"
                         );
                         target.startDate = this.props.source.startDate;
                         this.setState({
@@ -277,7 +288,7 @@ class CreateDependency extends React.Component {
                     } else {
                       if (target.startDate < this.props.source.endDate) {
                         alert(
-                          "You cannot make the second task earlier then the first."
+                          "Please choose a start date that is after the first task"
                         );
                         target.startDate = this.props.source.endDate;
                         this.setState({

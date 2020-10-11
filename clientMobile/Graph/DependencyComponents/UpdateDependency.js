@@ -83,28 +83,31 @@ class UpdateDependencyForm extends Component {
   }
 
   handleDateTimeSelect(selectedDate, type) {
-    let date = new Date(
-      new Date(selectedDate).getTime() -
-        new Date().getTimezoneOffset() * 60 * 1000,
-    )
-      .toISOString()
-      .substring(0, 16);
-    if(type.type === "date") 
-      date = 
-        `${date.substring(0,10)}T${
-          type.for === "start" ? 
-            this.state.startDate.substring(11,16) 
-          : 
-          this.state.endDate.substring(11,16)
-        }`;
-    else 
+    let date = selectedDate;
+    if (type.type !== 'both') {
+      let date = new Date(
+        new Date(date).getTime() -
+          new Date().getTimezoneOffset() * 60 * 1000,
+      )
+        .toISOString()
+        .substring(0, 16);
+      if(type.type === "date") 
         date = 
-        `${type.for === "start" ? 
-            this.state.startDate.substring(0,10) 
-          : 
-            this.state.endDate.substring(0,10)}T${
-            date.substring(11,16)
-        }`;
+          `${date.substring(0,10)}T${
+            type.for === "start" ? 
+              this.state.startDate.substring(11,16) 
+            : 
+            this.state.endDate.substring(11,16)
+          }`;
+      else 
+          date = 
+          `${type.for === "start" ? 
+              this.state.startDate.substring(0,10) 
+            : 
+              this.state.endDate.substring(0,10)}T${
+              date.substring(11,16)
+          }`;
+    }
     if (type.for === 'start') {
       if (this.state.endDate < date)
         this.setState({

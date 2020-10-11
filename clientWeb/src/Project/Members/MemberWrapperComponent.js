@@ -23,7 +23,7 @@ class MemberWrapperComponent extends React.Component {
                             <GetAccessCode project={this.props.project}/>
                         </Row>
                         <Row>
-                            <AddProjectManager project={this.props.project}/>
+                            <AddProjectManager project={this.props.project} setProjectManagers={this.props.setProjectManagers}/>
                         </Row>
                     </Col>
                     <Col xs="8" className="align-items-center">

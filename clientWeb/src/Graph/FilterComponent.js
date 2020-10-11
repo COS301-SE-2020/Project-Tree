@@ -324,21 +324,13 @@ export default class FilterComponent extends React.Component {
 
     if(this.state.filterTaskOption !== null){
       return(
-        <Col>
-          <Button>
-            {this.state.searchValue.name}
-          </Button>
-        </Col>
+            this.state.searchValue.name
       )    
     }
 
     else{
       return(
-        <Col>
-          <Button>
-            {this.state.searchValue.name + " " + this.state.searchValue.surname}
-          </Button>
-        </Col>
+            this.state.searchValue.name + " " + this.state.searchValue.surname
       ) 
     }
   }
@@ -364,8 +356,8 @@ export default class FilterComponent extends React.Component {
           <Row>
             <Col></Col>
               <Col
-                className="text-center border rounded border-warning m-1 align-items-center"
-                xs={4}
+                className="text-center border rounded border-warning m-1 align-items-center p-0"
+                xs={5}
                 style={{
                   backgroundColor: "white",
                   color: "black",
@@ -379,8 +371,8 @@ export default class FilterComponent extends React.Component {
           <Row>
             <Col></Col>
               <Col
-                className="text-center border rounded border-warning m-1 align-items-center"
-                xs={4}
+                className="text-center border rounded border-warning m-1 align-items-center p-0"
+                xs={5}
                 style={{
                   backgroundColor: "white",
                   color: "black",
@@ -394,8 +386,8 @@ export default class FilterComponent extends React.Component {
           <Row>
               <Col></Col>
               <Col
-                className="text-center border rounded border-warning m-1 align-items-center"
-                xs={4}
+                className="text-center border rounded border-warning m-1 align-items-center p-0"
+                xs={5}
                 style={{
                   backgroundColor: "white",
                   color: "black",
@@ -406,7 +398,22 @@ export default class FilterComponent extends React.Component {
               </Col>
               <Col></Col>
             </Row>
-            {this.getSearchValue()}          
+            <Row>
+              <Col></Col>
+              <Col
+                  className="text-center border rounded border-warning m-1 align-items-center p-0"
+                  xs={5}
+                  style={{
+                    backgroundColor: "white",
+                    color: "black",
+                    minHeight: "30px",
+                    wordWrap: "break-word" 
+                  }}
+                >
+                {this.getSearchValue()}   
+              </Col>
+              <Col></Col>    
+            </Row>   
           <hr />
         </Container>
       );
