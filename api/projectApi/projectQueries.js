@@ -410,7 +410,10 @@ function getCriticalPath(req, res) {
     });
 }
 
-function joinProject(req, res) {
+async function joinProject(req, res) {
+  let userId = await uq.verify(req.body.token);
+  console.log(userId)
+  console.log(req.body)
   db.getSession()
     .run(
       `
@@ -424,7 +427,7 @@ function joinProject(req, res) {
           .run(
             `
             MATCH (a:User), (b:Project)
-            WHERE (a)-[]->(b) AND id(a)=${req.body.userId} AND id(b)=${project}
+            WHERE (a)-[]->(b) AND id(a)=${userId} AND id(b)=${project}
             RETURN (b)
             `
           )

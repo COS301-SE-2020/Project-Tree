@@ -9,15 +9,12 @@ import {
   TextInput,
   ScrollView,
   Image,
-  Modal
+  Modal,
+  Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Icon} from 'native-base';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
 import ImagePicker from 'react-native-image-crop-picker';
-import DocumentPicker from 'react-native-document-picker';
 
 
 let global_pfp = "";
@@ -32,6 +29,7 @@ export default class SettingsScreen extends Component {
     this.deleteUser = this.deleteUser.bind(this);
     this.choosePhotoFromLibrary = this.choosePhotoFromLibrary.bind(this);
     this.fileChange = this.fileChange.bind(this);
+    this.confirmation = this.confirmation.bind(this);
   }
 
   async setModalVisible(visible) {
@@ -55,6 +53,7 @@ export default class SettingsScreen extends Component {
         },
       );
       const body = await response.json();
+      console.log(body.user.profilepicture)
       if (body.user.profilepicture !== 'undefined') {
         this.setState({
           pfp: body.user.profilepicture,
@@ -62,6 +61,27 @@ export default class SettingsScreen extends Component {
       }
     });
   }
+
+  confirmation()
+  {
+    Alert.alert(
+      'Are You Sure?',
+      'Clicking confirm will  this user and all data associated with them',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          onPress: () => this.deleteUser(),
+        },
+      ],
+      {cancelable: false},
+    );
+}
+
 
   deleteUser() 
   {
@@ -80,7 +100,17 @@ export default class SettingsScreen extends Component {
         },
         body: data
       },
-    )  
+    )
+ 
+    // AsyncStorage.getItem('sessionToken').then((sessionToken) => {
+    //   if(sessionToken){
+    //       console.log(sessionToken);
+    //   }
+    //   else
+    //   {
+    //     console.log("XXX")
+    //   }
+    // });    
     this.props.handleLogout();
     console.log("HELLO")
   }
@@ -168,7 +198,7 @@ export default class SettingsScreen extends Component {
             <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
-                this.deleteUser();
+                this.confirmation();
               }}
               style={[
                 styles.signIn,

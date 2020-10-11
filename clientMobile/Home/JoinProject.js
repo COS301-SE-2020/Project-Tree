@@ -2,6 +2,8 @@
 import React, {Component} from 'react';
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Label, Form, Item, Input, Icon} from 'native-base';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 class JoinProject extends Component {
   constructor(props) {
@@ -81,20 +83,26 @@ class JoinProjectModal extends Component {
 class JoinProjectForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { code:"" };
+    this.state = { code:"" , token:""};
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async handleSubmit() {
+
+    await AsyncStorage.getItem('sessionToken').then(async (value) => 
+    {
+      let x = JSON.parse(value);
+      this.setState({token: x});
+    })
     if(this.state.code === null){
         alert("The code entered is invalid");
         return;
     }
 
-    let data = JSON.stringify({userId: this.props.user.id , accessCode: this.state.code });
+    let data = JSON.stringify({userId: this.props.user.id,token:this.state.token, accessCode: this.state.code });
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/project/joinproject',
+      'http://10.0.2.2:5000/project/joinproject',
       {
         method: 'POST',
         headers: {
