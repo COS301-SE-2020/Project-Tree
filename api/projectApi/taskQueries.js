@@ -231,7 +231,6 @@ async function createClone(req, res) {
 }
 
 async function deleteClone(req, res) {
-  console.log(req.body);
   db.getSession()
     .run(
       `
