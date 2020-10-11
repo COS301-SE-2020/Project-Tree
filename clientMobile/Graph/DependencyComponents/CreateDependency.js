@@ -304,7 +304,7 @@ class CreateDependencyForm extends Component {
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/dependency/add',
+      'https://projecttree.herokuapp.com/dependency/add',
       {
         method: 'POST',
         headers: {

@@ -72,12 +72,10 @@ class Graph extends Component {
     super(props);
     this.state = {
       drawerVisible: false,
-      direction: 'TB',
       key: 0,
       displayCriticalPath: false,
     };
     this.setDrawerVisible = this.setDrawerVisible.bind(this);
-    this.toggleDirection = this.toggleDirection.bind(this);
     this.reload = this.reload.bind(this);
     this.toggleCriticalPath = this.toggleCriticalPath.bind(this);
   }
@@ -88,16 +86,6 @@ class Graph extends Component {
 
   setDrawerVisible(mode) {
     this.setState({drawerVisible: mode});
-  }
-
-  toggleDirection() {
-    if (this.state.direction == 'TB') {
-      this.setState({direction: 'LR'});
-    } else {
-      this.setState({direction: 'TB'});
-    }
-
-    this.setState({key: this.state.key + 1});
   }
 
   toggleCriticalPath() {
@@ -122,8 +110,6 @@ class Graph extends Component {
               project={this.props.project}
               userPermissions={this.props.userPermissions}
               navigation={this.props.navigation}
-              direction={this.state.direction}
-              toggleDirection={this.toggleDirection}
               displayCriticalPath={this.state.displayCriticalPath}
               toggleCriticalPath={this.toggleCriticalPath}
             />
@@ -141,7 +127,6 @@ class Graph extends Component {
               userPermissions={this.props.userPermissions}
               navigation={this.props.navigation}
               setDrawerVisible={this.setDrawerVisible}
-              direction={this.state.direction}
               reloadKey={this.state.key}
               reload={this.reload}
               displayCriticalPath={this.state.displayCriticalPath}
@@ -199,7 +184,7 @@ class GraphScreen extends Component {
     }
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/getProject',
+      'https://projecttree.herokuapp.com/getProject',
       {
         method: 'POST',
         headers: {
@@ -217,7 +202,7 @@ class GraphScreen extends Component {
       this.setState({nodes: body.tasks, links: body.rels});
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllProjectMembers',
+      'https://projecttree.herokuapp.com/people/getAllProjectMembers',
       {
         method: 'POST',
         headers: {
@@ -234,7 +219,7 @@ class GraphScreen extends Component {
     this.setState({allUsers: body2.users});
 
     const response3 = await fetch(
-      'http://projecttree.herokuapp.com/people/assignedProjectUsers',
+      'https://projecttree.herokuapp.com/people/assignedProjectUsers',
       {
         method: 'POST',
         headers: {
@@ -251,7 +236,7 @@ class GraphScreen extends Component {
     this.setState({assignedProjUsers: body3.projectUsers});
 
     const response4 = await fetch(
-      'http://projecttree.herokuapp.com/getProjectViews',
+      'https://projecttree.herokuapp.com/getProjectViews',
       {
         method: 'POST',
         headers: {
@@ -302,7 +287,7 @@ class GraphScreen extends Component {
       }
     } else {
       const response = await fetch(
-        'http://projecttree.herokuapp.com/getProject',
+        'https://projecttree.herokuapp.com/getProject',
         {
           method: 'POST',
           headers: {
@@ -319,7 +304,7 @@ class GraphScreen extends Component {
     }
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/getProjectViews',
+      'https://projecttree.herokuapp.com/getProjectViews',
       {
         method: 'POST',
         headers: {
@@ -403,7 +388,7 @@ class GraphScreen extends Component {
     this.props.reload();
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/task/savePositions',
+      'https://projecttree.herokuapp.com/task/savePositions',
       {
         method: 'POST',
         headers: {
@@ -556,7 +541,6 @@ class GraphScreen extends Component {
             nodes={this.state.nodes}
             links={this.state.links}
             views={this.state.views}
-            direction={this.props.direction}
             webKey={this.props.reloadKey}
             projID={this.props.project.id}
             displayTaskDependency={this.displayTaskDependency}
@@ -741,14 +725,13 @@ class WebViewWrapper extends Component {
 
   render() {
     let s={
-      uri: 'http://projecttree.herokuapp.com/mobile',
+      uri: 'https://projecttree.herokuapp.com/mobile',
        method: 'POST',
        body: `nodes=${JSON.stringify(
         this.props.nodes
       )}&links=${JSON.stringify(
         this.props.links
-      )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
-        this.props.displayCriticalPath
+      )}&criticalPath=${this.props.displayCriticalPath
       }&projId=${this.props.projID}&views=${JSON.stringify(
         this.props.views
       )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
@@ -756,15 +739,14 @@ class WebViewWrapper extends Component {
     
     if (Platform.OS === 'ios') { 
       s={
-        uri: 'http://projecttree.herokuapp.com/mobile',
+        uri: 'https://projecttree.herokuapp.com/mobile',
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
           body: `nodes=${JSON.stringify(
           this.props.nodes
         )}&links=${JSON.stringify(
           this.props.links
-        )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
-          this.props.displayCriticalPath
+        )}&criticalPath=${this.props.displayCriticalPath
         }&projId=${this.props.projID}&views=${JSON.stringify(
           this.props.views
         )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,

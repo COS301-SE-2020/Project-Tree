@@ -17,7 +17,7 @@ export default class ProgressDashboardWrapper extends Component {
     this._isMounted = true;f
 
     var response = await fetch(
-      'http://projecttree.herokuapp.com/project/projecttasks',
+      'https://projecttree.herokuapp.com/project/projecttasks',
       {
         method: 'POST',
         headers: {
@@ -35,7 +35,7 @@ export default class ProgressDashboardWrapper extends Component {
     }
 
     response = await fetch(
-      'http://projecttree.herokuapp.com/project/criticalpath',
+      'https://projecttree.herokuapp.com/project/criticalpath',
       {
         method: 'POST',
         headers: {
@@ -57,7 +57,7 @@ export default class ProgressDashboardWrapper extends Component {
     this._isMounted = true;
 
     var response = await fetch(
-      'http://projecttree.herokuapp.com/project/projecttasks',
+      'https://projecttree.herokuapp.com/project/projecttasks',
       {
         method: 'POST',
         headers: {
@@ -75,7 +75,7 @@ export default class ProgressDashboardWrapper extends Component {
     }
 
     response = await fetch(
-      'http://projecttree.herokuapp.com/project/criticalpath',
+      'https://projecttree.herokuapp.com/project/criticalpath',
       {
         method: 'POST',
         headers: {

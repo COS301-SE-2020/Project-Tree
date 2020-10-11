@@ -120,7 +120,7 @@ class UserSettings extends Component {
       token = JSON.parse(value);
       this.setState({token: token});
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/get',
+        'https://projecttree.herokuapp.com/user/get',
         {
           method: 'POST',
           headers: {
@@ -277,7 +277,7 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/pass',
+        'https://projecttree.herokuapp.com/user/pass',
         {
           method: 'POST',
           headers: {
@@ -326,7 +326,7 @@ class UserSettings extends Component {
       data = JSON.stringify(data);
 
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/edit',
+        'https://projecttree.herokuapp.com/user/edit',
         {
           method: 'POST',
           headers: {
