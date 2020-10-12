@@ -237,37 +237,6 @@ class ProjectInfo extends React.Component {
               </Col>
             </Row>
           }
-          {this.props.userPermission["project"] === true ? (
-            <Row>
-            <Col className="p-3">
-              <OverlayTrigger
-                placement='auto'
-                overlay={
-                  <Tooltip style={{fontSize: "22px"}}>
-                    {this.getProjectManagers()}
-                  </Tooltip>
-                }
-              >
-                <i className="fa fa-info-circle">{" "}Project Managers</i>
-              </OverlayTrigger>
-            </Col>
-          </Row>   
-          ) : 
-          <Row>
-            <Col>
-            <OverlayTrigger
-              placement='auto'
-              overlay={
-                <Tooltip style={{fontSize: "22px"}}>
-                  {this.getProjectManagers()}
-                </Tooltip>
-              }
-            >
-              <i className="fa fa-info-circle">{" "}Project Managers</i>
-            </OverlayTrigger>
-            </Col>
-          </Row>
-          }
         </Container>
       </React.Fragment>
     );
