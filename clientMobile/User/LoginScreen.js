@@ -161,7 +161,6 @@ class LoginScreen extends Component {
                 {
                   borderColor: '#3CB371',
                   borderWidth: 2,
-                 // marginTop: 8,
                 },
               ]}>
               <Text

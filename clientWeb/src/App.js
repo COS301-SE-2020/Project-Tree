@@ -423,7 +423,6 @@ class App extends Component {
                       )
                     ) : (
                       <div class="screenC">
-                        {/* <div className="column left" style={{ backgroundColor: "white" }}> */}
                         <div className="login">
                           <div
                             className="container"

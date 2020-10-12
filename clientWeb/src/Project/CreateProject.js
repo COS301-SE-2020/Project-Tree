@@ -52,7 +52,6 @@ class CreateProject extends React.Component {
     event.preventDefault();
     let data = stringifyFormData(new FormData(event.target));
     $.post("/project/add", JSON.parse(data), (response) => {
-      console.log(response)
       this.setState({ show: false, isloading: false });
       this.props.setProject(response);
     }).fail(() => {

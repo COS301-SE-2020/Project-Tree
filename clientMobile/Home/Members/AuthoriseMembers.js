@@ -1,6 +1,6 @@
 import React from "react";
 import {Spinner, Icon} from "native-base";
-import {View, Text, Image, TouchableHighlight, TouchableOpacity, ScrollView, Dimensions, StyleSheet} from "react-native";
+import {View, Text, Image, TouchableOpacity, ScrollView, StyleSheet} from "react-native";
 
 class JoinProject extends React.Component {
     constructor() {
@@ -12,7 +12,6 @@ class JoinProject extends React.Component {
     setUsers(){
         let users = [...this.state.users]
 		users.shift();
-		console.log("USERS:		",users)
         this.setState({users:users})
     }
 
