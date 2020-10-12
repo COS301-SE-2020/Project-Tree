@@ -7,6 +7,7 @@ import {
   Container,
   Form,
   Spinner,
+  Alert
 } from "react-bootstrap";
 import $ from "jquery";
 import "./style.scss";
@@ -15,6 +16,7 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 const eye = <FontAwesomeIcon icon={faEye} />;
 
 let global_pfp = "";
+let oldE = ""
 function stringifyFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
@@ -82,6 +84,7 @@ class Settings extends React.Component {
       passwordError4: "",
       hidden: true,
       deleteUserCheck: false,
+      oldEmail: ""
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
@@ -96,6 +99,7 @@ class Settings extends React.Component {
     this.toggleShow = this.toggleShow.bind(this);
     this.password_validate = this.password_validate.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
+
   }
 
   password_validate(p) {
@@ -118,6 +122,7 @@ class Settings extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+
     if (this.props.user !== prevProps.user) {
       this.setState({ user: this.props.user });
     }
@@ -134,7 +139,6 @@ class Settings extends React.Component {
   async fileChange() {
     var file = document.getElementById("input_img");
     var form = new FormData();
-    console.log(file.files[0])
     form.append("image", file.files[0]);
     var settings = {
       url:
@@ -150,7 +154,6 @@ class Settings extends React.Component {
       var jx = JSON.parse(response);
       global_pfp = jx.data.url;
     });
-    console.log(global_pfp)
     this.setState({ pfp: global_pfp });
   }
 
@@ -180,7 +183,6 @@ class Settings extends React.Component {
       arr[2].indexOf("✓") !== -1 &&
       arr[3].indexOf("✓") !== -1
     ) {
-      console.log("POP");
       this.setState({
         confirmPassword: val,
         confirmNewPass: true,
@@ -224,6 +226,7 @@ class Settings extends React.Component {
  
 
   openEdit() {
+    oldE = this.props.user.email
     this.setState({
       toggleEdit: true,
     });
@@ -247,7 +250,8 @@ class Settings extends React.Component {
     });
   }
 
-  async handlePass(oldPass, newPass) {
+  async handlePass(oldPass, newPass) 
+  {
     this.setState({ isloading: true });
     if (oldPass.trim().length < 1) {
       alert("Please enter your password you wish to change");
@@ -291,15 +295,24 @@ class Settings extends React.Component {
     data.append("name", this.state.user.name);
     data.append("sname", this.state.user.sname);
     data.append("email", this.state.user.email);
+    data.append("oldEmail", oldE);
     data.append("bday", this.state.user.birthday);
     await data.append("profilepicture", this.state.pfp);
     await data.append("oldprofile", this.state.user.profilepicture);
     data.append("token", localStorage.getItem("sessionToken"));
     data = await stringifyFormData(data);
     $.post("/user/edit", data, (response) => {
-      this.setState({ user: response.user, prevUser: response.user });
-      this.closeEdit();
-      this.setState({ isloading: false, pfp: "" });
+       if(response.message == "true")
+       {
+          this.handleLogout()
+          alert("Change to email detected. Please log in with your new email.")
+       }
+       else
+       {
+          this.setState({ user: response.user, prevUser: response.user });
+          this.closeEdit();
+          this.setState({ isloading: false, pfp: "", email:"" });
+       }
     }).fail(() => {
       alert("Unable to update user preferences");
     });
@@ -312,7 +325,6 @@ class Settings extends React.Component {
       deleteColor = 'danger';
       deleteString = 'Are you sure? '
     }
-
     return (
       <React.Fragment>
         <Button

@@ -6,10 +6,14 @@ var imgbbUploader = require('imgbb-uploader');
 
 
 async function editUser(req, res) {
-  console.log(req.body)
   let pfp = req.body.profilepicture;
   if (pfp == "") {
     pfp = req.body.oldprofile;
+  }
+  let emailchange = ""
+  if(req.body.email != req.body.oldEmail)
+  {
+    emailchange= "true"
   }
   let userId = await verify(req.body.token);
   if (userId != null) {
@@ -37,7 +41,7 @@ async function editUser(req, res) {
           birthday: result.records[0]._fields[0].properties.bday,
         };
         res.status(200);
-        res.send({ user });
+        res.send({ user: user, message: emailchange });
       })
       .catch((err) => {
         console.log(err);
@@ -397,9 +401,7 @@ async function verify(token) {
 }
 
 async function deleteUser(req, res) {
-  console.log("token:", req.body.token)
   let userId = await verify(req.body.token);
-  console.log("USERID:", userId)
   if (userId != null) {
       db.getSession()
         .run(
@@ -407,7 +409,6 @@ async function deleteUser(req, res) {
           DETACH DELETE n`
         )
         .then((result) => {
-          console.log(result)
           res.status(200);
           res.send({ message: "User deleted", status: true});
         })

@@ -50,6 +50,7 @@ class UserSettings extends Component {
       passwordError2: '',
       passwordError3: '',
       passwordError4: '',
+      oldEmail: ""
     };
     this.textInputChange = this.textInputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
@@ -135,6 +136,7 @@ class UserSettings extends Component {
         userName: body.user.name,
         sname: body.user.sname,
         email: body.user.email,
+        oldEmail: body.user.email,
         initialEmail: body.user.email,
         profilepicture: body.user.profilepicture,
       });
@@ -317,6 +319,7 @@ class UserSettings extends Component {
         token: this.state.token,
         name: this.state.userName,
         email: this.state.email,
+        oldEmail: this.state.oldEmail,
         sname: this.state.sname,
         bday: this.state.startDate,
         testEmail: this.state.initialEmail,
@@ -326,7 +329,7 @@ class UserSettings extends Component {
       data = JSON.stringify(data);
 
       const response = await fetch(
-        'https://projecttree.herokuapp.com/user/edit',
+        'https://10.0.2.2:5000/user/edit',
         {
           method: 'POST',
           headers: {
@@ -337,8 +340,10 @@ class UserSettings extends Component {
         },
       );
       const body = await response.json();
+      console.log(body)
       this.props.userScreen(false);
-    } else {
+    } 
+    else {
       alert('Please ensure all entered information is valid');
     }
   }
@@ -346,7 +351,7 @@ class UserSettings extends Component {
   render() {
     return (
       <View style={styleUser.container}>
-        <StatusBar backgroundColor="96BB7C" barStyle="light-content" />
+        <StatusBar backgroundColor="#96BB7C" barStyle="light-content" />
         <View style={styleUser.header}>
           <Text style={styleUser.text_header}>User details</Text>
         </View>
