@@ -3,7 +3,6 @@ import {Platform,Alert} from 'react-native';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 import IconFeather from 'react-native-vector-icons/Feather';
 import IconEntypo from 'react-native-vector-icons/Entypo';
-import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
 import styled from 'styled-components/native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -82,15 +81,6 @@ class Settings extends Component {
 
   async handleLogout() {
     AsyncStorage.clear();
-    // AsyncStorage.getItem('sessionToken').then((sessionToken) => {
-    //   if(sessionToken){
-    //       console.log(sessionToken);
-    //   }
-    //   else
-    //   {
-    //     console.log("XXX")
-    //   }
-    // });
     try {
       const keys = await AsyncStorage.getAllKeys();
       await AsyncStorage.multiRemove(keys);
@@ -328,7 +318,6 @@ export default class App extends Component {
                 appearence={{
                   floating: false,
                   topPadding: 5,
-                  //bottomPadding: 0,
                   horizontalPadding: 10,
                   shadow: true,
                   tabBarBackground: '#184D47',

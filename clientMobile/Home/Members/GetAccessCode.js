@@ -1,6 +1,6 @@
 import React from 'react';
 import {Label, Form, Item, Input, Icon} from 'native-base';
-import {View, TouchableOpacity, Text} from 'react-native';
+import {View} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 
 class GetAccessCode extends React.Component {

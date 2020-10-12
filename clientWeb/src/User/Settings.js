@@ -23,15 +23,6 @@ function stringifyFormData(fd) {
   return data;
 }
 
-/* function getBase64(file, onLoadCallback) {
-  var reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = onLoadCallback;
-  reader.onerror = function (error) {
-    console.log("Error when converting PDF file to base64: ", error);
-  };
-} */
-
 const FileUploader = (props) => {
   const hiddenFileInput = React.useRef(null);
 
@@ -134,7 +125,6 @@ class Settings extends React.Component {
   async fileChange() {
     var file = document.getElementById("input_img");
     var form = new FormData();
-    console.log(file.files[0])
     form.append("image", file.files[0]);
     var settings = {
       url:
@@ -150,7 +140,6 @@ class Settings extends React.Component {
       var jx = JSON.parse(response);
       global_pfp = jx.data.url;
     });
-    console.log(global_pfp)
     this.setState({ pfp: global_pfp });
   }
 
@@ -180,7 +169,6 @@ class Settings extends React.Component {
       arr[2].indexOf("✓") !== -1 &&
       arr[3].indexOf("✓") !== -1
     ) {
-      console.log("POP");
       this.setState({
         confirmPassword: val,
         confirmNewPass: true,
@@ -408,7 +396,6 @@ class Settings extends React.Component {
                           this.handleNewPasswordChange(e.target.value);
                           this.setState({ confirmPassword: e.target.value });
                           this.value = this.state.confirmPassword;
-                          console.log(this.state.confirmPassword);
                         }}
                       />
                     </Col>

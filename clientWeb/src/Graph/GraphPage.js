@@ -87,7 +87,6 @@ class GraphPage extends React.Component {
 
       // Gets all the users in the database, might update to be all users assigned to the project
       $.post("/people/getAllProjectMembers", { id: this.props.project.id }, (response) => {
-        console.log(response.users)
         this.setState({ allUsers: response.users });
       }).fail((err) => {
         throw Error(err);
@@ -367,47 +366,21 @@ class TaskSidebar extends React.Component {
     for (let x = 0; x < people.length; x++) {
       list.push(
         <Row className="justify-content-md-center">
-        {/* //   <Col className="justify-content-md-center">
-        //   <OverlayTrigger
-        //     placement='auto'
-        //     trigger="click"
-        //     overlay={
-        //       <Tooltip>
-        //         <a href="https://www.w3schools.com" target="_blank">Send me an email</a>
-        //       </Tooltip>
-        //     }
-        //   >
-        //     <img
-        //       class="circular"
-        //       src={people[x].profilePicture}
-        //       alt="user"
-        //       width="50"
-        //       height="50"
-        //     />
-        //   </OverlayTrigger>
-        //   </Col>
-        //   <Col key={people[x].id} xs={8} className="text-left">
-        //     {people[x].name}&nbsp;{people[x].surname}
-        //   </Col>
-        //   <Row>
-        //     <br />
-        //   </Row> */}
-          <Card style={{width:'100%', marginBottom:5}}>
-            <div class="row no-gutters">
-              <div class="col-auto">
-                <img class="circular"
-                  src={people[x].profilePicture}
-                  alt="user"
-                />
-              </div>
-              <div class="col">
-                <div class="card-block px-2">
-                  {/* <h4 class="card-title">{people[x].name}&nbsp;{people[x].surname}</h4> */}
-                  <h4>{people[x].name}&nbsp;{people[x].surname}</h4>
-                </div>
-              </div>
-            </div>
-          </Card>
+          <Col className="justify-content-md-center">
+            <img
+              class="circular"
+              src={people[x].profilePicture}
+              alt="user"
+              width="50"
+              height="50"
+            />
+          </Col>
+          <Col key={people[x].id} xs={8} className="text-left">
+            {people[x].name}&nbsp;{people[x].surname}
+          </Col>
+          <Row>
+            <br />
+          </Row>
         </Row>
       );
     }

@@ -1,6 +1,5 @@
 function createHtmlEmail(from_name, taskName, projectName, _to, message, type) {
   let body;
-  console.log(type);
   if (type === "task") {
     body = `<h2>New notification from ${from_name} for project ${projectName} regarding your task ${taskName}:<br/>${message}<br/> <a href="https://projecttree.herokuapp.com/">Explore</a></p></h2>`;
   }

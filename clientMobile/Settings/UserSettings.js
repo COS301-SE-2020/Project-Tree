@@ -16,7 +16,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import ImagePicker from 'react-native-image-crop-picker';
 
 
 class UserSettings extends Component {
@@ -434,27 +433,6 @@ class UserSettings extends Component {
                 </Animatable.View>
               ) : null}
             </View>
-            {/* <Text style={[styleUser.text_footer, {marginTop: 35}]}>Date of Birth</Text> */}
-            {/* <View>
-            <Form>
-              <Item floatingLabel disabled>
-              <Input value={this.state.startDate.toISOString().substr(0, 10)} editable={false} />
-               <TextInput
-                  style={styleUser.textInput}
-                 // defaultValue={this.state.startDate}
-                  placeholder="startDate"
-                  editable={false} 
-                />
-                <Icon
-                  type="AntDesign"
-                  name="calendar"
-                  onPress={() => {
-                    this.setState({startDatePickerVisible: true});
-                  }}
-                />
-              </Item>
-            </Form>
-            </View> */}
             <Modal
               animationType="fade"
               transparent={true}
@@ -724,7 +702,6 @@ const styleUser = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 40,
-    //fontFamily: 'sans-serif-medium',
   },
   text_footer: {
     color: '#05375a',

@@ -1,10 +1,8 @@
 import React from 'react';
 import {
   View,
-  TouchableHighlight,
   Text,
   StyleSheet,
-  TextInput,
   Modal,
   TouchableOpacity
 } from 'react-native';
