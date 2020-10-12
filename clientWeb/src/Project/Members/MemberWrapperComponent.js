@@ -50,17 +50,17 @@ class MemberWrapperComponent extends React.Component {
                         <Row>
                             <AddProjectManager project={this.props.project} setProjectManagers={this.props.setProjectManagers}/>
                         </Row>
-                        <Row>
-                            <OverlayTrigger
-                                placement='auto'
-                                overlay={
-                                <Tooltip style={{fontSize: "22px"}}>
-                                    {this.props.getProjectManagers()}
-                                </Tooltip>
-                                }
-                            >
-                                <i className="fa fa-info-circle">{" "}Project Managers</i>
-                            </OverlayTrigger>
+                        <Row className="mt-3">
+                                <OverlayTrigger
+                                    placement='auto'
+                                    overlay={
+                                    <Tooltip style={{fontSize: "22px"}}>
+                                        {this.props.getProjectManagers()}
+                                    </Tooltip>
+                                    }
+                                >
+                                    <i className="fa fa-info-circle">{" "}Project Managers</i>
+                                </OverlayTrigger>
                         </Row>
                     </Col>
                     <Col xs="8" className="align-items-center">
