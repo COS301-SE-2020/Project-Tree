@@ -307,10 +307,10 @@ class Settings extends React.Component {
 
   render() {
     let deleteColor = 'dark';
-    let deleteString = 'Delete User ';
+    let deleteString = 'Delete Account ';
     if(this.state.deleteUserCheck){
       deleteColor = 'danger';
-      deleteString = 'Are you sure? '
+      deleteString = 'Are you sure you want to delete your account? '
     }
 
     return (
