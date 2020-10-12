@@ -119,7 +119,7 @@ class JoinProject extends React.Component {
                     size="sm"
                   ></Spinner>
                 ) : (
-                  "Add"
+                  "Join"
                 )}
               </Button>
             </Modal.Footer>
