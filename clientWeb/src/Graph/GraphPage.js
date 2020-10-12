@@ -427,7 +427,7 @@ class TaskSidebar extends React.Component {
         >
           <Row className="text-center align-items-center">
             <Col></Col>
-            <Col xs={5} className="text-center">
+            <Col xs={9} className="text-center">
               {this.props.viewId !== null ? (
                 <h4>
                   {this.props.task.name}
