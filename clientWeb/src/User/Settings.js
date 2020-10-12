@@ -25,15 +25,6 @@ function stringifyFormData(fd) {
   return data;
 }
 
-/* function getBase64(file, onLoadCallback) {
-  var reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = onLoadCallback;
-  reader.onerror = function (error) {
-    console.log("Error when converting PDF file to base64: ", error);
-  };
-} */
-
 const FileUploader = (props) => {
   const hiddenFileInput = React.useRef(null);
 
@@ -320,10 +311,10 @@ class Settings extends React.Component {
 
   render() {
     let deleteColor = 'dark';
-    let deleteString = 'Delete User ';
+    let deleteString = 'Delete Account ';
     if(this.state.deleteUserCheck){
       deleteColor = 'danger';
-      deleteString = 'Are you sure? '
+      deleteString = 'Are you sure you want to delete your account? '
     }
     return (
       <React.Fragment>
@@ -420,7 +411,6 @@ class Settings extends React.Component {
                           this.handleNewPasswordChange(e.target.value);
                           this.setState({ confirmPassword: e.target.value });
                           this.value = this.state.confirmPassword;
-                          console.log(this.state.confirmPassword);
                         }}
                       />
                     </Col>

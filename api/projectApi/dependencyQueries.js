@@ -4,7 +4,6 @@ const updateProject = require("./updateProject");
 async function createDependency(req, res) {
   let startDate = new Date(req.body.changedInfo.startDate);
   let endDate = new Date(req.body.changedInfo.endDate);
-  console.log(req.body);
   let changedRel = {
     id: "tempID",
     sStartDate: req.body.changedInfo.sStartDate,

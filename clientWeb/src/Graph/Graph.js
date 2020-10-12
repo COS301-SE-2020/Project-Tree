@@ -24,8 +24,6 @@ function makeLink(edge, criticalPathLinks) {
     id: "l" + edge.id,
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
-    // connector: { name: "rounded" },
-    // router: { name: "manhattan" },
     connector: { name: 'smooth' },
     attrs: {
       type: "link",
@@ -471,14 +469,6 @@ class Graph extends React.Component {
   }
 
   clearChanges(){
-    // let nodes = this.props.nodes;
-
-    // for(let x=0; x<nodes.length; x++){
-    //   if(nodes[x].changedX !== undefined){
-    //     nodes[x].changedX = undefined;
-    //     nodes[x].changedY = undefined;
-    //   }
-    // }
     this.props.setTaskInfo();
     this.setState({savePosition:false});
   }

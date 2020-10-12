@@ -412,8 +412,6 @@ function getCriticalPath(req, res) {
 
 async function joinProject(req, res) {
   let userId = await uq.verify(req.body.token);
-  console.log(userId)
-  console.log(req.body)
   db.getSession()
     .run(
       `
