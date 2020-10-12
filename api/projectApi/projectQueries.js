@@ -395,6 +395,8 @@ function getCriticalPath(req, res) {
         MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
         WHERE duration.between(c.startDate, d.endDate) = dur
         RETURN p
+        ORDER BY length(p) DESC
+        LIMIT 1
       `
     )
     .then((result) => {

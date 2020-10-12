@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  Dimensions
 } from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -183,14 +184,20 @@ class CreateTaskForm extends Component {
   formatValidateInput() {
     if (this.checkFormData('all') === false) return null;
 
+    let windowWidth = Math.floor(Dimensions.get('window').width-25);
+    let windowHeight = Math.floor(Dimensions.get('window').height-100);
+
+    let x = Math.floor(Math.random() * windowWidth);
+    let y = Math.floor(Math.random() * windowHeight);
+
     let data = {
       name: this.state.name,
       startDate: this.state.startDate,
       endDate: this.state.endDate,
       description: this.state.description,
       project: this.props.project,
-      positionX: 0,
-      positionY: 0,
+      positionX: x,
+      positionY: y,
     };
 
     return data;
