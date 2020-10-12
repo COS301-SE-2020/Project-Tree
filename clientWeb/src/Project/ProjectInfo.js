@@ -7,6 +7,11 @@ import DeleteProject from "./DeleteProject";
 import MemberWrapperComponent from "./Members/MemberWrapperComponent"
 
 class ProjectInfo extends React.Component {
+  constructor(props){
+    super();
+    this.getProjectManagers = this.getProjectManagers.bind(this);
+  }
+
   getProjectManagers(){
     if(this.props.managers === null) return "";
     
@@ -209,13 +214,29 @@ class ProjectInfo extends React.Component {
               </Table>
             </Col>
           </Row>
-          {this.props.userPermission["project"] === true ? (
+          {this.props.userPermission["project"] === true ? 
             <Row>
               <Col>
-                <MemberWrapperComponent project={this.props.project.projectInfo} setProjectManagers={this.props.setProjectManagers}/>
+                <MemberWrapperComponent 
+                  project={this.props.project.projectInfo} 
+                  setProjectManagers={this.props.setProjectManagers} 
+                  getProjectManagers={this.getProjectManagers}
+                  display={true}
+                />
               </Col>
-            </Row>       
-          ) : null}
+            </Row> 
+            : 
+            <Row>
+              <Col>
+                <MemberWrapperComponent 
+                  project={this.props.project.projectInfo} 
+                  setProjectManagers={this.props.setProjectManagers} 
+                  getProjectManagers={this.getProjectManagers}
+                  display={false}
+                />
+              </Col>
+            </Row>
+          }
           {this.props.userPermission["project"] === true ? (
             <Row>
             <Col className="p-3">
