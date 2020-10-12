@@ -203,7 +203,7 @@ export default class SettingsScreen extends Component {
                     color: '#008656',
                   },
                 ]}>
-                Delete User
+                Delete Account
               </Text>
             </TouchableOpacity>
           </View>  
