@@ -137,7 +137,6 @@ class UserSettings extends Component {
         email: body.user.email,
         oldEmail: body.user.email,
         initialEmail: body.user.email,
-        profilepicture: body.user.profilepicture,
       });
       if (body.user.birthday == '  ') {
       } else {
@@ -323,12 +322,11 @@ class UserSettings extends Component {
         bday: this.state.startDate,
         testEmail: this.state.initialEmail,
         testPass: pass,
-        profilepicture: this.state.profilepicture,
       };
       data = JSON.stringify(data);
 
       const response = await fetch(
-        'https://10.0.2.2:5000/user/edit',
+        'http://10.0.2.2:5000/user/edit',
         {
           method: 'POST',
           headers: {
@@ -339,8 +337,12 @@ class UserSettings extends Component {
         },
       );
       const body = await response.json();
-      console.log(body)
-      this.props.userScreen(false);
+      if(body.message)
+      {
+        alert('Change to email detected. Please log in with your new email.');
+      }
+      this.props.userScreen(false);  
+      
     } 
     else {
       alert('Please ensure all entered information is valid');

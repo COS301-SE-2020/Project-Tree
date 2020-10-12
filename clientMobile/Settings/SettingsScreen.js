@@ -50,7 +50,11 @@ export default class SettingsScreen extends Component {
         },
       );
       const body = await response.json();
-      if (body.user.profilepicture !== 'undefined') {
+      if(body.message == "Invalid User")
+      {
+        this.props.handleLogout()
+      }
+      if (body.user.profilepicture != 'undefined') {
         this.setState({
           pfp: body.user.profilepicture,
         });
@@ -62,7 +66,7 @@ export default class SettingsScreen extends Component {
   {
     Alert.alert(
       'Are You Sure?',
-      'Clicking confirm will  this user and all data associated with them',
+      'Clicking confirm will delete this user and all data associated with them.',
       [
         {
           text: 'Cancel',

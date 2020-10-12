@@ -39,6 +39,7 @@ async function editUser(req, res) {
           sname: result.records[0]._fields[0].properties.sname,
           email: result.records[0]._fields[0].properties.email,
           birthday: result.records[0]._fields[0].properties.bday,
+          profilepicture: result.records[0]._fields[0].properties.profilepicture
         };
         res.status(200);
         res.send({ user: user, message: emailchange });
