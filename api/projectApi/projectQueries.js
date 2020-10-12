@@ -395,6 +395,8 @@ function getCriticalPath(req, res) {
         MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
         WHERE duration.between(c.startDate, d.endDate) = dur
         RETURN p
+        ORDER BY length(p) DESC
+        LIMIT 1
       `
     )
     .then((result) => {
@@ -412,8 +414,6 @@ function getCriticalPath(req, res) {
 
 async function joinProject(req, res) {
   let userId = await uq.verify(req.body.token);
-  console.log(userId)
-  console.log(req.body)
   db.getSession()
     .run(
       `

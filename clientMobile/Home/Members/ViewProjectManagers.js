@@ -1,10 +1,8 @@
 import React from 'react';
 import {
   View,
-  TouchableHighlight,
   Text,
   StyleSheet,
-  TextInput,
   Modal,
   TouchableOpacity
 } from 'react-native';
@@ -54,7 +52,7 @@ class ViewManagerInfo extends React.Component{
 
     async componentDidMount(){
         const response = await fetch(
-            'http://projecttree.herokuapp.com/people/getProjectManagers',
+            'https://projecttree.herokuapp.com/people/getProjectManagers',
             {
             method: 'POST',
             headers: {
@@ -77,7 +75,7 @@ class ViewManagerInfo extends React.Component{
         for(let x=0; x<this.state.managers.length; x++){
             managerComponents.push(
                 <View key={this.state.managers[x].id}>
-                    <Text>
+                    <Text style={styles.modalText}>
                         {this.state.managers[x].name + " " + this.state.managers[x].surname}
                     </Text>
                 </View>
@@ -250,7 +248,7 @@ const styles = StyleSheet.create({
     modalText: {
       marginBottom: 15,
       textAlign: 'center',
-      fontSize: 25,
+      fontSize: 20,
     },
     CreateDependencyBtn: {
       height: 50,

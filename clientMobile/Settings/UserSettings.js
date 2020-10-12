@@ -16,7 +16,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import ImagePicker from 'react-native-image-crop-picker';
 
 
 class UserSettings extends Component {
@@ -50,6 +49,7 @@ class UserSettings extends Component {
       passwordError2: '',
       passwordError3: '',
       passwordError4: '',
+      oldEmail: ""
     };
     this.textInputChange = this.textInputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
@@ -120,7 +120,7 @@ class UserSettings extends Component {
       token = JSON.parse(value);
       this.setState({token: token});
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/get',
+        'https://projecttree.herokuapp.com/user/get',
         {
           method: 'POST',
           headers: {
@@ -135,8 +135,8 @@ class UserSettings extends Component {
         userName: body.user.name,
         sname: body.user.sname,
         email: body.user.email,
+        oldEmail: body.user.email,
         initialEmail: body.user.email,
-        profilepicture: body.user.profilepicture,
       });
       if (body.user.birthday == '  ') {
       } else {
@@ -277,7 +277,7 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/pass',
+        'https://projecttree.herokuapp.com/user/pass',
         {
           method: 'POST',
           headers: {
@@ -317,16 +317,16 @@ class UserSettings extends Component {
         token: this.state.token,
         name: this.state.userName,
         email: this.state.email,
+        oldEmail: this.state.oldEmail,
         sname: this.state.sname,
         bday: this.state.startDate,
         testEmail: this.state.initialEmail,
         testPass: pass,
-        profilepicture: this.state.profilepicture,
       };
       data = JSON.stringify(data);
 
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/edit',
+        'http://10.0.2.2:5000/user/edit',
         {
           method: 'POST',
           headers: {
@@ -337,8 +337,14 @@ class UserSettings extends Component {
         },
       );
       const body = await response.json();
-      this.props.userScreen(false);
-    } else {
+      if(body.message)
+      {
+        alert('Change to email detected. Please log in with your new email.');
+      }
+      this.props.userScreen(false);  
+      
+    } 
+    else {
       alert('Please ensure all entered information is valid');
     }
   }
@@ -346,7 +352,7 @@ class UserSettings extends Component {
   render() {
     return (
       <View style={styleUser.container}>
-        <StatusBar backgroundColor="96BB7C" barStyle="light-content" />
+        <StatusBar backgroundColor="#96BB7C" barStyle="light-content" />
         <View style={styleUser.header}>
           <Text style={styleUser.text_header}>User details</Text>
         </View>
@@ -434,27 +440,6 @@ class UserSettings extends Component {
                 </Animatable.View>
               ) : null}
             </View>
-            {/* <Text style={[styleUser.text_footer, {marginTop: 35}]}>Date of Birth</Text> */}
-            {/* <View>
-            <Form>
-              <Item floatingLabel disabled>
-              <Input value={this.state.startDate.toISOString().substr(0, 10)} editable={false} />
-               <TextInput
-                  style={styleUser.textInput}
-                 // defaultValue={this.state.startDate}
-                  placeholder="startDate"
-                  editable={false} 
-                />
-                <Icon
-                  type="AntDesign"
-                  name="calendar"
-                  onPress={() => {
-                    this.setState({startDatePickerVisible: true});
-                  }}
-                />
-              </Item>
-            </Form>
-            </View> */}
             <Modal
               animationType="fade"
               transparent={true}
@@ -724,7 +709,6 @@ const styleUser = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 40,
-    //fontFamily: 'sans-serif-medium',
   },
   text_footer: {
     color: '#05375a',

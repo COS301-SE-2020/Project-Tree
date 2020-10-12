@@ -6,10 +6,7 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
-  TextInput,
-  ScrollView,
   Image,
-  Modal,
   Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -42,7 +39,7 @@ export default class SettingsScreen extends Component {
       token = JSON.parse(value);
       this.setState({token: token});
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/get',
+        'https://projecttree.herokuapp.com/user/get',
         {
           method: 'POST',
           headers: {
@@ -53,8 +50,11 @@ export default class SettingsScreen extends Component {
         },
       );
       const body = await response.json();
-      console.log(body.user.profilepicture)
-      if (body.user.profilepicture !== 'undefined') {
+      if(body.message == "Invalid User")
+      {
+        this.props.handleLogout()
+      }
+      if (body.user.profilepicture != 'undefined') {
         this.setState({
           pfp: body.user.profilepicture,
         });
@@ -66,7 +66,7 @@ export default class SettingsScreen extends Component {
   {
     Alert.alert(
       'Are You Sure?',
-      'Clicking confirm will  this user and all data associated with them',
+      'Clicking confirm will delete this user and all data associated with them.',
       [
         {
           text: 'Cancel',
@@ -91,7 +91,7 @@ export default class SettingsScreen extends Component {
     }
     data = JSON.stringify(data)
      const res =  fetch(
-      'http://projecttree.herokuapp.com/user/delete',
+      'https://projecttree.herokuapp.com/user/delete',
       {
         method: 'POST',
         headers: {
@@ -102,21 +102,10 @@ export default class SettingsScreen extends Component {
       },
     )
  
-    // AsyncStorage.getItem('sessionToken').then((sessionToken) => {
-    //   if(sessionToken){
-    //       console.log(sessionToken);
-    //   }
-    //   else
-    //   {
-    //     console.log("XXX")
-    //   }
-    // });    
     this.props.handleLogout();
-    console.log("HELLO")
   }
 
   choosePhotoFromLibrary(){
-    console.log(this.state.token)
     ImagePicker.openPicker({
       width: 300,
       height: 300,
@@ -126,7 +115,6 @@ export default class SettingsScreen extends Component {
     }).then(image => {
       this.fileChange(image);
     });
-    console.log("hi")
   }
 
   async fileChange(file) 
@@ -152,7 +140,7 @@ export default class SettingsScreen extends Component {
       data = JSON.stringify(data)
 
        const res =  fetch(
-        'http://projecttree.herokuapp.com/user/change',
+        'https://projecttree.herokuapp.com/user/change',
         {
           method: 'POST',
           headers: {
@@ -215,7 +203,7 @@ export default class SettingsScreen extends Component {
                     color: '#008656',
                   },
                 ]}>
-                Delete User
+                Delete Account
               </Text>
             </TouchableOpacity>
           </View>  
@@ -291,43 +279,6 @@ export default class SettingsScreen extends Component {
               </Text>
             </TouchableOpacity>
           </View> 
-          {/* <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={() => this.setModalVisible(false)}>
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <TouchableOpacity
-                    style={styles.hideButton}
-                    onPress={() => this.setModalVisible(false)}>
-                    <Icon type="FontAwesome" name="close" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.choosePhotoFromLibrary();
-                    }}
-                    style={[
-                      styles.signIn,
-                      {
-                        borderColor: '#184D47',
-                        borderWidth: 2,
-                        marginTop: 20,
-                      },
-                    ]}>
-                <Text
-                  style={[
-                    styles.textSign,
-                    {
-                      color: '#008656',
-                    },
-                  ]}>
-                  Open Gallery
-                </Text>
-            </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>          */}
         </Animatable.View>
       </View>
     );

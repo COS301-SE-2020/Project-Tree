@@ -175,7 +175,7 @@ class UpdateDependencyForm extends Component {
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/dependency/update',
+      'https://projecttree.herokuapp.com/dependency/update',
       {
         method: 'POST',
         headers: {

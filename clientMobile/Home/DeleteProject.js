@@ -29,7 +29,7 @@ export default class DeleteProject extends Component {
     };
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/project/delete',
+      'https://projecttree.herokuapp.com/project/delete',
       {
         method: 'POST',
         headers: {
