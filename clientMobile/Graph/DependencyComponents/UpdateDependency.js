@@ -74,6 +74,7 @@ class UpdateDependencyForm extends Component {
       error: null,
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
+      ableToSubmit: false,
     };
 
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
@@ -164,6 +165,7 @@ class UpdateDependencyForm extends Component {
   }
 
   async handleSubmit() {
+    this.setState({ableToSubmit: true});
     let input = this.formatValidateInput();
     if (input === null) return;
 
@@ -192,6 +194,7 @@ class UpdateDependencyForm extends Component {
       this.props.displayTaskDependency(null, null);
       this.props.setProjectInfo(body.nodes, body.rels);
     }
+    this.setState({ableToSubmit: false});
   }
 
   CalcDiff(sd, ed) {
@@ -310,6 +313,7 @@ class UpdateDependencyForm extends Component {
           />
         <View style={{flex: 1}}>
           <TouchableOpacity
+            disabled={this.state.ableToSubmit}
             style={styles.submitButton}
             onPress={this.handleSubmit}>
             <Text style={{color: 'white'}}>Submit</Text>

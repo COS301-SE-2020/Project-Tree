@@ -104,6 +104,7 @@ class CreateTaskForm extends Component {
       pacManList: [],
       resourcesList: [],
       resPersonList: [],
+      ableToSubmit: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
@@ -204,6 +205,7 @@ class CreateTaskForm extends Component {
   }
 
   async handleSubmit() {
+    this.setState({ableToSubmit: true});
     let input = this.formatValidateInput();
     if (input === null) {
       return;
@@ -268,6 +270,8 @@ class CreateTaskForm extends Component {
 
     this.props.setModalVisible(false);
     this.props.setProjectInfo(body.nodes, body.rels, assignedPeople);
+    
+    this.setState({ableToSubmit: false});
   }
 
   updateSearch(value, mode) {
@@ -709,6 +713,7 @@ class CreateTaskForm extends Component {
         </ScrollView>
         <View styles={{padding: 10}}>
           <TouchableOpacity
+            disabled={this.state.ableToSubmit}
             style={styles.submitButton}
             onPress={this.handleSubmit}>
             <Text style={{color: 'white'}}>Submit</Text>
