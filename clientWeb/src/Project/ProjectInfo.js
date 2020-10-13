@@ -38,7 +38,7 @@ class ProjectInfo extends React.Component {
       <React.Fragment>
         <Container
           className="block-example border rounded border-secondary"
-          style={{ height: h }}
+          style={{ minHeight: h }}
         >
           <Row className="align-items-center bg-secondary py-2">
             <Col>
