@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/COS301-SE-2020/Project-Tree.svg?branch=master)](https://travis-ci.org/COS301-SE-2020/Project-Tree)
 <a href="https://www.statuscake.com/" title="Website Uptime Monitoring"><img src="https://app.statuscake.com/button/index.php?Track=5661201&Days=1&Design=4" /></a>
 
+<img src="logo.png" width=450/>
 <img src="group photo.jpg" width=300/>
 
 The project entails the development of a project management system. The system represents a project visually as a tree structure, with each “leaf” being a project task, and each branch being a task dependency. The core idea of the system is to allow for all task dependencies to be captured accurately and clearly, to ensure effective project management.
@@ -11,16 +12,15 @@ The project entails the development of a project management system. The system r
 
 | Document                      | Links                                                                                                                        |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| SRS V3                        | [Software Requirements Specification V3](https://drive.google.com/file/d/1xjLBOQCMQuwiLpBqkmlKaFXmSfa3HJSd/view?usp=sharing) |
-| SRS V4 (Demo 4)               | [Software Requirements Specification V4](https://drive.google.com/file/d/1YYFLu-B00LBTEbkfmsM_Xz6z15AyEqzO/view?usp=sharing) |
+| SRS                           | [Software Requirements Specification](https://drive.google.com/file/d/1zKs6e3Fx8nMi3XmNC9hN_HuTOr2skMx6/view?usp=sharing)    |
 | Project Management tool       | [Asana](https://app.asana.com/0/1175793006340426/board)                                                                      |
 | Project Tree Website          | [Website](https://projecttree.herokuapp.com/)                                                                                |
 | Project Tree Mobile           | [Mobile App](https://drive.google.com/file/d/1xgWt-K9mzN6L9JeMkQ-rF9eO_YAiVuRY/view?usp=sharing)                             |
-| User Manual                   | [User Manual](https://drive.google.com/file/d/1I-THn5WdSYVK8owDEb2rAukejthtZ-Cy/view?usp=sharing)                            |
-| User Manual V3 (Demo 4)       | [User Manual V3](https://drive.google.com/file/d/12UmHMPX538FCQwrbB4613TAVp9qVN6Tr/view?usp=sharing)                         |
+| User Manual                   | [User Manual](https://drive.google.com/file/d/1K9eoKgYzPn_t4mbZaNgGmGSuUaiKWXYk/view?usp=sharing)                            |
 | Technical Installation Manual | [Technical Installation Manual](https://drive.google.com/file/d/1ObufSIvrVCSqpog9ENT2ud-sVO8fbyo1/view?usp=sharing)          |
 | Coding Standards              | [Coding Standards](https://drive.google.com/file/d/10XIZpqaFohxW8eiQM4hKsrCR_ZDSC-8K/view?usp=sharing)                       |
 | Testing Policy Document       | [Testing Policy](https://drive.google.com/file/d/1sprpHY_Br0TLddgdWWLBVPwRhalveE-_/view?usp=sharing)                         |
+| Outdated Documentation        | [Documentation](https://drive.google.com/drive/folders/1QR4uf5biWp2WJ9dN6wHdup5sKdGv0UhW?usp=sharing)                        |
 
 ## Demos
 
