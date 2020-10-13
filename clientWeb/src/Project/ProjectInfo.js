@@ -1,37 +1,50 @@
 import React from "react";
-import { Table, Button, Container, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Container,
+  Row,
+  Col,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import SendProjectNotification from "../Notifications/SendProjectNotification";
 import UpdateProject from "./UpdateProject";
 import DeleteProject from "./DeleteProject";
-import MemberWrapperComponent from "./Members/MemberWrapperComponent"
+import MemberWrapperComponent from "./Members/MemberWrapperComponent";
 
 class ProjectInfo extends React.Component {
-  constructor(props){
+  constructor(props) {
     super();
     this.getProjectManagers = this.getProjectManagers.bind(this);
   }
 
-  getProjectManagers(){
-    if(this.props.managers === null) return "";
-    
+  getProjectManagers() {
+    if (this.props.managers === null) return "";
+
     let tooltip = "";
-    for(let x=0; x<this.props.managers.length; x++){
-      if(x===this.props.managers.length-1){
-        tooltip+=this.props.managers[x].name + " " + this.props.managers[x].surname;
+    for (let x = 0; x < this.props.managers.length; x++) {
+      if (x === this.props.managers.length - 1) {
+        tooltip +=
+          this.props.managers[x].name + " " + this.props.managers[x].surname;
         break;
       }
 
-      tooltip+=this.props.managers[x].name + " " + this.props.managers[x].surname + ", "
+      tooltip +=
+        this.props.managers[x].name +
+        " " +
+        this.props.managers[x].surname +
+        ", ";
     }
 
     return tooltip;
   }
 
   render() {
-    let h="32em";
-    if(this.props.userPermission["project"] === true){
-      h="40em";
+    let h = "32em";
+    if (this.props.userPermission["project"] === true) {
+      h = "40em";
     }
 
     return (
@@ -94,13 +107,13 @@ class ProjectInfo extends React.Component {
           <Row className="align-items-center pt-1">
             <Col
               className="align-items-center text-center"
-              style={{ fontSize: "20px", }}
+              style={{ fontSize: "20px" }}
             >
               Start date and time
             </Col>
             <Col
               className="align-items-center text-center"
-              style={{ fontSize: "20px", }}
+              style={{ fontSize: "20px" }}
             >
               End date and time
             </Col>
@@ -110,13 +123,19 @@ class ProjectInfo extends React.Component {
               className="align-items-center text-center"
               style={{ fontSize: "20px" }}
             >
-              {`${this.props.project.projectInfo.startDate.substring(0, 10)} ${this.props.project.projectInfo.startDate.substring(11, 16)}`}
+              {`${this.props.project.projectInfo.startDate.substring(
+                0,
+                10
+              )} ${this.props.project.projectInfo.startDate.substring(11, 16)}`}
             </Col>
             <Col
               className="align-items-center text-center"
               style={{ fontSize: "20px" }}
             >
-              {`${this.props.project.projectInfo.endDate.substring(0, 10)} ${this.props.project.projectInfo.endDate.substring(11, 16)}`}
+              {`${this.props.project.projectInfo.endDate.substring(
+                0,
+                10
+              )} ${this.props.project.projectInfo.endDate.substring(11, 16)}`}
             </Col>
           </Row>
           <Row className="align-items-center py-1">
@@ -138,17 +157,23 @@ class ProjectInfo extends React.Component {
               >
                 <tbody>
                   <tr>
-                    <th colSpan="4">Project permissions {" "}
+                    <th colSpan="4">
+                      Project permissions{" "}
                       <OverlayTrigger
-                        placement='right'
+                        placement="right"
                         overlay={
-                        <Tooltip className="helpTooltip">
-                          Project managers may set project member role permissions that apply to tasks
-                        </Tooltip>
-                        } >
-                        <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
-                        </OverlayTrigger>
-                      </th>
+                          <Tooltip className="helpTooltip">
+                            Project managers may set project member role
+                            permissions that apply to tasks
+                          </Tooltip>
+                        }
+                      >
+                        <i
+                          className="fa fa-info-circle"
+                          style={{ color: "black", fontSize: "20px" }}
+                        ></i>
+                      </OverlayTrigger>
+                    </th>
                   </tr>
                   <tr>
                     <td></td>
@@ -214,29 +239,29 @@ class ProjectInfo extends React.Component {
               </Table>
             </Col>
           </Row>
-          {this.props.userPermission["project"] === true ? 
+          {this.props.userPermission["project"] === true ? (
             <Row>
               <Col>
-                <MemberWrapperComponent 
-                  project={this.props.project.projectInfo} 
-                  setProjectManagers={this.props.setProjectManagers} 
+                <MemberWrapperComponent
+                  project={this.props.project.projectInfo}
+                  setProjectManagers={this.props.setProjectManagers}
                   getProjectManagers={this.getProjectManagers}
                   display={true}
                 />
               </Col>
-            </Row> 
-            : 
+            </Row>
+          ) : (
             <Row>
               <Col>
-                <MemberWrapperComponent 
-                  project={this.props.project.projectInfo} 
-                  setProjectManagers={this.props.setProjectManagers} 
+                <MemberWrapperComponent
+                  project={this.props.project.projectInfo}
+                  setProjectManagers={this.props.setProjectManagers}
                   getProjectManagers={this.getProjectManagers}
                   display={false}
                 />
               </Col>
             </Row>
-          }
+          )}
         </Container>
       </React.Fragment>
     );

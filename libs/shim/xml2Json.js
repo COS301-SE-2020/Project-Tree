@@ -1,4 +1,4 @@
-import xml2js from '../xml2js.js';
+import xml2js from "../xml2js.js";
 
 function xml2Json(xml) {
   let json;

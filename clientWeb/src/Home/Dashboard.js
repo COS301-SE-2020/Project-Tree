@@ -99,21 +99,31 @@ class Dashboard extends React.Component {
       <React.Fragment>
         <Container fluid className="mt-2" id="top">
           <Row>
-            <Col className="p-1" style={{position:"fixed", zIndex:"8"}}>
+            <Col className="p-1" style={{ position: "fixed", zIndex: "8" }}>
               <a href="#top">
                 <Button variant="warning">Jump To Top</Button>
               </a>
             </Col>
-            <Col ></Col>
+            <Col></Col>
             <Col sm={12} md={4} className="text-center">
               <h1 style={{ fontWeight: "bold" }}>Project Dashboard</h1>
             </Col>
             <Col sm={12} md={4}>
               <Row>
-                <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"8"}}>
+                <Col
+                  sm={12}
+                  xl={6}
+                  className="text-center p-1"
+                  style={{ zIndex: "8" }}
+                >
                   {this.MakeDropdown()}
                 </Col>
-                <Col sm={12} xl={6} className="text-center p-1" style={{ zIndex:"8"}}>
+                <Col
+                  sm={12}
+                  xl={6}
+                  className="text-center p-1"
+                  style={{ zIndex: "8" }}
+                >
                   <a href="#calendar">
                     <Button variant="warning">Jump To Calendar</Button>
                   </a>
@@ -121,7 +131,7 @@ class Dashboard extends React.Component {
               </Row>
             </Col>
           </Row>
-          <Row style={{width:"100%"}}>
+          <Row style={{ width: "100%" }}>
             <Container fluid className="p-0">
               <Row>{this.ProjectAnalyticList()}</Row>
               <Row style={{ marginTop: "2em", marginBottom: "2em" }}>

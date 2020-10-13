@@ -1,23 +1,23 @@
-import k6 from 'k6';
-import http from 'k6/http';
+import k6 from "k6";
+import http from "k6/http";
 
 /* Constants */
 const undef = void 0; /* eslint-disable-line no-void */
 
 /* Symbols */
-const Assign = Symbol('assign');
-const Clear = Symbol('clear');
-const Define = Symbol.for('define');
-const Extend = Symbol.for('extend');
-const Has = Symbol('has');
-const Initial = Symbol.for('initial');
-const Iteration = Symbol.for('iteration');
-const Post = Symbol.for('post');
-const Pre = Symbol.for('pre');
-const Request = Symbol.for('request');
-const Reset = Symbol.for('reset');
-const Var = Symbol.for('variable');
-const Write = Symbol('write');
+const Assign = Symbol("assign");
+const Clear = Symbol("clear");
+const Define = Symbol.for("define");
+const Extend = Symbol.for("extend");
+const Has = Symbol("has");
+const Initial = Symbol.for("initial");
+const Iteration = Symbol.for("iteration");
+const Post = Symbol.for("post");
+const Pre = Symbol.for("pre");
+const Request = Symbol.for("request");
+const Reset = Symbol.for("reset");
+const Var = Symbol.for("variable");
+const Write = Symbol("write");
 
 /* Expressions */
 const expression = {
@@ -137,17 +137,17 @@ const standard = {
 /* State validation */
 function requireEnvironment() {
   if (!state.environment) {
-    throw new Error('Missing Postman environment');
+    throw new Error("Missing Postman environment");
   }
 }
 function requireRequest() {
   if (!state.request) {
-    throw new Error('May only be used in a request scope');
+    throw new Error("May only be used in a request scope");
   }
 }
 function requirePost() {
   if (!state.post) {
-    throw new Error('May only be used in a postrequest script');
+    throw new Error("May only be used in a postrequest script");
   }
 }
 
@@ -215,7 +215,7 @@ const postman = Object.freeze({
     pm.globals.set(name, value);
   },
   setNextRequest() {
-    throw new Error('postman.setNextRequest not supported');
+    throw new Error("postman.setNextRequest not supported");
   },
 
   /*
@@ -248,24 +248,24 @@ const postman = Object.freeze({
    */
   [Initial](initial = {}) {
     if (state.initialized) {
-      throw new Error('Scope already initialized');
+      throw new Error("Scope already initialized");
     }
     state.initialized = true;
-    if ('options' in initial) {
+    if ("options" in initial) {
       setting.options = initial.options;
     }
-    if ('global' in initial) {
+    if ("global" in initial) {
       scope.global = scope.global[Assign](initial.global);
     }
-    if ('collection' in initial) {
+    if ("collection" in initial) {
       state.collection = true;
       scope.collection = scope.collection[Assign](initial.collection);
     }
-    if ('environment' in initial) {
+    if ("environment" in initial) {
       state.environment = true;
       scope.environment = scope.environment[Assign](initial.environment);
     }
-    if ('data' in initial) {
+    if ("data" in initial) {
       state.data = true;
       data.file = [...initial.data].reverse();
     }
@@ -302,19 +302,19 @@ const postman = Object.freeze({
    */
   [Request](...args) {
     switch (typeof args[0]) {
-      case 'object':
+      case "object":
         return executeRequest(...args);
-      case 'string':
+      case "string":
         return namedRequest(...args);
       default:
-        throw new Error('Invalid postman[Request] params');
+        throw new Error("Invalid postman[Request] params");
     }
   },
 
   /* Define request */
   [Define](spec) {
     if (!spec.name) {
-      throw new Error('Attempted to define request without name');
+      throw new Error("Attempted to define request without name");
     }
     if (!definition.request[spec.name]) {
       definition.request[spec.name] = [];
@@ -407,9 +407,9 @@ const pm = Object.freeze({
   info: Object.freeze({
     get eventName() {
       if (state.post) {
-        return 'test';
+        return "test";
       } else {
-        return 'prerequest';
+        return "prerequest";
       }
     },
     get iteration() {
@@ -444,10 +444,10 @@ const pm = Object.freeze({
   /* Request information */
   request: Object.freeze({
     get headers() {
-      throw new Error('pm.request.headers not supported');
+      throw new Error("pm.request.headers not supported");
     },
     get url() {
-      throw new Error('pm.request.url not supported');
+      throw new Error("pm.request.url not supported");
     },
   }),
 
@@ -457,18 +457,18 @@ const pm = Object.freeze({
       return store.response.code;
     },
     get headers() {
-      throw new Error('pm.response.headers not supported');
+      throw new Error("pm.response.headers not supported");
     },
     json() {
       parseBodyJson();
       const body = store.response.body;
       if (body.json === false) {
-        throw new Error('JSON parsing of body failed');
+        throw new Error("JSON parsing of body failed");
       }
       return body.json;
     },
     reason() {
-      throw new Error('pm.response.reason: Response reason unavailable in k6');
+      throw new Error("pm.response.reason: Response reason unavailable in k6");
     },
     get responseTime() {
       return store.response.time;
@@ -483,19 +483,19 @@ const pm = Object.freeze({
 
   /* Web transactions */
   sendRequest() {
-    throw new Error('pm.sendRequest not supported');
+    throw new Error("pm.sendRequest not supported");
   },
 
   /* Test definition */
   test(name, logic) {
     if (state.test) {
-      throw new Error('Nested pm.test calls not allowed');
+      throw new Error("Nested pm.test calls not allowed");
     }
     try {
       enterTest();
       logic();
       k6.check(store.response, {
-        [name]: response => {
+        [name]: (response) => {
           for (const test of store.test) {
             if (!test(response)) {
               return false;
@@ -545,7 +545,7 @@ const pm = Object.freeze({
    * const address = `${pm[Var]('protocol')}://${pm[Var]('domain')}/index.html`
    */
   [Var](name) {
-    if (name[0] === '$') {
+    if (name[0] === "$") {
       return computeDynamic(name.substring(1));
     } else {
       return this.variables.get(name);
@@ -589,55 +589,55 @@ const to = Object.freeze({
   be: Object.freeze({
     get accepted() {
       // Response code 202
-      store.test.push(response => response.code === 202);
+      store.test.push((response) => response.code === 202);
     },
     get badRequest() {
       // Response code 400
-      store.test.push(response => response.code === 400);
+      store.test.push((response) => response.code === 400);
     },
     get clientError() {
       // Response code 4xx
-      store.test.push(response => ((response.code / 100) | 0) === 4);
+      store.test.push((response) => ((response.code / 100) | 0) === 4);
     },
     get error() {
       // Response code 4xx|5xx
-      store.test.push(response => [4, 5].includes((response.code / 100) | 0));
+      store.test.push((response) => [4, 5].includes((response.code / 100) | 0));
     },
     get forbidden() {
       // Response code 403
-      store.test.push(response => response.code === 403);
+      store.test.push((response) => response.code === 403);
     },
     get info() {
       // Response code 1xx
-      store.test.push(response => ((response.code / 100) | 0) === 1);
+      store.test.push((response) => ((response.code / 100) | 0) === 1);
     },
     get notFound() {
       // Response code 404
-      store.test.push(response => response.code === 404);
+      store.test.push((response) => response.code === 404);
     },
     get ok() {
       // Response code 200
-      store.test.push(response => response.code === 200);
+      store.test.push((response) => response.code === 200);
     },
     get rateLimited() {
       // Response code 429
-      store.test.push(response => response.code === 429);
+      store.test.push((response) => response.code === 429);
     },
     get redirection() {
       // Response code 3xx
-      store.test.push(response => ((response.code / 100) | 0) === 3);
+      store.test.push((response) => ((response.code / 100) | 0) === 3);
     },
     get serverError() {
       // Response code 5xx
-      store.test.push(response => ((response.code / 100) | 0) === 5);
+      store.test.push((response) => ((response.code / 100) | 0) === 5);
     },
     get success() {
       // Response code 2xx
-      store.test.push(response => ((response.code / 100) | 0) === 2);
+      store.test.push((response) => ((response.code / 100) | 0) === 2);
     },
     get unauthorized() {
       // Response code 401
-      store.test.push(response => response.code === 401);
+      store.test.push((response) => response.code === 401);
     },
   }),
 
@@ -645,45 +645,47 @@ const to = Object.freeze({
   have: Object.freeze({
     body(value) {
       if (!value) {
-        store.test.push(response => !!response.body.text);
-      } else if (typeof value === 'string') {
-        store.test.push(response => response.body.text === value);
+        store.test.push((response) => !!response.body.text);
+      } else if (typeof value === "string") {
+        store.test.push((response) => response.body.text === value);
       } else if (value instanceof RegExp) {
-        store.test.push(response => value.test(response.body.text));
+        store.test.push((response) => value.test(response.body.text));
       } else {
-        throw new Error('Unrecognized argument type');
+        throw new Error("Unrecognized argument type");
       }
     },
     header(key, value) {
       if (arguments.length > 1) {
         store.test.push(
-          response => response.headers.uncased[key.toLowerCase()] === value
+          (response) => response.headers.uncased[key.toLowerCase()] === value
         );
       } else {
         store.test.push(
-          response => key.toLowerCase() in response.headers.uncased
+          (response) => key.toLowerCase() in response.headers.uncased
         );
       }
     },
     jsonBody() {
       parseBodyJson();
       if (arguments.length === 0) {
-        store.test.push(response => !!store.response.body.json);
+        store.test.push((response) => !!store.response.body.json);
       } else if (arguments.length === 1) {
-        if (typeof arguments[0] === 'object') {
+        if (typeof arguments[0] === "object") {
           const [expected] = arguments;
-          store.test.push(response => deepEqual(response.body.json, expected));
-        } else if (typeof arguments[0] === 'string') {
+          store.test.push((response) =>
+            deepEqual(response.body.json, expected)
+          );
+        } else if (typeof arguments[0] === "string") {
           const [path] = arguments;
           const value = jsonPath(store.response.body.json, path);
-          store.test.push(response => !!value);
+          store.test.push((response) => !!value);
         } else {
-          throw new Error('Unrecognized argument type');
+          throw new Error("Unrecognized argument type");
         }
       } else {
         const [path, expected] = arguments;
         const value = jsonPath(store.response.body.json, path);
-        store.test.push(response => value === expected);
+        store.test.push((response) => value === expected);
       }
     },
     jsonSchema(...args) {
@@ -692,11 +694,11 @@ const to = Object.freeze({
     },
     status(value) {
       switch (typeof value) {
-        case 'number':
-          store.test.push(response => response.code === value);
+        case "number":
+          store.test.push((response) => response.code === value);
           break;
-        case 'string':
-          throw new Error('Response reason unavailable in k6');
+        case "string":
+          throw new Error("Response reason unavailable in k6");
         default:
           throw new Error(`Unrecognized argument type: ${typeof value}`);
       }
@@ -708,57 +710,57 @@ const to = Object.freeze({
     be: Object.freeze({
       get accepted() {
         // Response code not 202
-        store.test.push(response => response.code !== 202);
+        store.test.push((response) => response.code !== 202);
       },
       get badRequest() {
         // Response code not 400
-        store.test.push(response => response.code !== 400);
+        store.test.push((response) => response.code !== 400);
       },
       get clientError() {
         // Response code not 4xx
-        store.test.push(response => ((response.code / 100) | 0) !== 4);
+        store.test.push((response) => ((response.code / 100) | 0) !== 4);
       },
       get error() {
         // Response code not 4xx|5xx
         store.test.push(
-          response => ![4, 5].includes((response.code / 100) | 0)
+          (response) => ![4, 5].includes((response.code / 100) | 0)
         );
       },
       get forbidden() {
         // Response code not 403
-        store.test.push(response => response.code !== 403);
+        store.test.push((response) => response.code !== 403);
       },
       get info() {
         // Response code not 1xx
-        store.test.push(response => ((response.code / 100) | 0) !== 1);
+        store.test.push((response) => ((response.code / 100) | 0) !== 1);
       },
       get notFound() {
         // Response code not 404
-        store.test.push(response => response.code !== 404);
+        store.test.push((response) => response.code !== 404);
       },
       get ok() {
         // Response code not 200
-        store.test.push(response => response.code !== 200);
+        store.test.push((response) => response.code !== 200);
       },
       get rateLimited() {
         // Response code not 429
-        store.test.push(response => response.code !== 429);
+        store.test.push((response) => response.code !== 429);
       },
       get redirection() {
         // Response code not 3xx
-        store.test.push(response => ((response.code / 100) | 0) !== 3);
+        store.test.push((response) => ((response.code / 100) | 0) !== 3);
       },
       get serverError() {
         // Response code not 5xx
-        store.test.push(response => ((response.code / 100) | 0) !== 5);
+        store.test.push((response) => ((response.code / 100) | 0) !== 5);
       },
       get success() {
         // Response code not 2xx
-        store.test.push(response => ((response.code / 100) | 0) !== 2);
+        store.test.push((response) => ((response.code / 100) | 0) !== 2);
       },
       get unauthorized() {
         // Response code not 401
-        store.test.push(response => response.code !== 401);
+        store.test.push((response) => response.code !== 401);
       },
     }),
 
@@ -766,47 +768,47 @@ const to = Object.freeze({
     have: Object.freeze({
       body(value) {
         if (!value) {
-          store.test.push(response => !response.body.text);
-        } else if (typeof value === 'string') {
-          store.test.push(response => response.body.text !== value);
+          store.test.push((response) => !response.body.text);
+        } else if (typeof value === "string") {
+          store.test.push((response) => response.body.text !== value);
         } else if (value instanceof RegExp) {
-          store.test.push(response => !value.test(response.body.text));
+          store.test.push((response) => !value.test(response.body.text));
         } else {
-          throw new Error('Unrecognized argument type');
+          throw new Error("Unrecognized argument type");
         }
       },
       header(key, value) {
         if (arguments.length > 1) {
           store.test.push(
-            response => response.headers.uncased[key.toLowerCase()] !== value
+            (response) => response.headers.uncased[key.toLowerCase()] !== value
           );
         } else {
           store.test.push(
-            response => !(key.toLowerCase() in response.headers.uncased)
+            (response) => !(key.toLowerCase() in response.headers.uncased)
           );
         }
       },
       jsonBody() {
         parseBodyJson();
         if (arguments.length === 0) {
-          store.test.push(response => !response.body.json);
+          store.test.push((response) => !response.body.json);
         } else if (arguments.length === 1) {
-          if (typeof arguments[0] === 'object') {
+          if (typeof arguments[0] === "object") {
             const [expected] = arguments;
             store.test.push(
-              response => !deepEqual(response.body.json, expected)
+              (response) => !deepEqual(response.body.json, expected)
             );
-          } else if (typeof arguments[0] === 'string') {
+          } else if (typeof arguments[0] === "string") {
             const [path] = arguments;
             const value = jsonPath(store.response.body.json, path);
-            store.test.push(response => !value);
+            store.test.push((response) => !value);
           } else {
-            throw new Error('Unrecognized argument type');
+            throw new Error("Unrecognized argument type");
           }
         } else {
           const [path, expected] = arguments;
           const value = jsonPath(store.response.body.json, path);
-          store.test.push(response => value !== expected);
+          store.test.push((response) => value !== expected);
         }
       },
       jsonSchema(...args) {
@@ -815,11 +817,11 @@ const to = Object.freeze({
       },
       status(value) {
         switch (typeof value) {
-          case 'number':
-            store.test.push(response => response.code !== value);
+          case "number":
+            store.test.push((response) => response.code !== value);
             break;
-          case 'string':
-            throw new Error('Response reason unavailable in k6');
+          case "string":
+            throw new Error("Response reason unavailable in k6");
           default:
             throw new Error(`Unrecognized argument type: ${typeof value}`);
         }
@@ -856,19 +858,19 @@ const responseCode = Object.freeze({
     return store.response.code;
   },
   get detail() {
-    throw new Error('responseCode.detail: Response message unavailable in k6');
+    throw new Error("responseCode.detail: Response message unavailable in k6");
   },
   get name() {
-    throw new Error('responseCode.name: Response message unavailable in k6');
+    throw new Error("responseCode.name: Response message unavailable in k6");
   },
 });
 
 /* Conversion */
 function xml2Json(xml) {
-  throw new Error('To use xml2Json import ./libs/shim/xml2Json.js');
+  throw new Error("To use xml2Json import ./libs/shim/xml2Json.js");
 }
 function xmlToJson(xml) {
-  throw new Error('Deprecated function xmlToJson not supported');
+  throw new Error("Deprecated function xmlToJson not supported");
 }
 
 /* Internal utility */
@@ -889,9 +891,9 @@ function deepEqual(x, y) {
   const ok = Object.keys;
   const tx = typeof x;
   const ty = typeof y;
-  return x && y && tx === 'object' && tx === ty
+  return x && y && tx === "object" && tx === ty
     ? ok(x).length === ok(y).length &&
-        ok(x).every(key => deepEqual(x[key], y[key]))
+        ok(x).every((key) => deepEqual(x[key], y[key]))
     : x === y;
 }
 function jsonPath(value, path) {
@@ -905,9 +907,9 @@ function jsonPath(value, path) {
 /* Standard library */
 function require(id) {
   switch (id) {
-    case 'lodash':
-    case 'cheerio':
-    case 'crypto-js':
+    case "lodash":
+    case "cheerio":
+    case "crypto-js":
       if (postman[Extend].module[id]) {
         return postman[Extend].module[id];
       } else {
@@ -1004,7 +1006,7 @@ function makeRequestConfig(method, address, data, headers, options, tags) {
   const config = {};
   config.method = method || null;
   config.address = address ? evaluateAddress(address) : null;
-  if (typeof data === 'string') {
+  if (typeof data === "string") {
     config.data = evaluate(data);
   } else if (data) {
     evaluateDataObject(data);
@@ -1022,7 +1024,7 @@ function makeRequestConfig(method, address, data, headers, options, tags) {
   }
 
   config.options = options || {};
-  if (tags && typeof tags === 'object') {
+  if (tags && typeof tags === "object") {
     config.options.tags = tags;
   }
   return config;
@@ -1045,13 +1047,13 @@ function defaultProtocol(string) {
   const URI = postman[Extend].module.urijs;
   const address = new URI(string);
   if (!address.protocol()) {
-    address.protocol('http');
+    address.protocol("http");
   }
   return address.toString();
 }
 function evaluateDataObject(data) {
   for (const key of Object.keys(data)) {
-    if (typeof data[key] === 'string') {
+    if (typeof data[key] === "string") {
       data[key] = evaluate(data[key]);
     }
   }
@@ -1072,7 +1074,7 @@ function enterRequest(name, id, method, address, data, headers) {
   if (address) {
     store.request.url = address;
   }
-  if (data && typeof data === 'object') {
+  if (data && typeof data === "object") {
     store.request.data = Object.freeze(Object.assign({}, data));
   }
   if (headers) {
@@ -1088,7 +1090,7 @@ function enterPost(response = {}) {
     code: response.status,
     time: response.timings ? response.timings.duration : undef,
   });
-  if (typeof response.body === 'string') {
+  if (typeof response.body === "string") {
     store.response.body.text = response.body;
   }
   if (response.headers) {
@@ -1161,17 +1163,17 @@ function translateCookie(cookie) {
   return {
     domain: cookie.domain,
     get hostOnly() {
-      throw new Error('cookie.hostOnly not supported');
+      throw new Error("cookie.hostOnly not supported");
     },
     httpOnly: cookie.httpOnly,
     name: cookie.name,
     path: cookie.path,
     secure: cookie.secure,
     get session() {
-      throw new Error('cookie.session not supported');
+      throw new Error("cookie.session not supported");
     },
     get storeId() {
-      throw new Error('cookie.storeId not supported');
+      throw new Error("cookie.storeId not supported");
     },
     value: cookie.value,
   };
@@ -1207,9 +1209,9 @@ function executeTests() {
 function guid() {
   // Version 4 GUID
   // From https://stackoverflow.com/a/2117523/10086414
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }

@@ -1,9 +1,7 @@
-
 import React, {Component} from 'react';
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Label, Form, Item, Input, Icon} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
-
 
 class JoinProject extends Component {
   constructor(props) {
@@ -50,7 +48,7 @@ class JoinProjectModal extends Component {
         onRequestClose={() => this.props.setModalVisible(false)}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <View style={{flex:2}}>
+            <View style={{flex: 2}}>
               <TouchableOpacity
                 style={styles.hideButton}
                 onPress={() => this.props.setModalVisible(false)}>
@@ -70,8 +68,11 @@ class JoinProjectModal extends Component {
               </View>
             </View>
 
-            <View style={{flex:4}}>
-              <JoinProjectForm setModalVisible={this.props.setModalVisible} user={this.props.user}/>
+            <View style={{flex: 4}}>
+              <JoinProjectForm
+                setModalVisible={this.props.setModalVisible}
+                user={this.props.user}
+              />
             </View>
           </View>
         </View>
@@ -83,23 +84,25 @@ class JoinProjectModal extends Component {
 class JoinProjectForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { code:"" , token:""};
+    this.state = {code: '', token: ''};
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async handleSubmit() {
-
-    await AsyncStorage.getItem('sessionToken').then(async (value) => 
-    {
+    await AsyncStorage.getItem('sessionToken').then(async (value) => {
       let x = JSON.parse(value);
       this.setState({token: x});
-    })
-    if(this.state.code === null){
-        alert("The code entered is invalid");
-        return;
+    });
+    if (this.state.code === null) {
+      alert('The code entered is invalid');
+      return;
     }
 
-    let data = JSON.stringify({userId: this.props.user.id,token:this.state.token, accessCode: this.state.code });
+    let data = JSON.stringify({
+      userId: this.props.user.id,
+      token: this.state.token,
+      accessCode: this.state.code,
+    });
 
     const response = await fetch(
       'https://projecttree.herokuapp.com/project/joinproject',
@@ -114,11 +117,9 @@ class JoinProjectForm extends Component {
     );
 
     const body = await response.json();
-    if(body.response !== "okay"){
+    if (body.response !== 'okay') {
       alert(body.response);
-    }
-
-    else{
+    } else {
       this.props.setModalVisible(false);
     }
   }
@@ -126,17 +127,15 @@ class JoinProjectForm extends Component {
   render() {
     return (
       <React.Fragment>
-        <View style={{flex:2}}>
+        <View style={{flex: 2}}>
           <Form>
             <Item floatingLabel>
               <Label>Access Code</Label>
-              <Input
-                onChangeText={(val) => this.setState({code:val})}
-              />
+              <Input onChangeText={(val) => this.setState({code: val})} />
             </Item>
           </Form>
         </View>
-        <View style={{flex:1}}>
+        <View style={{flex: 1}}>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={this.handleSubmit}>
@@ -147,8 +146,6 @@ class JoinProjectForm extends Component {
     );
   }
 }
-
-
 
 const styles = StyleSheet.create({
   centeredView: {

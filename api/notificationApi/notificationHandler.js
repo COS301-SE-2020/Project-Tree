@@ -21,7 +21,7 @@ async function sendNotification(req, res) {
 
   if (data.mode === 0) {
     let emails = getEmails(data.recipients);
-    
+
     emailHandler.sendEmailNotification(
       data.fromName,
       data.taskName,
@@ -243,9 +243,9 @@ function formatAutoCompleteData(
   }
 
   for (let x = 0; x < resources.length; x++) {
-    recipients.push({ 
-      id: resources[x].id, 
-      email: resources[x].email 
+    recipients.push({
+      id: resources[x].id,
+      email: resources[x].email,
     });
   }
 

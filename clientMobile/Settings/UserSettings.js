@@ -17,7 +17,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-
 class UserSettings extends Component {
   constructor(props) {
     super(props);
@@ -49,7 +48,7 @@ class UserSettings extends Component {
       passwordError2: '',
       passwordError3: '',
       passwordError4: '',
-      oldEmail: ""
+      oldEmail: '',
     };
     this.textInputChange = this.textInputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
@@ -325,26 +324,20 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
 
-      const response = await fetch(
-        'http://10.0.2.2:5000/user/edit',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: data,
+      const response = await fetch('http://10.0.2.2:5000/user/edit', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      );
+        body: data,
+      });
       const body = await response.json();
-      if(body.message)
-      {
+      if (body.message) {
         alert('Change to email detected. Please log in with your new email.');
       }
-      this.props.userScreen(false);  
-      
-    } 
-    else {
+      this.props.userScreen(false);
+    } else {
       alert('Please ensure all entered information is valid');
     }
   }
@@ -640,8 +633,8 @@ class UserSettings extends Component {
                   Submit Details
                 </Text>
               </TouchableOpacity>
-              </View>
-              <View style={styleUser.buttonSign}>
+            </View>
+            <View style={styleUser.buttonSign}>
               <TouchableOpacity
                 onPress={() => this.props.userScreen(false)}
                 style={[
@@ -661,7 +654,7 @@ class UserSettings extends Component {
                   ]}>
                   Cancel
                 </Text>
-              </TouchableOpacity>  
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </Animatable.View>

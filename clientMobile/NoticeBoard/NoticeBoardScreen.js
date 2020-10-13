@@ -60,7 +60,7 @@ class NoticeBoard extends Component {
     }
 
     return (
-      <View style={{backgroundColor: "white", flex: 1}}>
+      <View style={{backgroundColor: 'white', flex: 1}}>
         <TopBar useMenu={false} />
         <NoticeBoardScreen
           project={this.props.project}
@@ -234,17 +234,14 @@ class NotificationList extends Component {
           return (
             <Image source={Image_Http_URL} style={styles.profilePicture} />
           );
-        }
-        else if(this.props.allUsers.length-1 == x)
-        {
+        } else if (this.props.allUsers.length - 1 == x) {
           let imgTemp = {
-            uri: 'https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture'
+            uri: 'https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture',
           };
-          return (
-            <Image source={imgTemp} style={styles.profilePicture} />
-          );
+          return <Image source={imgTemp} style={styles.profilePicture} />;
         }
-    }}
+      }
+    }
   }
 
   createDailyMessageList(messages) {
@@ -306,7 +303,7 @@ class NotificationList extends Component {
             paddingRight: 20,
             flex: 1,
             marginBottom: 60,
-            backgroundColor: "white"
+            backgroundColor: 'white',
           }}>
           <ScrollView>{messageComponents}</ScrollView>
         </View>

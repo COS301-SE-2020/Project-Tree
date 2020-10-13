@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
-import DateTimePicker from "react-native-modal-datetime-picker";
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import ms from 'ms';
 
 class UpdateDependency extends Component {
@@ -92,22 +92,18 @@ class UpdateDependencyForm extends Component {
       )
         .toISOString()
         .substring(0, 16);
-      if(type.type === "date") 
-        date = 
-          `${date.substring(0,10)}T${
-            type.for === "start" ? 
-              this.state.startDate.substring(11,16) 
-            : 
-              this.state.endDate.substring(11,16)
-          }`;
-      else 
-        date = 
-          `${type.for === "start" ? 
-              this.state.startDate.substring(0,10) 
-            : 
-              this.state.endDate.substring(0,10)}T${
-              date.substring(11,16)
-          }`;
+      if (type.type === 'date')
+        date = `${date.substring(0, 10)}T${
+          type.for === 'start'
+            ? this.state.startDate.substring(11, 16)
+            : this.state.endDate.substring(11, 16)
+        }`;
+      else
+        date = `${
+          type.for === 'start'
+            ? this.state.startDate.substring(0, 10)
+            : this.state.endDate.substring(0, 10)
+        }T${date.substring(11, 16)}`;
     }
     if (type.for === 'start') {
       if (this.state.endDate < date)
@@ -142,10 +138,16 @@ class UpdateDependencyForm extends Component {
   updateIndex(selectedIndex) {
     if (selectedIndex == 0) {
       this.setState({selectedIndex: 0, relationshipType: 'ss'});
-      this.handleDateTimeSelect(this.state.sStartDate, {type: 'both', for: 'start',});
+      this.handleDateTimeSelect(this.state.sStartDate, {
+        type: 'both',
+        for: 'start',
+      });
     } else {
       this.setState({selectedIndex: 1, relationshipType: 'fs'});
-      this.handleDateTimeSelect(this.state.sEndDate, {type: 'both', for: 'start',});
+      this.handleDateTimeSelect(this.state.sEndDate, {
+        type: 'both',
+        for: 'start',
+      });
     }
   }
 
@@ -187,8 +189,10 @@ class UpdateDependencyForm extends Component {
     );
 
     const body = await response.json();
-    if ( body.message === "After Project End Date"){
-      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
+    if (body.message === 'After Project End Date') {
+      alert(
+        'The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date',
+      );
     } else {
       this.props.toggleVisibility(true, false);
       this.props.displayTaskDependency(null, null);
@@ -292,25 +296,22 @@ class UpdateDependencyForm extends Component {
           </Form>
         </View>
         <DateTimePicker
-            testID="dateTimePicker"
-            date={
-              new Date(
-                new Date(this.state.dateTimeType.value).getTime() +
-                  new Date().getTimezoneOffset() * 60 * 1000,
-              )
-            }
-            mode={this.state.dateTimeType.type}
-            is24Hour={true}
-            display="default"
-            isVisible={this.state.dateTimePicker}
-            onCancel={()=>(this.setState({dateTimePicker: false}))}
-            onConfirm={(selectedDate) =>
-              this.handleDateTimeSelect(
-                selectedDate,
-                this.state.dateTimeType,
-              )
-            }
-          />
+          testID="dateTimePicker"
+          date={
+            new Date(
+              new Date(this.state.dateTimeType.value).getTime() +
+                new Date().getTimezoneOffset() * 60 * 1000,
+            )
+          }
+          mode={this.state.dateTimeType.type}
+          is24Hour={true}
+          display="default"
+          isVisible={this.state.dateTimePicker}
+          onCancel={() => this.setState({dateTimePicker: false})}
+          onConfirm={(selectedDate) =>
+            this.handleDateTimeSelect(selectedDate, this.state.dateTimeType)
+          }
+        />
         <View style={{flex: 1}}>
           <TouchableOpacity
             disabled={this.state.ableToSubmit}

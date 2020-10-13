@@ -77,16 +77,23 @@ export default class DependencyPieChartsComponent extends React.Component {
         <Container fluid>
           <Row>
             <Col>
-              <h4>Dependency Info {" "}
-              <OverlayTrigger
-                placement='right'
-                overlay={
-                <Tooltip className="helpTooltip">
-                  Depicts the number of dependencies per task in order to identify bottlenecks
-                </Tooltip>
-                } >
-                <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
-                </OverlayTrigger></h4>
+              <h4>
+                Dependency Info{" "}
+                <OverlayTrigger
+                  placement="right"
+                  overlay={
+                    <Tooltip className="helpTooltip">
+                      Depicts the number of dependencies per task in order to
+                      identify bottlenecks
+                    </Tooltip>
+                  }
+                >
+                  <i
+                    className="fa fa-info-circle"
+                    style={{ color: "black", fontSize: "20px" }}
+                  ></i>
+                </OverlayTrigger>
+              </h4>
             </Col>
           </Row>
           <Row className="align-items-center my-2">

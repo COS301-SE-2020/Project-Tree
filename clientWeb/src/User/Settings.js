@@ -7,7 +7,7 @@ import {
   Container,
   Form,
   Spinner,
-  Alert
+  Alert,
 } from "react-bootstrap";
 import $ from "jquery";
 import "./style.scss";
@@ -16,7 +16,7 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 const eye = <FontAwesomeIcon icon={faEye} />;
 
 let global_pfp = "";
-let oldE = ""
+let oldE = "";
 function stringifyFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
@@ -75,7 +75,7 @@ class Settings extends React.Component {
       passwordError4: "",
       hidden: true,
       deleteUserCheck: false,
-      oldEmail: ""
+      oldEmail: "",
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
@@ -90,7 +90,6 @@ class Settings extends React.Component {
     this.toggleShow = this.toggleShow.bind(this);
     this.password_validate = this.password_validate.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
-
   }
 
   password_validate(p) {
@@ -113,7 +112,6 @@ class Settings extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-
     if (this.props.user !== prevProps.user) {
       this.setState({ user: this.props.user });
     }
@@ -149,7 +147,7 @@ class Settings extends React.Component {
   }
 
   hideModal() {
-    this.setState({ show: false, deleteUserCheck:false });
+    this.setState({ show: false, deleteUserCheck: false });
   }
 
   handlePasswordChange(val) {
@@ -195,8 +193,8 @@ class Settings extends React.Component {
   }
 
   deleteUser() {
-    if(this.state.deleteUserCheck === false){
-      this.setState({deleteUserCheck:true})
+    if (this.state.deleteUserCheck === false) {
+      this.setState({ deleteUserCheck: true });
       return;
     }
 
@@ -204,9 +202,8 @@ class Settings extends React.Component {
       "/user/delete",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
-        if(response.status)
-        {
-          this.handleLogout()
+        if (response.status) {
+          this.handleLogout();
         }
       }
     ).fail((response) => {
@@ -214,10 +211,8 @@ class Settings extends React.Component {
     });
   }
 
- 
-
   openEdit() {
-    oldE = this.props.user.email
+    oldE = this.props.user.email;
     this.setState({
       toggleEdit: true,
     });
@@ -234,15 +229,19 @@ class Settings extends React.Component {
       "/user/get",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
-        this.setState({ toggleEdit: false, user: response.user, pfp: "", deleteUserCheck:false });
+        this.setState({
+          toggleEdit: false,
+          user: response.user,
+          pfp: "",
+          deleteUserCheck: false,
+        });
       }
     ).fail((response) => {
       throw Error(response.message);
     });
   }
 
-  async handlePass(oldPass, newPass) 
-  {
+  async handlePass(oldPass, newPass) {
     this.setState({ isloading: true });
     if (oldPass.trim().length < 1) {
       alert("Please enter your password you wish to change");
@@ -293,28 +292,25 @@ class Settings extends React.Component {
     data.append("token", localStorage.getItem("sessionToken"));
     data = await stringifyFormData(data);
     $.post("/user/edit", data, (response) => {
-       if(response.message == "true")
-       {
-          this.handleLogout()
-          alert("Change to email detected. Please log in with your new email.")
-       }
-       else
-       {
-          this.setState({ user: response.user, prevUser: response.user });
-          this.closeEdit();
-          this.setState({ isloading: false, pfp: "", email:"" });
-       }
+      if (response.message == "true") {
+        this.handleLogout();
+        alert("Change to email detected. Please log in with your new email.");
+      } else {
+        this.setState({ user: response.user, prevUser: response.user });
+        this.closeEdit();
+        this.setState({ isloading: false, pfp: "", email: "" });
+      }
     }).fail(() => {
       alert("Unable to update user preferences");
     });
   }
 
   render() {
-    let deleteColor = 'dark';
-    let deleteString = 'Delete Account ';
-    if(this.state.deleteUserCheck){
-      deleteColor = 'danger';
-      deleteString = 'Are you sure you want to delete your account? '
+    let deleteColor = "dark";
+    let deleteString = "Delete Account ";
+    if (this.state.deleteUserCheck) {
+      deleteColor = "danger";
+      deleteString = "Are you sure you want to delete your account? ";
     }
     return (
       <React.Fragment>

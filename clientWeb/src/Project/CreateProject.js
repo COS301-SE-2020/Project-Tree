@@ -60,30 +60,29 @@ class CreateProject extends React.Component {
   }
 
   changeDate(e, type) {
-    if(type.substring(type.length-4, type.length) === "Date") {
+    if (type.substring(type.length - 4, type.length) === "Date") {
       if (isNaN(Date.parse(e.target.value))) return;
-    } else if (
-        !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
-      ) return;
+    } else if (!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value))
+      return;
     let project = this.state.project;
-    let value = type.substring(0,1) === "s" ? 
-      project.startDate : project.endDate;
-    if(type.substring(type.length-4, type.length) === "Date") 
-    value = `${e.target.value}T${
-        type.substring(0,1) === "s" ? 
-          project.startDate.substring(11,16) 
-        : 
-          project.endDate.substring(11,16)}`;
-    else value = `${type.substring(0,1) === "s" ? 
-        project.startDate.substring(0,10) 
-      : 
-        project.endDate.substring(0,10)}T${
-        e.target.value
+    let value =
+      type.substring(0, 1) === "s" ? project.startDate : project.endDate;
+    if (type.substring(type.length - 4, type.length) === "Date")
+      value = `${e.target.value}T${
+        type.substring(0, 1) === "s"
+          ? project.startDate.substring(11, 16)
+          : project.endDate.substring(11, 16)
       }`;
-    let startDate = type.substring(0,1) === "s" ? 
-      value : this.state.project.startDate;
-    let endDate = type.substring(0,1) === "s" ? 
-      this.state.project.endDate : value;
+    else
+      value = `${
+        type.substring(0, 1) === "s"
+          ? project.startDate.substring(0, 10)
+          : project.endDate.substring(0, 10)
+      }T${e.target.value}`;
+    let startDate =
+      type.substring(0, 1) === "s" ? value : this.state.project.startDate;
+    let endDate =
+      type.substring(0, 1) === "s" ? this.state.project.endDate : value;
     if (endDate < startDate) {
       alert(
         "Please choose an end date/time that finishes after the start date/time."
@@ -91,16 +90,12 @@ class CreateProject extends React.Component {
       project.startDate = value;
       project.endDate = value;
     } else {
-      if (type.substring(0,1) === "s") 
-        project.startDate = value;
-      else
-        project.endDate = value;
+      if (type.substring(0, 1) === "s") project.startDate = value;
+      else project.endDate = value;
     }
     this.setState({ project });
-    if (type.substring(0,1) === "s") 
-      return this.state.project.startDate;
-    else
-      return this.state.project.endDate;
+    if (type.substring(0, 1) === "s") return this.state.project.startDate;
+    else return this.state.project.endDate;
   }
 
   render() {
@@ -164,7 +159,9 @@ class CreateProject extends React.Component {
                   name="cp_StartDate"
                   type="date"
                   value={this.state.project.startDate.substring(0, 10)}
-                  onChange={(e) => {this.value = this.changeDate(e, "startDate")}}
+                  onChange={(e) => {
+                    this.value = this.changeDate(e, "startDate");
+                  }}
                 />
               </Form.Group>
               <Form.Group>
@@ -174,7 +171,9 @@ class CreateProject extends React.Component {
                   name="cp_StartTime"
                   type="time"
                   value={this.state.project.startDate.substring(11, 16)}
-                  onChange={(e) => {this.value = this.changeDate(e, "startTime")}}
+                  onChange={(e) => {
+                    this.value = this.changeDate(e, "startTime");
+                  }}
                 />
               </Form.Group>
               <Form.Group>
@@ -184,7 +183,9 @@ class CreateProject extends React.Component {
                   name="cp_EndDate"
                   type="date"
                   value={this.state.project.endDate.substring(0, 10)}
-                  onChange={(e) => {this.value = this.changeDate(e, "endDate")}}
+                  onChange={(e) => {
+                    this.value = this.changeDate(e, "endDate");
+                  }}
                 />
               </Form.Group>
               <Form.Group>
@@ -194,7 +195,9 @@ class CreateProject extends React.Component {
                   name="cp_EndTime"
                   type="time"
                   value={this.state.project.endDate.substring(11, 16)}
-                  onChange={(e) => {this.value = this.changeDate(e, "endTime")}}
+                  onChange={(e) => {
+                    this.value = this.changeDate(e, "endTime");
+                  }}
                 />
               </Form.Group>
               <Table bordered striped hover>

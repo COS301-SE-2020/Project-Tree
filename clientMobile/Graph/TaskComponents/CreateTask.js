@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
-import DateTimePicker from "react-native-modal-datetime-picker";
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import ms from 'ms';
 
 class CreateTask extends Component {
@@ -123,26 +123,23 @@ class CreateTaskForm extends Component {
     )
       .toISOString()
       .substring(0, 16);
-    if(type.type === "date") 
-      date = 
-        `${date.substring(0,10)}T${
-          type.for === "start" ? 
-            this.state.startDate.substring(11,16) 
-          : 
-          this.state.endDate.substring(11,16)
-        }`;
-    else 
-        date = 
-        `${type.for === "start" ? 
-            this.state.startDate.substring(0,10) 
-          : 
-            this.state.endDate.substring(0,10)}T${
-            date.substring(11,16)
-        }`;
+    if (type.type === 'date')
+      date = `${date.substring(0, 10)}T${
+        type.for === 'start'
+          ? this.state.startDate.substring(11, 16)
+          : this.state.endDate.substring(11, 16)
+      }`;
+    else
+      date = `${
+        type.for === 'start'
+          ? this.state.startDate.substring(0, 10)
+          : this.state.endDate.substring(0, 10)
+      }T${date.substring(11, 16)}`;
     if (type.for === 'start') {
       if (date < this.props.project.startDate) {
         this.setState({
-          error: 'You cannot make the start date/time before the project date/time.',
+          error:
+            'You cannot make the start date/time before the project date/time.',
           startDate: this.props.project.startDate,
           dateTimePicker: false,
         });
@@ -162,7 +159,8 @@ class CreateTaskForm extends Component {
     } else {
       if (date > this.props.project.endDate) {
         this.setState({
-          error: 'You cannot make the end date/time after the project end date/time.',
+          error:
+            'You cannot make the end date/time after the project end date/time.',
           endDate: this.props.project.startDate,
           dateTimePicker: false,
         });
@@ -185,8 +183,8 @@ class CreateTaskForm extends Component {
   formatValidateInput() {
     if (this.checkFormData('all') === false) return null;
 
-    let windowWidth = Math.floor(Dimensions.get('window').width-25);
-    let windowHeight = Math.floor(Dimensions.get('window').height-100);
+    let windowWidth = Math.floor(Dimensions.get('window').width - 25);
+    let windowHeight = Math.floor(Dimensions.get('window').height - 100);
 
     let x = Math.floor(Math.random() * windowWidth);
     let y = Math.floor(Math.random() * windowHeight);
@@ -270,7 +268,7 @@ class CreateTaskForm extends Component {
 
     this.props.setModalVisible(false);
     this.props.setProjectInfo(body.nodes, body.rels, assignedPeople);
-    
+
     this.setState({ableToSubmit: false});
   }
 
@@ -702,12 +700,9 @@ class CreateTaskForm extends Component {
             is24Hour={true}
             display="default"
             isVisible={this.state.dateTimePicker}
-            onCancel={()=>(this.setState({dateTimePicker: false}))}
+            onCancel={() => this.setState({dateTimePicker: false})}
             onConfirm={(selectedDate) =>
-              this.handleDateTimeSelect(
-                selectedDate,
-                this.state.dateTimeType,
-              )
+              this.handleDateTimeSelect(selectedDate, this.state.dateTimeType)
             }
           />
         </ScrollView>
@@ -855,10 +850,11 @@ const styles = StyleSheet.create({
     elevation: 1,
     margin: 3,
   },
-  dateTimePicker:{
-    width: 320, 
-    backgroundColor: "white",
-    zIndex: 90,  }
+  dateTimePicker: {
+    width: 320,
+    backgroundColor: 'white',
+    zIndex: 90,
+  },
 });
 
 export default CreateTask;

@@ -58,16 +58,23 @@ export default class CriticalPathBarCharts extends React.Component {
       <Container fluid>
         <Row>
           <Col>
-            <h4>Critical Path Info  {" "}
+            <h4>
+              Critical Path Info{" "}
               <OverlayTrigger
-                placement='right'
+                placement="right"
                 overlay={
-                <Tooltip className="helpTooltip">
-                  Easily distinguish which critical path tasks will take the longest
-                </Tooltip>
-                } >
-                <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
-                </OverlayTrigger></h4>
+                  <Tooltip className="helpTooltip">
+                    Easily distinguish which critical path tasks will take the
+                    longest
+                  </Tooltip>
+                }
+              >
+                <i
+                  className="fa fa-info-circle"
+                  style={{ color: "black", fontSize: "20px" }}
+                ></i>
+              </OverlayTrigger>
+            </h4>
             {criticalPath.length === 1 ? (
               <Col className="text-center">
                 No critical path to display

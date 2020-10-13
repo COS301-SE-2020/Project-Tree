@@ -6,15 +6,15 @@ import "./libs/shim/expect.js";
 export let options = {
   maxRedirects: 4,
   duration: "30s",
-  vus: 400
+  vus: 400,
 };
 
 const Request = Symbol.for("request");
 postman[Symbol.for("initial")]({
-  options
+  options,
 });
 
-export default function() {
+export default function () {
   postman[Request]({
     name: "Register 1",
     id: "2e411bb9-c358-48a8-85f8-804eb681d5cc",
@@ -35,7 +35,7 @@ export default function() {
       pm.test("Response time is less than 2s", () => {
         pm.expect(pm.response.responseTime).to.be.below(2000);
       });
-    }
+    },
   });
 
   postman[Request]({
@@ -58,7 +58,7 @@ export default function() {
       pm.test("Response time is less than 2s", () => {
         pm.expect(pm.response.responseTime).to.be.below(2000);
       });
-    }
+    },
   });
 
   postman[Request]({
@@ -81,7 +81,7 @@ export default function() {
       pm.test("Response time is less than 2s", () => {
         pm.expect(pm.response.responseTime).to.be.below(2000);
       });
-    }
+    },
   });
 
   // postman[Request]({

@@ -87,9 +87,14 @@ function deleteTask(req, res) {
 
       let queries = [];
       await successors.forEach(async (succ) => {
-        await updateProject.updateTask(succ, req.body.nodes, req.body.rels, queries);
+        await updateProject.updateTask(
+          succ,
+          req.body.nodes,
+          req.body.rels,
+          queries
+        );
       });
-      updateProject.runQueries(queries)
+      updateProject.runQueries(queries);
 
       res.send({
         nodes: req.body.nodes,
@@ -117,7 +122,7 @@ async function updateTask(req, res) {
     progress: req.body.changedInfo.progress.low,
     startDate: req.body.changedInfo.startDate,
     endDate: req.body.changedInfo.endDate,
-    duration: endDate.getTime() - startDate.getTime()
+    duration: endDate.getTime() - startDate.getTime(),
   };
   for (var x = 0; x < req.body.nodes.length; x++) {
     if (req.body.nodes[x].id == changedTask.id) {
@@ -132,11 +137,11 @@ async function updateTask(req, res) {
     req.body.rels,
     queries
   );
-  if (await updateProject.CheckEndDate(queries, req.body.project) == false){
+  if ((await updateProject.CheckEndDate(queries, req.body.project)) == false) {
     res.status(400);
-    res.send({message: "After Project End Date"});
+    res.send({ message: "After Project End Date" });
     return;
-  }else{
+  } else {
     let timeCompleteString;
     if (
       req.body.changedInfo.timeComplete === null ||
@@ -187,7 +192,7 @@ async function updateTask(req, res) {
             req.body.nodes[x] = changedTask;
           }
         }
-        updateProject.runQueries(queries)
+        updateProject.runQueries(queries);
 
         res.send({
           nodes: req.body.nodes,
@@ -250,8 +255,8 @@ async function deleteClone(req, res) {
     });
 }
 
-async function savePositions(req,res){
-  for(let x = 0; x < req.body.changedNodes.length; x++){
+async function savePositions(req, res) {
+  for (let x = 0; x < req.body.changedNodes.length; x++) {
     await db
       .getSession()
       .run(
@@ -280,5 +285,5 @@ module.exports = {
   updateTask,
   createClone,
   deleteClone,
-  savePositions
+  savePositions,
 };

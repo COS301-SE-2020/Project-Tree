@@ -1,5 +1,14 @@
 import React from "react";
-import { ProgressBar, Button, Container, Row, Col, Tooltip, OverlayTrigger, Card } from "react-bootstrap";
+import {
+  ProgressBar,
+  Button,
+  Container,
+  Row,
+  Col,
+  Tooltip,
+  OverlayTrigger,
+  Card,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
@@ -51,14 +60,21 @@ class GraphPage extends React.Component {
     });
 
     // Gets all the users in the database, might update to be all users assigned to the project
-    $.post("/people/getAllProjectMembers", { id: this.state.project.id }, (response) => {
-      this.setState({ allUsers: response.users });
-    }).fail((err) => {
+    $.post(
+      "/people/getAllProjectMembers",
+      { id: this.state.project.id },
+      (response) => {
+        this.setState({ allUsers: response.users });
+      }
+    ).fail((err) => {
       throw Error(err);
     });
 
     // Gets all users already assigned to a task in a project
-    $.post("/people/assignedProjectUsers", { id: this.state.project.id }, (response) => {
+    $.post(
+      "/people/assignedProjectUsers",
+      { id: this.state.project.id },
+      (response) => {
         this.setState({ assignedProjUsers: response.projectUsers });
       }
     ).fail((err) => {
@@ -86,14 +102,21 @@ class GraphPage extends React.Component {
       this.toggleSidebar(null, null, null, null, null);
 
       // Gets all the users in the database, might update to be all users assigned to the project
-      $.post("/people/getAllProjectMembers", { id: this.props.project.id }, (response) => {
-        this.setState({ allUsers: response.users });
-      }).fail((err) => {
+      $.post(
+        "/people/getAllProjectMembers",
+        { id: this.props.project.id },
+        (response) => {
+          this.setState({ allUsers: response.users });
+        }
+      ).fail((err) => {
         throw Error(err);
       });
 
       // Gets all users already assigned to a task in a project
-      $.post("/people/assignedProjectUsers", { id: this.props.project.id }, (response) => {
+      $.post(
+        "/people/assignedProjectUsers",
+        { id: this.props.project.id },
+        (response) => {
           this.setState({ assignedProjUsers: response.projectUsers });
         }
       ).fail((err) => {
@@ -111,7 +134,7 @@ class GraphPage extends React.Component {
   }
 
   setTaskInfo(nodes, rels, displayNode, displayRel, assignedPeople) {
-    if(displayNode===undefined && displayRel===undefined){
+    if (displayNode === undefined && displayRel === undefined) {
       this.toggleSidebar(null, null);
     }
 
@@ -234,16 +257,23 @@ class GraphPage extends React.Component {
                     </Link>
                   </Col>
                   <Col xs={8} md={8} lg={8} xl={8} className="text-center m-1">
-                    <h2>{this.props.project.name} {" "}
-                    <OverlayTrigger
-                      placement='auto'
-                      overlay={
-                      <Tooltip className="helpTooltip">
-                        Click on a task or dependency to view their information and perform actions.
-                      </Tooltip>
-                      } >
-                      <i className="fa fa-question-circle"  style={{ color: "black", fontSize: "20px" }}></i>
-                    </OverlayTrigger></h2>
+                    <h2>
+                      {this.props.project.name}{" "}
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={
+                          <Tooltip className="helpTooltip">
+                            Click on a task or dependency to view their
+                            information and perform actions.
+                          </Tooltip>
+                        }
+                      >
+                        <i
+                          className="fa fa-question-circle"
+                          style={{ color: "black", fontSize: "20px" }}
+                        ></i>
+                      </OverlayTrigger>
+                    </h2>
                   </Col>
                   <Col></Col>
                 </Row>
@@ -393,18 +423,18 @@ class TaskSidebar extends React.Component {
     return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
-  updateType(pac, resp, reso){
-    if(this.props.userPermission["update"]) return "update";
+  updateType(pac, resp, reso) {
+    if (this.props.userPermission["update"]) return "update";
     let check = false;
-    pac.forEach(person => {
+    pac.forEach((person) => {
       if (person.id === this.props.user.id) check = true;
     });
     if (check) return "progress";
-    resp.forEach(person => {
+    resp.forEach((person) => {
       if (person.id === this.props.user.id) check = true;
     });
     if (check) return "progress";
-    reso.forEach(person => {
+    reso.forEach((person) => {
       if (person.id === this.props.user.id) check = true;
     });
     if (check) return "progress";
@@ -416,7 +446,11 @@ class TaskSidebar extends React.Component {
     let taskPacMans = taskUsers[0];
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
-    let updateType = this.updateType(taskPacMans, taskResPersons, taskResources);
+    let updateType = this.updateType(
+      taskPacMans,
+      taskResPersons,
+      taskResources
+    );
     let progressColor = "info";
 
     return (

@@ -2,18 +2,14 @@ const db = require("../DB");
 const { JWT } = require("jose");
 const bcrypt = require("bcrypt");
 
-var imgbbUploader = require('imgbb-uploader');
-
-
 async function editUser(req, res) {
   let pfp = req.body.profilepicture;
   if (pfp == "") {
     pfp = req.body.oldprofile;
   }
-  let emailchange = ""
-  if(req.body.email != req.body.oldEmail)
-  {
-    emailchange= "true"
+  let emailchange = "";
+  if (req.body.email != req.body.oldEmail) {
+    emailchange = "true";
   }
   let userId = await verify(req.body.token);
   if (userId != null) {
@@ -39,7 +35,8 @@ async function editUser(req, res) {
           sname: result.records[0]._fields[0].properties.sname,
           email: result.records[0]._fields[0].properties.email,
           birthday: result.records[0]._fields[0].properties.bday,
-          profilepicture: result.records[0]._fields[0].properties.profilepicture
+          profilepicture:
+            result.records[0]._fields[0].properties.profilepicture,
         };
         res.status(200);
         res.send({ user: user, message: emailchange });
@@ -70,7 +67,9 @@ async function register(req, res) {
     .then((result) => {
       if (result.records.length != 0) {
         res.status(200);
-        res.send({ message: "An account with that email has already been registered." });
+        res.send({
+          message: "An account with that email has already been registered.",
+        });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           let token = JWT.sign(
@@ -404,24 +403,24 @@ async function verify(token) {
 async function deleteUser(req, res) {
   let userId = await verify(req.body.token);
   if (userId != null) {
-      db.getSession()
-        .run(
-          `MATCH (n) where id(n) = ${userId}
+    db.getSession()
+      .run(
+        `MATCH (n) where id(n) = ${userId}
           DETACH DELETE n`
-        )
-        .then((result) => {
-          res.status(200);
-          res.send({ message: "User deleted", status: true});
-        })
-        .catch((err) => {
-          console.log(err);
-          res.status(400);
-          res.send({ message: err, status: false });
-        });
-    } else {
-      res.status(400);
-      res.send({ message: "Can't delete user", status: false });
-    }
+      )
+      .then((result) => {
+        res.status(200);
+        res.send({ message: "User deleted", status: true });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err, status: false });
+      });
+  } else {
+    res.status(400);
+    res.send({ message: "Can't delete user", status: false });
+  }
 }
 
 async function verify(token) {
@@ -454,9 +453,8 @@ async function verify(token) {
   return value;
 }
 
-async function changePictureMobile(req, res) 
-{
-  let pfp = req.body.profilepicture
+async function changePictureMobile(req, res) {
+  let pfp = req.body.profilepicture;
   let userId = await verify(req.body.token);
   if (userId != null) {
     db.getSession()
@@ -497,5 +495,5 @@ module.exports = {
   checkPermissionInternal,
   editPassword,
   deleteUser,
-  changePictureMobile
+  changePictureMobile,
 };

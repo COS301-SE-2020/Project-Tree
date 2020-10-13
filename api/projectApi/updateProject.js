@@ -34,8 +34,8 @@ function updateTask(task, nodes, rels, queries) {
   task.startDate = startDate.toISOString().substring(0, 16);
   task.endDate = endDate.toISOString().substring(0, 16);
 
-  queries.push({ 
-    endDate : task.endDate,
+  queries.push({
+    endDate: task.endDate,
     query: `
         MATCH (a:Task) 
         WHERE ID(a) = ${task.id}
@@ -43,7 +43,7 @@ function updateTask(task, nodes, rels, queries) {
           startDate: datetime("${task.startDate}"),
           endDate: datetime("${task.endDate}")
         }
-      `
+      `,
   });
 
   getSuccDependencies(task, rels).forEach((dep) =>
@@ -69,9 +69,9 @@ function updateDependency(dependency, nodes, rels, queries) {
     .toISOString()
     .substring(0, 16);
 
-    queries.push({ 
-      endDate : dependency.endDate,
-      query: `
+  queries.push({
+    endDate: dependency.endDate,
+    query: `
         MATCH (a)-[r:DEPENDENCY]->(b) 
         WHERE ID(r) = ${dependency.id}
         SET r += {
@@ -80,8 +80,8 @@ function updateDependency(dependency, nodes, rels, queries) {
           startDate: datetime("${dependency.startDate}"),
           endDate: datetime("${dependency.endDate}")
         }
-      `
-    });
+      `,
+  });
   updateTask(findNode(nodes, dependency), nodes, rels, queries);
 }
 
@@ -124,14 +124,16 @@ function getSuccessors(id, nodes, rels) {
 }
 
 async function runQueries(queries) {
-  queries.forEach(query => {
-    db.getSession().run(query.query).catch((err)=>console.log(err));
+  queries.forEach((query) => {
+    db.getSession()
+      .run(query.query)
+      .catch((err) => console.log(err));
   });
 }
 
 function CheckEndDate(queries, project) {
   let check = true;
-  queries.forEach(query => {
+  queries.forEach((query) => {
     if (query.endDate > project.endDate) check = false;
   });
   return check;

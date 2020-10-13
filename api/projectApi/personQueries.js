@@ -137,19 +137,21 @@ function updateAssignedPeople(req, res) {
     if (resourcesAddStatus === 400) res.sendStatus(400);
   }
 
-  if(req.body.auto_notification.timeComplete !== undefined && req.body.auto_notification.timeComplete !== null){
+  if (
+    req.body.auto_notification.timeComplete !== undefined &&
+    req.body.auto_notification.timeComplete !== null
+  ) {
     let data2 = sendProjectNotification.formatAutoCompleteData(
-      [...packageManagers], 
-      [...responsiblePersons], 
-      [...resources], 
+      [...packageManagers],
+      [...responsiblePersons],
+      [...resources],
       req.body.auto_notification
     );
-    
+
     if (data2.recipients.length !== 0)
       sendProjectNotification.sendNotification({ body: data2 });
   }
 
-  
   for (var x = 0; x < notificationOrigPacMan.length; x++) {
     packageManagers = packageManagers.filter(
       (el) => el.id !== notificationOrigPacMan[x].id
@@ -578,8 +580,8 @@ async function getAssignedProjectUsers(req, res) {
 }
 
 async function addProjectManager(req, res) {
-  let user = parseInt(req.body.userId)
-  let project = parseInt(req.body.projId)
+  let user = parseInt(req.body.userId);
+  let project = parseInt(req.body.projId);
   let alreadyManager = false;
 
   let session = db.getSession();
@@ -592,10 +594,12 @@ async function addProjectManager(req, res) {
       `
     )
     .then((result) => {
-      if (result.records[0] != null){
+      if (result.records[0] != null) {
         alreadyManager = true;
         res.status(200);
-        res.send({response: "You are already a project manager for this project"});
+        res.send({
+          response: "You are already a project manager for this project",
+        });
       }
     })
     .catch((err) => {
@@ -604,7 +608,7 @@ async function addProjectManager(req, res) {
       res.send(err);
     });
 
-  if(alreadyManager===true){
+  if (alreadyManager === true) {
     return;
   }
 
@@ -629,7 +633,7 @@ async function addProjectManager(req, res) {
       `
     )
     .then(function (result) {
-      res.send({response:"okay"})
+      res.send({ response: "okay" });
       res.status(200);
     })
     .catch((err) => {
@@ -637,7 +641,6 @@ async function addProjectManager(req, res) {
       res.status(400);
       res.send(err);
     });
-
 }
 
 async function getPendingMembers(req, res) {
@@ -669,30 +672,27 @@ async function getPendingMembers(req, res) {
 }
 
 async function authoriseMember(req, res) {
-
   let user = JSON.parse(req.body.user);
   let project = JSON.parse(req.body.project);
-  
+
   let notification = null;
-  if(req.body.check == "true" || req.body.check == true){
-    notification = "Your request to join has been accepted"
+  if (req.body.check == "true" || req.body.check == true) {
+    notification = "Your request to join has been accepted";
+  } else {
+    notification = "Your request to join has been declined";
   }
 
-  else{
-    notification = "Your request to join has been declined"
-  }
-  
   let notificationData = {
-    type: 'auto',
-    fromName: 'Project Tree',
-    recipients: [{email:user.email}],
+    type: "auto",
+    fromName: "Project Tree",
+    recipients: [{ email: user.email }],
     projName: project.name,
     projID: project.id,
     mode: 0,
-    message: notification
-  }
+    message: notification,
+  };
 
-  sendProjectNotification.sendNotification({body:notificationData});
+  sendProjectNotification.sendNotification({ body: notificationData });
 
   let session = db.getSession();
   await session
@@ -709,8 +709,8 @@ async function authoriseMember(req, res) {
       res.send(err);
     });
 
-    if(req.body.check == "true" || req.body.check == true){
-      db.getSession()
+  if (req.body.check == "true" || req.body.check == true) {
+    db.getSession()
       .run(
         `
           MATCH (c:User), (d:Project)
@@ -728,15 +728,11 @@ async function authoriseMember(req, res) {
         res.status(400);
         res.send(err);
       });
-    }
-
-    else{
-      res.status(200);
-      res.send({ okay: "okay" });
-    }
+  } else {
+    res.status(200);
+    res.send({ okay: "okay" });
+  }
 }
-
-
 
 module.exports = {
   assignPeople,
@@ -747,5 +743,5 @@ module.exports = {
   addProjectManager,
   getPendingMembers,
   authoriseMember,
-  getProjectManagers
+  getProjectManagers,
 };

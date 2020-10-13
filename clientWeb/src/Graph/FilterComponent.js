@@ -6,8 +6,8 @@ import {
   Col,
   ToggleButtonGroup,
   ToggleButton,
-  OverlayTrigger, 
-  Tooltip
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import Autosuggest from "react-autosuggest";
 import "./FilterComponent.css";
@@ -286,31 +286,25 @@ export default class FilterComponent extends React.Component {
     }
   }
 
-  getTaskPersonOption(){
-    if(this.state.filterTaskOption !== null){
-      return 'task'
-    }
-
-    else return 'people'
+  getTaskPersonOption() {
+    if (this.state.filterTaskOption !== null) {
+      return "task";
+    } else return "people";
   }
 
-  getSubOption(){
-    let data = '';
-    if(this.state.filterTaskOption !== null){
+  getSubOption() {
+    let data = "";
+    if (this.state.filterTaskOption !== null) {
       data = this.state.filterTaskOption;
-      data = data.replace('task','');
-    }
-
-    else{
+      data = data.replace("task", "");
+    } else {
       data = this.state.filterPeopleOption;
-      data = data.replace('people', '');
+      data = data.replace("people", "");
 
-      if(data === 'PackMan'){
-        data = 'package manager'
-      }
-
-      else if(data === 'ResPer'){
-        data = 'responsible person'
+      if (data === "PackMan") {
+        data = "package manager";
+      } else if (data === "ResPer") {
+        data = "responsible person";
       }
     }
 
@@ -319,19 +313,13 @@ export default class FilterComponent extends React.Component {
     return data;
   }
 
-  getSearchValue(){
-    if(this.state.searchValue === null) return null;
+  getSearchValue() {
+    if (this.state.searchValue === null) return null;
 
-    if(this.state.filterTaskOption !== null){
-      return(
-            this.state.searchValue.name
-      )    
-    }
-
-    else{
-      return(
-            this.state.searchValue.name + " " + this.state.searchValue.surname
-      ) 
+    if (this.state.filterTaskOption !== null) {
+      return this.state.searchValue.name;
+    } else {
+      return this.state.searchValue.name + " " + this.state.searchValue.surname;
     }
   }
 
@@ -355,65 +343,65 @@ export default class FilterComponent extends React.Component {
           </Row>
           <Row>
             <Col></Col>
-              <Col
-                className="text-center border rounded border-warning m-1 align-items-center p-0"
-                xs={5}
-                style={{
-                  backgroundColor: "white",
-                  color: "black",
-                  height: "30px",
-                }}
-              >
-                {this.state.filterMode}
-              </Col>
-              <Col></Col>
+            <Col
+              className="text-center border rounded border-warning m-1 align-items-center p-0"
+              xs={5}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              {this.state.filterMode}
+            </Col>
+            <Col></Col>
           </Row>
           <Row>
             <Col></Col>
-              <Col
-                className="text-center border rounded border-warning m-1 align-items-center p-0"
-                xs={5}
-                style={{
-                  backgroundColor: "white",
-                  color: "black",
-                  height: "30px",
-                }}
-              >
-                {this.getTaskPersonOption()} 
-              </Col>
-              <Col></Col>
+            <Col
+              className="text-center border rounded border-warning m-1 align-items-center p-0"
+              xs={5}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              {this.getTaskPersonOption()}
+            </Col>
+            <Col></Col>
           </Row>
           <Row>
-              <Col></Col>
-              <Col
-                className="text-center border rounded border-warning m-1 align-items-center p-0"
-                xs={5}
-                style={{
-                  backgroundColor: "white",
-                  color: "black",
-                  height: "30px",
-                }}
-              >
-               {this.getSubOption()}
-              </Col>
-              <Col></Col>
-            </Row>
-            <Row>
-              <Col></Col>
-              <Col
-                  className="text-center border rounded border-warning m-1 align-items-center p-0"
-                  xs={5}
-                  style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    minHeight: "30px",
-                    wordWrap: "break-word" 
-                  }}
-                >
-                {this.getSearchValue()}   
-              </Col>
-              <Col></Col>    
-            </Row>   
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-warning m-1 align-items-center p-0"
+              xs={5}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              {this.getSubOption()}
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-warning m-1 align-items-center p-0"
+              xs={5}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                minHeight: "30px",
+                wordWrap: "break-word",
+              }}
+            >
+              {this.getSearchValue()}
+            </Col>
+            <Col></Col>
+          </Row>
           <hr />
         </Container>
       );
@@ -423,16 +411,24 @@ export default class FilterComponent extends React.Component {
       <Container className="p-2">
         <Row>
           <Col className="text-center">
-            <h4>Search <OverlayTrigger
-                  placement='auto'
-                  overlay={
+            <h4>
+              Search{" "}
+              <OverlayTrigger
+                placement="auto"
+                overlay={
                   <Tooltip className="helpTooltip">
-                     Select the filter or highlight button then select tasks or people and search for specific tasks or people to display. Now click GO!
+                    Select the filter or highlight button then select tasks or
+                    people and search for specific tasks or people to display.
+                    Now click GO!
                   </Tooltip>
-                  } >
-                  <i className="fa fa-question-circle"  style={{ color: "black", fontSize: "17px" }}></i>
-              </OverlayTrigger></h4>
-             
+                }
+              >
+                <i
+                  className="fa fa-question-circle"
+                  style={{ color: "black", fontSize: "17px" }}
+                ></i>
+              </OverlayTrigger>
+            </h4>
           </Col>
         </Row>
         <Row>

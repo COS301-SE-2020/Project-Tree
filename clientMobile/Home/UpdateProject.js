@@ -5,13 +5,12 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import {Table, TableWrapper, Row, Rows} from 'react-native-table-component';
 import {Label, Icon, Form, Item, Input} from 'native-base';
-import DateTimePicker from "react-native-modal-datetime-picker";
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import ms from 'ms';
-
 
 class UpdateProject extends Component {
   constructor(props) {
@@ -113,13 +112,13 @@ class UpdateProjectForm extends Component {
     var body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     else {
-      if (this._isMounted === true) { 
+      if (this._isMounted === true) {
         let firstTask = null;
         let lastTask = null;
-        body.tasks.forEach(task => {
-          if ( firstTask === null || firstTask.startDate > task.startDate )
+        body.tasks.forEach((task) => {
+          if (firstTask === null || firstTask.startDate > task.startDate)
             firstTask = task;
-          if ( lastTask === null || lastTask.endDate < task.endDate )
+          if (lastTask === null || lastTask.endDate < task.endDate)
             lastTask = task;
         });
         this.setState({firstTask, lastTask});
@@ -145,20 +144,20 @@ class UpdateProjectForm extends Component {
     var body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     else {
-      if (this._isMounted === true) { 
+      if (this._isMounted === true) {
         let firstTask = null;
         let lastTask = null;
-        body.tasks.forEach(task => {
-          if ( firstTask === null || firstTask.startDate > task.startDate )
+        body.tasks.forEach((task) => {
+          if (firstTask === null || firstTask.startDate > task.startDate)
             firstTask = task;
-          if ( lastTask === null || lastTask.endDate < task.endDate )
+          if (lastTask === null || lastTask.endDate < task.endDate)
             lastTask = task;
         });
         this.setState({firstTask, lastTask});
       }
     }
   }
-  
+
   componentWillUnmount() {
     this._isMounted = false;
   }
@@ -170,25 +169,23 @@ class UpdateProjectForm extends Component {
     )
       .toISOString()
       .substring(0, 16);
-    if(type.type === "date") 
-      date = 
-        `${date.substring(0,10)}T${
-          type.for === "start" ? 
-            this.state.startDate.substring(11,16) 
-          : 
-          this.state.endDate.substring(11,16)
-        }`;
-    else 
-        date = 
-        `${type.for === "start" ? 
-            this.state.startDate.substring(0,10) 
-          : 
-            this.state.endDate.substring(0,10)}T${
-            date.substring(11,16)
-        }`;
+    if (type.type === 'date')
+      date = `${date.substring(0, 10)}T${
+        type.for === 'start'
+          ? this.state.startDate.substring(11, 16)
+          : this.state.endDate.substring(11, 16)
+      }`;
+    else
+      date = `${
+        type.for === 'start'
+          ? this.state.startDate.substring(0, 10)
+          : this.state.endDate.substring(0, 10)
+      }T${date.substring(11, 16)}`;
     if (type.for === 'start') {
-      if (date > this.state.firstTask.startDate){
-        alert("The start date of the project cannot be any latter then the current date as it would be after the start of a task, if you want it to be any later then change the task first");
+      if (date > this.state.firstTask.startDate) {
+        alert(
+          'The start date of the project cannot be any latter then the current date as it would be after the start of a task, if you want it to be any later then change the task first',
+        );
         date = this.state.firstTask.startDate;
       }
       if (this.state.endDate < date)
@@ -205,8 +202,10 @@ class UpdateProjectForm extends Component {
           dateTimePicker: false,
         });
     } else {
-      if (date < this.state.lastTask.endDate){
-        alert("The end date of the project cannot be any earlier then the current date as it would be before a end of a task, if you want it to be any earlier then change the task first");
+      if (date < this.state.lastTask.endDate) {
+        alert(
+          'The end date of the project cannot be any earlier then the current date as it would be before a end of a task, if you want it to be any earlier then change the task first',
+        );
         date = this.state.lastTask.endDate;
       }
       if (this.state.startDate > date)
@@ -224,7 +223,7 @@ class UpdateProjectForm extends Component {
         });
     }
   }
-  
+
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
     startDate.setTime(
@@ -260,10 +259,10 @@ class UpdateProjectForm extends Component {
       up_id: this.props.project.id,
       up_name: this.state.projName,
       up_description: this.state.projDescription,
-      up_StartDate: this.state.startDate.substring(0,10),
-      up_StartTime: this.state.startDate.substring(11,16),
-      up_EndDate: this.state.endDate.substring(0,10),
-      up_EndTime: this.state.endDate.substring(11,16),
+      up_StartDate: this.state.startDate.substring(0, 10),
+      up_StartTime: this.state.startDate.substring(11, 16),
+      up_EndDate: this.state.endDate.substring(0, 10),
+      up_EndTime: this.state.endDate.substring(11, 16),
       up_pm_Create: permissions[0],
       up_pm_Delete: permissions[1],
       up_pm_Update: permissions[2],
@@ -433,12 +432,9 @@ class UpdateProjectForm extends Component {
             is24Hour={true}
             display="default"
             isVisible={this.state.dateTimePicker}
-            onCancel={()=>(this.setState({dateTimePicker: false}))}
+            onCancel={() => this.setState({dateTimePicker: false})}
             onConfirm={(selectedDate) =>
-              this.handleDateTimeSelect(
-                selectedDate,
-                this.state.dateTimeType,
-              )
+              this.handleDateTimeSelect(selectedDate, this.state.dateTimeType)
             }
           />
           <PermissionsTable

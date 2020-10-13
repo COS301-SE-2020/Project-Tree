@@ -80,7 +80,7 @@ export default class GanttChartWrapper extends React.Component {
                   value="label"
                   style={{ fontWeight: "bold" }}
                 >
-                  Select tasks starting wihtin the next: 
+                  Select tasks starting wihtin the next:
                 </ToggleButton>
                 <ToggleButton
                   variant="secondary"
@@ -285,8 +285,9 @@ class GanttChart extends React.Component {
   render() {
     if (
       this.props.project.tasks.length === 0 ||
-      this.props.project.tasks === null || 
-      (this.props.project.tasks.length === 1 && this.props.project.tasks[0].duration === 0)
+      this.props.project.tasks === null ||
+      (this.props.project.tasks.length === 1 &&
+        this.props.project.tasks[0].duration === 0)
     ) {
       return <p style={{ marginTop: "20px" }}>No tasks to display</p>;
     }

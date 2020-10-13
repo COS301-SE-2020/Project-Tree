@@ -14,7 +14,7 @@ class ProjectPage extends React.Component {
       noticeBoardRefreshKey: 0,
       messages: null,
       refresh: 0,
-      managers:null,
+      managers: null,
     };
 
     this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(
@@ -22,13 +22,16 @@ class ProjectPage extends React.Component {
     );
 
     this.setProjectManagers = this.setProjectManagers.bind(this);
-    
   }
 
-  setProjectManagers(){
-    $.post("/people/getProjectManagers", { id: this.props.project.projectInfo.id }, (response) => {
-      this.setState({ managers: response.users });
-    }).fail((err) => {
+  setProjectManagers() {
+    $.post(
+      "/people/getProjectManagers",
+      { id: this.props.project.projectInfo.id },
+      (response) => {
+        this.setState({ managers: response.users });
+      }
+    ).fail((err) => {
       throw Error(err);
     });
   }
@@ -63,17 +66,25 @@ class ProjectPage extends React.Component {
       alert("Unable to fetch notifications");
     });
 
-    $.post("/getProject", { id: this.props.project.projectInfo.id }, (response) => {
-      this.props.project.tasks = response.tasks;
-      this.props.project.rels = response.rels;
-      this.setState({ refresh: this.state.refresh+1 });
-    }).fail((err) => {
+    $.post(
+      "/getProject",
+      { id: this.props.project.projectInfo.id },
+      (response) => {
+        this.props.project.tasks = response.tasks;
+        this.props.project.rels = response.rels;
+        this.setState({ refresh: this.state.refresh + 1 });
+      }
+    ).fail((err) => {
       throw Error(err);
     });
 
-    $.post("/people/getProjectManagers", { id: this.props.project.projectInfo.id }, (response) => {
-      this.setState({ managers: response.users });
-    }).fail((err) => {
+    $.post(
+      "/people/getProjectManagers",
+      { id: this.props.project.projectInfo.id },
+      (response) => {
+        this.setState({ managers: response.users });
+      }
+    ).fail((err) => {
       throw Error(err);
     });
   }
@@ -93,17 +104,25 @@ class ProjectPage extends React.Component {
         alert("Unable to fetch notifications");
       });
 
-      $.post("/getProject", { id: this.props.project.projectInfo.id }, (response) => {
-        this.props.project.tasks = response.tasks;
-        this.props.project.rels = response.rels;
-        this.setState({ refresh: this.state.refresh+1 });
-      }).fail((err) => {
+      $.post(
+        "/getProject",
+        { id: this.props.project.projectInfo.id },
+        (response) => {
+          this.props.project.tasks = response.tasks;
+          this.props.project.rels = response.rels;
+          this.setState({ refresh: this.state.refresh + 1 });
+        }
+      ).fail((err) => {
         throw Error(err);
       });
 
-      $.post("/people/getProjectManagers", { id: this.props.project.projectInfo.id }, (response) => {
-        this.setState({ managers: response.users });
-      }).fail((err) => {
+      $.post(
+        "/people/getProjectManagers",
+        { id: this.props.project.projectInfo.id },
+        (response) => {
+          this.setState({ managers: response.users });
+        }
+      ).fail((err) => {
         throw Error(err);
       });
     }

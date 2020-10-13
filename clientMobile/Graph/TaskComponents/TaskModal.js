@@ -108,23 +108,23 @@ class TaskModal extends Component {
     let endDate = new Date(ed);
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
-  
-  updateType(pac, resp, reso){
-    if(this.props.userPermissions["update"]) return "update";
+
+  updateType(pac, resp, reso) {
+    if (this.props.userPermissions['update']) return 'update';
     let check = false;
-    pac.forEach(person => {
+    pac.forEach((person) => {
       if (person.id === this.props.user.id) check = true;
     });
-    if (check) return "progress";
-    resp.forEach(person => {
+    if (check) return 'progress';
+    resp.forEach((person) => {
       if (person.id === this.props.user.id) check = true;
     });
-    if (check) return "progress";
-    reso.forEach(person => {
+    if (check) return 'progress';
+    reso.forEach((person) => {
       if (person.id === this.props.user.id) check = true;
     });
-    if (check) return "progress";
-    return "none";
+    if (check) return 'progress';
+    return 'none';
   }
 
   render() {
@@ -138,8 +138,12 @@ class TaskModal extends Component {
     taskPacMans = taskUsers[0];
     taskResPersons = taskUsers[1];
     taskResources = taskUsers[2];
-    
-    let updateType = this.updateType(taskPacMans, taskResPersons, taskResources);
+
+    let updateType = this.updateType(
+      taskPacMans,
+      taskResPersons,
+      taskResources,
+    );
 
     let color = '#0275d8';
 
@@ -223,7 +227,7 @@ class TaskModal extends Component {
 
               <View>
                 <View style={{flexDirection: 'row'}}>
-                  {updateType !== "none" ? (
+                  {updateType !== 'none' ? (
                     <View style={{flex: 1}}>
                       <TouchableOpacity
                         style={styles.editButton}
