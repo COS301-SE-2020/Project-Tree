@@ -232,6 +232,7 @@ class UpdateTask extends React.Component {
             taskName: data.name,
             type: "auto",
             mode: 2,
+            timeComplete: timeComplete,
           },
         }),
       });

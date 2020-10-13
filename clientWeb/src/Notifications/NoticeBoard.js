@@ -168,7 +168,7 @@ class NotificationList extends React.Component {
             <em>
               {message.type === "task" ? message.taskName : null}
               {message.type === "project" ? "Project Wide" : null}
-              {message.type === "auto" ? "Task assigned" : null}{" "}
+              {message.type === "auto" ? "Task Notification" : null}{" "}
             </em>
             <br />
             {message.message}

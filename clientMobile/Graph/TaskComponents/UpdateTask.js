@@ -77,6 +77,7 @@ class UpdateTaskForm extends Component {
       endDate: this.props.task.endDate,
       duration: this.props.task.duration,
       progress: this.props.task.progress,
+      initialProgress: this.props.task.progress,
       type: this.props.task.type,
       issue: this.props.task.type === 'Issue',
       dateTimePicker: false,
@@ -178,6 +179,23 @@ class UpdateTaskForm extends Component {
     if (this.state.issue === true) type = 'Issue';
     if (parseInt(this.state.progress) === 100) type = 'Complete';
 
+    let timeComplete = undefined;
+    if (
+      this.state.initialProgress < 100 &&
+      parseInt(this.state.progress) === 100
+    ) {
+      timeComplete = new Date();
+      timeComplete.setTime(
+        timeComplete.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+      );
+      timeComplete = timeComplete.toISOString();
+    } else if (
+      this.state.initialProgress === 100 &&
+      parseInt(this.state.progress) < 100
+    ) {
+      timeComplete = null;
+    }
+
     let data = {
       id: this.props.task.id,
       name: this.state.name,
@@ -186,6 +204,7 @@ class UpdateTaskForm extends Component {
       description: this.state.description,
       progress: this.state.progress,
       type: type,
+      timeComplete: timeComplete,
     };
 
     return data;
@@ -443,6 +462,7 @@ class UpdateTaskForm extends Component {
               taskName: this.state.name,
               type: 'auto',
               mode: 2,
+              timeComplete: input.timeComplete,
             },
           }),
         },

@@ -220,6 +220,50 @@ function formatAutoAssignData(
   return returnData;
 }
 
+function formatAutoCompleteData(
+  packageManagers,
+  responsiblePersons,
+  resources,
+  data
+) {
+  let recipients = [];
+
+  for (let x = 0; x < packageManagers.length; x++) {
+    recipients.push({
+      id: packageManagers[x].id,
+      email: packageManagers[x].email,
+    });
+  }
+
+  for (let x = 0; x < responsiblePersons.length; x++) {
+    recipients.push({
+      id: responsiblePersons[x].id,
+      email: responsiblePersons[x].email,
+    });
+  }
+
+  for (let x = 0; x < resources.length; x++) {
+    recipients.push({ 
+      id: resources[x].id, 
+      email: resources[x].email 
+    });
+  }
+
+  let returnData = {
+    type: "auto",
+    fromName: "Project Tree",
+    recipients: [...recipients],
+    timestamp: data.timestamp,
+    message: data.taskName + " has been completed",
+    taskName: data.taskName,
+    projName: data.projName,
+    projID: data.projID,
+    mode: 2,
+  };
+
+  return returnData;
+}
+
 function getIds(data) {
   let ids = [];
   for (let count = 0; count < data.length; count++) {
@@ -246,6 +290,7 @@ module.exports = {
   sendNotification,
   retrieveNotifications,
   formatAutoAssignData,
+  formatAutoCompleteData,
   getEmails,
   getIds,
 };

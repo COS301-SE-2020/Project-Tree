@@ -137,6 +137,19 @@ function updateAssignedPeople(req, res) {
     if (resourcesAddStatus === 400) res.sendStatus(400);
   }
 
+  if(req.body.auto_notification.timeComplete !== undefined && req.body.auto_notification.timeComplete !== null){
+    let data2 = sendProjectNotification.formatAutoCompleteData(
+      [...packageManagers], 
+      [...responsiblePersons], 
+      [...resources], 
+      req.body.auto_notification
+    );
+    
+    if (data2.recipients.length !== 0)
+      sendProjectNotification.sendNotification({ body: data2 });
+  }
+
+  
   for (var x = 0; x < notificationOrigPacMan.length; x++) {
     packageManagers = packageManagers.filter(
       (el) => el.id !== notificationOrigPacMan[x].id
