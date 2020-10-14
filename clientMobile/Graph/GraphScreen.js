@@ -364,28 +364,32 @@ class GraphScreen extends Component {
     }
   }
 
-  async saveChanges(){
+  async saveChanges() {
     let changedNodes = [];
-    let nodes = [...this.state.nodes]
-    let views = [...this.state.views]
+    let nodes = [...this.state.nodes];
+    let views = [...this.state.views];
 
-    for(let x=0; x<nodes.length; x++){
-      if(nodes[x].changedX !== undefined){
+    for (let x = 0; x < nodes.length; x++) {
+      if (nodes[x].changedX !== undefined) {
         changedNodes.push(nodes[x]);
       }
     }
 
-    for(let y=0; y<views.length; y++){
-      if(views[y].changedX !== undefined){
+    for (let y = 0; y < views.length; y++) {
+      if (views[y].changedX !== undefined) {
         changedNodes.push(views[y]);
       }
     }
 
     let data = {
-      changedNodes: changedNodes
+      changedNodes: changedNodes,
     };
 
-    this.setState({savePosition:false, positionTasksMode:false, autoPos:false})
+    this.setState({
+      savePosition: false,
+      positionTasksMode: false,
+      autoPos: false,
+    });
     this.props.reload();
 
     const response2 = await fetch(
@@ -401,40 +405,47 @@ class GraphScreen extends Component {
     );
   }
 
-  clearChanges(val){
-    if(val){
-      this.setState({positionTasksMode:!this.state.positionTasksMode, savePosition:false, autoPos:false});
+  clearChanges(val) {
+    if (val) {
+      this.setState({
+        positionTasksMode: !this.state.positionTasksMode,
+        savePosition: false,
+        autoPos: false,
+      });
       this.props.reload();
-    }
-    else{
-      this.setState({savePosition:false, positionTasksMode:false, autoPos:false});
+    } else {
+      this.setState({
+        savePosition: false,
+        positionTasksMode: false,
+        autoPos: false,
+      });
       this.setProjectInfo();
     }
   }
 
-  moveNode(message){
-    message = message.split(" ");
+  moveNode(message) {
+    message = message.split(' ');
     let id = message[1];
     let xVal = message[2];
     let yVal = message[3];
 
-    for(let x = 0; x < this.state.nodes.length; x++){
-      if(this.state.nodes[x].id === parseInt(id)){
-        this.state.nodes[x].changedX=parseInt(xVal)
-        this.state.nodes[x].changedY=parseInt(yVal)
+    for (let x = 0; x < this.state.nodes.length; x++) {
+      if (this.state.nodes[x].id === parseInt(id)) {
+        this.state.nodes[x].changedX = parseInt(xVal);
+        this.state.nodes[x].changedY = parseInt(yVal);
       }
     }
 
-    for(let y = 0; y < this.state.views.length; y++){
-      if(this.state.views[y].id === parseInt(id)){
-        this.state.views[y].changedX=parseInt(xVal)
-        this.state.views[y].changedY=parseInt(yVal)
+    for (let y = 0; y < this.state.views.length; y++) {
+      if (this.state.views[y].id === parseInt(id)) {
+        this.state.views[y].changedX = parseInt(xVal);
+        this.state.views[y].changedY = parseInt(yVal);
       }
     }
 
-    if(this.state.savePosition !== true){
-			this.setState({savePosition:true});
-		}
+    if (this.state.savePosition !== true) {
+      this.setState({savePosition: true});
+    }
   }
 
   displayTaskDependency(
@@ -492,13 +503,11 @@ class GraphScreen extends Component {
     });
   }
 
-  filterButtonToggle(){
-    if(this.state.positionTasksMode){
+  filterButtonToggle() {
+    if (this.state.positionTasksMode) {
       return null;
-    }
-
-    else if(this.state.filterOn === false){
-      return(
+    } else if (this.state.filterOn === false) {
+      return (
         <TouchableOpacity
           style={styles.floatinBtn2}
           onPress={() => {
@@ -506,11 +515,9 @@ class GraphScreen extends Component {
           }}>
           <IconMaterial name="search" size={25} />
         </TouchableOpacity>
-      )
-    }
-
-    else{
-      return(
+      );
+    } else {
+      return (
         <TouchableOpacity
           style={styles.floatinBtn2}
           onPress={() => {
@@ -519,7 +526,7 @@ class GraphScreen extends Component {
           }}>
           <IconMaterial name="clear" size={25} />
         </TouchableOpacity>
-      )
+      );
     }
   }
 
@@ -528,11 +535,11 @@ class GraphScreen extends Component {
       return null;
     }
 
-    let leftPos = 145
-    let color = '#EEBB4D'
-    if(this.state.positionTasksMode){
+    let leftPos = 145;
+    let color = '#EEBB4D';
+    if (this.state.positionTasksMode) {
       leftPos = 80;
-      color = '#96BB7C'
+      color = '#96BB7C';
     }
 
     return this.state.nodes ? (
@@ -602,19 +609,17 @@ class GraphScreen extends Component {
           </TouchableOpacity>
 
           {this.filterButtonToggle()}
-          
-          {this.props.userPermissions["update"] || this.props.userPermissions["create"]?
+
+          {this.props.userPermissions['update'] ||
+          this.props.userPermissions['create'] ? (
             <TouchableOpacity
               style={[styles.floatinBtn3, {left:leftPos, backgroundColor:color}]}
               onPress={() => { this.clearChanges(!this.state.savePosition); }}>
               <IconSimpleLineIcons name="cursor-move" size={25} />
             </TouchableOpacity>
-            :
-            null
-          }
-          
+          ) : null}
 
-          {this.state.savePosition?
+          {this.state.savePosition ? (
             <React.Fragment>
               <TouchableOpacity
                 style={styles.floatinBtn4}
@@ -623,27 +628,26 @@ class GraphScreen extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.floatinBtn5}
-                onPress={() => { this.clearChanges(false); }}>
+                onPress={() => {
+                  this.clearChanges(false);
+                }}>
                 <IconMaterial name="clear" size={25} />
               </TouchableOpacity>
             </React.Fragment>
-            :
-            null
-          }
+          ) : null}
 
-          {this.state.positionTasksMode?
+          {this.state.positionTasksMode ? (
             <TouchableOpacity
-              onPress={()=>{this.setState({autoPos:true}); this.props.reload()}}
+              onPress={() => {
+                this.setState({autoPos: true});
+                this.props.reload();
+              }}
               style={styles.autoPositionButton}>
-              <Text style={{textAlign:'center'}}>
-                Auto Position
-              </Text>
+              <Text style={{textAlign: 'center'}}>Auto Position</Text>
             </TouchableOpacity>
-            :
-            null
-          }
-          
-          {this.state.positionTasksMode === false?
+          ) : null}
+
+          {this.state.positionTasksMode === false ? (
             <CreateDependency
               sourceCreateDependency={this.state.sourceCreateDependency}
               targetCreateDependency={this.state.targetCreateDependency}
@@ -656,12 +660,10 @@ class GraphScreen extends Component {
               getProjectInfo={this.getProjectInfo}
               links={this.state.links}
             />
-            :
-            null
-          }
-          
+          ) : null}
 
-          {this.props.userPermissions['create'] === true && this.state.positionTasksMode === false? (
+          {this.props.userPermissions['create'] === true &&
+          this.state.positionTasksMode === false ? (
             <CreateTask
               projectID={this.props.project.id}
               project={this.props.project}
@@ -689,11 +691,9 @@ class WebViewWrapper extends Component {
   handleOnMessage(event) {
     let message = event.nativeEvent.data;
 
-    if (message[0] === 'm'){
-      this.props.moveNode(message)
-    }
-
-    else if (message[0] === 'n') {
+    if (message[0] === 'm') {
+      this.props.moveNode(message);
+    } else if (message[0] === 'n') {
       message = message.split(' ');
 
       let node = parseInt(message[0].substr(1));
@@ -725,33 +725,31 @@ class WebViewWrapper extends Component {
   }
 
   render() {
-    let s={
+    let s = {
       uri: 'https://projecttree.herokuapp.com/mobile',
-       method: 'POST',
-       body: `nodes=${JSON.stringify(
-        this.props.nodes
-      )}&links=${JSON.stringify(
-        this.props.links
-      )}&criticalPath=${this.props.displayCriticalPath
-      }&projId=${this.props.projID}&views=${JSON.stringify(
-        this.props.views
-      )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
-    }
-    
-    if (Platform.OS === 'ios') { 
-      s={
+      method: 'POST',
+      body: `nodes=${JSON.stringify(this.props.nodes)}&links=${JSON.stringify(
+        this.props.links,
+      )}&criticalPath=${this.props.displayCriticalPath}&projId=${
+        this.props.projID
+      }&views=${JSON.stringify(this.props.views)}&positionMode=${
+        this.props.positionTasksMode
+      }&autoPos=${this.props.autoPos}`,
+    };
+
+    if (Platform.OS === 'ios') {
+      s = {
         uri: 'https://projecttree.herokuapp.com/mobile',
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-          body: `nodes=${JSON.stringify(
-          this.props.nodes
-        )}&links=${JSON.stringify(
-          this.props.links
-        )}&criticalPath=${this.props.displayCriticalPath
-        }&projId=${this.props.projID}&views=${JSON.stringify(
-          this.props.views
-        )}&positionMode=${this.props.positionTasksMode}&autoPos=${this.props.autoPos}`,
-      }
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `nodes=${JSON.stringify(this.props.nodes)}&links=${JSON.stringify(
+          this.props.links,
+        )}&criticalPath=${this.props.displayCriticalPath}&projId=${
+          this.props.projID
+        }&views=${JSON.stringify(this.props.views)}&positionMode=${
+          this.props.positionTasksMode
+        }&autoPos=${this.props.autoPos}`,
+      };
     }
 
     return this.props.views !== null ? (
@@ -835,7 +833,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 72,
     right: 12,
-    left:278,
+    left: 278,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EEBB4D',

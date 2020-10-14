@@ -59,7 +59,7 @@ class NotificationList extends React.Component {
     if (type === "auto") {
       return (
         <img
-          class="circular"
+          className="circular"
           src="https://i.ibb.co/wRrd1gN/project-Tree.png"
           alt="user"
           width="70"
@@ -69,20 +69,17 @@ class NotificationList extends React.Component {
     }
 
     for (var x = 0; x < users.length; x++) {
-      if (parseInt(users[x].id) === parseInt(profileId[0])) 
-      {
+      if (parseInt(users[x].id) === parseInt(profileId[0])) {
         return (
           <img
-            class="circular"
+            className="circular"
             src={users[x].profilePicture}
             alt="user"
             width="70"
             height="70"
           />
         );
-      }
-      else if(x === users.length-1)
-      {
+      } else if (x === users.length - 1) {
         return (
           <img
             src="https://i.ibb.co/QC8Fstg/undraw-profile-pic-ic5t.png"
@@ -195,9 +192,9 @@ class NotificationList extends React.Component {
   render() {
     let messages = this.sortMessages();
     let messageComponents = this.createMessageList(messages);
-    let h="28em";
-    if(this.props.userPermission["project"] === true){
-      h="36em";
+    let h = "28em";
+    if (this.props.userPermission["project"] === true) {
+      h = "36em";
     }
     return (
       <Container>

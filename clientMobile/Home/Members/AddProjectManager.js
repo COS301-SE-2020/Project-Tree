@@ -6,26 +6,26 @@ import {
   StyleSheet,
   TextInput,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {Icon, Spinner} from 'native-base';
 import {ScrollView} from 'react-native-gesture-handler';
 
 export default class AddProjectManagerModal extends React.Component {
-  constructor(props){
+  constructor(props) {
     super();
-    this.state = {visible:false}
+    this.state = {visible: false};
     this.setModalVisible = this.setModalVisible.bind(this);
   }
 
-  setModalVisible(value){
-    this.setState({visible:value});
+  setModalVisible(value) {
+    this.setState({visible: value});
   }
 
   render() {
     return (
       <React.Fragment>
-        <View style={{width:'100%', alignItems:'center'}}>
+        <View style={{width: '100%', alignItems: 'center'}}>
           <TouchableOpacity
             style={styles.createButton}
             onPress={() => {
@@ -50,7 +50,9 @@ export default class AddProjectManagerModal extends React.Component {
               </View>
 
               <View style={{alignItems: 'center', flex: 1}}>
-                <Text style={{fontSize: 25, color: '#184D47'}}>Add Project Manager</Text>
+                <Text style={{fontSize: 25, color: '#184D47'}}>
+                  Add Project Manager
+                </Text>
                 <View
                   style={{
                     backgroundColor: '#EEBB4D',
@@ -61,7 +63,10 @@ export default class AddProjectManagerModal extends React.Component {
               </View>
 
               <View style={{flex: 6}}>
-                <SearchComponent setModalVisible={this.setModalVisible} project={this.props.project} />
+                <SearchComponent
+                  setModalVisible={this.setModalVisible}
+                  project={this.props.project}
+                />
               </View>
             </View>
           </View>
@@ -76,7 +81,7 @@ class SearchComponent extends React.Component {
     super(props);
     this.state = {
       searchValue: null,
-      users: null
+      users: null,
     };
     this.setSearchValue = this.setSearchValue.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -86,51 +91,51 @@ class SearchComponent extends React.Component {
     this.setState({searchValue: value, onFocus: false});
   }
 
-  async componentDidMount(){
-    let data={
+  async componentDidMount() {
+    let data = {
       id: this.props.project.id,
-    }
+    };
 
     data = JSON.stringify(data);
 
     const response = await fetch(
       'https://projecttree.herokuapp.com/people/getAllProjectMembers',
       {
-          method: 'POST',
-          headers: {
+        method: 'POST',
+        headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          },
-          body: data,
+        },
+        body: data,
       },
     );
 
     const body = await response.json();
-    this.setState({users:body.users});
+    this.setState({users: body.users});
   }
 
-  async handleSubmit(){
-    let data={
-      userId: this.state.searchValue.id, 
-      projId: this.props.project.id 
-    }
+  async handleSubmit() {
+    let data = {
+      userId: this.state.searchValue.id,
+      projId: this.props.project.id,
+    };
 
     data = JSON.stringify(data);
 
     const response = await fetch(
       'https://projecttree.herokuapp.com/people/addProjectManager',
       {
-          method: 'POST',
-          headers: {
+        method: 'POST',
+        headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          },
-          body: data,
+        },
+        body: data,
       },
     );
 
     const body = await response.json();
-    if(body.response !== "okay"){
+    if (body.response !== 'okay') {
       alert(body.response);
     }
 
@@ -138,19 +143,19 @@ class SearchComponent extends React.Component {
   }
 
   render() {
-    if(this.state.users === null){
-      return(
+    if (this.state.users === null) {
+      return (
         <View style={{alignItems: 'center', flex: 1}}>
-            <Spinner />
+          <Spinner />
         </View>
-      )
+      );
     }
 
     return (
       <View style={{alignItems: 'center', flex: 1}}>
         {this.state.searchValue !== null ? (
           <React.Fragment>
-            <View style={{flex:4}}>
+            <View style={{flex: 4}}>
               <TouchableHighlight
                 style={[styles.SelectedButtonStyle, {alignSelf: 'center'}]}
                 onPress={() => this.setState({searchValue: null})}>
@@ -159,8 +164,8 @@ class SearchComponent extends React.Component {
                 </Text>
               </TouchableHighlight>
             </View>
-            
-            <View styles={{flex:1}}>
+
+            <View styles={{flex: 1}}>
               <TouchableOpacity
                 style={styles.submitButton}
                 onPress={this.handleSubmit}>
@@ -168,13 +173,12 @@ class SearchComponent extends React.Component {
               </TouchableOpacity>
             </View>
           </React.Fragment>
-            
-          ) : (
-            <Searchbar
-              users={this.state.users}
-              setSearchValue={this.setSearchValue}
-            />
-          )}
+        ) : (
+          <Searchbar
+            users={this.state.users}
+            setSearchValue={this.setSearchValue}
+          />
+        )}
       </View>
     );
   }
@@ -223,9 +227,9 @@ class Searchbar extends React.Component {
             type="button"
             onPress={() => this.setSearch(suggestion)}
             style={styles.ButtonStyle}>
-              <Text style={styles.TextStyle}>
-                {suggestion.name}&nbsp;{suggestion.surname}
-              </Text>
+            <Text style={styles.TextStyle}>
+              {suggestion.name}&nbsp;{suggestion.surname}
+            </Text>
           </TouchableOpacity>
         </View>
       );
@@ -235,27 +239,27 @@ class Searchbar extends React.Component {
   }
 
   render() {
-      return (
-        <View>
-          <TextInput
-            style={{
-              height: 40,
-              borderColor: 'gray',
-              borderWidth: 1,
-              width: 200,
-              borderRadius: 5,
-            }}
-            onChangeText={(value) => this.updateSearch(value, 'people')}
-            value={this.state.searchTerm}
-            placeholder="Enter the name of a person"
-          />
-            <ScrollView>
-              {this.state.searchTerm.length > 1
-                ? this.getSuggestions(this.state.suggestions)
-                : null}
-            </ScrollView>
-        </View>
-      );
+    return (
+      <View>
+        <TextInput
+          style={{
+            height: 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            width: 200,
+            borderRadius: 5,
+          }}
+          onChangeText={(value) => this.updateSearch(value, 'people')}
+          value={this.state.searchTerm}
+          placeholder="Enter the name of a person"
+        />
+        <ScrollView>
+          {this.state.searchTerm.length > 1
+            ? this.getSuggestions(this.state.suggestions)
+            : null}
+        </ScrollView>
+      </View>
+    );
   }
 }
 
@@ -346,7 +350,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
     margin: 0,
-    width: 200
+    width: 200,
   },
   hideButton: {
     flex: 1,
@@ -371,7 +375,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
     marginTop: 15,
-    width: 200
+    width: 200,
   },
   modalText: {
     marginBottom: 15,

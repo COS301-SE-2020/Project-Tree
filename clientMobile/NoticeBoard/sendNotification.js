@@ -26,14 +26,17 @@ async function sendNotification(
 
   data = JSON.stringify(data);
 
-  const response = await fetch('https://projecttree.herokuapp.com/sendNotification', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+  const response = await fetch(
+    'https://projecttree.herokuapp.com/sendNotification',
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: data,
     },
-    body: data,
-  });
+  );
 }
 
 export default sendNotification;

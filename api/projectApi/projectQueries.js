@@ -6,7 +6,7 @@ const {
 } = require("../userManagementApi/userQueries");
 
 const up = require("./updateProject");
-const uuid = require('uuid');
+const uuid = require("uuid");
 
 async function createProject(req, res) {
   let userId = await uq.verify(req.body.token);
@@ -170,7 +170,7 @@ async function updateProject(req, res) {
     req.body.up_r_Update != undefined
       ? (up_r_Update = true)
       : (up_r_Update = false);
-      
+
     let startDate = `${req.body.up_StartDate}T${req.body.up_StartTime}`;
     let endDate = `${req.body.up_EndDate}T${req.body.up_EndTime}`;
 
@@ -261,9 +261,7 @@ async function getProjects(req, res) {
             startDate: up.datetimeToString(
               record._fields[0].properties.startDate
             ),
-            endDate: up.datetimeToString(
-              record._fields[0].properties.endDate
-            ),
+            endDate: up.datetimeToString(record._fields[0].properties.endDate),
             permissions: [
               record._fields[0].properties.packManCT,
               record._fields[0].properties.packManDT,
@@ -302,9 +300,7 @@ async function getProjects(req, res) {
             startDate: up.datetimeToString(
               record._fields[0].properties.startDate
             ),
-            endDate: up.datetimeToString(
-              record._fields[0].properties.endDate
-            ),
+            endDate: up.datetimeToString(record._fields[0].properties.endDate),
             permissions: [
               record._fields[0].properties.packManCT,
               record._fields[0].properties.packManDT,
@@ -421,7 +417,7 @@ async function joinProject(req, res) {
       `
     )
     .then((result) => {
-      if (result.records[0] != null){
+      if (result.records[0] != null) {
         let project = result.records[0]._fields[0].low;
         db.getSession()
           .run(
@@ -432,7 +428,7 @@ async function joinProject(req, res) {
             `
           )
           .then((result) => {
-            if (result.records[0] == null){
+            if (result.records[0] == null) {
               db.getSession()
                 .run(
                   `
@@ -443,26 +439,28 @@ async function joinProject(req, res) {
                 )
                 .then((result) => {
                   res.status(200);
-                  res.send({ response:"okay" });
+                  res.send({ response: "okay" });
                 })
                 .catch((err) => {
                   console.log(err);
                   res.status(400);
                   res.send({ message: err });
                 });
-            }
-
-            else res.send({ response: "You are already a member of this project or are pending approval" });
+            } else
+              res.send({
+                response:
+                  "You are already a member of this project or are pending approval",
+              });
           })
           .catch((err) => {
             console.log(err);
             res.status(400);
             res.send({ message: err });
           });
-
-      }
-
-      else res.send({ response: "The access code you have provided doesn't exist" });
+      } else
+        res.send({
+          response: "The access code you have provided doesn't exist",
+        });
     })
     .catch((err) => {
       console.log(err);
@@ -470,8 +468,6 @@ async function joinProject(req, res) {
       res.send({ message: err });
     });
 }
-
-
 
 function getAllInfo(req, res) {}
 
@@ -482,5 +478,5 @@ module.exports = {
   getProjects,
   getProjectTasks,
   getCriticalPath,
-  joinProject
+  joinProject,
 };

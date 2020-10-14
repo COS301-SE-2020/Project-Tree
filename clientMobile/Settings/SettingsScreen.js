@@ -7,20 +7,23 @@ import {
   StyleSheet,
   StatusBar,
   Image,
-  Alert
+  Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 
-
-let global_pfp = "";
+let global_pfp = '';
 const axios = require('axios').default;
 
 export default class SettingsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {pfp: 'https://i.ibb.co/MRpbpHN/default.png',  modalVisible: false, token:''};
+    this.state = {
+      pfp: 'https://i.ibb.co/MRpbpHN/default.png',
+      modalVisible: false,
+      token: '',
+    };
 
     this.setModalVisible = this.setModalVisible.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
@@ -50,9 +53,8 @@ export default class SettingsScreen extends Component {
         },
       );
       const body = await response.json();
-      if(body.message == "Invalid User")
-      {
-        this.props.handleLogout()
+      if (body.message == 'Invalid User') {
+        this.props.handleLogout();
       }
       if (body.user.profilepicture != 'undefined') {
         this.setState({
@@ -62,8 +64,7 @@ export default class SettingsScreen extends Component {
     });
   }
 
-  confirmation()
-  {
+  confirmation() {
     Alert.alert(
       'Are You Sure?',
       'Clicking confirm will delete this user and all data associated with them.',
@@ -80,86 +81,78 @@ export default class SettingsScreen extends Component {
       ],
       {cancelable: false},
     );
-}
+  }
 
-
-  deleteUser() 
-  {
-    let tok = this.state.token
+  deleteUser() {
+    let tok = this.state.token;
     let data = {
       token: tok,
-    }
-    data = JSON.stringify(data)
-     const res =  fetch(
-      'https://projecttree.herokuapp.com/user/delete',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: data
+    };
+    data = JSON.stringify(data);
+    const res = fetch('https://projecttree.herokuapp.com/user/delete', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    )
- 
+      body: data,
+    });
+
     this.props.handleLogout();
   }
 
-  choosePhotoFromLibrary(){
+  choosePhotoFromLibrary() {
     ImagePicker.openPicker({
       width: 300,
       height: 300,
       cropping: true,
       compressImageQuality: 0.7,
-      includeBase64: true
-    }).then(image => {
+      includeBase64: true,
+    }).then((image) => {
       this.fileChange(image);
     });
   }
 
-  async fileChange(file) 
-  {
-    let tok = this.state.token
-    let body = new FormData()
-    body.append('image', file.data)
+  async fileChange(file) {
+    let tok = this.state.token;
+    let body = new FormData();
+    body.append('image', file.data);
     await axios({
       method: 'post',
-      url: 'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
+      url:
+        'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
       timeout: 0,
       processData: false,
-      mimeType: "multipart/form-data",
+      mimeType: 'multipart/form-data',
       contentType: false,
-      data: body
-    }) .then(function (response) {
-      let x = (response.data.data.url)
-      global_pfp= (response.data.data.url)
-      let data = {
-        token: tok,
-        profilepicture: x
-      }
-      data = JSON.stringify(data)
+      data: body,
+    })
+      .then(function (response) {
+        let x = response.data.data.url;
+        global_pfp = response.data.data.url;
+        let data = {
+          token: tok,
+          profilepicture: x,
+        };
+        data = JSON.stringify(data);
 
-       const res =  fetch(
-        'https://projecttree.herokuapp.com/user/change',
-        {
+        const res = fetch('https://projecttree.herokuapp.com/user/change', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-          body: data
-        },
-      )
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-    this.setState({pfp: global_pfp})
+          body: data,
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    this.setState({pfp: global_pfp});
   }
 
-  hideModal() 
-  {
-    this.setState({ show: false });
+  hideModal() {
+    this.setState({show: false});
   }
 
   render() {
@@ -167,11 +160,12 @@ export default class SettingsScreen extends Component {
       <View style={styles.container}>
         <StatusBar backgroundColor="#96BB7C" barStyle="light-content" />
         <View style={styles.header}>
-        <TouchableOpacity
-              onPress={() => {
-                this.choosePhotoFromLibrary();
-              }}>
-          <Image style={styles.logo} source={{uri: this.state.pfp}} /></TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this.choosePhotoFromLibrary();
+            }}>
+            <Image style={styles.logo} source={{uri: this.state.pfp}} />
+          </TouchableOpacity>
           <Text style={styles.text_header}>User Details</Text>
         </View>
         <Animatable.View
@@ -183,7 +177,7 @@ export default class SettingsScreen extends Component {
               marginBottom: 40,
             },
           ]}>
-            <View style={styles.button}>
+          <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
                 this.confirmation();
@@ -206,7 +200,7 @@ export default class SettingsScreen extends Component {
                 Delete Account
               </Text>
             </TouchableOpacity>
-          </View>  
+          </View>
           <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
@@ -230,7 +224,7 @@ export default class SettingsScreen extends Component {
                 Change Profile Picture
               </Text>
             </TouchableOpacity>
-          </View>  
+          </View>
           <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
@@ -278,7 +272,7 @@ export default class SettingsScreen extends Component {
                 Logout
               </Text>
             </TouchableOpacity>
-          </View> 
+          </View>
         </Animatable.View>
       </View>
     );
@@ -286,7 +280,6 @@ export default class SettingsScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: '#96BB7C',

@@ -5,29 +5,29 @@ import {
   Button,
   InputGroup,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
 } from "react-bootstrap";
 import copy from "copy-to-clipboard";
 
 class GetAccessCode extends React.Component {
-    constructor() {
-        super();
-        this.state = { show: false };
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
-    }
-    
-    showModal() {
-        this.setState({ show: true });
-    }
+  constructor() {
+    super();
+    this.state = { show: false };
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+  }
 
-    hideModal() {
-        this.setState({ show: false });
-    }
+  showModal() {
+    this.setState({ show: true });
+  }
 
-    copyToBoard(){
-        copy(this.props.project.accessCode);
-    }
+  hideModal() {
+    this.setState({ show: false });
+  }
+
+  copyToBoard() {
+    copy(this.props.project.accessCode);
+  }
 
   render() {
     return (
@@ -56,30 +56,41 @@ class GetAccessCode extends React.Component {
             }}
           >
             <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
-              <Modal.Title>Get Access Code {" "}
-              <OverlayTrigger
-                placement='right'
-                overlay={
-                <Tooltip className="helpTooltip">
-                  Send this code to people you would like to join this project. They will need to be accepted by project managers before they are added to the project.
-                </Tooltip>
-                } >
-                <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
-                </OverlayTrigger></Modal.Title>
+              <Modal.Title>
+                Get Access Code{" "}
+                <OverlayTrigger
+                  placement="right"
+                  overlay={
+                    <Tooltip className="helpTooltip">
+                      Send this code to people you would like to join this
+                      project. They will need to be accepted by project managers
+                      before they are added to the project.
+                    </Tooltip>
+                  }
+                >
+                  <i
+                    className="fa fa-info-circle"
+                    style={{ color: "black", fontSize: "20px" }}
+                  ></i>
+                </OverlayTrigger>
+              </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form.Group>
-                    <InputGroup>
-                        <Form.Control
-                            disabled
-                            type="text"
-                            value={this.props.project.accessCode}
-                        />
-                        <Button className="btn-warning" onClick={()=>this.copyToBoard()}>
-                            <i className="fa fa-clipboard"> </i>
-                        </Button>
-                    </InputGroup>
-                </Form.Group>
+              <Form.Group>
+                <InputGroup>
+                  <Form.Control
+                    disabled
+                    type="text"
+                    value={this.props.project.accessCode}
+                  />
+                  <Button
+                    className="btn-warning"
+                    onClick={() => this.copyToBoard()}
+                  >
+                    <i className="fa fa-clipboard"> </i>
+                  </Button>
+                </InputGroup>
+              </Form.Group>
             </Modal.Body>
 
             <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>

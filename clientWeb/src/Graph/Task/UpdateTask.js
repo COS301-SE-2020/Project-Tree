@@ -149,7 +149,12 @@ class UpdateTask extends React.Component {
       this.state.people.push(this.state.resourcesList[x]);
     }
 
-    this.setState({ Show: false, pacManList: pacManList, resourceList: resourcesList, resPersonList: resPersonList });
+    this.setState({
+      Show: false,
+      pacManList: pacManList,
+      resourceList: resourcesList,
+      resPersonList: resPersonList,
+    });
   }
 
   async handleSubmit(event) {
@@ -201,16 +206,18 @@ class UpdateTask extends React.Component {
     });
 
     const body = await response.json();
-    if ( body.message === "After Project End Date"){
-      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
-      this.setState({isloading: false}); 
+    if (body.message === "After Project End Date") {
+      alert(
+        "The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date"
+      );
+      this.setState({ isloading: false });
     } else {
       let timestamp = new Date();
       timestamp.setTime(
         timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000
       );
       timestamp = timestamp.toISOString();
-  
+
       await fetch("/people/updateAssignedPeople", {
         method: "POST",
         headers: {
@@ -236,7 +243,7 @@ class UpdateTask extends React.Component {
           },
         }),
       });
-  
+
       await this.props.setTaskInfo(
         body.nodes,
         body.rels,
@@ -244,7 +251,7 @@ class UpdateTask extends React.Component {
         body.displayRel,
         this.state.assignedProjUsers
       );
-  
+
       // Resets the people list
       for (let x = 0; x < this.state.pacManList.length; x++) {
         this.state.people.push(this.state.pacManList[x]);
@@ -255,7 +262,7 @@ class UpdateTask extends React.Component {
       for (let x = 0; x < this.state.resourcesList.length; x++) {
         this.state.people.push(this.state.resourcesList[x]);
       }
-  
+
       this.setState({ Show: false, isloading: false });
     }
   }
@@ -421,36 +428,33 @@ class UpdateTask extends React.Component {
 
   updateStart() {
     let check = true;
-    this.props.rels.forEach(el => {
+    this.props.rels.forEach((el) => {
       if (el.target === this.state.id) check = false;
     });
     return check;
   }
 
   changeDate(e, type) {
-    if(type.substring(type.length-4, type.length) === "Date") {
+    if (type.substring(type.length - 4, type.length) === "Date") {
       if (isNaN(Date.parse(e.target.value))) return;
-    } else if (
-        !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
-      ) return;
-    let value = type.substring(0,1) === "s" ? 
-    this.state.startDate : this.state.endDate;
-    if(type.substring(type.length-4, type.length) === "Date") 
-    value = `${e.target.value}T${
-        type.substring(0,1) === "s" ? 
-          this.state.startDate.substring(11,16) 
-        : 
-          this.state.endDate.substring(11,16)}`;
-    else value = `${type.substring(0,1) === "s" ? 
-        this.state.startDate.substring(0,10) 
-      : 
-        this.state.endDate.substring(0,10)}T${
-        e.target.value
+    } else if (!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value))
+      return;
+    let value =
+      type.substring(0, 1) === "s" ? this.state.startDate : this.state.endDate;
+    if (type.substring(type.length - 4, type.length) === "Date")
+      value = `${e.target.value}T${
+        type.substring(0, 1) === "s"
+          ? this.state.startDate.substring(11, 16)
+          : this.state.endDate.substring(11, 16)
       }`;
+    else
+      value = `${
+        type.substring(0, 1) === "s"
+          ? this.state.startDate.substring(0, 10)
+          : this.state.endDate.substring(0, 10)
+      }T${e.target.value}`;
     if (value < this.props.project.startDate) {
-      alert(
-        "You cannot make the task before the project date/time."
-      );
+      alert("You cannot make the task before the project date/time.");
       value = this.props.project.startDate;
     }
     if (value > this.props.project.endDate) {
@@ -459,31 +463,30 @@ class UpdateTask extends React.Component {
       );
       value = this.props.project.endDate;
     }
-    let startDate = type.substring(0,1) === "s" ? 
-      value : this.state.startDate;
-    let endDate = type.substring(0,1) === "s" ? 
-      this.state.endDate : value;
+    let startDate = type.substring(0, 1) === "s" ? value : this.state.startDate;
+    let endDate = type.substring(0, 1) === "s" ? this.state.endDate : value;
     if (endDate < startDate) {
-      alert(
-        "You cannot make the end date/time before the start date/time."
-      );
-      this.setState({ 
+      alert("You cannot make the end date/time before the start date/time.");
+      this.setState({
         startDate: value,
         endDate: value,
-        duration: this.CalcDiff(value, value)
+        duration: this.CalcDiff(value, value),
       });
     } else {
-      if (type.substring(0,1) === "s") 
-        this.setState({ startDate: value, duration: this.CalcDiff(value, this.state.endDate)});
+      if (type.substring(0, 1) === "s")
+        this.setState({
+          startDate: value,
+          duration: this.CalcDiff(value, this.state.endDate),
+        });
       else
-        this.setState({ endDate: value, duration: this.CalcDiff(this.state.startDate, value) });
+        this.setState({
+          endDate: value,
+          duration: this.CalcDiff(this.state.startDate, value),
+        });
     }
-    if (type.substring(0,1) === "s") 
-      return this.state.startDate;
-    else
-      return this.state.endDate;
+    if (type.substring(0, 1) === "s") return this.state.startDate;
+    else return this.state.endDate;
   }
-
 
   render() {
     /*
@@ -521,7 +524,7 @@ class UpdateTask extends React.Component {
           <i className="fa fa-edit"> </i> Edit
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
-          {this.props.updateType === "update" ?
+          {this.props.updateType === "update" ? (
             <Form onSubmit={this.handleSubmit}>
               <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
                 <Modal.Title>Edit Task</Modal.Title>
@@ -551,7 +554,7 @@ class UpdateTask extends React.Component {
                     }}
                   />
                 </Form.Group>
-                {this.updateStart() ? 
+                {this.updateStart() ? (
                   <React.Fragment>
                     <Form.Group>
                       <Form.Label>Start date of task</Form.Label>
@@ -559,7 +562,9 @@ class UpdateTask extends React.Component {
                         required
                         type="date"
                         value={this.state.startDate.substring(0, 10)}
-                        onChange={(e) => {this.value = this.changeDate(e, "startDate")}}
+                        onChange={(e) => {
+                          this.value = this.changeDate(e, "startDate");
+                        }}
                       />
                     </Form.Group>
                     <Form.Group>
@@ -568,18 +573,22 @@ class UpdateTask extends React.Component {
                         required
                         type="time"
                         value={this.state.startDate.substring(11, 16)}
-                        onChange={(e) => {this.value = this.changeDate(e, "startTime")}}
+                        onChange={(e) => {
+                          this.value = this.changeDate(e, "startTime");
+                        }}
                       />
                     </Form.Group>
                   </React.Fragment>
-                :
+                ) : (
                   <React.Fragment>
                     <Form.Group>
                       <Form.Label>Start date of task</Form.Label>{" "}
                       <OverlayTrigger
                         overlay={
                           <Tooltip>
-                            This task is dependent on another task, to edit the start date of this task please update either a previous task or dependency.
+                            This task is dependent on another task, to edit the
+                            start date of this task please update either a
+                            previous task or dependency.
                           </Tooltip>
                         }
                       >
@@ -593,12 +602,14 @@ class UpdateTask extends React.Component {
                         onChange={(e) => {}}
                       />
                     </Form.Group>
-                    <Form.Group>  
+                    <Form.Group>
                       <Form.Label>Start time of task</Form.Label>{" "}
                       <OverlayTrigger
                         overlay={
                           <Tooltip>
-                            This task is dependent on another task, to edit the start time of this task please update either a previous task or dependency.
+                            This task is dependent on another task, to edit the
+                            start time of this task please update either a
+                            previous task or dependency.
                           </Tooltip>
                         }
                       >
@@ -613,14 +624,16 @@ class UpdateTask extends React.Component {
                       />
                     </Form.Group>
                   </React.Fragment>
-                }
+                )}
                 <Form.Group>
                   <Form.Label>End date of task</Form.Label>
                   <Form.Control
                     required
                     type="date"
                     value={this.state.endDate.substring(0, 10)}
-                    onChange={(e) => {this.value = this.changeDate(e, "endDate")}}
+                    onChange={(e) => {
+                      this.value = this.changeDate(e, "endDate");
+                    }}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -629,7 +642,9 @@ class UpdateTask extends React.Component {
                     required
                     type="time"
                     value={this.state.endDate.substring(11, 16)}
-                    onChange={(e) => {this.value = this.changeDate(e, "endTime")}}
+                    onChange={(e) => {
+                      this.value = this.changeDate(e, "endTime");
+                    }}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -729,7 +744,9 @@ class UpdateTask extends React.Component {
                             <button
                               type="button"
                               className="selectedPersonBtn"
-                              onClick={() => this.removeAssignedPerson(person, 0)}
+                              onClick={() =>
+                                this.removeAssignedPerson(person, 0)
+                              }
                               key={person.id}
                             >
                               {person.name}&nbsp;{person.surname}
@@ -777,7 +794,9 @@ class UpdateTask extends React.Component {
                             <button
                               type="button"
                               className="selectedPersonBtn"
-                              onClick={() => this.removeAssignedPerson(person, 1)}
+                              onClick={() =>
+                                this.removeAssignedPerson(person, 1)
+                              }
                               key={person.id}
                             >
                               {person.name}&nbsp;{person.surname}
@@ -825,7 +844,9 @@ class UpdateTask extends React.Component {
                             <button
                               type="button"
                               className="selectedPersonBtn"
-                              onClick={() => this.removeAssignedPerson(person, 2)}
+                              onClick={() =>
+                                this.removeAssignedPerson(person, 2)
+                              }
                               key={person.id}
                             >
                               {person.name}&nbsp;{person.surname}
@@ -861,7 +882,7 @@ class UpdateTask extends React.Component {
                 </Button>
               </Modal.Footer>
             </Form>
-          :
+          ) : (
             <Form onSubmit={this.handleSubmit}>
               <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
                 <Modal.Title>Edit Task</Modal.Title>
@@ -942,7 +963,7 @@ class UpdateTask extends React.Component {
                 </Button>
               </Modal.Footer>
             </Form>
-          }
+          )}
         </Modal>
       </React.Fragment>
     );

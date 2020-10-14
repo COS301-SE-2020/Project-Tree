@@ -924,4 +924,3 @@ const styles = StyleSheet.create({
   row: {height: 40},
   text: {margin: 6, textAlign: 'center'},
 });
-

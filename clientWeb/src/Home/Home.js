@@ -3,7 +3,7 @@ import CreateProject from "../Project/CreateProject";
 import Dashboard from "./Dashboard";
 import image from "../Images/BigTree.svg";
 import { Container, Row, Col } from "react-bootstrap";
-import JoinProject from "../Project/JoinProject"
+import JoinProject from "../Project/JoinProject";
 
 class Home extends React.Component {
   render() {
@@ -46,7 +46,7 @@ class Home extends React.Component {
                     />
                   </Col>
                   <Col className="text-left">
-                    <JoinProject user={this.props.user}/>
+                    <JoinProject user={this.props.user} />
                   </Col>
                 </Row>
               </Container>

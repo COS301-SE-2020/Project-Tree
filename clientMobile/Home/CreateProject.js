@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {
-  Modal, 
-  StyleSheet, 
-  Text, 
-  View, 
+  Modal,
+  StyleSheet,
+  Text,
+  View,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import {Label, Form, Item, Input, Icon} from 'native-base';
 import {Table, TableWrapper, Row, Rows} from 'react-native-table-component';
-import DateTimePicker from "react-native-modal-datetime-picker";
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import ms from 'ms';
 
 class CreateProject extends Component {
@@ -119,22 +119,18 @@ class CreateProjectForm extends Component {
     )
       .toISOString()
       .substring(0, 16);
-    if(type.type === "date") 
-      date = 
-        `${date.substring(0,10)}T${
-          type.for === "start" ? 
-            this.state.startDate.substring(11,16) 
-          : 
-          this.state.endDate.substring(11,16)
-        }`;
-    else 
-        date = 
-        `${type.for === "start" ? 
-            this.state.startDate.substring(0,10) 
-          : 
-            this.state.endDate.substring(0,10)}T${
-            date.substring(11,16)
-        }`;
+    if (type.type === 'date')
+      date = `${date.substring(0, 10)}T${
+        type.for === 'start'
+          ? this.state.startDate.substring(11, 16)
+          : this.state.endDate.substring(11, 16)
+      }`;
+    else
+      date = `${
+        type.for === 'start'
+          ? this.state.startDate.substring(0, 10)
+          : this.state.endDate.substring(0, 10)
+      }T${date.substring(11, 16)}`;
     if (type.for === 'start') {
       if (this.state.endDate < date)
         this.setState({
@@ -165,7 +161,7 @@ class CreateProjectForm extends Component {
         });
     }
   }
-  
+
   CalcDiff(sd, ed) {
     let startDate = new Date(sd);
     startDate.setTime(
@@ -200,10 +196,10 @@ class CreateProjectForm extends Component {
       token: this.props.token,
       cp_Name: this.state.projName,
       cp_Description: this.state.projDescription,
-      cp_StartDate: this.state.startDate.substring(0,10),
-      cp_StartTime: this.state.startDate.substring(11,16),
-      cp_EndDate: this.state.endDate.substring(0,10),
-      cp_EndTime: this.state.endDate.substring(11,16),
+      cp_StartDate: this.state.startDate.substring(0, 10),
+      cp_StartTime: this.state.startDate.substring(11, 16),
+      cp_EndDate: this.state.endDate.substring(0, 10),
+      cp_EndTime: this.state.endDate.substring(11, 16),
       cp_pm_Create: permissions[0],
       cp_pm_Delete: permissions[1],
       cp_pm_Update: permissions[2],
@@ -281,83 +277,83 @@ class CreateProjectForm extends Component {
               />
             </Item>
             <Item floatingLabel disabled>
-                <Label>Start Date</Label>
-                <Input value={this.state.startDate.substring(0, 10)} />
-                <Icon
-                  type="FontAwesome"
-                  name="calendar-o"
-                  onPress={() => {
-                    this.setState({
-                      dateTimePicker: true,
-                      dateTimeType: {
-                        type: 'date',
-                        for: 'start',
-                        value: this.state.startDate,
-                      },
-                    });
-                  }}
-                />
-              </Item>
-              <Item floatingLabel disabled>
-                <Label>Start Time</Label>
-                <Input value={this.state.startDate.substring(11, 16)} />
-                <Icon
-                  type="SimpleLineIcons"
-                  name="clock"
-                  onPress={() => {
-                    this.setState({
-                      dateTimePicker: true,
-                      dateTimeType: {
-                        type: 'time',
-                        for: 'start',
-                        value: this.state.startDate,
-                      },
-                    });
-                  }}
-                />
-              </Item>
-              <Item floatingLabel disabled>
-                <Label>End Date</Label>
-                <Input value={this.state.endDate.substring(0, 10)} />
-                <Icon
-                  type="FontAwesome"
-                  name="calendar-o"
-                  onPress={() => {
-                    this.setState({
-                      dateTimePicker: true,
-                      dateTimeType: {
-                        type: 'date',
-                        for: 'end',
-                        value: this.state.endDate,
-                      },
-                    });
-                  }}
-                />
-              </Item>
-              <Item floatingLabel disabled>
-                <Label>End Time</Label>
-                <Input value={this.state.endDate.substring(11, 16)} />
-                <Icon
-                  type="SimpleLineIcons"
-                  name="clock"
-                  onPress={() => {
-                    this.setState({
-                      dateTimePicker: true,
-                      dateTimeType: {
-                        type: 'time',
-                        for: 'end',
-                        value: this.state.endDate,
-                      },
-                    });
-                  }}
-                />
-              </Item>
-              <Item floatingLabel disabled>
-                <Label>Duration</Label>
-                <Input
-                  value={this.CalcDiff(this.state.startDate, this.state.endDate)}
-                />
-              </Item>
+              <Label>Start Date</Label>
+              <Input value={this.state.startDate.substring(0, 10)} />
+              <Icon
+                type="FontAwesome"
+                name="calendar-o"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'date',
+                      for: 'start',
+                      value: this.state.startDate,
+                    },
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Start Time</Label>
+              <Input value={this.state.startDate.substring(11, 16)} />
+              <Icon
+                type="SimpleLineIcons"
+                name="clock"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'time',
+                      for: 'start',
+                      value: this.state.startDate,
+                    },
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>End Date</Label>
+              <Input value={this.state.endDate.substring(0, 10)} />
+              <Icon
+                type="FontAwesome"
+                name="calendar-o"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'date',
+                      for: 'end',
+                      value: this.state.endDate,
+                    },
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>End Time</Label>
+              <Input value={this.state.endDate.substring(11, 16)} />
+              <Icon
+                type="SimpleLineIcons"
+                name="clock"
+                onPress={() => {
+                  this.setState({
+                    dateTimePicker: true,
+                    dateTimeType: {
+                      type: 'time',
+                      for: 'end',
+                      value: this.state.endDate,
+                    },
+                  });
+                }}
+              />
+            </Item>
+            <Item floatingLabel disabled>
+              <Label>Duration</Label>
+              <Input
+                value={this.CalcDiff(this.state.startDate, this.state.endDate)}
+              />
+            </Item>
           </Form>
           <DateTimePicker
             testID="dateTimePicker"
@@ -371,12 +367,9 @@ class CreateProjectForm extends Component {
             is24Hour={true}
             display="default"
             isVisible={this.state.dateTimePicker}
-            onCancel={()=>(this.setState({dateTimePicker: false}))}
+            onCancel={() => this.setState({dateTimePicker: false})}
             onConfirm={(selectedDate) =>
-              this.handleDateTimeSelect(
-                selectedDate,
-                this.state.dateTimeType,
-              )
+              this.handleDateTimeSelect(selectedDate, this.state.dateTimeType)
             }
           />
           <PermissionsTable

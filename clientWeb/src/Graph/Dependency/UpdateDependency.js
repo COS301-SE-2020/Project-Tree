@@ -75,9 +75,11 @@ class UpdateDependency extends React.Component {
       body: projectData,
     });
     const body = await response.json();
-    if ( body.message === "After Project End Date"){
-      alert("The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date");
-      this.setState({isloading: false}); 
+    if (body.message === "After Project End Date") {
+      alert(
+        "The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date"
+      );
+      this.setState({ isloading: false });
     } else {
       await this.props.setTaskInfo(
         body.nodes,

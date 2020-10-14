@@ -73,13 +73,12 @@ class RegisterScreen extends Component {
     }
   }
 
-  validateEmail(text){
+  validateEmail(text) {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(text) === false) {
       return false;
-    }
-    else {
-      return true
+    } else {
+      return true;
     }
   }
 

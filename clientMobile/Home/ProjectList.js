@@ -95,7 +95,10 @@ class ProjectListDrawer extends Component {
           />
         </View>
         <View style={{flex: 1}}>
-          <JoinProject setDrawerVisible={this.props.setDrawerVisible} user={this.props.user}/>
+          <JoinProject
+            setDrawerVisible={this.props.setDrawerVisible}
+            user={this.props.user}
+          />
         </View>
         <View style={{height: 20}}></View>
       </View>

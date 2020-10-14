@@ -7,7 +7,7 @@ import {
   ToggleButton,
   Spinner,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
 } from "react-bootstrap";
 import $ from "jquery";
 
@@ -93,16 +93,23 @@ class SendProjectNotification extends React.Component {
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
-                <Form.Label>Notification Message  {" "}
-              <OverlayTrigger
-                placement='right'
-                overlay={
-                <Tooltip className="helpTooltip">
-                  This message will be sent to every member part of this project
-                </Tooltip>
-                } >
-                <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
-                </OverlayTrigger></Form.Label>
+                <Form.Label>
+                  Notification Message{" "}
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={
+                      <Tooltip className="helpTooltip">
+                        This message will be sent to every member part of this
+                        project
+                      </Tooltip>
+                    }
+                  >
+                    <i
+                      className="fa fa-info-circle"
+                      style={{ color: "black", fontSize: "20px" }}
+                    ></i>
+                  </OverlayTrigger>
+                </Form.Label>
                 <Form.Control
                   as="textarea"
                   rows="3"
@@ -111,7 +118,7 @@ class SendProjectNotification extends React.Component {
                   required
                 />
               </Form.Group>
-              <ToggleButtonGroup horizontal name="notify">
+              <ToggleButtonGroup horizontal="true" name="notify">
                 <ToggleButton
                   variant="outline-secondary"
                   value="email"

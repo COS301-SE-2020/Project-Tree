@@ -54,14 +54,12 @@ export class Register extends React.Component {
     return arr;
   }
 
-  validateEmail(text){
-
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  validateEmail(text) {
+    let reg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(text.email) === false) {
       return false;
-    }
-    else {
-      return true
+    } else {
+      return true;
     }
   }
 
@@ -76,10 +74,13 @@ export class Register extends React.Component {
     let data = stringifyFormData(new FormData(event.target));
     let x = JSON.parse(data);
     let arr = this.password_validate(x);
-    let p = (this.validateEmail(x))
+    let p = this.validateEmail(x);
     if (arr.length === 0 && p) {
       $.post("/register", JSON.parse(data), (response) => {
-        if (response.message === "An account with that email has already been registered.") {
+        if (
+          response.message ===
+          "An account with that email has already been registered."
+        ) {
           alert(
             "User with this email already exists. Try with a different email."
           );
@@ -90,12 +91,9 @@ export class Register extends React.Component {
       }).fail(() => {
         alert("Unable to create User");
       });
-    } 
-    else if(p != true)
-    {
-      alert("Email format is not valid. Please check again.")
-    }   
-    else {
+    } else if (p !== true) {
+      alert("Email format is not valid. Please check again.");
+    } else {
       this.setState({ passwordError: arr[0] });
       this.setState({ passwordError2: arr[1] });
       this.setState({ passwordError3: arr[2] });

@@ -122,7 +122,8 @@ class App extends Component {
               otherProjects[i].criticalPath = response;
               this.setState({ otherProjects: otherProjects });
             }
-          ).fail(() => {
+          ).fail((err) => {
+            console.log(err);
             alert("Unable to get Critical Path");
           });
         });
@@ -199,13 +200,13 @@ class App extends Component {
 
       let project = {};
       this.state.ownedProjects.forEach((p) => {
-        if (p.projectInfo.id === proj.id){
+        if (p.projectInfo.id === proj.id) {
           p.projectInfo = proj;
           project = p;
         }
       });
       this.state.otherProjects.forEach((p) => {
-        if (p.projectInfo.id === proj.id){
+        if (p.projectInfo.id === proj.id) {
           p.projectInfo = proj;
           project = p;
         }

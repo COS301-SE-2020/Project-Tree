@@ -1,5 +1,12 @@
 import React from "react";
-import { Form, Modal, Button, Spinner, Tooltip, OverlayTrigger } from "react-bootstrap";
+import {
+  Form,
+  Modal,
+  Button,
+  Spinner,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
 import ms from "ms";
 
 class CreateDependency extends React.Component {
@@ -62,11 +69,12 @@ class CreateDependency extends React.Component {
       body: projectData,
     });
     const body = await response.json();
-    if ( body.message === "After Project End Date"){
-      alert("Making these changes will move the project end Date. Please select a date that does not change the project duration");
-      this.setState({isloading: false}); 
+    if (body.message === "After Project End Date") {
+      alert(
+        "Making these changes will move the project end Date. Please select a date that does not change the project duration"
+      );
+      this.setState({ isloading: false });
     } else {
-
       await this.props.setTaskInfo(
         body.nodes,
         body.rels,
@@ -108,18 +116,25 @@ class CreateDependency extends React.Component {
             </Modal.Header>
             <Modal.Body>
               <Form.Group>
-                <Form.Label>Relationship type {" "}
+                <Form.Label>
+                  Relationship type{" "}
                   <OverlayTrigger
-                      placement='auto'
-                      overlay={
+                    placement="auto"
+                    overlay={
                       <Tooltip className="helpTooltip">
-                        Start-Start: The second task can start when the first task starts <br></br>
-                        Start-Finish: The second task can only start when the first task has finished
+                        Start-Start: The second task can start when the first
+                        task starts <br></br>
+                        Start-Finish: The second task can only start when the
+                        first task has finished
                       </Tooltip>
-                      } >
-                      <i className="fa fa-info-circle"  style={{ color: "black", fontSize: "20px" }}></i>
-                    </OverlayTrigger>
-                  </Form.Label>
+                    }
+                  >
+                    <i
+                      className="fa fa-info-circle"
+                      style={{ color: "black", fontSize: "20px" }}
+                    ></i>
+                  </OverlayTrigger>
+                </Form.Label>
                 <Form.Control
                   required
                   as="select"
@@ -160,7 +175,7 @@ class CreateDependency extends React.Component {
                     this.value = this.state.relationshipType;
                   }}
                 >
-                  <option value="ss">Start-Start </option> 
+                  <option value="ss">Start-Start </option>
                   <option value="fs">Finish-Start </option>
                 </Form.Control>
               </Form.Group>
@@ -221,7 +236,7 @@ class CreateDependency extends React.Component {
                     } else {
                       if (target.startDate < this.props.source.endDate) {
                         alert(
-                          "Please choose a start date that is after the first task" 
+                          "Please choose a start date that is after the first task"
                         );
                         target.startDate = this.props.source.endDate;
                         this.setState({

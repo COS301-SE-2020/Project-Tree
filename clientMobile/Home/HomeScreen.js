@@ -153,12 +153,16 @@ class Home extends Component {
 
   render() {
     if (this.state.projects === null) {
-      return <View style={{backgroundColor: 'white', flex: 1}}><Spinner /></View>;
+      return (
+        <View style={{backgroundColor: 'white', flex: 1}}>
+          <Spinner />
+        </View>
+      );
     }
 
     return (
       <Screen>
-        <Drawer 
+        <Drawer
           type="overlay"
           open={this.state.drawerVisible}
           content={
@@ -183,7 +187,7 @@ class Home extends Component {
               opacity: (2 - ratio) / 2,
             },
           })}>
-          <TopBar useMenu={true} setDrawerVisible={this.setDrawerVisible}/>
+          <TopBar useMenu={true} setDrawerVisible={this.setDrawerVisible} />
           <HomeScreen
             project={this.props.project}
             user={this.props.user}
@@ -196,7 +200,6 @@ class Home extends Component {
           />
         </Drawer>
       </Screen>
-      
     );
   }
 }
@@ -380,7 +383,10 @@ class HomeScreen extends Component {
                         color: '#184D47',
                         textAlign: 'center',
                       }}>
-                      {`${this.props.project.startDate.substring(0,10)} ${this.props.project.startDate.substring(11,16)}`}
+                      {`${this.props.project.startDate.substring(
+                        0,
+                        10,
+                      )} ${this.props.project.startDate.substring(11, 16)}`}
                     </Text>
                   </View>
                   <View style={{width: '50%', alignItems: 'center'}}>
@@ -389,7 +395,10 @@ class HomeScreen extends Component {
                         color: '#184D47',
                         textAlign: 'center',
                       }}>
-                      {`${this.props.project.endDate.substring(0,10)} ${this.props.project.endDate.substring(11,16)}`}
+                      {`${this.props.project.endDate.substring(
+                        0,
+                        10,
+                      )} ${this.props.project.endDate.substring(11, 16)}`}
                     </Text>
                   </View>
                 </View>
@@ -432,7 +441,7 @@ class HomeScreen extends Component {
               </CardItem>
               {this.props.userPermissions['project'] === true ? (
                 <CardItem>
-                  <MemberComponent project={this.props.project}/>
+                  <MemberComponent project={this.props.project} />
                 </CardItem>
               ) : null}
               <CardItem>
@@ -480,7 +489,7 @@ const styles = StyleSheet.create({
     margin: 5,
     textAlign: 'center',
     flex: 1,
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   editButton: {
     backgroundColor: '#184D47',

@@ -11,8 +11,7 @@ async function createDependency(req, res) {
     startDate: req.body.changedInfo.startDate,
     endDate: req.body.changedInfo.endDate,
     duration: endDate.getTime() - startDate.getTime(),
-    relationshipType:
-      req.body.changedInfo.relationshipType,
+    relationshipType: req.body.changedInfo.relationshipType,
     source: req.body.changedInfo.fid,
     target: req.body.changedInfo.sid,
   };
@@ -27,11 +26,11 @@ async function createDependency(req, res) {
     queries
   );
 
-  if (await updateProject.CheckEndDate(queries, req.body.project) == false){
+  if ((await updateProject.CheckEndDate(queries, req.body.project)) == false) {
     res.status(400);
-    res.send({message: "After Project End Date"});
+    res.send({ message: "After Project End Date" });
     return;
-  }else{
+  } else {
     db.getSession()
       .run(
         `
@@ -72,7 +71,7 @@ async function createDependency(req, res) {
           source: result.records[0]._fields[0].start.low,
           target: result.records[0]._fields[0].end.low,
         };
-        
+
         for (var x = 0; x < req.body.rels.length; x++) {
           if (req.body.rels[x].id == "tempID") {
             req.body.rels[x] = changedRel;
@@ -128,7 +127,7 @@ async function createDependency(req, res) {
               res.send({ message: err });
             });
         }
-        updateProject.runQueries(queries)
+        updateProject.runQueries(queries);
 
         res.status(200);
         res.send({
@@ -157,8 +156,7 @@ async function updateDependency(req, res) {
     startDate: req.body.changedInfo.startDate,
     endDate: req.body.changedInfo.endDate,
     duration: endDate.getTime() - startDate.getTime(),
-    relationshipType:
-      req.body.changedInfo.relationshipType,
+    relationshipType: req.body.changedInfo.relationshipType,
     source: req.body.changedInfo.source,
     target: req.body.changedInfo.target,
   };
@@ -175,11 +173,11 @@ async function updateDependency(req, res) {
     req.body.rels,
     queries
   );
-  if (await updateProject.CheckEndDate(queries, req.body.project) == false){
+  if ((await updateProject.CheckEndDate(queries, req.body.project)) == false) {
     res.status(400);
-    res.send({message: "After Project End Date"});
+    res.send({ message: "After Project End Date" });
     return;
-  }else{
+  } else {
     db.getSession()
       .run(
         `
@@ -223,7 +221,7 @@ async function updateDependency(req, res) {
             req.body.rels[x] = changedRel;
           }
         }
-        updateProject.runQueries(queries)
+        updateProject.runQueries(queries);
 
         res.status(200);
         res.send({
@@ -274,8 +272,13 @@ function deleteDependency(req, res) {
         });
 
         let queries = [];
-        await updateProject.updateTask(target, req.body.nodes, req.body.rels, queries);
-        updateProject.runQueries(queries)
+        await updateProject.updateTask(
+          target,
+          req.body.nodes,
+          req.body.rels,
+          queries
+        );
+        updateProject.runQueries(queries);
 
         res.status(200);
         res.send({
@@ -322,8 +325,13 @@ function deleteDependency(req, res) {
         });
 
         let queries = [];
-        await updateProject.updateTask(target, req.body.nodes, req.body.rels, queries);
-        updateProject.runQueries(queries)
+        await updateProject.updateTask(
+          target,
+          req.body.nodes,
+          req.body.rels,
+          queries
+        );
+        updateProject.runQueries(queries);
 
         res.status(200);
         res.send({
@@ -377,9 +385,14 @@ function deleteDependency(req, res) {
         });
 
         let queries = [];
-        await updateProject.updateTask(target, req.body.nodes, req.body.rels, queries);
-        updateProject.runQueries(queries)
-  
+        await updateProject.updateTask(
+          target,
+          req.body.nodes,
+          req.body.rels,
+          queries
+        );
+        updateProject.runQueries(queries);
+
         res.status(200);
         res.send({
           nodes: req.body.nodes,
@@ -423,8 +436,13 @@ function deleteDependency(req, res) {
         });
 
         let queries = [];
-        await updateProject.updateTask(target, req.body.nodes, req.body.rels, queries);
-        updateProject.runQueries(queries)
+        await updateProject.updateTask(
+          target,
+          req.body.nodes,
+          req.body.rels,
+          queries
+        );
+        updateProject.runQueries(queries);
 
         res.status(200);
         res.send({
