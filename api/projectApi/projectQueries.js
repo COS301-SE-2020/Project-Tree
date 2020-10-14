@@ -398,20 +398,20 @@ function getCriticalPath(req, res) {
     .then((result) => {
       let path = null;
       let maxDur = 0;
-      result.records.forEach(record => {
+      result.records.forEach((record) => {
         let dur = 0;
         record._fields[0].segments.forEach((segment, i) => {
-          if ( i == 0 ){
-            dur += parseInt(segment.start.properties.duration)/10000;
+          if (i == 0) {
+            dur += parseInt(segment.start.properties.duration) / 10000;
           }
-          dur += parseInt(segment.relationship.properties.duration)/10000;
-          dur += parseInt(segment.end.properties.duration)/10000;
+          dur += parseInt(segment.relationship.properties.duration) / 10000;
+          dur += parseInt(segment.end.properties.duration) / 10000;
         });
-        if ( maxDur < dur ) {
+        if (maxDur < dur) {
           maxdur = dur;
           path = record._fields[0];
         }
-      }); 
+      });
       res.status(200);
       res.send({ path: path });
     })

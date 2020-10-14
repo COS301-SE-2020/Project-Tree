@@ -18,7 +18,6 @@ import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 import IonIcons from 'react-native-vector-icons/Ionicons';
 
-
 class LoginScreen extends Component {
   constructor(props) {
     super(props);

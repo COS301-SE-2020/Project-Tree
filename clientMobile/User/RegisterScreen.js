@@ -313,7 +313,7 @@ class RegisterScreen extends Component {
               Password
             </Text>
             <View style={styles.mover}>
-            <IconSimpleLineIcons name="lock" size={21} />
+              <IconSimpleLineIcons name="lock" size={21} />
               <TextInput
                 placeholder="Password"
                 secureTextEntry={this.state.hiddenText ? true : false}

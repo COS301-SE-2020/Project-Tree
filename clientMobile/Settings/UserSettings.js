@@ -471,7 +471,7 @@ class UserSettings extends Component {
                     Current Password
                   </Text>
                   <View style={styles.mover}>
-                  <IconSimpleLineIcons name="lock" size={21} />
+                    <IconSimpleLineIcons name="lock" size={21} />
                     <TextInput
                       placeholder="Password"
                       secureTextEntry={this.state.hiddenText ? true : false}
@@ -481,10 +481,10 @@ class UserSettings extends Component {
                     />
                     <TouchableOpacity onPress={this.updateHiddenText}>
                       {this.state.hiddenText ? (
-                       <FontAwesome name="eye-slash" color="grey" size={21} />
-                  ) : (
-                      <FontAwesome name="eye" color="black" size={21} />
-                    )}
+                        <FontAwesome name="eye-slash" color="grey" size={21} />
+                      ) : (
+                        <FontAwesome name="eye" color="black" size={21} />
+                      )}
                     </TouchableOpacity>
                   </View>
 
@@ -498,7 +498,7 @@ class UserSettings extends Component {
                     New Password
                   </Text>
                   <View style={styles.mover}>
-                  <IconSimpleLineIcons name="lock" size={21} />
+                    <IconSimpleLineIcons name="lock" size={21} />
                     <TextInput
                       placeholder="Password"
                       secureTextEntry={this.state.hiddenText ? true : false}
@@ -508,10 +508,10 @@ class UserSettings extends Component {
                     />
                     <TouchableOpacity onPress={this.updateHiddenText}>
                       {this.state.hiddenText ? (
-                       <FontAwesome name="eye-slash" color="grey" size={21} />
-                       ) : (
+                        <FontAwesome name="eye-slash" color="grey" size={21} />
+                      ) : (
                         <FontAwesome name="eye" color="black" size={21} />
-                        )}
+                      )}
                     </TouchableOpacity>
                   </View>
                   {this.state.isValidPassword ? (
