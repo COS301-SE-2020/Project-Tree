@@ -13,11 +13,27 @@ class ProjectPage extends React.Component {
     this.state = {
       noticeBoardRefreshKey: 0,
       messages: null,
+      refresh: 0,
+      managers: null,
     };
 
     this.updateNoticeBoardRefreshKey = this.updateNoticeBoardRefreshKey.bind(
       this
     );
+
+    this.setProjectManagers = this.setProjectManagers.bind(this);
+  }
+
+  setProjectManagers() {
+    $.post(
+      "/people/getProjectManagers",
+      { id: this.props.project.projectInfo.id },
+      (response) => {
+        this.setState({ managers: response.users });
+      }
+    ).fail((err) => {
+      throw Error(err);
+    });
   }
 
   async updateNoticeBoardRefreshKey() {
@@ -49,6 +65,28 @@ class ProjectPage extends React.Component {
     }).fail(() => {
       alert("Unable to fetch notifications");
     });
+
+    $.post(
+      "/getProject",
+      { id: this.props.project.projectInfo.id },
+      (response) => {
+        this.props.project.tasks = response.tasks;
+        this.props.project.rels = response.rels;
+        this.setState({ refresh: this.state.refresh + 1 });
+      }
+    ).fail((err) => {
+      throw Error(err);
+    });
+
+    $.post(
+      "/people/getProjectManagers",
+      { id: this.props.project.projectInfo.id },
+      (response) => {
+        this.setState({ managers: response.users });
+      }
+    ).fail((err) => {
+      throw Error(err);
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -65,6 +103,28 @@ class ProjectPage extends React.Component {
       }).fail(() => {
         alert("Unable to fetch notifications");
       });
+
+      $.post(
+        "/getProject",
+        { id: this.props.project.projectInfo.id },
+        (response) => {
+          this.props.project.tasks = response.tasks;
+          this.props.project.rels = response.rels;
+          this.setState({ refresh: this.state.refresh + 1 });
+        }
+      ).fail((err) => {
+        throw Error(err);
+      });
+
+      $.post(
+        "/people/getProjectManagers",
+        { id: this.props.project.projectInfo.id },
+        (response) => {
+          this.setState({ managers: response.users });
+        }
+      ).fail((err) => {
+        throw Error(err);
+      });
     }
   }
 
@@ -79,11 +139,14 @@ class ProjectPage extends React.Component {
               userPermission={this.props.userPermission}
               user={this.props.user}
               updateNoticeBoardRefreshKey={this.updateNoticeBoardRefreshKey}
+              setProjectManagers={this.setProjectManagers}
+              managers={this.state.managers}
             />
           </Col>
           <Col sm={12} md={12} lg={6} xl={6}>
             {this.props.project != null && this.props.user != null ? (
               <NoticeBoard
+                userPermission={this.props.userPermission}
                 messages={this.state.messages}
                 refreshKey={this.state.noticeBoardRefreshKey}
               />

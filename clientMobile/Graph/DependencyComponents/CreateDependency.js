@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import ms from 'ms';
 
 class CreateDependency extends Component {
@@ -97,7 +97,7 @@ class CreateDependency extends Component {
           target={this.state.target}
           source_viewId={this.state.source_viewId}
           target_viewId={this.state.target_viewId}
-          projID={this.props.projID}
+          project={this.props.project}
           getProjectInfo={this.props.getProjectInfo}
           setProjectInfo={this.props.setProjectInfo}
         />
@@ -174,7 +174,7 @@ class CreateDependencyModal extends Component {
                 target={this.props.target}
                 source_viewId={this.props.source_viewId}
                 target_viewId={this.props.target_viewId}
-                projID={this.props.projID}
+                project={this.props.project}
               />
             </View>
           </View>
@@ -204,6 +204,7 @@ class CreateDependencyForm extends Component {
       error: null,
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
+      ableToSubmit: false,
     };
 
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
@@ -212,17 +213,28 @@ class CreateDependencyForm extends Component {
     this.updateIndex = this.updateIndex.bind(this);
   }
 
-  handleDateTimeSelect(event, selectedDate, type) {
-    if (event.type === 'dismissed') {
-      this.setState({dateTimePicker: false});
-      return;
+  handleDateTimeSelect(selectedDate, type) {
+    let date = selectedDate;
+    if (type.type !== 'both') {
+      date = new Date(
+        new Date(selectedDate).getTime() -
+          new Date().getTimezoneOffset() * 60 * 1000,
+      )
+        .toISOString()
+        .substring(0, 16);
+      if (type.type === 'date')
+        date = `${date.substring(0, 10)}T${
+          type.for === 'start'
+            ? this.state.startDate.substring(11, 16)
+            : this.state.endDate.substring(11, 16)
+        }`;
+      else
+        date = `${
+          type.for === 'start'
+            ? this.state.startDate.substring(0, 10)
+            : this.state.endDate.substring(0, 10)
+        }T${date.substring(11, 16)}`;
     }
-    let date = new Date(
-      new Date(selectedDate).getTime() -
-        new Date().getTimezoneOffset() * 60 * 1000,
-    )
-      .toISOString()
-      .substring(0, 16);
     if (type.for === 'start') {
       if (this.state.endDate < date)
         this.setState({
@@ -256,16 +268,21 @@ class CreateDependencyForm extends Component {
   updateIndex(selectedIndex) {
     if (selectedIndex == 0) {
       this.setState({selectedIndex: 0, relationshipType: 'ss'});
-      this.handleDateTimeSelect({}, this.state.sStartDate, {for: 'start'});
+      this.handleDateTimeSelect(this.state.sStartDate, {
+        type: 'both',
+        for: 'start',
+      });
     } else {
       this.setState({selectedIndex: 1, relationshipType: 'fs'});
-      this.handleDateTimeSelect({}, this.state.sEndDate, {for: 'start'});
+      this.handleDateTimeSelect(this.state.sEndDate, {
+        type: 'both',
+        for: 'start',
+      });
     }
   }
 
   formatValidateInput() {
     let data = {
-      projId: this.props.projID,
       fid: this.props.source.id,
       sid: this.props.target.id,
       cd_viewId_source: this.props.source_viewId,
@@ -281,15 +298,17 @@ class CreateDependencyForm extends Component {
   }
 
   async handleSubmit() {
+    this.setState({ableToSubmit: true});
     let input = this.formatValidateInput();
     if (input === null) return;
 
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = input;
+    projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/dependency/add',
+      'https://projecttree.herokuapp.com/dependency/add',
       {
         method: 'POST',
         headers: {
@@ -301,8 +320,15 @@ class CreateDependencyForm extends Component {
     );
 
     const body = await response.json();
-    this.props.setCreateDependencyVisibility(false);
-    this.props.setProjectInfo(body.nodes, body.rels);
+    if (body.message === 'After Project End Date') {
+      alert(
+        'The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date',
+      );
+    } else {
+      this.props.setCreateDependencyVisibility(false);
+      this.props.setProjectInfo(body.nodes, body.rels);
+    }
+    this.setState({ableToSubmit: false});
   }
 
   CalcDiff(sd, ed) {
@@ -398,32 +424,29 @@ class CreateDependencyForm extends Component {
         </View>
         <View styles={{flex: 1}}>
           <TouchableOpacity
+            disabled={this.state.ableToSubmit}
             style={styles.submitButton}
             onPress={this.handleSubmit}>
             <Text style={{color: 'white'}}>Submit</Text>
           </TouchableOpacity>
         </View>
-        {this.state.dateTimePicker && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={
-              new Date(
-                new Date(this.state.dateTimeType.value).getTime() +
-                  new Date().getTimezoneOffset() * 60 * 1000,
-              )
-            }
-            mode={this.state.dateTimeType.type}
-            is24Hour={true}
-            display="default"
-            onChange={(event, selectedDate) =>
-              this.handleDateTimeSelect(
-                event,
-                selectedDate,
-                this.state.dateTimeType,
-              )
-            }
-          />
-        )}
+        <DateTimePicker
+          testID="dateTimePicker"
+          date={
+            new Date(
+              new Date(this.state.dateTimeType.value).getTime() +
+                new Date().getTimezoneOffset() * 60 * 1000,
+            )
+          }
+          mode={this.state.dateTimeType.type}
+          is24Hour={true}
+          display="default"
+          isVisible={this.state.dateTimePicker}
+          onCancel={() => this.setState({dateTimePicker: false})}
+          onConfirm={(selectedDate) =>
+            this.handleDateTimeSelect(selectedDate, this.state.dateTimeType)
+          }
+        />
       </View>
     );
   }

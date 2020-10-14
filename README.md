@@ -1,11 +1,11 @@
-# Project Management Tree 
+# Project Management Tree
+
 [![Build Status](https://travis-ci.org/COS301-SE-2020/Project-Tree.svg?branch=master)](https://travis-ci.org/COS301-SE-2020/Project-Tree)
 <a href="https://www.statuscake.com/" title="Website Uptime Monitoring"><img src="https://app.statuscake.com/button/index.php?Track=5661201&Days=1&Design=4" /></a>
 
 <img src="group photo.jpg" width=300/> <img src="logo.png" width=450/>
 
 The project entails the development of a project management system. The system represents a project visually as a tree structure, with each “leaf” being a project task, and each branch being a task dependency. The core idea of the system is to allow for all task dependencies to be captured accurately and clearly, to ensure effective project management.
-
 
 ## Links
 

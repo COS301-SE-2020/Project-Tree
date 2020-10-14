@@ -7,14 +7,33 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AsyncStorage from '@react-native-community/async-storage';
+import ImagePicker from 'react-native-image-crop-picker';
+
+let global_pfp = '';
+const axios = require('axios').default;
 
 export default class SettingsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {pfp: 'https://i.ibb.co/MRpbpHN/default.png'};
+    this.state = {
+      pfp: 'https://i.ibb.co/MRpbpHN/default.png',
+      modalVisible: false,
+      token: '',
+    };
+
+    this.setModalVisible = this.setModalVisible.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.choosePhotoFromLibrary = this.choosePhotoFromLibrary.bind(this);
+    this.fileChange = this.fileChange.bind(this);
+    this.confirmation = this.confirmation.bind(this);
+  }
+
+  async setModalVisible(visible) {
+    this.setState({modalVisible: visible});
   }
 
   async componentDidMount() {
@@ -23,7 +42,7 @@ export default class SettingsScreen extends Component {
       token = JSON.parse(value);
       this.setState({token: token});
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/get',
+        'https://projecttree.herokuapp.com/user/get',
         {
           method: 'POST',
           headers: {
@@ -34,7 +53,10 @@ export default class SettingsScreen extends Component {
         },
       );
       const body = await response.json();
-      if (body.user.profilepicture !== 'undefined') {
+      if (body.message == 'Invalid User') {
+        this.props.handleLogout();
+      }
+      if (body.user.profilepicture != 'undefined') {
         this.setState({
           pfp: body.user.profilepicture,
         });
@@ -42,12 +64,108 @@ export default class SettingsScreen extends Component {
     });
   }
 
+  confirmation() {
+    Alert.alert(
+      'Are You Sure?',
+      'Clicking confirm will delete this user and all data associated with them.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          onPress: () => this.deleteUser(),
+        },
+      ],
+      {cancelable: false},
+    );
+  }
+
+  deleteUser() {
+    let tok = this.state.token;
+    let data = {
+      token: tok,
+    };
+    data = JSON.stringify(data);
+    const res = fetch('https://projecttree.herokuapp.com/user/delete', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    });
+
+    this.props.handleLogout();
+  }
+
+  choosePhotoFromLibrary() {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 300,
+      cropping: true,
+      compressImageQuality: 0.7,
+      includeBase64: true,
+    }).then((image) => {
+      this.fileChange(image);
+    });
+  }
+
+  async fileChange(file) {
+    let tok = this.state.token;
+    let body = new FormData();
+    body.append('image', file.data);
+    await axios({
+      method: 'post',
+      url:
+        'https://api.imgbb.com/1/upload?key=0a77a57b5cf30dc09fd33f608fcb318c',
+      timeout: 0,
+      processData: false,
+      mimeType: 'multipart/form-data',
+      contentType: false,
+      data: body,
+    })
+      .then(function (response) {
+        let x = response.data.data.url;
+        global_pfp = response.data.data.url;
+        let data = {
+          token: tok,
+          profilepicture: x,
+        };
+        data = JSON.stringify(data);
+
+        const res = fetch('https://projecttree.herokuapp.com/user/change', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: data,
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    this.setState({pfp: global_pfp});
+  }
+
+  hideModal() {
+    this.setState({show: false});
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="#008656" barStyle="light-content" />
+        <StatusBar backgroundColor="#96BB7C" barStyle="light-content" />
         <View style={styles.header}>
-          <Image style={styles.logo} source={{uri: this.state.pfp}} />
+          <TouchableOpacity
+            onPress={() => {
+              this.choosePhotoFromLibrary();
+            }}>
+            <Image style={styles.logo} source={{uri: this.state.pfp}} />
+          </TouchableOpacity>
           <Text style={styles.text_header}>User Details</Text>
         </View>
         <Animatable.View
@@ -62,14 +180,14 @@ export default class SettingsScreen extends Component {
           <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {
-                this.props.userScreen(true);
+                this.confirmation();
               }}
               style={[
                 styles.signIn,
                 {
                   borderColor: '#184D47',
                   borderWidth: 2,
-                  marginTop: 185,
+                  marginTop: 10,
                 },
               ]}>
               <Text
@@ -79,7 +197,55 @@ export default class SettingsScreen extends Component {
                     color: '#008656',
                   },
                 ]}>
-                Edit User Settings
+                Delete Account
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.button}>
+            <TouchableOpacity
+              onPress={() => {
+                this.choosePhotoFromLibrary();
+              }}
+              style={[
+                styles.signIn,
+                {
+                  borderColor: '#184D47',
+                  borderWidth: 2,
+                  marginTop: 50,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.textSign,
+                  {
+                    color: '#008656',
+                  },
+                ]}>
+                Change Profile Picture
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.button}>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.userScreen(true);
+              }}
+              style={[
+                styles.signIn,
+                {
+                  borderColor: '#184D47',
+                  borderWidth: 2,
+                  marginTop: 10,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.textSign,
+                  {
+                    color: '#008656',
+                  },
+                ]}>
+                Edit User Details
               </Text>
             </TouchableOpacity>
           </View>
@@ -93,7 +259,7 @@ export default class SettingsScreen extends Component {
                 {
                   borderColor: '#184D47',
                   borderWidth: 2,
-                  marginTop: 20,
+                  marginTop: 10,
                 },
               ]}>
               <Text
@@ -116,7 +282,7 @@ export default class SettingsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#008656',
+    backgroundColor: '#96BB7C',
   },
   header: {
     alignItems: 'center',
@@ -155,6 +321,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#FF0000',
     paddingBottom: 5,
   },
+  hideButton: {
+    backgroundColor: '#fff',
+    alignItems: 'flex-end',
+    marginRight: 10,
+    marginTop: 0,
+    bottom: 0,
+  },
   textInput: {
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 0 : -12,
@@ -189,5 +362,98 @@ const styles = StyleSheet.create({
     height: 110,
     borderRadius: 100,
     marginBottom: 10,
+  },
+  panel: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 0},
+    shadowRadius: 5,
+    shadowOpacity: 0.4,
+  },
+  panelHeader: {
+    alignItems: 'center',
+  },
+  panelHandle: {
+    width: 40,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#00000040',
+    marginBottom: 10,
+  },
+  panelTitle: {
+    fontSize: 27,
+    height: 35,
+  },
+  panelSubtitle: {
+    fontSize: 14,
+    color: 'gray',
+    height: 30,
+    marginBottom: 10,
+  },
+  panelButton: {
+    padding: 13,
+    borderRadius: 10,
+    backgroundColor: '#FF6347',
+    alignItems: 'center',
+    marginVertical: 7,
+  },
+  panelButtonTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  centeredView: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(100,100,100, 0.8)',
+    padding: 20,
+  },
+  modalView: {
+    margin: 80,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 100,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    width: 350,
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  floatinBtn: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    right: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
   },
 });

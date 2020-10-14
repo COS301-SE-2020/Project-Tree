@@ -16,6 +16,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import IconEntypo from 'react-native-vector-icons/AntDesign';
+import IconMaterial from 'react-native-vector-icons/MaterialIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 class UserSettings extends Component {
   constructor(props) {
@@ -48,6 +52,7 @@ class UserSettings extends Component {
       passwordError2: '',
       passwordError3: '',
       passwordError4: '',
+      oldEmail: '',
     };
     this.textInputChange = this.textInputChange.bind(this);
     this.emailInputChange = this.emailInputChange.bind(this);
@@ -118,7 +123,7 @@ class UserSettings extends Component {
       token = JSON.parse(value);
       this.setState({token: token});
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/get',
+        'https://projecttree.herokuapp.com/user/get',
         {
           method: 'POST',
           headers: {
@@ -133,8 +138,8 @@ class UserSettings extends Component {
         userName: body.user.name,
         sname: body.user.sname,
         email: body.user.email,
+        oldEmail: body.user.email,
         initialEmail: body.user.email,
-        profilepicture: body.user.profilepicture,
       });
       if (body.user.birthday == '  ') {
       } else {
@@ -275,7 +280,7 @@ class UserSettings extends Component {
       };
       data = JSON.stringify(data);
       const response = await fetch(
-        'http://projecttree.herokuapp.com/user/pass',
+        'https://projecttree.herokuapp.com/user/pass',
         {
           method: 'POST',
           headers: {
@@ -315,26 +320,26 @@ class UserSettings extends Component {
         token: this.state.token,
         name: this.state.userName,
         email: this.state.email,
+        oldEmail: this.state.oldEmail,
         sname: this.state.sname,
         bday: this.state.startDate,
         testEmail: this.state.initialEmail,
         testPass: pass,
-        profilepicture: this.state.profilepicture,
       };
       data = JSON.stringify(data);
 
-      const response = await fetch(
-        'http://projecttree.herokuapp.com/user/edit',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: data,
+      const response = await fetch('http://10.0.2.2:5000/user/edit', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      );
+        body: data,
+      });
       const body = await response.json();
+      if (body.message) {
+        alert('Change to email detected. Please log in with your new email.');
+      }
       this.props.userScreen(false);
     } else {
       alert('Please ensure all entered information is valid');
@@ -344,13 +349,8 @@ class UserSettings extends Component {
   render() {
     return (
       <View style={styleUser.container}>
-        <StatusBar backgroundColor="#EBB035" barStyle="light-content" />
+        <StatusBar backgroundColor="#96BB7C" barStyle="light-content" />
         <View style={styleUser.header}>
-          <TouchableOpacity
-            style={styleUser.hideButton1}
-            onPress={() => this.props.userScreen(false)}>
-            <Icon type="FontAwesome" name="close" />
-          </TouchableOpacity>
           <Text style={styleUser.text_header}>User details</Text>
         </View>
         <Animatable.View animation="fadeInUp" style={styleUser.footer}>
@@ -369,7 +369,7 @@ class UserSettings extends Component {
               />
               {this.state.check_textInputChange ? (
                 <Animatable.View animation="rubberBand">
-                  <Feather name="check-circle" color="green" size={16} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
@@ -399,7 +399,7 @@ class UserSettings extends Component {
               Surname
             </Text>
             <View style={styleUser.action}>
-              <FontAwesome name="user-o" color="#05375a" size={16} />
+              <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
                 placeholder="Surname"
                 style={styleUser.textInput}
@@ -410,7 +410,7 @@ class UserSettings extends Component {
               />
               {this.state.checkSname ? (
                 <Animatable.View animation="rubberBand">
-                  <Feather name="check-circle" color="green" size={16} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
@@ -433,31 +433,10 @@ class UserSettings extends Component {
               />
               {this.state.check_emailInputChange ? (
                 <Animatable.View animation="pulse">
-                  <Feather name="check-circle" color="#296d98" size={20} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
-            {/* <Text style={[styleUser.text_footer, {marginTop: 35}]}>Date of Birth</Text> */}
-            {/* <View>
-            <Form>
-              <Item floatingLabel disabled>
-              <Input value={this.state.startDate.toISOString().substr(0, 10)} editable={false} />
-               <TextInput
-                  style={styleUser.textInput}
-                 // defaultValue={this.state.startDate}
-                  placeholder="startDate"
-                  editable={false} 
-                />
-                <Icon
-                  type="AntDesign"
-                  name="calendar"
-                  onPress={() => {
-                    this.setState({startDatePickerVisible: true});
-                  }}
-                />
-              </Item>
-            </Form>
-            </View> */}
             <Modal
               animationType="fade"
               transparent={true}
@@ -492,7 +471,7 @@ class UserSettings extends Component {
                     Current Password
                   </Text>
                   <View style={styles.mover}>
-                    <Feather name="lock" color="#05375a" size={20} />
+                    <IconSimpleLineIcons name="lock" size={21} />
                     <TextInput
                       placeholder="Password"
                       secureTextEntry={this.state.hiddenText ? true : false}
@@ -502,9 +481,9 @@ class UserSettings extends Component {
                     />
                     <TouchableOpacity onPress={this.updateHiddenText}>
                       {this.state.hiddenText ? (
-                        <Feather name="eye-off" color="grey" size={20} />
+                        <FontAwesome name="eye-slash" color="grey" size={21} />
                       ) : (
-                        <Feather name="eye" color="grey" size={20} />
+                        <FontAwesome name="eye" color="black" size={21} />
                       )}
                     </TouchableOpacity>
                   </View>
@@ -519,7 +498,7 @@ class UserSettings extends Component {
                     New Password
                   </Text>
                   <View style={styles.mover}>
-                    <Feather name="lock" color="#05375a" size={20} />
+                    <IconSimpleLineIcons name="lock" size={21} />
                     <TextInput
                       placeholder="Password"
                       secureTextEntry={this.state.hiddenText ? true : false}
@@ -529,9 +508,9 @@ class UserSettings extends Component {
                     />
                     <TouchableOpacity onPress={this.updateHiddenText}>
                       {this.state.hiddenText ? (
-                        <Feather name="eye-off" color="grey" size={20} />
+                        <FontAwesome name="eye-slash" color="grey" size={21} />
                       ) : (
-                        <Feather name="eye" color="grey" size={20} />
+                        <FontAwesome name="eye" color="black" size={21} />
                       )}
                     </TouchableOpacity>
                   </View>
@@ -655,7 +634,29 @@ class UserSettings extends Component {
                       color: '#296d98',
                     },
                   ]}>
-                  Edit Details
+                  Submit Details
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styleUser.buttonSign}>
+              <TouchableOpacity
+                onPress={() => this.props.userScreen(false)}
+                style={[
+                  styleUser.signIn,
+                  {
+                    borderColor: '#296d98',
+                    borderWidth: 2,
+                    marginTop: -38,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styleUser.textSign,
+                    {
+                      color: '#296d98',
+                    },
+                  ]}>
+                  Cancel
                 </Text>
               </TouchableOpacity>
             </View>
@@ -670,7 +671,7 @@ export default UserSettings;
 const styleUser = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EBB035',
+    backgroundColor: '#96BB7C',
     alignItems: 'center',
   },
   header: {
@@ -705,7 +706,6 @@ const styleUser = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 40,
-    fontFamily: 'sans-serif-medium',
   },
   text_footer: {
     color: '#05375a',

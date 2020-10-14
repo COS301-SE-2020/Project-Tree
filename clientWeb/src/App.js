@@ -122,7 +122,8 @@ class App extends Component {
               otherProjects[i].criticalPath = response;
               this.setState({ otherProjects: otherProjects });
             }
-          ).fail(() => {
+          ).fail((err) => {
+            console.log(err);
             alert("Unable to get Critical Path");
           });
         });
@@ -199,10 +200,16 @@ class App extends Component {
 
       let project = {};
       this.state.ownedProjects.forEach((p) => {
-        if (p.projectInfo.id === proj.id) project = p;
+        if (p.projectInfo.id === proj.id) {
+          p.projectInfo = proj;
+          project = p;
+        }
       });
       this.state.otherProjects.forEach((p) => {
-        if (p.projectInfo.id === proj.id) project = p;
+        if (p.projectInfo.id === proj.id) {
+          p.projectInfo = proj;
+          project = p;
+        }
       });
       this.setState({ project: project });
       let data = {};
@@ -298,7 +305,7 @@ class App extends Component {
               position: "fixed",
               height: "87px",
               width: "100%",
-              zIndex: "90",
+              zIndex: "9",
             }}
           >
             <Nav className="form-inline ">
@@ -336,10 +343,9 @@ class App extends Component {
               {this.state.showSideBar !== false ? (
                 <Col
                   sm={12}
-                  md={6}
-                  lg={4}
-                  xl={4}
-                  xs={4}
+                  md={7}
+                  lg={5}
+                  xl={5}
                   className="border-right border-dark"
                   style={{
                     height: this.state.height,
@@ -353,6 +359,7 @@ class App extends Component {
                     ownedProjects={this.state.ownedProjects}
                     otherProjects={this.state.otherProjects}
                     setProject={(project) => this.setProject(project)}
+                    user={this.state.user}
                   />
                 </Col>
               ) : null}
@@ -367,6 +374,7 @@ class App extends Component {
                         ownedProjects={this.state.ownedProjects}
                         otherProjects={this.state.otherProjects}
                         setProject={(project) => this.setProject(project)}
+                        user={this.state.user}
                       />
                     ) : (
                       <Redirect to="/" />
@@ -416,7 +424,6 @@ class App extends Component {
                       )
                     ) : (
                       <div class="screenC">
-                        {/* <div className="column left" style={{ backgroundColor: "white" }}> */}
                         <div className="login">
                           <div
                             className="container"

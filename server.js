@@ -27,11 +27,13 @@ app.post("/project/delete", pq.deleteProject);
 app.post("/project/update", pq.updateProject);
 app.post("/project/projecttasks", pq.getProjectTasks);
 app.post("/project/criticalpath", pq.getCriticalPath);
+app.post("/project/joinproject", pq.joinProject);
 app.post("/task/add", tq.createTask);
 app.post("/task/update", tq.updateTask);
 app.post("/task/delete", tq.deleteTask);
 app.post("/task/createClone", tq.createClone);
 app.post("/task/deleteClone", tq.deleteClone);
+app.post("/task/savePositions", tq.savePositions);
 app.post("/dependency/add", dq.createDependency);
 app.post("/dependency/update", dq.updateDependency);
 app.post("/dependency/delete", dq.deleteDependency);
@@ -40,16 +42,19 @@ app.post("/getProjectViews", gq.getProjectViews);
 app.post("/login", um.login);
 app.post("/register", um.register);
 app.post("/verify", um.verify);
+app.post("/user/delete", um.deleteUser);
 app.post("/user/get", um.getUser);
 app.post("/user/edit", um.editUser);
 app.post("/user/pass", um.editPassword);
 app.post("/user/checkpermission", um.checkPermission);
+app.post("/user/change", um.changePictureMobile);
 app.post("/mobile", async (req, res) => {
   taskArr = req.body.nodes;
   relArr = req.body.links;
   views = req.body.views;
   direction = req.body.graphDir;
-
+  positionMode = req.body.positionMode;
+  autoPos = req.body.autoPos;
   let criticalPath = null;
   if (req.body.criticalPath === "true") {
     criticalPath = await db
@@ -86,12 +91,19 @@ app.post("/mobile", async (req, res) => {
     views: views,
     graphDirection: direction,
     criticalPath: JSON.stringify(criticalPath),
+    positionMode: positionMode,
+    autoPos: autoPos,
   });
 });
 app.post("/people/getAllUsers", personQueries.getAllUsers);
+app.post("/people/getAllProjectMembers", personQueries.getAllProjectMembers);
+app.post("/people/getProjectManagers", personQueries.getProjectManagers);
 app.post("/people/assignPeople", personQueries.assignPeople);
 app.post("/people/updateAssignedPeople", personQueries.updateAssignedPeople);
 app.post("/people/assignedProjectUsers", personQueries.getAssignedProjectUsers);
+app.post("/people/addProjectManager", personQueries.addProjectManager);
+app.post("/people/getpendingmembers", personQueries.getPendingMembers);
+app.post("/people/authorisemember", personQueries.authoriseMember);
 app.post("/sendNotification", nh.sendNotification);
 app.post("/retrieveNotifications", nh.retrieveNotifications);
 

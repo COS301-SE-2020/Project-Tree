@@ -128,26 +128,6 @@ class TaskInfo extends React.Component {
         return list[0];
       } else {
         list.forEach((el, i) => {
-          let color;
-          switch (el.type) {
-            case "Complete":
-              color = "#77dd77";
-              break;
-            case "Issue":
-              color = "#ffae42";
-              break;
-            default:
-              color = "#fff";
-              if (el.type === "Incomplete") {
-                let today = new Date();
-                if (today > new Date(el.endDate)) color = "#ff6961";
-              } else if (el.type === "Complete") {
-                color = "#77dd77";
-              } else if (el.type === "Issue") {
-                color = "#ffae42";
-              }
-              break;
-          }
           let progressColor = "info";
           list[i] = (
             <Col

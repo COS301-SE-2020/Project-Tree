@@ -15,21 +15,13 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 const eye = <FontAwesomeIcon icon={faEye} />;
 
 let global_pfp = "";
+let oldE = "";
 function stringifyFormData(fd) {
   const data = {};
   for (let key of fd.keys()) {
     data[key] = fd.get(key);
   }
   return data;
-}
-
-function getBase64(file, onLoadCallback) {
-  var reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = onLoadCallback;
-  reader.onerror = function (error) {
-    console.log("Error when converting PDF file to base64: ", error);
-  };
 }
 
 const FileUploader = (props) => {
@@ -81,6 +73,8 @@ class Settings extends React.Component {
       passwordError3: "",
       passwordError4: "",
       hidden: true,
+      deleteUserCheck: false,
+      oldEmail: "",
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
@@ -94,10 +88,11 @@ class Settings extends React.Component {
     this.handlePass = this.handlePass.bind(this);
     this.toggleShow = this.toggleShow.bind(this);
     this.password_validate = this.password_validate.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
   }
 
   password_validate(p) {
-    let str = "";
+    //let str = "";
     let arr = [];
     // let p = d.password;
     /[A-Z]/.test(p) === false
@@ -151,7 +146,7 @@ class Settings extends React.Component {
   }
 
   hideModal() {
-    this.setState({ show: false });
+    this.setState({ show: false, deleteUserCheck: false });
   }
 
   handlePasswordChange(val) {
@@ -171,12 +166,11 @@ class Settings extends React.Component {
     });
 
     if (
-      arr[0].indexOf("✓") != -1 &&
-      arr[1].indexOf("✓") != -1 &&
-      arr[2].indexOf("✓") != -1 &&
-      arr[3].indexOf("✓") != -1
+      arr[0].indexOf("✓") !== -1 &&
+      arr[1].indexOf("✓") !== -1 &&
+      arr[2].indexOf("✓") !== -1 &&
+      arr[3].indexOf("✓") !== -1
     ) {
-      console.log("POP");
       this.setState({
         confirmPassword: val,
         confirmNewPass: true,
@@ -197,7 +191,27 @@ class Settings extends React.Component {
     window.location.reload(false);
   }
 
+  deleteUser() {
+    if (this.state.deleteUserCheck === false) {
+      this.setState({ deleteUserCheck: true });
+      return;
+    }
+
+    $.post(
+      "/user/delete",
+      { token: localStorage.getItem("sessionToken") },
+      (response) => {
+        if (response.status) {
+          this.handleLogout();
+        }
+      }
+    ).fail((response) => {
+      throw Error(response.message);
+    });
+  }
+
   openEdit() {
+    oldE = this.props.user.email;
     this.setState({
       toggleEdit: true,
     });
@@ -214,7 +228,12 @@ class Settings extends React.Component {
       "/user/get",
       { token: localStorage.getItem("sessionToken") },
       (response) => {
-        this.setState({ toggleEdit: false, user: response.user, pfp: "" });
+        this.setState({
+          toggleEdit: false,
+          user: response.user,
+          pfp: "",
+          deleteUserCheck: false,
+        });
       }
     ).fail((response) => {
       throw Error(response.message);
@@ -265,21 +284,33 @@ class Settings extends React.Component {
     data.append("name", this.state.user.name);
     data.append("sname", this.state.user.sname);
     data.append("email", this.state.user.email);
+    data.append("oldEmail", oldE);
     data.append("bday", this.state.user.birthday);
     await data.append("profilepicture", this.state.pfp);
     await data.append("oldprofile", this.state.user.profilepicture);
     data.append("token", localStorage.getItem("sessionToken"));
     data = await stringifyFormData(data);
     $.post("/user/edit", data, (response) => {
-      this.setState({ user: response.user, prevUser: response.user });
-      this.closeEdit();
-      this.setState({ isloading: false, pfp: "" });
+      if (response.message === "true") {
+        this.handleLogout();
+        alert("Change to email detected. Please log in with your new email.");
+      } else {
+        this.setState({ user: response.user, prevUser: response.user });
+        this.closeEdit();
+        this.setState({ isloading: false, pfp: "", email: "" });
+      }
     }).fail(() => {
       alert("Unable to update user preferences");
     });
   }
 
   render() {
+    let deleteColor = "dark";
+    let deleteString = "Delete Account ";
+    if (this.state.deleteUserCheck) {
+      deleteColor = "danger";
+      deleteString = "Are you sure you want to delete your account? ";
+    }
     return (
       <React.Fragment>
         <Button
@@ -352,7 +383,6 @@ class Settings extends React.Component {
                           this.setState({ password: e.target.value });
                           this.value = this.state.password;
                         }}
-                        required
                       />
                     </Col>
                     <Col xs={1}>
@@ -376,9 +406,7 @@ class Settings extends React.Component {
                           this.handleNewPasswordChange(e.target.value);
                           this.setState({ confirmPassword: e.target.value });
                           this.value = this.state.confirmPassword;
-                          console.log(this.state.confirmPassword);
                         }}
-                        required
                       />
                     </Col>
                     <Col xs={1}>
@@ -391,7 +419,7 @@ class Settings extends React.Component {
                       <p></p>
                       <p
                         style={
-                          this.state.passwordError.indexOf("✓") != -1
+                          this.state.passwordError.indexOf("✓") !== -1
                             ? { color: "green" }
                             : { color: "red" }
                         }
@@ -401,7 +429,7 @@ class Settings extends React.Component {
                       </p>
                       <p
                         style={
-                          this.state.passwordError2.indexOf("✓") != -1
+                          this.state.passwordError2.indexOf("✓") !== -1
                             ? { color: "green" }
                             : { color: "red" }
                         }
@@ -411,7 +439,7 @@ class Settings extends React.Component {
                       </p>
                       <p
                         style={
-                          this.state.passwordError3.indexOf("✓") != -1
+                          this.state.passwordError3.indexOf("✓") !== -1
                             ? { color: "green" }
                             : { color: "red" }
                         }
@@ -421,7 +449,7 @@ class Settings extends React.Component {
                       </p>
                       <p
                         style={
-                          this.state.passwordError4.indexOf("✓") != -1
+                          this.state.passwordError4.indexOf("✓") !== -1
                             ? { color: "green" }
                             : { color: "red" }
                         }
@@ -597,11 +625,11 @@ class Settings extends React.Component {
                         <Col>
                           <Button
                             block
-                            variant="dark"
+                            variant={deleteColor}
                             className="mb-2"
-                            onClick={() => this.handleLogout()}
+                            onClick={() => this.deleteUser()}
                           >
-                            <i className="fa fa-sign-out"> </i> Logout{" "}
+                            <i className="fa fa-sign-out"> </i> {deleteString}
                           </Button>
                         </Col>
                       </Row>

@@ -21,7 +21,7 @@ class CloneTask extends Component {
   }
 
   async handleSubmit() {
-    await fetch('http://projecttree.herokuapp.com/task/createClone', {
+    await fetch('https://projecttree.herokuapp.com/task/createClone', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

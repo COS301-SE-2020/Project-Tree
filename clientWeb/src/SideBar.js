@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./App.scss";
 import DeleteProject from "./Project/DeleteProject";
 import CreateProject from "./Project/CreateProject";
+import JoinProject from "./Project/JoinProject";
 
 class SideBar extends React.Component {
   OwnedProjects() {
@@ -177,6 +178,7 @@ class SideBar extends React.Component {
             this.props.closeSideBar();
           }}
         />
+        <JoinProject user={this.props.user} />
         <h4 className="text-white">Owned Projects</h4>
         {this.OwnedProjects()}
         <hr style={{ backgroundColor: "white" }}></hr>

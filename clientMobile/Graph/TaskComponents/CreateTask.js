@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import ms from 'ms';
 
 class CreateTask extends Component {
@@ -90,8 +91,8 @@ class CreateTaskForm extends Component {
     this.state = {
       name: '',
       description: '',
-      startDate: new Date().toISOString().substring(0, 16),
-      endDate: new Date().toISOString().substring(0, 16),
+      startDate: this.props.project.startDate,
+      endDate: this.props.project.startDate,
       duration: '0 ms',
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
@@ -103,6 +104,7 @@ class CreateTaskForm extends Component {
       pacManList: [],
       resourcesList: [],
       resPersonList: [],
+      ableToSubmit: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
@@ -114,19 +116,34 @@ class CreateTaskForm extends Component {
     this.assignPeople = this.assignPeople.bind(this);
   }
 
-  handleDateTimeSelect(event, selectedDate, type) {
-    if (event.type === 'dismissed') {
-      this.setState({dateTimePicker: false});
-      return;
-    }
+  handleDateTimeSelect(selectedDate, type) {
     let date = new Date(
       new Date(selectedDate).getTime() -
         new Date().getTimezoneOffset() * 60 * 1000,
     )
       .toISOString()
       .substring(0, 16);
+    if (type.type === 'date')
+      date = `${date.substring(0, 10)}T${
+        type.for === 'start'
+          ? this.state.startDate.substring(11, 16)
+          : this.state.endDate.substring(11, 16)
+      }`;
+    else
+      date = `${
+        type.for === 'start'
+          ? this.state.startDate.substring(0, 10)
+          : this.state.endDate.substring(0, 10)
+      }T${date.substring(11, 16)}`;
     if (type.for === 'start') {
-      if (this.state.endDate < date)
+      if (date < this.props.project.startDate) {
+        this.setState({
+          error:
+            'You cannot make the start date/time before the project date/time.',
+          startDate: this.props.project.startDate,
+          dateTimePicker: false,
+        });
+      } else if (this.state.endDate < date)
         this.setState({
           error: 'You cannot set the start date/time after the end date/time.',
           startDate: date,
@@ -140,7 +157,14 @@ class CreateTaskForm extends Component {
           dateTimePicker: false,
         });
     } else {
-      if (this.state.startDate > date)
+      if (date > this.props.project.endDate) {
+        this.setState({
+          error:
+            'You cannot make the end date/time after the project end date/time.',
+          endDate: this.props.project.startDate,
+          dateTimePicker: false,
+        });
+      } else if (this.state.startDate > date)
         this.setState({
           error: 'You cannot set the end date/time before the start date/time.',
           startDate: date,
@@ -159,18 +183,27 @@ class CreateTaskForm extends Component {
   formatValidateInput() {
     if (this.checkFormData('all') === false) return null;
 
+    let windowWidth = Math.floor(Dimensions.get('window').width - 25);
+    let windowHeight = Math.floor(Dimensions.get('window').height - 100);
+
+    let x = Math.floor(Math.random() * windowWidth);
+    let y = Math.floor(Math.random() * windowHeight);
+
     let data = {
       name: this.state.name,
       startDate: this.state.startDate,
       endDate: this.state.endDate,
       description: this.state.description,
       project: this.props.project,
+      positionX: x,
+      positionY: y,
     };
 
     return data;
   }
 
   async handleSubmit() {
+    this.setState({ableToSubmit: true});
     let input = this.formatValidateInput();
     if (input === null) {
       return;
@@ -180,7 +213,7 @@ class CreateTaskForm extends Component {
     projectData.changedInfo = input;
     projectData = JSON.stringify(projectData);
 
-    const response = await fetch('http://projecttree.herokuapp.com/task/add', {
+    const response = await fetch('https://projecttree.herokuapp.com/task/add', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -200,7 +233,7 @@ class CreateTaskForm extends Component {
     );
     timestamp = timestamp.toISOString();
 
-    await fetch('http://projecttree.herokuapp.com/people/assignPeople', {
+    await fetch('https://projecttree.herokuapp.com/people/assignPeople', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -235,6 +268,8 @@ class CreateTaskForm extends Component {
 
     this.props.setModalVisible(false);
     this.props.setProjectInfo(body.nodes, body.rels, assignedPeople);
+
+    this.setState({ableToSubmit: false});
   }
 
   updateSearch(value, mode) {
@@ -653,30 +688,27 @@ class CreateTaskForm extends Component {
               </View>
             </View>
           </Form>
-          {this.state.dateTimePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={
-                new Date(
-                  new Date(this.state.dateTimeType.value).getTime() +
-                    new Date().getTimezoneOffset() * 60 * 1000,
-                )
-              }
-              mode={this.state.dateTimeType.type}
-              is24Hour={true}
-              display="default"
-              onChange={(event, selectedDate) =>
-                this.handleDateTimeSelect(
-                  event,
-                  selectedDate,
-                  this.state.dateTimeType,
-                )
-              }
-            />
-          )}
+          <DateTimePicker
+            testID="dateTimePicker"
+            date={
+              new Date(
+                new Date(this.state.dateTimeType.value).getTime() +
+                  new Date().getTimezoneOffset() * 60 * 1000,
+              )
+            }
+            mode={this.state.dateTimeType.type}
+            is24Hour={true}
+            display="default"
+            isVisible={this.state.dateTimePicker}
+            onCancel={() => this.setState({dateTimePicker: false})}
+            onConfirm={(selectedDate) =>
+              this.handleDateTimeSelect(selectedDate, this.state.dateTimeType)
+            }
+          />
         </ScrollView>
         <View styles={{padding: 10}}>
           <TouchableOpacity
+            disabled={this.state.ableToSubmit}
             style={styles.submitButton}
             onPress={this.handleSubmit}>
             <Text style={{color: 'white'}}>Submit</Text>
@@ -817,6 +849,11 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
     margin: 3,
+  },
+  dateTimePicker: {
+    width: 320,
+    backgroundColor: 'white',
+    zIndex: 90,
   },
 });
 

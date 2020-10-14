@@ -64,6 +64,7 @@ class UpdateDependency extends React.Component {
     this.setState({ isloading: true });
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = this.state.dependency;
+    projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
     const response = await fetch("/dependency/update", {
       method: "POST",
@@ -74,13 +75,20 @@ class UpdateDependency extends React.Component {
       body: projectData,
     });
     const body = await response.json();
-    await this.props.setTaskInfo(
-      body.nodes,
-      body.rels,
-      body.displayNode,
-      body.displayRel
-    );
-    this.setState({ Show: false, isloading: false });
+    if (body.message === "After Project End Date") {
+      alert(
+        "The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date"
+      );
+      this.setState({ isloading: false });
+    } else {
+      await this.props.setTaskInfo(
+        body.nodes,
+        body.rels,
+        body.displayNode,
+        body.displayRel
+      );
+      this.setState({ Show: false, isloading: false });
+    }
   }
 
   CalcDiff(sd, ed) {

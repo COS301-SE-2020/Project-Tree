@@ -14,8 +14,9 @@ import TaskModal from './TaskComponents/TaskModal';
 import DependencyModal from './DependencyComponents/DependencyModal';
 import CreateDependency from './DependencyComponents/CreateDependency';
 import IconEntypo from 'react-native-vector-icons/AntDesign';
-import IconFeather from 'react-native-vector-icons/Feather';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Drawer from 'react-native-drawer';
 import styled from 'styled-components/native';
 import GraphDrawer from './GraphDrawer';
@@ -72,12 +73,10 @@ class Graph extends Component {
     super(props);
     this.state = {
       drawerVisible: false,
-      direction: 'TB',
       key: 0,
       displayCriticalPath: false,
     };
     this.setDrawerVisible = this.setDrawerVisible.bind(this);
-    this.toggleDirection = this.toggleDirection.bind(this);
     this.reload = this.reload.bind(this);
     this.toggleCriticalPath = this.toggleCriticalPath.bind(this);
   }
@@ -88,16 +87,6 @@ class Graph extends Component {
 
   setDrawerVisible(mode) {
     this.setState({drawerVisible: mode});
-  }
-
-  toggleDirection() {
-    if (this.state.direction == 'TB') {
-      this.setState({direction: 'LR'});
-    } else {
-      this.setState({direction: 'TB'});
-    }
-
-    this.setState({key: this.state.key + 1});
   }
 
   toggleCriticalPath() {
@@ -122,8 +111,6 @@ class Graph extends Component {
               project={this.props.project}
               userPermissions={this.props.userPermissions}
               navigation={this.props.navigation}
-              direction={this.state.direction}
-              toggleDirection={this.toggleDirection}
               displayCriticalPath={this.state.displayCriticalPath}
               toggleCriticalPath={this.toggleCriticalPath}
             />
@@ -141,7 +128,6 @@ class Graph extends Component {
               userPermissions={this.props.userPermissions}
               navigation={this.props.navigation}
               setDrawerVisible={this.setDrawerVisible}
-              direction={this.state.direction}
               reloadKey={this.state.key}
               reload={this.reload}
               displayCriticalPath={this.state.displayCriticalPath}
@@ -177,6 +163,9 @@ class GraphScreen extends Component {
       target_viewId: null,
       delDep_sourceViewId: null,
       delDep_targetViewId: null,
+      positionTasksMode: false,
+      savePosition: false,
+      autoPos: false,
     };
     this.getProjectInfo = this.getProjectInfo.bind(this);
     this.displayTaskDependency = this.displayTaskDependency.bind(this);
@@ -185,6 +174,7 @@ class GraphScreen extends Component {
     this.setCreateDependency = this.setCreateDependency.bind(this);
     this.setFilterVisibility = this.setFilterVisibility.bind(this);
     this.setFilterOn = this.setFilterOn.bind(this);
+    this.moveNode = this.moveNode.bind(this);
   }
 
   async componentDidMount() {
@@ -195,7 +185,7 @@ class GraphScreen extends Component {
     }
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/getProject',
+      'https://projecttree.herokuapp.com/getProject',
       {
         method: 'POST',
         headers: {
@@ -213,7 +203,7 @@ class GraphScreen extends Component {
       this.setState({nodes: body.tasks, links: body.rels});
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllUsers',
+      'https://projecttree.herokuapp.com/people/getAllProjectMembers',
       {
         method: 'POST',
         headers: {
@@ -230,7 +220,7 @@ class GraphScreen extends Component {
     this.setState({allUsers: body2.users});
 
     const response3 = await fetch(
-      'http://projecttree.herokuapp.com/people/assignedProjectUsers',
+      'https://projecttree.herokuapp.com/people/assignedProjectUsers',
       {
         method: 'POST',
         headers: {
@@ -247,7 +237,7 @@ class GraphScreen extends Component {
     this.setState({assignedProjUsers: body3.projectUsers});
 
     const response4 = await fetch(
-      'http://projecttree.herokuapp.com/getProjectViews',
+      'https://projecttree.herokuapp.com/getProjectViews',
       {
         method: 'POST',
         headers: {
@@ -298,7 +288,7 @@ class GraphScreen extends Component {
       }
     } else {
       const response = await fetch(
-        'http://projecttree.herokuapp.com/getProject',
+        'https://projecttree.herokuapp.com/getProject',
         {
           method: 'POST',
           headers: {
@@ -315,7 +305,7 @@ class GraphScreen extends Component {
     }
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/getProjectViews',
+      'https://projecttree.herokuapp.com/getProjectViews',
       {
         method: 'POST',
         headers: {
@@ -374,6 +364,90 @@ class GraphScreen extends Component {
     }
   }
 
+  async saveChanges() {
+    let changedNodes = [];
+    let nodes = [...this.state.nodes];
+    let views = [...this.state.views];
+
+    for (let x = 0; x < nodes.length; x++) {
+      if (nodes[x].changedX !== undefined) {
+        changedNodes.push(nodes[x]);
+      }
+    }
+
+    for (let y = 0; y < views.length; y++) {
+      if (views[y].changedX !== undefined) {
+        changedNodes.push(views[y]);
+      }
+    }
+
+    let data = {
+      changedNodes: changedNodes,
+    };
+
+    this.setState({
+      savePosition: false,
+      positionTasksMode: false,
+      autoPos: false,
+    });
+    this.props.reload();
+
+    const response2 = await fetch(
+      'https://projecttree.herokuapp.com/task/savePositions',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      },
+    );
+  }
+
+  clearChanges(val) {
+    if (val) {
+      this.setState({
+        positionTasksMode: !this.state.positionTasksMode,
+        savePosition: false,
+        autoPos: false,
+      });
+      this.props.reload();
+    } else {
+      this.setState({
+        savePosition: false,
+        positionTasksMode: false,
+        autoPos: false,
+      });
+      this.setProjectInfo();
+    }
+  }
+
+  moveNode(message) {
+    message = message.split(' ');
+    let id = message[1];
+    let xVal = message[2];
+    let yVal = message[3];
+
+    for (let x = 0; x < this.state.nodes.length; x++) {
+      if (this.state.nodes[x].id === parseInt(id)) {
+        this.state.nodes[x].changedX = parseInt(xVal);
+        this.state.nodes[x].changedY = parseInt(yVal);
+      }
+    }
+
+    for (let y = 0; y < this.state.views.length; y++) {
+      if (this.state.views[y].id === parseInt(id)) {
+        this.state.views[y].changedX = parseInt(xVal);
+        this.state.views[y].changedY = parseInt(yVal);
+      }
+    }
+
+    if (this.state.savePosition !== true) {
+      this.setState({savePosition: true});
+    }
+  }
+
   displayTaskDependency(
     taskID,
     dependencyID,
@@ -429,9 +503,43 @@ class GraphScreen extends Component {
     });
   }
 
+  filterButtonToggle() {
+    if (this.state.positionTasksMode) {
+      return null;
+    } else if (this.state.filterOn === false) {
+      return (
+        <TouchableOpacity
+          style={styles.floatinBtn2}
+          onPress={() => {
+            this.setFilterVisibility(true);
+          }}>
+          <IconMaterial name="search" size={25} />
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <TouchableOpacity
+          style={styles.floatinBtn2}
+          onPress={() => {
+            this.setFilterOn(false);
+            this.setProjectInfo();
+          }}>
+          <IconMaterial name="clear" size={25} />
+        </TouchableOpacity>
+      );
+    }
+  }
+
   render() {
     if (this.props.project === null) {
       return null;
+    }
+
+    let leftPos = 145;
+    let color = '#EEBB4D';
+    if (this.state.positionTasksMode) {
+      leftPos = 80;
+      color = '#96BB7C';
     }
 
     return this.state.nodes ? (
@@ -441,12 +549,14 @@ class GraphScreen extends Component {
             nodes={this.state.nodes}
             links={this.state.links}
             views={this.state.views}
-            direction={this.props.direction}
             webKey={this.props.reloadKey}
             projID={this.props.project.id}
             displayTaskDependency={this.displayTaskDependency}
             setCreateDependency={this.setCreateDependency}
             displayCriticalPath={this.props.displayCriticalPath}
+            positionTasksMode={this.state.positionTasksMode}
+            moveNode={this.moveNode}
+            autoPos={this.state.autoPos}
           />
         </View>
 
@@ -461,6 +571,7 @@ class GraphScreen extends Component {
           assignedProjUsers={this.state.assignedProjUsers}
           allUsers={this.state.allUsers}
           user={this.props.user}
+          rels={this.state.links}
         />
         <DependencyModal
           project={this.props.project}
@@ -497,38 +608,69 @@ class GraphScreen extends Component {
             <IconEntypo name="menu-fold" size={25} />
           </TouchableOpacity>
 
-          {this.state.filterOn === false ? (
-            <TouchableOpacity
-              style={styles.floatinBtn2}
-              onPress={() => {
-                this.setFilterVisibility(true);
-              }}>
-              <IconFeather name="search" size={25} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.floatinBtn2}
-              onPress={() => {
-                this.setFilterOn(false);
-                this.setProjectInfo();
-              }}>
-              <IconMaterial name="clear" size={25} />
-            </TouchableOpacity>
-          )}
+          {this.filterButtonToggle()}
 
-          <CreateDependency
-            sourceCreateDependency={this.state.sourceCreateDependency}
-            targetCreateDependency={this.state.targetCreateDependency}
-            source_viewId={this.state.source_viewId}
-            target_viewId={this.state.target_viewId}
-            setCreateDependency={this.setCreateDependency}
-            getName={this.getName}
-            projID={this.props.project.id}
-            setProjectInfo={this.setProjectInfo}
-            getProjectInfo={this.getProjectInfo}
-            links={this.state.links}
-          />
-          {this.props.userPermissions['create'] === true ? (
+          {this.props.userPermissions['update'] ||
+          this.props.userPermissions['create'] ? (
+            <TouchableOpacity
+              style={[
+                styles.floatinBtn3,
+                {left: leftPos, backgroundColor: color},
+              ]}
+              onPress={() => {
+                this.clearChanges(!this.state.savePosition);
+              }}>
+              <IconSimpleLineIcons name="cursor-move" size={25} />
+            </TouchableOpacity>
+          ) : null}
+
+          {this.state.savePosition ? (
+            <React.Fragment>
+              <TouchableOpacity
+                style={styles.floatinBtn4}
+                onPress={() => {
+                  this.saveChanges();
+                }}>
+                <IconFontAwesome name="save" size={25} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.floatinBtn5}
+                onPress={() => {
+                  this.clearChanges(false);
+                }}>
+                <IconMaterial name="clear" size={25} />
+              </TouchableOpacity>
+            </React.Fragment>
+          ) : null}
+
+          {this.state.positionTasksMode ? (
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({autoPos: true});
+                this.props.reload();
+              }}
+              style={styles.autoPositionButton}>
+              <Text style={{textAlign: 'center'}}>Auto Position</Text>
+            </TouchableOpacity>
+          ) : null}
+
+          {this.state.positionTasksMode === false ? (
+            <CreateDependency
+              sourceCreateDependency={this.state.sourceCreateDependency}
+              targetCreateDependency={this.state.targetCreateDependency}
+              source_viewId={this.state.source_viewId}
+              target_viewId={this.state.target_viewId}
+              setCreateDependency={this.setCreateDependency}
+              getName={this.getName}
+              project={this.props.project}
+              setProjectInfo={this.setProjectInfo}
+              getProjectInfo={this.getProjectInfo}
+              links={this.state.links}
+            />
+          ) : null}
+
+          {this.props.userPermissions['create'] === true &&
+          this.state.positionTasksMode === false ? (
             <CreateTask
               projectID={this.props.project.id}
               project={this.props.project}
@@ -536,6 +678,7 @@ class GraphScreen extends Component {
               setProjectInfo={this.setProjectInfo}
               assignedProjUsers={this.state.assignedProjUsers}
               allUsers={this.state.allUsers}
+              rels={this.state.links}
             />
           ) : null}
         </View>
@@ -555,7 +698,9 @@ class WebViewWrapper extends Component {
   handleOnMessage(event) {
     let message = event.nativeEvent.data;
 
-    if (message[0] === 'n') {
+    if (message[0] === 'm') {
+      this.props.moveNode(message);
+    } else if (message[0] === 'n') {
       message = message.split(' ');
 
       let node = parseInt(message[0].substr(1));
@@ -587,25 +732,41 @@ class WebViewWrapper extends Component {
   }
 
   render() {
+    let s = {
+      uri: 'https://projecttree.herokuapp.com/mobile',
+      method: 'POST',
+      body: `nodes=${JSON.stringify(this.props.nodes)}&links=${JSON.stringify(
+        this.props.links,
+      )}&criticalPath=${this.props.displayCriticalPath}&projId=${
+        this.props.projID
+      }&views=${JSON.stringify(this.props.views)}&positionMode=${
+        this.props.positionTasksMode
+      }&autoPos=${this.props.autoPos}`,
+    };
+
+    if (Platform.OS === 'ios') {
+      s = {
+        uri: 'https://projecttree.herokuapp.com/mobile',
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `nodes=${JSON.stringify(this.props.nodes)}&links=${JSON.stringify(
+          this.props.links,
+        )}&criticalPath=${this.props.displayCriticalPath}&projId=${
+          this.props.projID
+        }&views=${JSON.stringify(this.props.views)}&positionMode=${
+          this.props.positionTasksMode
+        }&autoPos=${this.props.autoPos}`,
+      };
+    }
+
     return this.props.views !== null ? (
       <WebView
+        useWebKit={true}
         key={this.props.webKey}
         ref={(ref) => (this.myWebView = ref)}
         renderLoading={this.ActivityIndicatorLoadingView}
         startInLoadingState={true}
-        source={{
-          uri: 'http://projecttree.herokuapp.com/mobile',
-          method: 'POST',
-          body: `nodes=${JSON.stringify(
-            this.props.nodes,
-          )}&links=${JSON.stringify(
-            this.props.links,
-          )}&graphDir=${JSON.stringify(this.props.direction)}&criticalPath=${
-            this.props.displayCriticalPath
-          }&projId=${this.props.projID}&views=${JSON.stringify(
-            this.props.views,
-          )}`,
-        }}
+        source={s}
         onMessage={(event) => this.handleOnMessage(event)}
       />
     ) : (
@@ -638,6 +799,48 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 72,
     left: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
+  },
+  floatinBtn3: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  floatinBtn4: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    left: 148,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
+  },
+  floatinBtn5: {
+    height: 50,
+    width: 50,
+    borderRadius: 200,
+    position: 'absolute',
+    bottom: 72,
+    left: 216,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEBB4D',
+  },
+  autoPositionButton: {
+    height: 50,
+    borderRadius: 5,
+    position: 'absolute',
+    bottom: 72,
+    right: 12,
+    left: 278,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EEBB4D',

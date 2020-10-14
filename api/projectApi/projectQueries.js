@@ -6,6 +6,7 @@ const {
 } = require("../userManagementApi/userQueries");
 
 const up = require("./updateProject");
+const uuid = require("uuid");
 
 async function createProject(req, res) {
   let userId = await uq.verify(req.body.token);
@@ -38,6 +39,9 @@ async function createProject(req, res) {
       ? (cp_r_Update = true)
       : (cp_r_Update = false);
 
+    let startDate = `${req.body.cp_StartDate}T${req.body.cp_StartTime}`;
+    let endDate = `${req.body.cp_EndDate}T${req.body.cp_EndTime}`;
+
     db.getSession()
       .run(
         `
@@ -46,7 +50,9 @@ async function createProject(req, res) {
           CREATE(n:Project {
               name:"${req.body.cp_Name}", 
               description:"${req.body.cp_Description}", 
-              projManCT:true, 
+              startDate: datetime("${startDate}"),
+              endDate: datetime("${endDate}"),
+              projManCT:true,
               projManDT:true, 
               projManUT:true, 
               packManCT:${cp_pm_Create}, 
@@ -57,7 +63,8 @@ async function createProject(req, res) {
               resPerUT:${cp_rp_Update}, 
               resourceCT:${cp_r_Create}, 
               resourceDT:${cp_r_Delete}, 
-              resourceUT:${cp_r_Update}
+              resourceUT:${cp_r_Update},
+              accessCode:"${uuid.v4().substring(9, 23)}"
           }),
           (b)-[x:MANAGES]->(n)
           RETURN n
@@ -69,6 +76,13 @@ async function createProject(req, res) {
           id: result.records[0]._fields[0].identity.low,
           name: result.records[0]._fields[0].properties.name,
           description: result.records[0]._fields[0].properties.description,
+          accessCode: result.records[0]._fields[0].properties.accessCode,
+          startDate: up.datetimeToString(
+            result.records[0]._fields[0].properties.startDate
+          ),
+          endDate: up.datetimeToString(
+            result.records[0]._fields[0].properties.endDate
+          ),
           permissions: [
             result.records[0]._fields[0].properties.packManCT,
             result.records[0]._fields[0].properties.packManDT,
@@ -156,6 +170,10 @@ async function updateProject(req, res) {
     req.body.up_r_Update != undefined
       ? (up_r_Update = true)
       : (up_r_Update = false);
+
+    let startDate = `${req.body.up_StartDate}T${req.body.up_StartTime}`;
+    let endDate = `${req.body.up_EndDate}T${req.body.up_EndTime}`;
+
     db.getSession()
       .run(
         `
@@ -164,6 +182,8 @@ async function updateProject(req, res) {
           SET a += {
               name:"${req.body.up_name}",
               description:"${req.body.up_description}",
+              startDate: datetime("${startDate}"),
+              endDate: datetime("${endDate}"),
               projManCT:true, 
               projManDT:true, 
               projManUT:true, 
@@ -186,6 +206,13 @@ async function updateProject(req, res) {
           id: result.records[0]._fields[0].identity.low,
           name: result.records[0]._fields[0].properties.name,
           description: result.records[0]._fields[0].properties.description,
+          accessCode: result.records[0]._fields[0].properties.accessCode,
+          startDate: up.datetimeToString(
+            result.records[0]._fields[0].properties.startDate
+          ),
+          endDate: up.datetimeToString(
+            result.records[0]._fields[0].properties.endDate
+          ),
           permissions: [
             result.records[0]._fields[0].properties.packManCT,
             result.records[0]._fields[0].properties.packManDT,
@@ -230,6 +257,11 @@ async function getProjects(req, res) {
             id: record._fields[0].identity.low,
             name: record._fields[0].properties.name,
             description: record._fields[0].properties.description,
+            accessCode: record._fields[0].properties.accessCode,
+            startDate: up.datetimeToString(
+              record._fields[0].properties.startDate
+            ),
+            endDate: up.datetimeToString(record._fields[0].properties.endDate),
             permissions: [
               record._fields[0].properties.packManCT,
               record._fields[0].properties.packManDT,
@@ -253,7 +285,7 @@ async function getProjects(req, res) {
       .getSession()
       .run(
         `
-          MATCH (user:User)-[r]->(m:Task)-[:PART_OF]->(j) 
+          MATCH (user:User)-[r:MEMBER]->(j) 
           WHERE ID(user) = ${userId}
           return DISTINCT j
         `
@@ -264,6 +296,11 @@ async function getProjects(req, res) {
             id: record._fields[0].identity.low,
             name: record._fields[0].properties.name,
             description: record._fields[0].properties.description,
+            accessCode: record._fields[0].properties.accessCode,
+            startDate: up.datetimeToString(
+              record._fields[0].properties.startDate
+            ),
+            endDate: up.datetimeToString(record._fields[0].properties.endDate),
             permissions: [
               record._fields[0].properties.packManCT,
               record._fields[0].properties.packManDT,
@@ -354,13 +391,90 @@ function getCriticalPath(req, res) {
         MATCH p = (c:Task {projId: ${req.body.projId}})-[:DEPENDENCY *..]->(d:Task {projId: ${req.body.projId}})
         WHERE duration.between(c.startDate, d.endDate) = dur
         RETURN p
+        ORDER BY length(p) DESC
+        LIMIT 10
       `
     )
     .then((result) => {
+      let path = null;
+      let maxDur = 0;
+      result.records.forEach((record) => {
+        let dur = 0;
+        record._fields[0].segments.forEach((segment, i) => {
+          if (i == 0) {
+            dur += parseInt(segment.start.properties.duration) / 10000;
+          }
+          dur += parseInt(segment.relationship.properties.duration) / 10000;
+          dur += parseInt(segment.end.properties.duration) / 10000;
+        });
+        if (maxDur < dur) {
+          maxdur = dur;
+          path = record._fields[0];
+        }
+      });
       res.status(200);
-      if (result.records[0] != null)
-        res.send({ path: result.records[0]._fields[0] });
-      else res.send({ path: null });
+      res.send({ path: path });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400);
+      res.send({ message: err });
+    });
+}
+
+async function joinProject(req, res) {
+  let userId = await uq.verify(req.body.token);
+  db.getSession()
+    .run(
+      `
+      MATCH (n:Project) WHERE n.accessCode = "${req.body.accessCode}" RETURN id(n)
+      `
+    )
+    .then((result) => {
+      if (result.records[0] != null) {
+        let project = result.records[0]._fields[0].low;
+        db.getSession()
+          .run(
+            `
+            MATCH (a:User), (b:Project)
+            WHERE (a)-[]->(b) AND id(a)=${userId} AND id(b)=${project}
+            RETURN (b)
+            `
+          )
+          .then((result) => {
+            if (result.records[0] == null) {
+              db.getSession()
+                .run(
+                  `
+                    MATCH (a:User), (b:Project)
+                    WHERE id(a)=${req.body.userId} AND id(b)=${project}
+                    CREATE (a)-[:PENDING_MEMBER]->(b)        
+                  `
+                )
+                .then((result) => {
+                  res.status(200);
+                  res.send({ response: "okay" });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  res.status(400);
+                  res.send({ message: err });
+                });
+            } else
+              res.send({
+                response:
+                  "You are already a member of this project or are pending approval",
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(400);
+            res.send({ message: err });
+          });
+      } else
+        res.send({
+          response: "The access code you have provided doesn't exist",
+        });
     })
     .catch((err) => {
       console.log(err);
@@ -378,4 +492,5 @@ module.exports = {
   getProjects,
   getProjectTasks,
   getCriticalPath,
+  joinProject,
 };

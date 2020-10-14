@@ -11,6 +11,12 @@ import {
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import IconEntypo from 'react-native-vector-icons/AntDesign';
+import IconMaterial from 'react-native-vector-icons/MaterialIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+
+import IonIcons from 'react-native-vector-icons/Ionicons';
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -67,7 +73,7 @@ class LoginScreen extends Component {
       };
       data = JSON.stringify(data);
 
-      const response = await fetch('http://projecttree.herokuapp.com/login', {
+      const response = await fetch('https://projecttree.herokuapp.com/login', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -117,7 +123,7 @@ class LoginScreen extends Component {
             Password
           </Text>
           <View style={styles.action}>
-            <Feather name="lock" size={20} />
+            <IconSimpleLineIcons name="lock" size={20} />
             <TextInput
               placeholder="Your Password"
               placeholderTextColor="#666666"
@@ -161,7 +167,6 @@ class LoginScreen extends Component {
                 {
                   borderColor: '#3CB371',
                   borderWidth: 2,
-                  marginTop: 8,
                 },
               ]}>
               <Text

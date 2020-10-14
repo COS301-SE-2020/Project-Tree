@@ -34,7 +34,6 @@ class SplashScreen extends Component {
           ]}
           animation="fadeInUpBig">
           <Text style={[styles.title, {}]}>Welcome to Project Tree</Text>
-          <Text style={styles.underText}>Click to Login</Text>
           <View style={styles.button}>
             <TouchableOpacity
               onPress={() => {

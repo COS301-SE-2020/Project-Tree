@@ -20,14 +20,13 @@ class About extends React.Component {
   render() {
     return (
       <Container fluid>
-        <Button
-          className=".btn"
+        <h8
           onClick={() => {
             this.showModal();
           }}
         >
-          Find out More!{" "}
-        </Button>
+          <a href="/#">Find out More... </a>
+        </h8>
         <Modal
           size="lg"
           closeButton

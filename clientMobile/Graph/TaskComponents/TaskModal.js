@@ -30,6 +30,7 @@ class TaskModal extends Component {
     this.toggleVisibility = this.toggleVisibility.bind(this);
     this.toggleProgressModal = this.toggleProgressModal.bind(this);
     this.classifyExistingUsers = this.classifyExistingUsers.bind(this);
+    this.updateType = this.updateType.bind(this);
   }
 
   toggleVisibility(taskModal, updateModal, selectedTask) {
@@ -108,6 +109,24 @@ class TaskModal extends Component {
     return ms(endDate.getTime() - startDate.getTime(), {long: true});
   }
 
+  updateType(pac, resp, reso) {
+    if (this.props.userPermissions['update']) return 'update';
+    let check = false;
+    pac.forEach((person) => {
+      if (person.id === this.props.user.id) check = true;
+    });
+    if (check) return 'progress';
+    resp.forEach((person) => {
+      if (person.id === this.props.user.id) check = true;
+    });
+    if (check) return 'progress';
+    reso.forEach((person) => {
+      if (person.id === this.props.user.id) check = true;
+    });
+    if (check) return 'progress';
+    return 'none';
+  }
+
   render() {
     if (
       this.props.selectedTask === null ||
@@ -120,11 +139,18 @@ class TaskModal extends Component {
     taskResPersons = taskUsers[1];
     taskResources = taskUsers[2];
 
+    let updateType = this.updateType(
+      taskPacMans,
+      taskResPersons,
+      taskResources,
+    );
+
     let color = '#0275d8';
 
     return (
       <React.Fragment>
         <UpdateTask
+          updateType={updateType}
           task={this.props.selectedTask}
           modalVisibility={this.state.displayUpdateModal}
           toggleVisibility={this.toggleVisibility}
@@ -137,6 +163,7 @@ class TaskModal extends Component {
           resources={taskResources}
           allUsers={this.props.allUsers}
           assignedProjUsers={this.props.assignedProjUsers}
+          rels={this.props.rels}
         />
         <Modal
           animationType="fade"
@@ -200,7 +227,7 @@ class TaskModal extends Component {
 
               <View>
                 <View style={{flexDirection: 'row'}}>
-                  {this.props.userPermissions['update'] === true ? (
+                  {updateType !== 'none' ? (
                     <View style={{flex: 1}}>
                       <TouchableOpacity
                         style={styles.editButton}

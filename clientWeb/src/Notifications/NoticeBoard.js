@@ -4,8 +4,6 @@ import { Row, Col, Container } from "react-bootstrap";
 import $ from "jquery";
 import "./style.css";
 
-let global_pfp = " ";
-
 class NoticeBoard extends Component {
   _isMounted = false;
 
@@ -39,6 +37,7 @@ class NoticeBoard extends Component {
       <NotificationList
         messages={this.props.messages}
         users={this.state.users}
+        userPermission={this.props.userPermission}
       />
     );
   }
@@ -49,7 +48,7 @@ class NotificationList extends React.Component {
     super(props);
     this.state = {
       user: this.props.users,
-      pfp: "https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture",
+      pfp: "https://ibb.co/qdFDwjM",
       imageHash: Date.now(),
     };
     this.returnRandomUser = this.returnRandomUser.bind(this);
@@ -57,11 +56,11 @@ class NotificationList extends React.Component {
 
   returnRandomUser(profileId, type) {
     let users = this.state.user.users;
-    if (type == "auto") {
+    if (type === "auto") {
       return (
         <img
-          class="circular"
-          src={this.state.pfp}
+          className="circular"
+          src="https://i.ibb.co/wRrd1gN/project-Tree.png"
           alt="user"
           width="70"
           height="70"
@@ -73,11 +72,20 @@ class NotificationList extends React.Component {
       if (parseInt(users[x].id) === parseInt(profileId[0])) {
         return (
           <img
-            class="circular"
+            className="circular"
             src={users[x].profilePicture}
             alt="user"
             width="70"
             height="70"
+          />
+        );
+      } else if (x === users.length - 1) {
+        return (
+          <img
+            src="https://i.ibb.co/QC8Fstg/undraw-profile-pic-ic5t.png"
+            alt="user"
+            width="80"
+            height="80"
           />
         );
       }
@@ -157,7 +165,7 @@ class NotificationList extends React.Component {
             <em>
               {message.type === "task" ? message.taskName : null}
               {message.type === "project" ? "Project Wide" : null}
-              {message.type === "auto" ? "Task assigned" : null}{" "}
+              {message.type === "auto" ? "Task Notification" : null}{" "}
             </em>
             <br />
             {message.message}
@@ -184,7 +192,10 @@ class NotificationList extends React.Component {
   render() {
     let messages = this.sortMessages();
     let messageComponents = this.createMessageList(messages);
-
+    let h = "28em";
+    if (this.props.userPermission["project"] === true) {
+      h = "36em";
+    }
     return (
       <Container>
         <Row>
@@ -195,7 +206,7 @@ class NotificationList extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col style={{ height: "23em", overflowY: "auto" }}>
+          <Col style={{ height: h, overflowY: "auto" }}>
             {messageComponents}
           </Col>
         </Row>

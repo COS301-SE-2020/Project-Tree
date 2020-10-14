@@ -3,6 +3,7 @@ import CreateProject from "../Project/CreateProject";
 import Dashboard from "./Dashboard";
 import image from "../Images/BigTree.svg";
 import { Container, Row, Col } from "react-bootstrap";
+import JoinProject from "../Project/JoinProject";
 
 class Home extends React.Component {
   render() {
@@ -30,11 +31,11 @@ class Home extends React.Component {
               <Container>
                 <Row>
                   <Col>
-                    <h5>Start Your Project planning journey</h5>
+                    <h5>Start your project planning journey</h5>
                   </Col>
                 </Row>
                 <Row>
-                  <Col>
+                  <Col className="text-right">
                     <CreateProject
                       setProject={(project) => {
                         this.props.setProject(project);
@@ -43,6 +44,9 @@ class Home extends React.Component {
                         this.props.closeSideBar();
                       }}
                     />
+                  </Col>
+                  <Col className="text-left">
+                    <JoinProject user={this.props.user} />
                   </Col>
                 </Row>
               </Container>

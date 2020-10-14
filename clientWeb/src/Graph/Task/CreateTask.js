@@ -9,13 +9,15 @@ class CreateTask extends React.Component {
     let now = new Date();
     now.setTime(now.getTime() - new Date().getTimezoneOffset() * 60 * 1000);
     now = now.toISOString().substring(0, 16);
+    let task = {};
+    task.startDate = now;
+    task.endDate = now;
     this.state = {
       Show: true,
       name: "",
       description: "",
-      startDate: now,
+      task: task,
       duration: "0ms",
-      endDate: now,
       people: this.props.allUsers,
       pacManSearchTerm: "",
       resourcesSearchTerm: "",
@@ -32,6 +34,7 @@ class CreateTask extends React.Component {
     this.addResPerson = this.addResPerson.bind(this);
     this.addResource = this.addResource.bind(this);
     this.assignPeople = this.assignPeople.bind(this);
+    this.changeDate = this.changeDate.bind(this);
   }
 
   hideModal() {
@@ -192,9 +195,11 @@ class CreateTask extends React.Component {
       project: this.props.project,
       name: this.state.name,
       description: this.state.description,
-      startDate: this.state.startDate,
+      startDate: this.state.task.startDate,
       duration: this.state.duration,
-      endDate: this.state.endDate,
+      endDate: this.state.task.endDate,
+      positionX: this.props.position.x,
+      positionY: this.props.position.y,
     };
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
@@ -262,6 +267,57 @@ class CreateTask extends React.Component {
       endDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
     );
     return ms(endDate.getTime() - startDate.getTime(), { long: true });
+  }
+
+  changeDate(e, type) {
+    if (type.substring(type.length - 4, type.length) === "Date") {
+      if (isNaN(Date.parse(e.target.value))) return;
+    } else if (!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value))
+      return;
+    let task = this.state.task;
+    let value = type.substring(0, 1) === "s" ? task.startDate : task.endDate;
+    if (type.substring(type.length - 4, type.length) === "Date")
+      value = `${e.target.value}T${
+        type.substring(0, 1) === "s"
+          ? task.startDate.substring(11, 16)
+          : task.endDate.substring(11, 16)
+      }`;
+    else
+      value = `${
+        type.substring(0, 1) === "s"
+          ? task.startDate.substring(0, 10)
+          : task.endDate.substring(0, 10)
+      }T${e.target.value}`;
+    if (value < this.props.project.startDate) {
+      alert("You cannot make the task before the project date/time.");
+      value = this.props.project.startDate;
+    }
+    if (value > this.props.project.endDate) {
+      alert(
+        "You cannot make the start date/time before the project date/time."
+      );
+      value = this.props.project.endDate;
+    }
+    let startDate =
+      type.substring(0, 1) === "s" ? value : this.state.task.startDate;
+    let endDate =
+      type.substring(0, 1) === "s" ? this.state.task.endDate : value;
+    if (endDate < startDate) {
+      alert(
+        "Please choose an end date/time that finishes after the start date/time."
+      );
+      task.startDate = value;
+      task.endDate = value;
+    } else {
+      if (type.substring(0, 1) === "s") task.startDate = value;
+      else task.endDate = value;
+    }
+    this.setState({
+      task,
+      duration: this.CalcDiff(task.startDate, task.endDate),
+    });
+    if (type.substring(0, 1) === "s") return this.state.task.startDate;
+    else return this.state.task.endDate;
   }
 
   render() {
@@ -332,82 +388,20 @@ class CreateTask extends React.Component {
                 <Form.Control
                   required
                   type="date"
-                  value={this.state.startDate.substring(0, 10)}
+                  value={this.state.task.startDate.substring(0, 10)}
                   onChange={(e) => {
-                    if (isNaN(Date.parse(e.target.value))) return;
-                    let value = this.state.startDate;
-                    value = `${e.target.value}T${this.state.startDate.substring(
-                      11,
-                      16
-                    )}`;
-                    let startDate = new Date(value);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let endDate = new Date(this.state.endDate);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the start date/time after the end date/time."
-                      );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        startDate: value,
-                        duration: this.CalcDiff(value, this.state.endDate),
-                      });
-                    }
-                    this.value = this.state.startDate;
+                    this.value = this.changeDate(e, "startDate");
                   }}
                 />
-                <Form.Label>Start Time of task</Form.Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Start time of task</Form.Label>
                 <Form.Control
                   required
                   type="time"
-                  value={this.state.startDate.substring(11, 16)}
+                  value={this.state.task.startDate.substring(11, 16)}
                   onChange={(e) => {
-                    if (
-                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
-                    )
-                      return;
-                    let value = this.state.startDate;
-                    value = `${this.state.startDate.substring(0, 10)}T${
-                      e.target.value
-                    }`;
-                    let startDate = new Date(value);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let endDate = new Date(this.state.endDate);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the start date/time after the end date/time."
-                      );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        startDate: value,
-                        duration: this.CalcDiff(value, this.state.endDate),
-                      });
-                    }
-                    this.value = this.state.startDate;
+                    this.value = this.changeDate(e, "startTime");
                   }}
                 />
               </Form.Group>
@@ -416,82 +410,20 @@ class CreateTask extends React.Component {
                 <Form.Control
                   required
                   type="date"
-                  value={this.state.endDate.substring(0, 10)}
+                  value={this.state.task.endDate.substring(0, 10)}
                   onChange={(e) => {
-                    if (isNaN(Date.parse(e.target.value))) return;
-                    let value = this.state.endDate;
-                    value = `${e.target.value}T${this.state.endDate.substring(
-                      11,
-                      16
-                    )}`;
-                    let startDate = new Date(this.state.startDate);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let endDate = new Date(value);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the end date/time before the start date/time."
-                      );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        endDate: value,
-                        duration: this.CalcDiff(this.state.startDate, value),
-                      });
-                    }
-                    this.value = this.state.endDate;
+                    this.value = this.changeDate(e, "endDate");
                   }}
                 />
-                <Form.Label>End Time of task</Form.Label>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>End time of task</Form.Label>
                 <Form.Control
                   required
                   type="time"
-                  value={this.state.endDate.substring(11, 16)}
+                  value={this.state.task.endDate.substring(11, 16)}
                   onChange={(e) => {
-                    if (
-                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
-                    )
-                      return;
-                    let value = this.state.endDate;
-                    value = `${this.state.endDate.substring(0, 10)}T${
-                      e.target.value
-                    }`;
-                    let startDate = new Date(this.state.startDate);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let endDate = new Date(value);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the end date/time before the start date/time."
-                      );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        endDate: value,
-                        duration: this.CalcDiff(this.state.startDate, value),
-                      });
-                    }
-                    this.value = this.state.endDate;
+                    this.value = this.changeDate(e, "endTime");
                   }}
                 />
               </Form.Group>

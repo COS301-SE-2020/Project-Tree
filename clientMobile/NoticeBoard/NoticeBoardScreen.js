@@ -60,13 +60,13 @@ class NoticeBoard extends Component {
     }
 
     return (
-      <React.Fragment>
+      <View style={{backgroundColor: 'white', flex: 1}}>
         <TopBar useMenu={false} />
         <NoticeBoardScreen
           project={this.props.project}
           user={this.props.user}
         />
-      </React.Fragment>
+      </View>
     );
   }
 }
@@ -89,7 +89,7 @@ class NoticeBoardScreen extends Component {
 
     data = JSON.stringify(data);
     const response = await fetch(
-      'http://projecttree.herokuapp.com/retrieveNotifications',
+      'https://projecttree.herokuapp.com/retrieveNotifications',
       {
         method: 'POST',
         headers: {
@@ -102,7 +102,7 @@ class NoticeBoardScreen extends Component {
     const body = await response.json();
 
     const response2 = await fetch(
-      'http://projecttree.herokuapp.com/people/getAllUsers',
+      'https://projecttree.herokuapp.com/people/getAllUsers',
       {
         method: 'POST',
         headers: {
@@ -234,6 +234,11 @@ class NotificationList extends Component {
           return (
             <Image source={Image_Http_URL} style={styles.profilePicture} />
           );
+        } else if (this.props.allUsers.length - 1 == x) {
+          let imgTemp = {
+            uri: 'https://i.ibb.co/MRpbpHN/default.pngusers.profilePicture',
+          };
+          return <Image source={imgTemp} style={styles.profilePicture} />;
         }
       }
     }
@@ -298,6 +303,7 @@ class NotificationList extends Component {
             paddingRight: 20,
             flex: 1,
             marginBottom: 60,
+            backgroundColor: 'white',
           }}>
           <ScrollView>{messageComponents}</ScrollView>
         </View>

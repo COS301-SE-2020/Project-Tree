@@ -30,8 +30,11 @@
                     "rels": <%= rels %>
                 }
             </textarea>
-            <textarea id="graphdirection">
-                <%= graphDirection %>
+			<textarea id="positionMode">
+                <%= positionMode %>
+			</textarea>
+			<textarea id="autoPos">
+                <%= autoPos %>
             </textarea>
             <textarea id="criticalpath">
                 <%= criticalPath %>
@@ -39,7 +42,8 @@
 						<textarea id="views">
 							<%= views %>
 						</textarea>
-        </div>
+		</div>
+		
         <div style="display:flex; justify-content:space-around;">
             <button class="btn" onclick="zoomIn()"><i class="fa fa-search-plus"></i></button>
             <button class="btn" onclick="zoomOut()"><i class="fa fa-search-minus"></i></button>
@@ -56,7 +60,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.js"></script>
         <!-- code -->
-    <script type="text/javascript">
+	<script type="text/javascript">
+		var positionMode = eval($('#positionMode').val());
+
         var dragStartPosition
         var nodeTouch = false;
 				var count = 0;
@@ -65,26 +71,37 @@
         var graph = new joint.dia.Graph();
         var paper = new joint.dia.Paper({
             el: $('#paper'),
-            gridSize: 10,
+            gridSize: 1,
             model: graph,
             linkPinning: false,
-            interactive: false
+            interactive: positionMode
         });
         paperScale(0.8,0.8)
 
         /*
         *   Detect and handle clicks on nodes and links
         */ 
-        paper.on('element:pointerdown', (event) => {handleDownNodeClick()});
-        paper.on('element:pointerup', (event) => {
-					if(event.model.attributes.attrs.originId !== undefined){
-						handleUpNodeClick(event.model.attributes.attrs.originId, event.model.id)
-					}
-					else{
-						handleUpNodeClick(event.model.id)
-					}
-				})
-        paper.on('link:pointerdown', (event) => {handleLinkClick(event.model)});
+		
+		if(positionMode===false){
+			paper.on('element:pointerdown', (event) => {handleDownNodeClick()});
+			paper.on('element:pointerup', (event) => {
+						if(event.model.attributes.attrs.originId !== undefined){
+							handleUpNodeClick(event.model.attributes.attrs.originId, event.model.id)
+						}
+						else{
+							handleUpNodeClick(event.model.id)
+						}
+					})
+			paper.on('link:pointerdown', (event) => {handleLinkClick(event.model)});
+		}
+
+		else{
+			graph.on('change:position', (cell) => {
+				var center = cell.getBBox().topLeft();
+				var id = cell.id
+				window.ReactNativeWebView.postMessage("m "+id+" "+center.x+" "+center.y);
+			});
+		}
 
         var initialDownClick = null;
         function handleDownNodeClick(){
@@ -202,10 +219,21 @@
 										height: height,
 									});
 
+									let xVal, yVal;
+									if(viewNodes[x].changedX !== undefined){
+										xVal = viewNodes[x].changedX;
+										yVal = viewNodes[x].changedY;
+									}
+									else{
+										xVal = viewNodes[x].positionX;
+										yVal = viewNodes[x].positionY;
+									}
+
 									clonedNode.attributes.attrs.text.text = `${wraptext}`
 									clonedNode.attributes.attrs.originId = allNodes[y].id;
 									clonedNode.attributes.id = `${viewNodes[x].id}`;
 									clonedNode.id = `${viewNodes[x].id}`;
+									clonedNode.attributes.position = { x: xVal, y: yVal }
 									clonedNodes.push(clonedNode);
 								}
 
@@ -305,12 +333,23 @@
 					}
 				}
 
+				let xVal, yVal;
+				if(node.changedX !== undefined){
+					xVal = node.changedX;
+					yVal = node.changedY;
+				}
+				else{
+					xVal = node.positionX;
+					yVal = node.positionY;
+				}
+
 				return new joint.shapes.standard.Rectangle({
 						id: `${node.id}`,
 						size:{
 							width:width,
 							height:height
 						},
+						position:{x:xVal, y:yVal},
 						attrs:{
 								type:'node',
 								body: {
@@ -342,22 +381,25 @@
         function layout() {      
             try {
                 var dataList = eval('dataList = ' + $('#adjacency-list').val());
-                var graphDirection = eval($('#graphdirection').val());
                 var criticalPath = eval('criticalPath = ' + $('#criticalpath').val());
-                var views = eval('views = ' + $('#views').val());
+				var views = eval('views = ' + $('#views').val());
+				var autoPos = eval($('#autoPos').val());
             } catch (e) { alert(e); }
 
-						var cells = buildGraph(dataList,criticalPath,views);
-						globalCells = cells;
-            graph.resetCells(cells);
-            joint.layout.DirectedGraph.layout(graph, {
-                dagre: dagre,
-                graphlib: graphlib,
-                setLinkVertices: false,
-                rankDir: graphDirection,
-                nodeSep: 25,
-                rankSep: 50
-            });
+						
+			var cells = buildGraph(dataList,criticalPath,views);
+			globalCells = cells;
+			graph.resetCells(cells);
+
+			if(autoPos){
+				joint.layout.DirectedGraph.layout(graph, {
+					dagre: dagre,
+					graphlib: graphlib,
+					setLinkVertices: false,
+					nodeSep: 25,
+					rankSep: 50
+				});
+			}
         }
         layout();
 

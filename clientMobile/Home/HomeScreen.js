@@ -19,6 +19,8 @@ import {useNavigation} from '@react-navigation/native';
 import SendProjectNotification from '../NoticeBoard/ProjectWideNotification';
 import ProgressDashboard from './ProgressDashboard';
 import TopBar from '../TopBar';
+import MemberComponent from './Members/MemberWrapperComponent';
+import ViewProjectMangers from './Members/ViewProjectManagers';
 
 function GoToTree() {
   const navigation = useNavigation();
@@ -32,7 +34,7 @@ function GoToTree() {
       <Icon
         type="FontAwesome"
         name="line-chart"
-        style={{color: 'white'}}></Icon>
+        style={{color: 'white', textAlign: 'center'}}></Icon>
     </TouchableOpacity>
   );
 }
@@ -95,7 +97,7 @@ class Home extends Component {
     await AsyncStorage.getItem('sessionToken').then(async (value) => {
       token = JSON.parse(value);
       const response = await fetch(
-        'http://projecttree.herokuapp.com/project/get',
+        'https://projecttree.herokuapp.com/project/get',
         {
           method: 'POST',
           headers: {
@@ -151,7 +153,11 @@ class Home extends Component {
 
   render() {
     if (this.state.projects === null) {
-      return <Spinner />;
+      return (
+        <View style={{backgroundColor: 'white', flex: 1}}>
+          <Spinner />
+        </View>
+      );
     }
 
     return (
@@ -165,6 +171,7 @@ class Home extends Component {
                 setCurrentProject={this.props.setSelectedProject}
                 setDrawerVisible={this.setDrawerVisible}
                 token={this.state.token}
+                user={this.props.user}
                 projects={this.state.projects}
                 otherProjects={this.state.otherProjects}
                 setProjectInfo={this.setProjectInfo}
@@ -284,7 +291,6 @@ class HomeScreen extends Component {
   render() {
     if (this.props.project === null)
       return <SelectProject setDrawerVisible={this.props.setDrawerVisible} />;
-
     return (
       <ScrollView style={styles.cardView}>
         <View>
@@ -338,6 +344,66 @@ class HomeScreen extends Component {
                 </Body>
               </CardItem>
               <CardItem>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    justifyContent: 'center',
+                  }}>
+                  <View style={{width: '50%', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#184D47',
+                        textAlign: 'center',
+                      }}>
+                      Start date and time
+                    </Text>
+                  </View>
+                  <View style={{width: '50%', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#184D47',
+                        textAlign: 'center',
+                      }}>
+                      End date and time
+                    </Text>
+                  </View>
+                </View>
+              </CardItem>
+              <CardItem>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    justifyContent: 'center',
+                  }}>
+                  <View style={{width: '50%', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#184D47',
+                        textAlign: 'center',
+                      }}>
+                      {`${this.props.project.startDate.substring(
+                        0,
+                        10,
+                      )} ${this.props.project.startDate.substring(11, 16)}`}
+                    </Text>
+                  </View>
+                  <View style={{width: '50%', alignItems: 'center'}}>
+                    <Text
+                      style={{
+                        color: '#184D47',
+                        textAlign: 'center',
+                      }}>
+                      {`${this.props.project.endDate.substring(
+                        0,
+                        10,
+                      )} ${this.props.project.endDate.substring(11, 16)}`}
+                    </Text>
+                  </View>
+                </View>
+              </CardItem>
+              <CardItem>
                 <Body style={{alignItems: 'center', justifyContent: 'center'}}>
                   <Text style={{textAlign: 'center'}}>
                     {this.props.project.description}
@@ -361,7 +427,7 @@ class HomeScreen extends Component {
                     <Icon
                       type="FontAwesome"
                       name="edit"
-                      style={{color: 'white'}}></Icon>
+                      style={{color: 'white', textAlign: 'center'}}></Icon>
                   </TouchableOpacity>
                 ) : null}
               </CardItem>
@@ -372,6 +438,14 @@ class HomeScreen extends Component {
               </CardItem>
               <CardItem>
                 <Body>{this.settingPermissions(this.props.project)}</Body>
+              </CardItem>
+              {this.props.userPermissions['project'] === true ? (
+                <CardItem>
+                  <MemberComponent project={this.props.project} />
+                </CardItem>
+              ) : null}
+              <CardItem>
+                <ViewProjectMangers project={this.props.project} />
               </CardItem>
             </Card>
           </Content>
@@ -409,10 +483,13 @@ const styles = StyleSheet.create({
   },
   row: {
     height: 40,
+    flexDirection: 'row',
   },
   text: {
-    margin: 6,
+    margin: 5,
     textAlign: 'center',
+    flex: 1,
+    flexWrap: 'wrap',
   },
   editButton: {
     backgroundColor: '#184D47',

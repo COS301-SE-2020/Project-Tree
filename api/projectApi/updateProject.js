@@ -1,42 +1,16 @@
 const db = require("../DB");
 
-function updateCurTask(task, nodes, rels) {
-  //needed for future development
-  /* getPredDependencies(task, rels)
-    .forEach(dep => {
-      if (task.startDate != dep.endDate) {
-        dep.endDate = task.startDate;
-        let startDate = new Date(dep.startDate);
-        let endDate = new Date(dep.endDate);
-        dep.duration = endDate.getTime() - startDate.getTime();
-        db.getSession()
-          .run(
-            `
-              MATCH (a)-[r]->(b) 
-              WHERE ID(r) = ${dep.id}
-              SET r += {  
-                endDate: datetime("${dep.endDate}"), 
-                duration:${dep.duration},
-              }
-            `
-          ).catch((err) => {
-            console.log(err);
-          });
-        
-      }
-    }); */
+function updateCurTask(task, nodes, rels, queries) {
   getSuccDependencies(task, rels).forEach((dep) =>
-    updateDependency(dep, nodes, rels)
+    updateDependency(dep, nodes, rels, queries)
   );
 }
 
-function updateCurDependency(dependency, nodes, rels) {
-  nodes.forEach((node) => {
-    if (node.id == dependency.target) updateTask(node, nodes, rels);
-  });
+function updateCurDependency(dependency, nodes, rels, queries) {
+  updateTask(findNode(nodes, dependency), nodes, rels, queries);
 }
 
-function updateTask(task, nodes, rels) {
+function updateTask(task, nodes, rels, queries) {
   let maxStartDate = new Date(task.startDate);
   maxStartDate.setTime(
     maxStartDate.getTime() - new Date().getTimezoneOffset() * 60 * 1000
@@ -60,27 +34,24 @@ function updateTask(task, nodes, rels) {
   task.startDate = startDate.toISOString().substring(0, 16);
   task.endDate = endDate.toISOString().substring(0, 16);
 
-  db.getSession()
-    .run(
-      `
+  queries.push({
+    endDate: task.endDate,
+    query: `
         MATCH (a:Task) 
         WHERE ID(a) = ${task.id}
         SET a += {
           startDate: datetime("${task.startDate}"),
           endDate: datetime("${task.endDate}")
         }
-      `
-    )
-    .catch((err) => {
-      console.log(err);
-    });
+      `,
+  });
 
   getSuccDependencies(task, rels).forEach((dep) =>
-    updateDependency(dep, nodes, rels)
+    updateDependency(dep, nodes, rels, queries)
   );
 }
 
-function updateDependency(dependency, nodes, rels) {
+function updateDependency(dependency, nodes, rels, queries) {
   let source;
   nodes.forEach((node) => {
     if (node.id == dependency.source) source = node;
@@ -98,9 +69,9 @@ function updateDependency(dependency, nodes, rels) {
     .toISOString()
     .substring(0, 16);
 
-  db.getSession()
-    .run(
-      `
+  queries.push({
+    endDate: dependency.endDate,
+    query: `
         MATCH (a)-[r:DEPENDENCY]->(b) 
         WHERE ID(r) = ${dependency.id}
         SET r += {
@@ -109,14 +80,15 @@ function updateDependency(dependency, nodes, rels) {
           startDate: datetime("${dependency.startDate}"),
           endDate: datetime("${dependency.endDate}")
         }
-      `
-    )
-    .catch((err) => {
-      console.log(err);
-    });
-  nodes.forEach((node) => {
-    if (node.id == dependency.target) updateTask(node, nodes, rels);
+      `,
   });
+  updateTask(findNode(nodes, dependency), nodes, rels, queries);
+}
+
+function findNode(nodes, dependency) {
+  for (const x in nodes) {
+    if (nodes[x].id == dependency.target) return nodes[x];
+  }
 }
 
 function getPredDependencies(task, rels) {
@@ -151,6 +123,22 @@ function getSuccessors(id, nodes, rels) {
   return successors;
 }
 
+async function runQueries(queries) {
+  queries.forEach((query) => {
+    db.getSession()
+      .run(query.query)
+      .catch((err) => console.log(err));
+  });
+}
+
+function CheckEndDate(queries, project) {
+  let check = true;
+  queries.forEach((query) => {
+    if (query.endDate > project.endDate) check = false;
+  });
+  return check;
+}
+
 function datetimeToString(datetime) {
   let obj = {
     year: datetime.year.low,
@@ -174,5 +162,7 @@ module.exports = {
   getSuccessors,
   datetimeToString,
   getPredDependencies,
-  getSuccDependencies
+  getSuccDependencies,
+  runQueries,
+  CheckEndDate,
 };

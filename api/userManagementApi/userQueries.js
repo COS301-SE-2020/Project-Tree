@@ -7,6 +7,10 @@ async function editUser(req, res) {
   if (pfp == "") {
     pfp = req.body.oldprofile;
   }
+  let emailchange = "";
+  if (req.body.email != req.body.oldEmail) {
+    emailchange = "true";
+  }
   let userId = await verify(req.body.token);
   if (userId != null) {
     db.getSession()
@@ -31,9 +35,11 @@ async function editUser(req, res) {
           sname: result.records[0]._fields[0].properties.sname,
           email: result.records[0]._fields[0].properties.email,
           birthday: result.records[0]._fields[0].properties.bday,
+          profilepicture:
+            result.records[0]._fields[0].properties.profilepicture,
         };
         res.status(200);
-        res.send({ user });
+        res.send({ user: user, message: emailchange });
       })
       .catch((err) => {
         console.log(err);
@@ -61,7 +67,9 @@ async function register(req, res) {
     .then((result) => {
       if (result.records.length != 0) {
         res.status(200);
-        res.send({ message: "duplicate" });
+        res.send({
+          message: "An account with that email has already been registered.",
+        });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           let token = JWT.sign(
@@ -392,6 +400,91 @@ async function verify(token) {
   return value;
 }
 
+async function deleteUser(req, res) {
+  let userId = await verify(req.body.token);
+  if (userId != null) {
+    db.getSession()
+      .run(
+        `MATCH (n) where id(n) = ${userId}
+          DETACH DELETE n`
+      )
+      .then((result) => {
+        res.status(200);
+        res.send({ message: "User deleted", status: true });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err, status: false });
+      });
+  } else {
+    res.status(400);
+    res.send({ message: "Can't delete user", status: false });
+  }
+}
+
+async function verify(token) {
+  let value = null;
+  try {
+    let user = JWT.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    await db
+      .getSession()
+      .run(
+        `
+          Match (n:User { email: "${user.email}"})
+          WHERE n.mobileToken = "${token}" or n.webToken= "${token}"
+          RETURN n
+        `
+      )
+      .then((result) => {
+        if (user.password == result.records[0]._fields[0].properties.hash) {
+          value = result.records[0]._fields[0].identity.low;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        return null;
+      });
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+  return value;
+}
+
+async function changePictureMobile(req, res) {
+  let pfp = req.body.profilepicture;
+  let userId = await verify(req.body.token);
+  if (userId != null) {
+    db.getSession()
+      .run(
+        `
+          MATCH (a) 
+          WHERE ID(a) = ${userId}
+          SET a += {
+            profilepicture:"${pfp}"
+          } 
+          RETURN a
+        `
+      )
+      .then((result) => {
+        res.status(200);
+        res.send({ msg: "Profile Changed", pic: pfp });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400);
+        res.send({ message: err });
+      });
+  } else {
+    res.status(400);
+    res.send({
+      message: "Invalid User",
+    });
+  }
+}
+
 module.exports = {
   login,
   register,
@@ -401,4 +494,6 @@ module.exports = {
   checkPermission,
   checkPermissionInternal,
   editPassword,
+  deleteUser,
+  changePictureMobile,
 };

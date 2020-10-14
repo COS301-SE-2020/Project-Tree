@@ -7,6 +7,8 @@ import {
   Col,
   InputGroup,
   Spinner,
+  Tooltip,
+  OverlayTrigger,
 } from "react-bootstrap";
 import ms from "ms";
 
@@ -132,6 +134,10 @@ class UpdateTask extends React.Component {
   }
 
   HideModal() {
+    let pacManList = [...this.props.pacMans];
+    let resourcesList = [...this.props.resources];
+    let resPersonList = [...this.props.resPersons];
+
     // Resets the people list
     for (let x = 0; x < this.state.pacManList.length; x++) {
       this.state.people.push(this.state.pacManList[x]);
@@ -143,7 +149,12 @@ class UpdateTask extends React.Component {
       this.state.people.push(this.state.resourcesList[x]);
     }
 
-    this.setState({ Show: false });
+    this.setState({
+      Show: false,
+      pacManList: pacManList,
+      resourceList: resourcesList,
+      resPersonList: resPersonList,
+    });
   }
 
   async handleSubmit(event) {
@@ -182,6 +193,7 @@ class UpdateTask extends React.Component {
     };
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = data;
+    projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
 
     const response = await fetch("/task/update", {
@@ -194,58 +206,65 @@ class UpdateTask extends React.Component {
     });
 
     const body = await response.json();
+    if (body.message === "After Project End Date") {
+      alert(
+        "The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date"
+      );
+      this.setState({ isloading: false });
+    } else {
+      let timestamp = new Date();
+      timestamp.setTime(
+        timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000
+      );
+      timestamp = timestamp.toISOString();
 
-    let timestamp = new Date();
-    timestamp.setTime(
-      timestamp.getTime() - new Date().getTimezoneOffset() * 60 * 1000
-    );
-    timestamp = timestamp.toISOString();
-
-    await fetch("/people/updateAssignedPeople", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ut_taskId: this.state.id,
-        ut_pacMans: this.state.pacManList,
-        ut_resPersons: this.state.resPersonList,
-        ut_resources: this.state.resourcesList,
-        ut_originalPacMans: this.props.pacMans,
-        ut_originalResPersons: this.props.resPersons,
-        ut_originalResources: this.props.resources,
-        auto_notification: {
-          timestamp: timestamp,
-          projName: this.props.project.name,
-          projID: this.props.project.id,
-          taskName: data.name,
-          type: "auto",
-          mode: 2,
+      await fetch("/people/updateAssignedPeople", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-      }),
-    });
+        body: JSON.stringify({
+          ut_taskId: this.state.id,
+          ut_pacMans: this.state.pacManList,
+          ut_resPersons: this.state.resPersonList,
+          ut_resources: this.state.resourcesList,
+          ut_originalPacMans: this.props.pacMans,
+          ut_originalResPersons: this.props.resPersons,
+          ut_originalResources: this.props.resources,
+          auto_notification: {
+            timestamp: timestamp,
+            projName: this.props.project.name,
+            projID: this.props.project.id,
+            taskName: data.name,
+            type: "auto",
+            mode: 2,
+            timeComplete: timeComplete,
+          },
+        }),
+      });
 
-    await this.props.setTaskInfo(
-      body.nodes,
-      body.rels,
-      body.displayNode,
-      body.displayRel,
-      this.state.assignedProjUsers
-    );
+      await this.props.setTaskInfo(
+        body.nodes,
+        body.rels,
+        body.displayNode,
+        body.displayRel,
+        this.state.assignedProjUsers
+      );
 
-    // Resets the people list
-    for (let x = 0; x < this.state.pacManList.length; x++) {
-      this.state.people.push(this.state.pacManList[x]);
-    }
-    for (let x = 0; x < this.state.resPersonList.length; x++) {
-      this.state.people.push(this.state.resPersonList[x]);
-    }
-    for (let x = 0; x < this.state.resourcesList.length; x++) {
-      this.state.people.push(this.state.resourcesList[x]);
-    }
+      // Resets the people list
+      for (let x = 0; x < this.state.pacManList.length; x++) {
+        this.state.people.push(this.state.pacManList[x]);
+      }
+      for (let x = 0; x < this.state.resPersonList.length; x++) {
+        this.state.people.push(this.state.resPersonList[x]);
+      }
+      for (let x = 0; x < this.state.resourcesList.length; x++) {
+        this.state.people.push(this.state.resourcesList[x]);
+      }
 
-    this.setState({ Show: false, isloading: false });
+      this.setState({ Show: false, isloading: false });
+    }
   }
 
   updateSearch(event, mode) {
@@ -407,6 +426,68 @@ class UpdateTask extends React.Component {
     return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
+  updateStart() {
+    let check = true;
+    this.props.rels.forEach((el) => {
+      if (el.target === this.state.id) check = false;
+    });
+    return check;
+  }
+
+  changeDate(e, type) {
+    if (type.substring(type.length - 4, type.length) === "Date") {
+      if (isNaN(Date.parse(e.target.value))) return;
+    } else if (!/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value))
+      return;
+    let value =
+      type.substring(0, 1) === "s" ? this.state.startDate : this.state.endDate;
+    if (type.substring(type.length - 4, type.length) === "Date")
+      value = `${e.target.value}T${
+        type.substring(0, 1) === "s"
+          ? this.state.startDate.substring(11, 16)
+          : this.state.endDate.substring(11, 16)
+      }`;
+    else
+      value = `${
+        type.substring(0, 1) === "s"
+          ? this.state.startDate.substring(0, 10)
+          : this.state.endDate.substring(0, 10)
+      }T${e.target.value}`;
+    if (value < this.props.project.startDate) {
+      alert("You cannot make the task before the project date/time.");
+      value = this.props.project.startDate;
+    }
+    if (value > this.props.project.endDate) {
+      alert(
+        "You cannot make the start date/time before the project date/time."
+      );
+      value = this.props.project.endDate;
+    }
+    let startDate = type.substring(0, 1) === "s" ? value : this.state.startDate;
+    let endDate = type.substring(0, 1) === "s" ? this.state.endDate : value;
+    if (endDate < startDate) {
+      alert("You cannot make the end date/time before the start date/time.");
+      this.setState({
+        startDate: value,
+        endDate: value,
+        duration: this.CalcDiff(value, value),
+      });
+    } else {
+      if (type.substring(0, 1) === "s")
+        this.setState({
+          startDate: value,
+          duration: this.CalcDiff(value, this.state.endDate),
+        });
+      else
+        this.setState({
+          endDate: value,
+          duration: this.CalcDiff(this.state.startDate, value),
+        });
+    }
+    if (type.substring(0, 1) === "s") return this.state.startDate;
+    else return this.state.endDate;
+  }
+
   render() {
     /*
      * Filters the list of people to only show people matching the search term
@@ -443,443 +524,446 @@ class UpdateTask extends React.Component {
           <i className="fa fa-edit"> </i> Edit
         </Button>
         <Modal show={this.state.Show} onHide={this.HideModal}>
-          <Form onSubmit={this.handleSubmit}>
-            <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
-              <Modal.Title>Edit Task</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form.Group>
-                <input
-                  hidden
-                  type="number"
-                  name="ut_id"
-                  value={this.state.id}
-                  onChange={() => {}}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Name of task</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  name="ut_name"
-                  value={this.state.name}
-                  onChange={(e) => {
-                    this.setState({ name: e.target.value });
-                    this.value = this.state.name;
-                  }}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Description of task</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  name="ut_description"
-                  rows="3"
-                  value={this.state.description}
-                  onChange={(e) => {
-                    this.setState({ description: e.target.value });
-                    this.value = this.state.description;
-                  }}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Start date of task</Form.Label>
-                <Form.Control
-                  required
-                  type="date"
-                  value={this.state.startDate.substring(0, 10)}
-                  onChange={(e) => {
-                    if (isNaN(Date.parse(e.target.value))) return;
-                    let value = this.state.startDate;
-                    value = `${e.target.value}T${this.state.startDate.substring(
-                      11,
-                      16
-                    )}`;
-                    let startDate = new Date(value);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let endDate = new Date(this.state.endDate);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the start date/time after the end date/time."
-                      );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        startDate: value,
-                        duration: this.CalcDiff(value, this.state.endDate),
-                      });
-                    }
-                    this.value = this.state.startDate;
-                  }}
-                />
-                <Form.Label>Start Time of task</Form.Label>
-                <Form.Control
-                  required
-                  type="time"
-                  value={this.state.startDate.substring(11, 16)}
-                  onChange={(e) => {
-                    if (
-                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
-                    )
-                      return;
-                    let value = this.state.startDate;
-                    value = `${this.state.startDate.substring(0, 10)}T${
-                      e.target.value
-                    }`;
-                    let startDate = new Date(value);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let endDate = new Date(this.state.endDate);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the start date/time after the end date/time."
-                      );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        startDate: value,
-                        duration: this.CalcDiff(value, this.state.endDate),
-                      });
-                    }
-                    this.value = this.state.startDate;
-                  }}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>End date of task</Form.Label>
-                <Form.Control
-                  required
-                  type="date"
-                  value={this.state.endDate.substring(0, 10)}
-                  onChange={(e) => {
-                    if (isNaN(Date.parse(e.target.value))) return;
-                    let value = this.state.endDate;
-                    value = `${e.target.value}T${this.state.endDate.substring(
-                      11,
-                      16
-                    )}`;
-                    let endDate = new Date(value);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let startDate = new Date(this.state.startDate);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the end date/time before the start date/time."
-                      );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        endDate: value,
-                        duration: this.CalcDiff(this.state.startDate, value),
-                      });
-                    }
-                    this.value = this.state.endDate;
-                  }}
-                />
-                <Form.Label>End Time of task</Form.Label>
-                <Form.Control
-                  required
-                  type="time"
-                  value={this.state.endDate.substring(11, 16)}
-                  onChange={(e) => {
-                    if (
-                      !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(e.target.value)
-                    )
-                      return;
-                    let value = this.state.endDate;
-                    value = `${this.state.endDate.substring(0, 10)}T${
-                      e.target.value
-                    }`;
-                    let endDate = new Date(value);
-                    endDate.setTime(
-                      endDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    let startDate = new Date(this.state.startDate);
-                    startDate.setTime(
-                      startDate.getTime() -
-                        new Date().getTimezoneOffset() * 60 * 1000
-                    );
-                    if (endDate < startDate) {
-                      alert(
-                        "You cannot make the end date/time before the start date/time."
-                      );
-                      this.setState({
-                        startDate: value,
-                        endDate: value,
-                        duration: this.CalcDiff(value, value),
-                      });
-                    } else {
-                      this.setState({
-                        endDate: value,
-                        duration: this.CalcDiff(this.state.startDate, value),
-                      });
-                    }
-                    this.value = this.state.endDate;
-                  }}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label> Duration</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  name="duration"
-                  value={this.state.duration}
-                  readOnly
-                />
-              </Form.Group>
-              <Form.Group>
-                <InputGroup>
-                  <Form.Label>Progress</Form.Label>
+          {this.props.updateType === "update" ? (
+            <Form onSubmit={this.handleSubmit}>
+              <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
+                <Modal.Title>Edit Task</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form.Group>
+                  <Form.Label>Name of task</Form.Label>
                   <Form.Control
                     required
-                    type="number"
-                    name="progress"
-                    min={0}
-                    max={100}
-                    value={this.state.progress}
+                    type="text"
+                    value={this.state.name}
                     onChange={(e) => {
-                      if (parseInt(e.target.value) === 100) {
-                        this.setState({ issue: false });
-                      }
-                      this.setState({ progress: e.target.value });
-                      this.value = this.state.progress;
+                      this.setState({ name: e.target.value });
+                      this.value = this.state.name;
                     }}
                   />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Description of task</Form.Label>
                   <Form.Control
-                    type="range"
-                    value={this.state.progress}
+                    as="textarea"
+                    rows="3"
+                    value={this.state.description}
                     onChange={(e) => {
-                      if (parseInt(e.target.value) === 100) {
-                        this.setState({ issue: false });
-                      }
-                      this.setState({ progress: e.target.value });
-                      this.value = this.state.progress;
+                      this.setState({ description: e.target.value });
+                      this.value = this.state.description;
                     }}
                   />
-                </InputGroup>
-              </Form.Group>
-
-              <Form.Group>
-                <Form.Check
-                  type="checkbox"
-                  label="There is an issue with the task"
-                  checked={this.state.issue}
-                  onChange={(e) => {
-                    if (parseInt(this.state.progress) === 100) {
-                      this.setState({ issue: false });
-                      this.checked = false;
-                      alert(
-                        "You cannot specify that a complete task has an issue."
-                      );
-                    } else {
-                      this.setState({ issue: e.target.checked });
-                      this.checked = this.state.issue;
-                    }
-                  }}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Package Manager</Form.Label>
-                <Row>
-                  <Col>
-                    <input
-                      type="text"
-                      value={this.state.pacManSearchTerm}
-                      onChange={(e) => this.updateSearch(e, 0)}
-                      placeholder="Search for a name"
-                      style={{ width: "100%" }}
-                    />
-                    {this.state.pacManSearchTerm.length >= 2
-                      ? filteredPacMan.map((person) => {
-                          return (
-                            <React.Fragment>
-                              <button
-                                type="button"
-                                className="selectPersonBtn"
-                                onClick={() => this.addPacMan(person)}
-                                key={person.id}
-                              >
-                                {person.name}&nbsp;{person.surname}
-                              </button>
-                              <br />
-                            </React.Fragment>
-                          );
-                        })
-                      : null}
-                  </Col>
-                  <Col>
-                    {this.state.pacManList.map((person) => {
-                      return (
-                        <React.Fragment>
-                          <button
-                            type="button"
-                            className="selectedPersonBtn"
-                            onClick={() => this.removeAssignedPerson(person, 0)}
-                            key={person.id}
-                          >
-                            {person.name}&nbsp;{person.surname}
-                          </button>
-                          <br />
-                        </React.Fragment>
-                      );
-                    })}
-                  </Col>
-                </Row>
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Responsible Person(s)</Form.Label>
-                <Row>
-                  <Col>
-                    <input
-                      type="text"
-                      value={this.state.resPersonSearchTerm}
-                      onChange={(e) => this.updateSearch(e, 1)}
-                      placeholder="Search for a name"
-                      style={{ width: "100%" }}
-                    />
-                    {this.state.resPersonSearchTerm.length >= 2
-                      ? filteredResPerson.map((person) => {
-                          return (
-                            <React.Fragment>
-                              <button
-                                type="button"
-                                className="selectPersonBtn"
-                                onClick={() => this.addResPerson(person)}
-                                key={person.id}
-                              >
-                                {person.name}&nbsp;{person.surname}
-                              </button>
-                              <br />
-                            </React.Fragment>
-                          );
-                        })
-                      : null}
-                  </Col>
-                  <Col>
-                    {this.state.resPersonList.map((person) => {
-                      return (
-                        <React.Fragment>
-                          <button
-                            type="button"
-                            className="selectedPersonBtn"
-                            onClick={() => this.removeAssignedPerson(person, 1)}
-                            key={person.id}
-                          >
-                            {person.name}&nbsp;{person.surname}
-                          </button>
-                          <br />
-                        </React.Fragment>
-                      );
-                    })}
-                  </Col>
-                </Row>
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Resource(s)</Form.Label>
-                <Row>
-                  <Col>
-                    <input
-                      type="text"
-                      value={this.state.resourcesSearchTerm}
-                      onChange={(e) => this.updateSearch(e, 2)}
-                      placeholder="Search for a name"
-                      style={{ width: "100%" }}
-                    />
-                    {this.state.resourcesSearchTerm.length >= 2
-                      ? filteredResources.map((person) => {
-                          return (
-                            <React.Fragment>
-                              <button
-                                type="button"
-                                className="selectPersonBtn"
-                                onClick={() => this.addResource(person)}
-                                key={person.id}
-                              >
-                                {person.name}&nbsp;{person.surname}
-                              </button>
-                              <br />
-                            </React.Fragment>
-                          );
-                        })
-                      : null}
-                  </Col>
-                  <Col>
-                    {this.state.resourcesList.map((person) => {
-                      return (
-                        <React.Fragment>
-                          <button
-                            type="button"
-                            className="selectedPersonBtn"
-                            onClick={() => this.removeAssignedPerson(person, 2)}
-                            key={person.id}
-                          >
-                            {person.name}&nbsp;{person.surname}
-                          </button>
-                          <br />
-                        </React.Fragment>
-                      );
-                    })}
-                  </Col>
-                </Row>
-              </Form.Group>
-              <br />
-            </Modal.Body>
-            <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
-              <Button variant="secondary" onClick={this.HideModal}>
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="dark"
-                style={{ width: "100px" }}
-                disabled={this.state.isloading}
-              >
-                {this.state.isloading ? (
-                  <Spinner
-                    animation="border"
-                    variant="success"
-                    size="sm"
-                  ></Spinner>
+                </Form.Group>
+                {this.updateStart() ? (
+                  <React.Fragment>
+                    <Form.Group>
+                      <Form.Label>Start date of task</Form.Label>
+                      <Form.Control
+                        required
+                        type="date"
+                        value={this.state.startDate.substring(0, 10)}
+                        onChange={(e) => {
+                          this.value = this.changeDate(e, "startDate");
+                        }}
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Start time of task</Form.Label>
+                      <Form.Control
+                        required
+                        type="time"
+                        value={this.state.startDate.substring(11, 16)}
+                        onChange={(e) => {
+                          this.value = this.changeDate(e, "startTime");
+                        }}
+                      />
+                    </Form.Group>
+                  </React.Fragment>
                 ) : (
-                  "Save"
+                  <React.Fragment>
+                    <Form.Group>
+                      <Form.Label>Start date of task</Form.Label>{" "}
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip>
+                            This task is dependent on another task, to edit the
+                            start date of this task please update either a
+                            previous task or dependency.
+                          </Tooltip>
+                        }
+                      >
+                        <i className="fa fa-question-circle"></i>
+                      </OverlayTrigger>
+                      <Form.Control
+                        required
+                        disabled
+                        type="date"
+                        value={this.state.startDate.substring(0, 10)}
+                        onChange={(e) => {}}
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Start time of task</Form.Label>{" "}
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip>
+                            This task is dependent on another task, to edit the
+                            start time of this task please update either a
+                            previous task or dependency.
+                          </Tooltip>
+                        }
+                      >
+                        <i className="fa fa-question-circle"></i>
+                      </OverlayTrigger>
+                      <Form.Control
+                        required
+                        disabled
+                        type="time"
+                        value={this.state.startDate.substring(11, 16)}
+                        onChange={(e) => {}}
+                      />
+                    </Form.Group>
+                  </React.Fragment>
                 )}
-              </Button>
-            </Modal.Footer>
-          </Form>
+                <Form.Group>
+                  <Form.Label>End date of task</Form.Label>
+                  <Form.Control
+                    required
+                    type="date"
+                    value={this.state.endDate.substring(0, 10)}
+                    onChange={(e) => {
+                      this.value = this.changeDate(e, "endDate");
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>End time of task</Form.Label>
+                  <Form.Control
+                    required
+                    type="time"
+                    value={this.state.endDate.substring(11, 16)}
+                    onChange={(e) => {
+                      this.value = this.changeDate(e, "endTime");
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label> Duration</Form.Label>
+                  <Form.Control
+                    required
+                    type="text"
+                    name="duration"
+                    value={this.state.duration}
+                    readOnly
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <InputGroup>
+                    <Form.Label>Progress</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      name="progress"
+                      min={0}
+                      max={100}
+                      value={this.state.progress}
+                      onChange={(e) => {
+                        if (parseInt(e.target.value) === 100) {
+                          this.setState({ issue: false });
+                        }
+                        this.setState({ progress: e.target.value });
+                        this.value = this.state.progress;
+                      }}
+                    />
+                    <Form.Control
+                      type="range"
+                      value={this.state.progress}
+                      onChange={(e) => {
+                        if (parseInt(e.target.value) === 100) {
+                          this.setState({ issue: false });
+                        }
+                        this.setState({ progress: e.target.value });
+                        this.value = this.state.progress;
+                      }}
+                    />
+                  </InputGroup>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Check
+                    type="checkbox"
+                    label="There is an issue with the task"
+                    checked={this.state.issue}
+                    onChange={(e) => {
+                      if (parseInt(this.state.progress) === 100) {
+                        this.setState({ issue: false });
+                        this.checked = false;
+                        alert(
+                          "You cannot specify that a complete task has an issue."
+                        );
+                      } else {
+                        this.setState({ issue: e.target.checked });
+                        this.checked = this.state.issue;
+                      }
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Package Manager</Form.Label>
+                  <Row>
+                    <Col>
+                      <input
+                        type="text"
+                        value={this.state.pacManSearchTerm}
+                        onChange={(e) => this.updateSearch(e, 0)}
+                        placeholder="Search for a name"
+                        style={{ width: "100%" }}
+                      />
+                      {this.state.pacManSearchTerm.length >= 2
+                        ? filteredPacMan.map((person) => {
+                            return (
+                              <React.Fragment>
+                                <button
+                                  type="button"
+                                  className="selectPersonBtn"
+                                  onClick={() => this.addPacMan(person)}
+                                  key={person.id}
+                                >
+                                  {person.name}&nbsp;{person.surname}
+                                </button>
+                                <br />
+                              </React.Fragment>
+                            );
+                          })
+                        : null}
+                    </Col>
+                    <Col>
+                      {this.state.pacManList.map((person) => {
+                        return (
+                          <React.Fragment>
+                            <button
+                              type="button"
+                              className="selectedPersonBtn"
+                              onClick={() =>
+                                this.removeAssignedPerson(person, 0)
+                              }
+                              key={person.id}
+                            >
+                              {person.name}&nbsp;{person.surname}
+                            </button>
+                            <br />
+                          </React.Fragment>
+                        );
+                      })}
+                    </Col>
+                  </Row>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Responsible Person(s)</Form.Label>
+                  <Row>
+                    <Col>
+                      <input
+                        type="text"
+                        value={this.state.resPersonSearchTerm}
+                        onChange={(e) => this.updateSearch(e, 1)}
+                        placeholder="Search for a name"
+                        style={{ width: "100%" }}
+                      />
+                      {this.state.resPersonSearchTerm.length >= 2
+                        ? filteredResPerson.map((person) => {
+                            return (
+                              <React.Fragment>
+                                <button
+                                  type="button"
+                                  className="selectPersonBtn"
+                                  onClick={() => this.addResPerson(person)}
+                                  key={person.id}
+                                >
+                                  {person.name}&nbsp;{person.surname}
+                                </button>
+                                <br />
+                              </React.Fragment>
+                            );
+                          })
+                        : null}
+                    </Col>
+                    <Col>
+                      {this.state.resPersonList.map((person) => {
+                        return (
+                          <React.Fragment>
+                            <button
+                              type="button"
+                              className="selectedPersonBtn"
+                              onClick={() =>
+                                this.removeAssignedPerson(person, 1)
+                              }
+                              key={person.id}
+                            >
+                              {person.name}&nbsp;{person.surname}
+                            </button>
+                            <br />
+                          </React.Fragment>
+                        );
+                      })}
+                    </Col>
+                  </Row>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Resource(s)</Form.Label>
+                  <Row>
+                    <Col>
+                      <input
+                        type="text"
+                        value={this.state.resourcesSearchTerm}
+                        onChange={(e) => this.updateSearch(e, 2)}
+                        placeholder="Search for a name"
+                        style={{ width: "100%" }}
+                      />
+                      {this.state.resourcesSearchTerm.length >= 2
+                        ? filteredResources.map((person) => {
+                            return (
+                              <React.Fragment>
+                                <button
+                                  type="button"
+                                  className="selectPersonBtn"
+                                  onClick={() => this.addResource(person)}
+                                  key={person.id}
+                                >
+                                  {person.name}&nbsp;{person.surname}
+                                </button>
+                                <br />
+                              </React.Fragment>
+                            );
+                          })
+                        : null}
+                    </Col>
+                    <Col>
+                      {this.state.resourcesList.map((person) => {
+                        return (
+                          <React.Fragment>
+                            <button
+                              type="button"
+                              className="selectedPersonBtn"
+                              onClick={() =>
+                                this.removeAssignedPerson(person, 2)
+                              }
+                              key={person.id}
+                            >
+                              {person.name}&nbsp;{person.surname}
+                            </button>
+                            <br />
+                          </React.Fragment>
+                        );
+                      })}
+                    </Col>
+                  </Row>
+                </Form.Group>
+                <br />
+              </Modal.Body>
+              <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
+                <Button variant="secondary" onClick={this.HideModal}>
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="dark"
+                  style={{ width: "100px" }}
+                  disabled={this.state.isloading}
+                >
+                  {this.state.isloading ? (
+                    <Spinner
+                      animation="border"
+                      variant="success"
+                      size="sm"
+                    ></Spinner>
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+              </Modal.Footer>
+            </Form>
+          ) : (
+            <Form onSubmit={this.handleSubmit}>
+              <Modal.Header closeButton style={{ backgroundColor: "#96BB7C" }}>
+                <Modal.Title>Edit Task</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form.Group>
+                  <InputGroup>
+                    <Form.Label>Progress</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      name="progress"
+                      min={0}
+                      max={100}
+                      value={this.state.progress}
+                      onChange={(e) => {
+                        if (parseInt(e.target.value) === 100) {
+                          this.setState({ issue: false });
+                        }
+                        this.setState({ progress: e.target.value });
+                        this.value = this.state.progress;
+                      }}
+                    />
+                    <Form.Control
+                      type="range"
+                      value={this.state.progress}
+                      onChange={(e) => {
+                        if (parseInt(e.target.value) === 100) {
+                          this.setState({ issue: false });
+                        }
+                        this.setState({ progress: e.target.value });
+                        this.value = this.state.progress;
+                      }}
+                    />
+                  </InputGroup>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Check
+                    type="checkbox"
+                    label="There is an issue with the task"
+                    checked={this.state.issue}
+                    onChange={(e) => {
+                      if (parseInt(this.state.progress) === 100) {
+                        this.setState({ issue: false });
+                        this.checked = false;
+                        alert(
+                          "You cannot specify that a complete task has an issue."
+                        );
+                      } else {
+                        this.setState({ issue: e.target.checked });
+                        this.checked = this.state.issue;
+                      }
+                    }}
+                  />
+                </Form.Group>
+                <br />
+              </Modal.Body>
+              <Modal.Footer style={{ backgroundColor: "#96BB7C" }}>
+                <Button variant="secondary" onClick={this.HideModal}>
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="dark"
+                  style={{ width: "100px" }}
+                  disabled={this.state.isloading}
+                >
+                  {this.state.isloading ? (
+                    <Spinner
+                      animation="border"
+                      variant="success"
+                      size="sm"
+                    ></Spinner>
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+              </Modal.Footer>
+            </Form>
+          )}
         </Modal>
       </React.Fragment>
     );

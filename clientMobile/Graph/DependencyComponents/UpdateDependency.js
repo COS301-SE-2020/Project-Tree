@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Icon, Label, Form, Item, Input} from 'native-base';
 import {ButtonGroup} from 'react-native-elements';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import ms from 'ms';
 
 class UpdateDependency extends Component {
@@ -44,6 +44,7 @@ class UpdateDependency extends Component {
 
             <View style={{flex: 6}}>
               <UpdateDependencyForm
+                project={this.props.project}
                 dependency={this.props.dependency}
                 toggleVisibility={this.props.toggleVisibility}
                 getProjectInfo={this.props.getProjectInfo}
@@ -73,6 +74,7 @@ class UpdateDependencyForm extends Component {
       error: null,
       dateTimePicker: false,
       dateTimeType: {type: 'date', for: 'start', value: new Date()},
+      ableToSubmit: false,
     };
 
     this.handleDateTimeSelect = this.handleDateTimeSelect.bind(this);
@@ -81,17 +83,28 @@ class UpdateDependencyForm extends Component {
     this.updateIndex = this.updateIndex.bind(this);
   }
 
-  handleDateTimeSelect(event, selectedDate, type) {
-    if (event.type === 'dismissed') {
-      this.setState({dateTimePicker: false});
-      return;
+  handleDateTimeSelect(selectedDate, type) {
+    let date = selectedDate;
+    if (type.type !== 'both') {
+      date = new Date(
+        new Date(selectedDate).getTime() -
+          new Date().getTimezoneOffset() * 60 * 1000,
+      )
+        .toISOString()
+        .substring(0, 16);
+      if (type.type === 'date')
+        date = `${date.substring(0, 10)}T${
+          type.for === 'start'
+            ? this.state.startDate.substring(11, 16)
+            : this.state.endDate.substring(11, 16)
+        }`;
+      else
+        date = `${
+          type.for === 'start'
+            ? this.state.startDate.substring(0, 10)
+            : this.state.endDate.substring(0, 10)
+        }T${date.substring(11, 16)}`;
     }
-    let date = new Date(
-      new Date(selectedDate).getTime() -
-        new Date().getTimezoneOffset() * 60 * 1000,
-    )
-      .toISOString()
-      .substring(0, 16);
     if (type.for === 'start') {
       if (this.state.endDate < date)
         this.setState({
@@ -125,15 +138,23 @@ class UpdateDependencyForm extends Component {
   updateIndex(selectedIndex) {
     if (selectedIndex == 0) {
       this.setState({selectedIndex: 0, relationshipType: 'ss'});
-      this.handleDateTimeSelect({}, this.state.sStartDate, {for: 'start'});
+      this.handleDateTimeSelect(this.state.sStartDate, {
+        type: 'both',
+        for: 'start',
+      });
     } else {
       this.setState({selectedIndex: 1, relationshipType: 'fs'});
-      this.handleDateTimeSelect({}, this.state.sEndDate, {for: 'start'});
+      this.handleDateTimeSelect(this.state.sEndDate, {
+        type: 'both',
+        for: 'start',
+      });
     }
   }
 
   formatValidateInput() {
     let data = {
+      source: this.props.dependency.source,
+      target: this.props.dependency.target,
       id: this.props.dependency.id,
       relationshipType: this.state.relationshipType,
       sStartDate: this.state.sStartDate,
@@ -146,15 +167,17 @@ class UpdateDependencyForm extends Component {
   }
 
   async handleSubmit() {
+    this.setState({ableToSubmit: true});
     let input = this.formatValidateInput();
     if (input === null) return;
 
     let projectData = await this.props.getProjectInfo();
     projectData.changedInfo = input;
+    projectData.project = this.props.project;
     projectData = JSON.stringify(projectData);
 
     const response = await fetch(
-      'http://projecttree.herokuapp.com/dependency/update',
+      'https://projecttree.herokuapp.com/dependency/update',
       {
         method: 'POST',
         headers: {
@@ -166,9 +189,16 @@ class UpdateDependencyForm extends Component {
     );
 
     const body = await response.json();
-    this.props.toggleVisibility(true, false);
-    this.props.displayTaskDependency(null, null);
-    this.props.setProjectInfo(body.nodes, body.rels);
+    if (body.message === 'After Project End Date') {
+      alert(
+        'The changes you tried to make would have moved the project end date, if you want to make the change please move the project end date',
+      );
+    } else {
+      this.props.toggleVisibility(true, false);
+      this.props.displayTaskDependency(null, null);
+      this.props.setProjectInfo(body.nodes, body.rels);
+    }
+    this.setState({ableToSubmit: false});
   }
 
   CalcDiff(sd, ed) {
@@ -265,29 +295,26 @@ class UpdateDependencyForm extends Component {
             </Item>
           </Form>
         </View>
-        {this.state.dateTimePicker && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={
-              new Date(
-                new Date(this.state.dateTimeType.value).getTime() +
-                  new Date().getTimezoneOffset() * 60 * 1000,
-              )
-            }
-            mode={this.state.dateTimeType.type}
-            is24Hour={true}
-            display="default"
-            onChange={(event, selectedDate) =>
-              this.handleDateTimeSelect(
-                event,
-                selectedDate,
-                this.state.dateTimeType,
-              )
-            }
-          />
-        )}
+        <DateTimePicker
+          testID="dateTimePicker"
+          date={
+            new Date(
+              new Date(this.state.dateTimeType.value).getTime() +
+                new Date().getTimezoneOffset() * 60 * 1000,
+            )
+          }
+          mode={this.state.dateTimeType.type}
+          is24Hour={true}
+          display="default"
+          isVisible={this.state.dateTimePicker}
+          onCancel={() => this.setState({dateTimePicker: false})}
+          onConfirm={(selectedDate) =>
+            this.handleDateTimeSelect(selectedDate, this.state.dateTimeType)
+          }
+        />
         <View style={{flex: 1}}>
           <TouchableOpacity
+            disabled={this.state.ableToSubmit}
             style={styles.submitButton}
             onPress={this.handleSubmit}>
             <Text style={{color: 'white'}}>Submit</Text>

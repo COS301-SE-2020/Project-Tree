@@ -1,5 +1,13 @@
 import React from "react";
-import { ProgressBar, Button, Container, Row, Col } from "react-bootstrap";
+import {
+  ProgressBar,
+  Button,
+  Container,
+  Row,
+  Col,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Graph from "./Graph";
 import DeleteTask from "./Task/DeleteTask";
@@ -51,9 +59,13 @@ class GraphPage extends React.Component {
     });
 
     // Gets all the users in the database, might update to be all users assigned to the project
-    $.post("/people/getAllUsers", { id: this.state.project.id }, (response) => {
-      this.setState({ allUsers: response.users });
-    }).fail((err) => {
+    $.post(
+      "/people/getAllProjectMembers",
+      { id: this.state.project.id },
+      (response) => {
+        this.setState({ allUsers: response.users });
+      }
+    ).fail((err) => {
       throw Error(err);
     });
 
@@ -81,12 +93,34 @@ class GraphPage extends React.Component {
         throw Error(err);
       });
 
-      $.post("/getProjectViews", { id: this.state.project.id }, (response) => {
+      $.post("/getProjectViews", { id: this.props.project.id }, (response) => {
         this.setState({ views: response.views });
       }).fail((err) => {
         throw Error(err);
       });
       this.toggleSidebar(null, null, null, null, null);
+
+      // Gets all the users in the database, might update to be all users assigned to the project
+      $.post(
+        "/people/getAllProjectMembers",
+        { id: this.props.project.id },
+        (response) => {
+          this.setState({ allUsers: response.users });
+        }
+      ).fail((err) => {
+        throw Error(err);
+      });
+
+      // Gets all users already assigned to a task in a project
+      $.post(
+        "/people/assignedProjectUsers",
+        { id: this.props.project.id },
+        (response) => {
+          this.setState({ assignedProjUsers: response.projectUsers });
+        }
+      ).fail((err) => {
+        throw Error(err);
+      });
     }
   }
 
@@ -99,6 +133,10 @@ class GraphPage extends React.Component {
   }
 
   setTaskInfo(nodes, rels, displayNode, displayRel, assignedPeople) {
+    if (displayNode === undefined && displayRel === undefined) {
+      this.toggleSidebar(null, null);
+    }
+
     if (nodes !== undefined && rels !== undefined) {
       this.setState({ nodes: nodes, links: rels });
 
@@ -218,7 +256,23 @@ class GraphPage extends React.Component {
                     </Link>
                   </Col>
                   <Col xs={8} md={8} lg={8} xl={8} className="text-center m-1">
-                    <h2>{this.props.project.name}</h2>
+                    <h2>
+                      {this.props.project.name}{" "}
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={
+                          <Tooltip className="helpTooltip">
+                            Click on a task or dependency to view their
+                            information and perform actions.
+                          </Tooltip>
+                        }
+                      >
+                        <i
+                          className="fa fa-question-circle"
+                          style={{ color: "black", fontSize: "20px" }}
+                        ></i>
+                      </OverlayTrigger>
+                    </h2>
                   </Col>
                   <Col></Col>
                 </Row>
@@ -227,6 +281,7 @@ class GraphPage extends React.Component {
               {this.state.task !== null ? (
                 <TaskSidebar
                   task={this.state.task}
+                  rels={this.state.links}
                   userPermission={this.props.userPermission}
                   toggleSidebar={this.toggleSidebar}
                   setTaskInfo={this.setTaskInfo}
@@ -263,7 +318,6 @@ class GraphPage extends React.Component {
                   user={this.props.user}
                 />
               ) : null}
-              <LegendSidebar />
             </Col>
             <Col
               xs={9}
@@ -298,6 +352,7 @@ class TaskSidebar extends React.Component {
   constructor(props) {
     super(props);
     this.classifyExistingUsers = this.classifyExistingUsers.bind(this);
+    this.updateType = this.updateType.bind(this);
   }
 
   // Classifies users on the project according to role if they are part of this task
@@ -336,14 +391,13 @@ class TaskSidebar extends React.Component {
   }
 
   printUsers(people) {
-    console.log(people);
     let list = [];
     for (let x = 0; x < people.length; x++) {
       list.push(
-        <Row className="justify-content-md-center">
+        <Row key={x} className="justify-content-md-center">
           <Col className="justify-content-md-center">
             <img
-              class="circular"
+              className="circular"
               src={people[x].profilePicture}
               alt="user"
               width="50"
@@ -368,12 +422,34 @@ class TaskSidebar extends React.Component {
     return ms(endDate.getTime() - startDate.getTime(), { long: true });
   }
 
+  updateType(pac, resp, reso) {
+    if (this.props.userPermission["update"]) return "update";
+    let check = false;
+    pac.forEach((person) => {
+      if (person.id === this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    resp.forEach((person) => {
+      if (person.id === this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    reso.forEach((person) => {
+      if (person.id === this.props.user.id) check = true;
+    });
+    if (check) return "progress";
+    return "none";
+  }
+
   render() {
     let taskUsers = this.classifyExistingUsers();
     let taskPacMans = taskUsers[0];
     let taskResPersons = taskUsers[1];
     let taskResources = taskUsers[2];
-
+    let updateType = this.updateType(
+      taskPacMans,
+      taskResPersons,
+      taskResources
+    );
     let progressColor = "info";
 
     return (
@@ -384,7 +460,7 @@ class TaskSidebar extends React.Component {
         >
           <Row className="text-center align-items-center">
             <Col></Col>
-            <Col xs={5} className="text-center">
+            <Col xs={9} className="text-center">
               {this.props.viewId !== null ? (
                 <h4>
                   {this.props.task.name}
@@ -439,18 +515,21 @@ class TaskSidebar extends React.Component {
               />
             </Col>
           </Row>
-          {this.props.userPermission["update"] === true ? (
+          {updateType !== "none" ? (
             <Row className="my-2">
               <Col xs={12} className="text-center">
                 <UpdateTask
                   task={this.props.task}
+                  rels={this.props.rels}
                   setTaskInfo={this.props.setTaskInfo}
                   getProjectInfo={this.props.getProjectInfo}
                   toggleSidebar={this.props.toggleSidebar}
                   pacMans={taskPacMans}
                   resPersons={taskResPersons}
                   resources={taskResources}
+                  user={this.props.user}
                   allUsers={this.props.allUsers}
+                  updateType={updateType}
                   assignedProjUsers={this.props.assignedProjUsers}
                   updateAssignedPeople={this.props.updateAssignedPeople}
                   project={this.props.project}
@@ -636,122 +715,6 @@ class DependencySidebar extends React.Component {
             </Col>
           </Row>
           <hr />
-        </Container>
-      </React.Fragment>
-    );
-  }
-}
-
-class LegendSidebar extends React.Component {
-  render() {
-    return (
-      <React.Fragment>
-        <Container
-          className="text-black text-center mb-3"
-          style={{ fontSize: "20px" }}
-        >
-          <Row>
-            <Col className="text-center">
-              <h4>Graph key</h4>
-            </Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-dark m-1"
-              xs={6}
-              style={{
-                backgroundColor: "white",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Incomplete
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-dark m-1"
-              xs={6}
-              style={{
-                backgroundColor: "#77dd77",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Complete
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-dark m-1"
-              xs={6}
-              style={{
-                backgroundColor: "#ff6961",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Overdue
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-dark m-1"
-              xs={6}
-              style={{
-                backgroundColor: "#ffae42",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Issue
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-primary m-1 align-items-center"
-              xs={6}
-              style={{
-                backgroundColor: "white",
-                color: "black",
-                width: "120px",
-                height: "30px",
-              }}
-            >
-              Critical Path
-            </Col>
-            <Col></Col>
-          </Row>
-          <Row>
-            <Col></Col>
-            <Col
-              className="text-center border rounded border-info m-1 align-items-center "
-              xs={6}
-              style={{
-                backgroundColor: "white",
-                color: "black",
-                width: "120px",
-                height: "30px",
-                boxShadow: "0 0 10px #009999",
-              }}
-            >
-              Highlight
-            </Col>
-            <Col></Col>
-          </Row>
         </Container>
       </React.Fragment>
     );

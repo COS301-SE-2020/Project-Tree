@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Chart } from "react-google-charts";
 import image from "../Images/project_analytic_1.svg";
 
@@ -46,7 +46,23 @@ export default class ScheduleTrackingComponent extends React.Component {
       <Container fluid>
         <Row>
           <Col>
-            <h4>Schedule Tracking</h4>
+            <h4>
+              Schedule Tracking{" "}
+              <OverlayTrigger
+                placement="right"
+                overlay={
+                  <Tooltip className="helpTooltip">
+                    Compare completion of tasks with expected completion to
+                    track project progress
+                  </Tooltip>
+                }
+              >
+                <i
+                  className="fa fa-info-circle"
+                  style={{ color: "black", fontSize: "20px" }}
+                ></i>
+              </OverlayTrigger>
+            </h4>
             {data.length === 1 ? (
               <Col className="text-center">
                 No ongoing tasks <br />

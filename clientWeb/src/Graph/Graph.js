@@ -15,6 +15,7 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import CreateTask from "./Task/CreateTask";
+import "./style.scss";
 
 function makeLink(edge, criticalPathLinks) {
   let strokeColor = "#000";
@@ -23,9 +24,7 @@ function makeLink(edge, criticalPathLinks) {
     id: "l" + edge.id,
     source: { id: `${edge.source}` },
     target: { id: `${edge.target}` },
-    // connector: { name: "rounded" },
-    // router: { name: "manhattan" },
-    connector: { name: 'smooth' },
+    connector: { name: "smooth" },
     attrs: {
       type: "link",
       line: { stroke: strokeColor },
@@ -90,9 +89,19 @@ function makeElement(node, criticalPathNodes) {
     };
   }
 
+  let xVal, yVal;
+  if (node.changedX !== undefined) {
+    xVal = node.changedX;
+    yVal = node.changedY;
+  } else {
+    xVal = node.positionX;
+    yVal = node.positionY;
+  }
+
   return new joint.shapes.standard.Rectangle({
     id: `${node.id}`,
     size: { width: width, height: height },
+    position: { x: xVal, y: yVal },
     attrs: {
       type: "node",
       body: {
@@ -160,10 +169,20 @@ function createViews(allNodes, viewNodes) {
             }
           );
 
+          let xVal, yVal;
+          if (viewNodes[x].changedX !== undefined) {
+            xVal = viewNodes[x].changedX;
+            yVal = viewNodes[x].changedY;
+          } else {
+            xVal = viewNodes[x].positionX;
+            yVal = viewNodes[x].positionY;
+          }
+
           clonedNode.attributes.attrs.text.text = `${wraptext}`;
           clonedNode.attributes.attrs.originId = allNodes[y].id;
           clonedNode.attributes.id = `${viewNodes[x].id}`;
           clonedNode.id = `${viewNodes[x].id}`;
+          clonedNode.attributes.position = { x: xVal, y: yVal };
           clonedNodes.push(clonedNode);
         }
 
@@ -201,11 +220,14 @@ class Graph extends React.Component {
       alert: null,
       viewId_source: null,
       viewId_target: null,
-      displayCriticalPath: true,
+      displayCriticalPath: false,
+      savePosition: false,
+      newPosition: { x: 0, y: 0 },
     };
     this.handleClick = this.handleClick.bind(this);
     this.drawGraph = this.drawGraph.bind(this);
     this.addTask = this.addTask.bind(this);
+    this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.zoomIn = this.zoomIn.bind(this);
     this.zoomOut = this.zoomOut.bind(this);
@@ -215,6 +237,8 @@ class Graph extends React.Component {
     this.closeCreateDependency = this.closeCreateDependency.bind(this);
     this.toggleCreateDependency = this.toggleCreateDependency.bind(this);
     this.clearDependency = this.clearDependency.bind(this);
+    this.moveNode = this.moveNode.bind(this);
+    this.autoPosition = this.autoPosition.bind(this);
   }
 
   recDepCheck(curr, target) {
@@ -230,6 +254,10 @@ class Graph extends React.Component {
   }
 
   toggleCreateDependency(clickedNode) {
+    if (this.state.savePosition === true) {
+      return;
+    }
+
     if (this.props.userPermission["create"] !== true) {
       alert("You do not have the permission to create a dependency");
       return;
@@ -345,9 +373,13 @@ class Graph extends React.Component {
     }
   }
 
-  addTask() {
+  addTask(cell) {
+    if (this.state.savePosition === true) return;
     if (this.props.userPermission["create"] === true)
-      this.setState({ createTask: true });
+      this.setState({
+        createTask: true,
+        newPosition: { x: cell.offsetX, y: cell.offsetY },
+      });
     else alert("You do not have the permission to create a task");
   }
 
@@ -370,13 +402,100 @@ class Graph extends React.Component {
     this.paperScale(graphScale, graphScale);
   }
 
+  moveNode(cell) {
+    if (this.state.source !== null) return;
+
+    var center = cell.getBBox().topLeft();
+    var id = cell.id;
+    for (let x = 0; x < this.props.nodes.length; x++) {
+      if (this.props.nodes[x].id === parseInt(id)) {
+        this.props.nodes[x].changedX = center.x;
+        this.props.nodes[x].changedY = center.y;
+      }
+    }
+
+    for (let y = 0; y < this.props.views.length; y++) {
+      if (this.props.views[y].id === parseInt(id)) {
+        this.props.views[y].changedX = center.x;
+        this.props.views[y].changedY = center.y;
+      }
+    }
+
+    if (
+      this.props.userPermission["update"] === false &&
+      this.props.userPermission["create"] === false
+    ) {
+      return;
+    }
+
+    if (this.state.savePosition !== true) {
+      this.setState({ savePosition: true });
+    }
+  }
+
+  async saveChanges() {
+    let changedNodes = [];
+    let nodes = [...this.props.nodes];
+    let views = [...this.props.views];
+
+    for (let x = 0; x < nodes.length; x++) {
+      if (nodes[x].changedX !== undefined) {
+        changedNodes.push(nodes[x]);
+      }
+    }
+
+    for (let y = 0; y < views.length; y++) {
+      if (views[y].changedX !== undefined) {
+        changedNodes.push(views[y]);
+      }
+    }
+
+    let data = {
+      changedNodes: changedNodes,
+    };
+
+    this.setState({ savePosition: false });
+
+    data = JSON.stringify(data);
+    const response = await fetch("/task/savePositions", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: data,
+    });
+
+    const body = await response.json();
+    if (body.message !== "ok") {
+      alert("Graph positions could not be saved");
+    }
+  }
+
+  clearChanges() {
+    this.props.setTaskInfo();
+    this.setState({ savePosition: false });
+  }
+
+  autoPosition() {
+    joint.layout.DirectedGraph.layout(this.state.graph, {
+      dagre: dagre,
+      graphlib: graphlib,
+      setLinkVertices: false,
+      rankDir: "TB",
+      nodeSep: 100,
+      rankSep: 100,
+    });
+    this.setState({ savePosition: true });
+  }
+
   componentDidMount() {
     let graph = new joint.dia.Graph();
     paper = new joint.dia.Paper({
       el: $("#paper"),
       width: "100%",
-      height: "93%",
-      gridSize: 50,
+      height: "100%",
+      gridSize: 1,
       model: graph,
       linkPinning: false,
     });
@@ -404,6 +523,8 @@ class Graph extends React.Component {
       paper.scale(graphScale, graphScale);
     });
 
+    graph.on("change:position", this.moveNode);
+
     $("#paper").mousemove(function (event) {
       if (dragStartPosition)
         paper.translate(
@@ -423,18 +544,14 @@ class Graph extends React.Component {
     var cells = buildGraph(this.props.nodes, this.props.links, criticalPath);
     cells = createViews(cells, this.props.views);
     this.state.graph.resetCells(cells);
-    joint.layout.DirectedGraph.layout(this.state.graph, {
-      dagre: dagre,
-      graphlib: graphlib,
-      setLinkVertices: false,
-      rankDir: "TB",
-      nodeSep: 100,
-      rankSep: 100,
-    });
+  }
+
+  showModal() {
+    this.setState({ createTask: true });
   }
 
   hideModal() {
-    this.setState({ createTask: false });
+    this.setState({ createTask: false, newPosition: { x: 0, y: 0 } });
   }
 
   openCreateDependency() {
@@ -478,16 +595,61 @@ class Graph extends React.Component {
                   style={{ fontSize: "27px" }}
                 >
                   <OverlayTrigger
+                    placement="auto"
                     overlay={
-                      <Tooltip>
+                      <Tooltip className="helpTooltip">
                         Double click on an empty space to create a new task or
-                        right click on two tasks to create a dependency
+                        right click on two tasks to create a dependency. Move
+                        your tasks by clicking and dragging them to create your
+                        own positioning and save, or use the auto position
+                        button to map your tasks automatically.
+                        <LegendSidebar />
                       </Tooltip>
                     }
                   >
                     <i className="fa fa-question-circle"></i>
                   </OverlayTrigger>
                 </Col>
+                {this.state.savePosition === true ? (
+                  <React.Fragment>
+                    <Col className="text-center">
+                      <Button
+                        block
+                        variant="success"
+                        size="sm"
+                        style={{ overflow: "hidden" }}
+                        onClick={() => this.saveChanges()}
+                      >
+                        Save Changes
+                      </Button>
+                    </Col>
+                    <Col className="text-center">
+                      <Button
+                        block
+                        variant="danger"
+                        size="sm"
+                        style={{ overflow: "hidden" }}
+                        onClick={() => this.clearChanges()}
+                      >
+                        Clear Changes
+                      </Button>
+                    </Col>
+                  </React.Fragment>
+                ) : null}
+                {this.props.userPermission["create"] === true &&
+                this.state.savePosition === false ? (
+                  <Col className="text-center">
+                    <Button
+                      onClick={() => this.showModal()}
+                      block
+                      variant="outline-secondary"
+                      size="sm"
+                      style={{ overflow: "hidden" }}
+                    >
+                      Create Task
+                    </Button>
+                  </Col>
+                ) : null}
                 {dependency != null ? (
                   <Col className="text-center">
                     <Button
@@ -521,7 +683,6 @@ class Graph extends React.Component {
                       block
                       xs={2}
                       size="sm"
-                      style={{ height: "31px", overflow: "hidden" }}
                       onClick={() => {
                         this.setState({
                           displayCriticalPath: !this.state.displayCriticalPath,
@@ -545,31 +706,11 @@ class Graph extends React.Component {
                 <Col className="text-center">
                   <Button
                     variant="outline-secondary"
-                    block
-                    size="sm"
-                    onClick={this.zoomIn}
-                  >
-                    <i className="fa fa-search-plus"></i>
-                  </Button>
-                </Col>
-                <Col className="text-center">
-                  <Button
-                    variant="outline-secondary"
-                    block
-                    size="sm"
-                    onClick={this.zoomOut}
-                  >
-                    <i className="fa fa-search-minus"></i>
-                  </Button>
-                </Col>
-                <Col className="text-center">
-                  <Button
-                    variant="dark"
                     size="sm"
                     block
-                    onClick={this.resetZoom}
+                    onClick={this.autoPosition}
                   >
-                    <i className="fa fa-repeat"></i>
+                    Auto Postion Tasks
                   </Button>
                 </Col>
               </Row>
@@ -588,7 +729,42 @@ class Graph extends React.Component {
             </Col>
           </Row>
         </Container>
-        <div id="paper" className="overflow-hidden user-select-none m-10"></div>
+        <div className="wrapper">
+          <div
+            id="zoomButtons"
+            className="overflow-hidden user-select-none m-10"
+          >
+            <Col id="increaseZoom" className="text-center">
+              <Button
+                variant="outline-secondary"
+                block
+                size="sm"
+                onClick={this.zoomIn}
+              >
+                <i className="fa fa-search-plus"></i>
+              </Button>
+            </Col>
+            <Col id="decreaseZoom" className="text-center">
+              <Button
+                variant="outline-secondary"
+                block
+                size="sm"
+                onClick={this.zoomOut}
+              >
+                <i className="fa fa-search-minus"></i>
+              </Button>
+            </Col>
+            <Col id="resetZoom" className="text-center">
+              <Button variant="dark" size="sm" block onClick={this.resetZoom}>
+                <i className="fa fa-repeat"></i>
+              </Button>
+            </Col>
+          </div>
+          <div
+            id="paper"
+            className="overflow-hidden user-select-none m-10"
+          ></div>
+        </div>
         {this.state.createDependency ? (
           <CreateDependency
             closeModal={this.closeCreateDependency}
@@ -607,6 +783,7 @@ class Graph extends React.Component {
           <CreateTask
             hideModal={this.hideModal}
             project={this.props.project}
+            position={this.state.newPosition}
             getProjectInfo={this.props.getProjectInfo}
             setTaskInfo={this.props.setTaskInfo}
             toggleSidebar={this.props.toggleSidebar}
@@ -614,6 +791,113 @@ class Graph extends React.Component {
             assignedProjUsers={this.props.assignedProjUsers}
           />
         ) : null}
+      </React.Fragment>
+    );
+  }
+}
+
+class LegendSidebar extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        <Container className="text-black text-center mb-3">
+          <Row>
+            <Col className="text-center">
+              <h5>Graph key</h5>
+            </Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Incomplete
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1"
+              xs={6}
+              style={{
+                backgroundColor: "#77dd77",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Complete
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1"
+              xs={6}
+              style={{
+                backgroundColor: "#ff6961",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Overdue
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-dark m-1"
+              xs={6}
+              style={{
+                backgroundColor: "#ffae42",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Issue
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-primary m-1 align-items-center"
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+              }}
+            >
+              Critical Path
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col
+              className="text-center border rounded border-info m-1 align-items-center "
+              xs={6}
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                height: "30px",
+                boxShadow: "0 0 10px #009999",
+              }}
+            >
+              Highlight
+            </Col>
+            <Col></Col>
+          </Row>
+        </Container>
       </React.Fragment>
     );
   }

@@ -12,6 +12,11 @@ import {
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import IconEntypo from 'react-native-vector-icons/AntDesign';
+import IconMaterial from 'react-native-vector-icons/MaterialIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 
 class RegisterScreen extends Component {
   constructor(props) {
@@ -44,6 +49,7 @@ class RegisterScreen extends Component {
     this.snameInputChange = this.snameInputChange.bind(this);
     this.handleValidSname = this.handleValidSname.bind(this);
     this.password_validate = this.password_validate.bind(this);
+    this.validateEmail = this.validateEmail.bind(this);
   }
 
   handleValidUser(val) {
@@ -69,6 +75,15 @@ class RegisterScreen extends Component {
       this.setState({
         userName: val,
       });
+    }
+  }
+
+  validateEmail(text) {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(text) === false) {
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -117,7 +132,7 @@ class RegisterScreen extends Component {
   }
 
   emailInputChange(val) {
-    if (val.length !== 0) {
+    if (this.validateEmail(val)) {
       this.setState({
         email: val,
         check_emailInputChange: true,
@@ -165,7 +180,7 @@ class RegisterScreen extends Component {
 
   async handleRegister(userName, password, email, sname) {
     if (userName.trim().length < 1) {
-      alert('Please enter a username');
+      alert('Please enter a name');
       return;
     }
 
@@ -179,7 +194,7 @@ class RegisterScreen extends Component {
       return;
     }
 
-    if (/@/g.test(email) === false) {
+    if (this.validateEmail(email) === false) {
       alert('Please enter a valid email address');
       return;
     }
@@ -201,7 +216,7 @@ class RegisterScreen extends Component {
       data = JSON.stringify(data);
 
       const response = await fetch(
-        'http://projecttree.herokuapp.com/register',
+        'https://projecttree.herokuapp.com/register',
         {
           method: 'POST',
           headers: {
@@ -231,11 +246,11 @@ class RegisterScreen extends Component {
         </View>
         <Animatable.View animation="fadeInUp" style={styles.footer}>
           <ScrollView>
-            <Text style={styles.text_footer}>Username</Text>
+            <Text style={styles.text_footer}>First name</Text>
             <View style={styles.mover}>
               <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
-                placeholder="Username"
+                placeholder="First name"
                 style={styles.inputT}
                 autoCapitalize="none"
                 onChangeText={(val) => this.inputChange(val)}
@@ -245,14 +260,14 @@ class RegisterScreen extends Component {
               />
               {this.state.check_inputChange ? (
                 <Animatable.View animation="rubberBand">
-                  <Feather name="check-circle" color="green" size={20} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
             {this.state.validUser ? null : (
               <Animatable.View animation="rubberBand" duration={400}>
                 <Text style={styles.errorMsg}>
-                  Username must be at least be longer than 1 character.
+                  First name must be at least be longer than 1 character.
                 </Text>
               </Animatable.View>
             )}
@@ -277,7 +292,7 @@ class RegisterScreen extends Component {
 
               {this.state.checkSname ? (
                 <Animatable.View animation="rubberBand">
-                  <Feather name="check-circle" color="green" size={20} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
@@ -298,7 +313,7 @@ class RegisterScreen extends Component {
               Password
             </Text>
             <View style={styles.mover}>
-              <Feather name="lock" color="#05375a" size={20} />
+              <IconSimpleLineIcons name="lock" size={21} />
               <TextInput
                 placeholder="Password"
                 secureTextEntry={this.state.hiddenText ? true : false}
@@ -308,9 +323,9 @@ class RegisterScreen extends Component {
               />
               <TouchableOpacity onPress={this.updateHiddenText}>
                 {this.state.hiddenText ? (
-                  <Feather name="eye-off" color="grey" size={20} />
+                  <FontAwesome name="eye-slash" color="grey" size={21} />
                 ) : (
-                  <Feather name="eye" color="grey" size={20} />
+                  <FontAwesome name="eye" color="black" size={21} />
                 )}
               </TouchableOpacity>
             </View>
@@ -332,7 +347,7 @@ class RegisterScreen extends Component {
             )}
             <Text style={[styles.text_footer, {marginTop: 35}]}>Email</Text>
             <View style={styles.mover}>
-              <FontAwesome name="paper-plane" color="#05375a" size={20} />
+              <FontAwesome name="envelope-o" color="#05375a" size={21} />
               <TextInput
                 placeholder="Email"
                 style={styles.inputT}
@@ -341,7 +356,7 @@ class RegisterScreen extends Component {
               />
               {this.state.check_emailInputChange ? (
                 <Animatable.View animation="pulse">
-                  <Feather name="check-circle" color="#296d98" size={20} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
