@@ -392,14 +392,28 @@ function getCriticalPath(req, res) {
         WHERE duration.between(c.startDate, d.endDate) = dur
         RETURN p
         ORDER BY length(p) DESC
-        LIMIT 1
+        LIMIT 10
       `
     )
     .then((result) => {
+      let path = null;
+      let maxDur = 0;
+      result.records.forEach(record => {
+        let dur = 0;
+        record._fields[0].segments.forEach((segment, i) => {
+          if ( i == 0 ){
+            dur += parseInt(segment.start.properties.duration)/10000;
+          }
+          dur += parseInt(segment.relationship.properties.duration)/10000;
+          dur += parseInt(segment.end.properties.duration)/10000;
+        });
+        if ( maxDur < dur ) {
+          maxdur = dur;
+          path = record._fields[0];
+        }
+      }); 
       res.status(200);
-      if (result.records[0] != null)
-        res.send({ path: result.records[0]._fields[0] });
-      else res.send({ path: null });
+      res.send({ path: path });
     })
     .catch((err) => {
       console.log(err);

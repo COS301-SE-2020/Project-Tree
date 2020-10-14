@@ -220,7 +220,7 @@ class Graph extends React.Component {
       alert: null,
       viewId_source: null,
       viewId_target: null,
-      displayCriticalPath: true,
+      displayCriticalPath: false,
       savePosition: false,
       newPosition: { x: 0, y: 0 },
     };

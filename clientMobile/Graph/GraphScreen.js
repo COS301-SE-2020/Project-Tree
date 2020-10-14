@@ -613,8 +613,13 @@ class GraphScreen extends Component {
           {this.props.userPermissions['update'] ||
           this.props.userPermissions['create'] ? (
             <TouchableOpacity
-              style={[styles.floatinBtn3, {left:leftPos, backgroundColor:color}]}
-              onPress={() => { this.clearChanges(!this.state.savePosition); }}>
+              style={[
+                styles.floatinBtn3,
+                {left: leftPos, backgroundColor: color},
+              ]}
+              onPress={() => {
+                this.clearChanges(!this.state.savePosition);
+              }}>
               <IconSimpleLineIcons name="cursor-move" size={25} />
             </TouchableOpacity>
           ) : null}
@@ -623,7 +628,9 @@ class GraphScreen extends Component {
             <React.Fragment>
               <TouchableOpacity
                 style={styles.floatinBtn4}
-                onPress={() => {this.saveChanges()}}>
+                onPress={() => {
+                  this.saveChanges();
+                }}>
                 <IconFontAwesome name="save" size={25} />
               </TouchableOpacity>
               <TouchableOpacity
