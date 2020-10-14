@@ -39,7 +39,7 @@ class CarouselSlides extends Component {
                 <img src={Mobile} alt="Mobile" className="carouselSlides" />
                 <Carousel.Caption>
                   <h4>
-                    <a href="https://projecttree.herokuapp.com/">
+                    <a href="https://drive.google.com/file/d/1xgWt-K9mzN6L9JeMkQ-rF9eO_YAiVuRY/view?usp=sharing">
                       Click here to <br></br> download Mobile <br></br> App!
                     </a>
                   </h4>
