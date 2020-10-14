@@ -729,7 +729,7 @@ class Graph extends React.Component {
             </Col>
           </Row>
         </Container>
-        <div class="wrapper">
+        <div className="wrapper">
           <div
             id="zoomButtons"
             className="overflow-hidden user-select-none m-10"

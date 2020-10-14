@@ -122,7 +122,8 @@ class App extends Component {
               otherProjects[i].criticalPath = response;
               this.setState({ otherProjects: otherProjects });
             }
-          ).fail(() => {
+          ).fail((err) => {
+            console.log(err);
             alert("Unable to get Critical Path");
           });
         });

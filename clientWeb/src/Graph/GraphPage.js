@@ -7,7 +7,6 @@ import {
   Col,
   Tooltip,
   OverlayTrigger,
-  Card,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Graph from "./Graph";
@@ -395,10 +394,10 @@ class TaskSidebar extends React.Component {
     let list = [];
     for (let x = 0; x < people.length; x++) {
       list.push(
-        <Row className="justify-content-md-center">
+        <Row key={x} className="justify-content-md-center">
           <Col className="justify-content-md-center">
             <img
-              class="circular"
+              className="circular"
               src={people[x].profilePicture}
               alt="user"
               width="50"

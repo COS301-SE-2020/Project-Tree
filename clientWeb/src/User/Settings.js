@@ -7,7 +7,6 @@ import {
   Container,
   Form,
   Spinner,
-  Alert,
 } from "react-bootstrap";
 import $ from "jquery";
 import "./style.scss";
@@ -292,7 +291,7 @@ class Settings extends React.Component {
     data.append("token", localStorage.getItem("sessionToken"));
     data = await stringifyFormData(data);
     $.post("/user/edit", data, (response) => {
-      if (response.message == "true") {
+      if (response.message === "true") {
         this.handleLogout();
         alert("Change to email detected. Please log in with your new email.");
       } else {

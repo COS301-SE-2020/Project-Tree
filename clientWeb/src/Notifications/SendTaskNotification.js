@@ -161,7 +161,7 @@ class SendTaskNotification extends React.Component {
                   required
                 />
               </Form.Group>
-              <ToggleButtonGroup horizontal name="notify">
+              <ToggleButtonGroup horizontal="true" name="notify">
                 <ToggleButton
                   variant="outline-secondary"
                   value="email"
