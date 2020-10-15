@@ -434,7 +434,7 @@ export default class FilterComponent extends React.Component {
         <Row>
           <Col className="text-center">
             <ToggleButtonGroup
-              horizontal
+              horizontal="true"
               name="filterMode"
               value={this.state.filterMode}
               defaultValue={this.state.filterMode}

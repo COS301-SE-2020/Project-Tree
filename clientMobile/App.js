@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, Alert} from 'react-native';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
-import IconFeather from 'react-native-vector-icons/Feather';
+import IconAnt from 'react-native-vector-icons/AntDesign';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
 import styled from 'styled-components/native';
@@ -30,9 +30,9 @@ const Screen = styled.View`
   background-color: #f2f2f2;
 `;
 
-const FeatherTabBarIcon = (props) => {
+const AntTabBarIcon = (props) => {
   return (
-    <IconFeather
+    <IconAnt
       name={props.name}
       size={props.size ? props.size : 24}
       color={props.tintColor}
@@ -443,7 +443,7 @@ export default class App extends Component {
                   )}
                   options={{
                     tabBarIcon: ({focused, color}) => (
-                      <FeatherTabBarIcon
+                      <AntTabBarIcon
                         focused={focused}
                         tintColor={color}
                         name="home"
@@ -493,10 +493,10 @@ export default class App extends Component {
                   children={() => <Settings setLogout={this.setLogout} />}
                   options={{
                     tabBarIcon: ({focused, color}) => (
-                      <FeatherTabBarIcon
+                      <AntTabBarIcon
                         focused={focused}
                         tintColor={color}
-                        name="settings"
+                        name="setting"
                       />
                     ),
                   }}
@@ -541,7 +541,7 @@ export default class App extends Component {
                 )}
                 options={{
                   tabBarIcon: ({focused, color}) => (
-                    <FeatherTabBarIcon
+                    <AntTabBarIcon
                       focused={focused}
                       tintColor={color}
                       name="home"
@@ -591,10 +591,10 @@ export default class App extends Component {
                 children={() => <Settings setLogout={this.setLogout} />}
                 options={{
                   tabBarIcon: ({focused, color}) => (
-                    <FeatherTabBarIcon
+                    <AntTabBarIcon
                       focused={focused}
                       tintColor={color}
-                      name="settings"
+                      name="setting"
                     />
                   ),
                 }}

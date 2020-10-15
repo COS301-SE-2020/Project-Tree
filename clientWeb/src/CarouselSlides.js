@@ -38,7 +38,7 @@ class CarouselSlides extends Component {
               <Carousel.Item>
                 <img src={Mobile} alt="Mobile" className="carouselSlides" />
                 <Carousel.Caption>
-                  <h4>
+                <h4>
                     <a href="https://drive.google.com/file/d/1xgWt-K9mzN6L9JeMkQ-rF9eO_YAiVuRY/view?usp=sharing">
                       Click here to <br></br> download Adroid <br></br> App!
                     </a>

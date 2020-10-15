@@ -25,7 +25,7 @@ class About extends React.Component {
             this.showModal();
           }}
         >
-          <a href="#">Find out More... </a>
+          <a href="/#">Find out More... </a>
         </h8>
         <Modal
           size="lg"

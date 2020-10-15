@@ -14,8 +14,9 @@ import TaskModal from './TaskComponents/TaskModal';
 import DependencyModal from './DependencyComponents/DependencyModal';
 import CreateDependency from './DependencyComponents/CreateDependency';
 import IconEntypo from 'react-native-vector-icons/AntDesign';
-import IconFeather from 'react-native-vector-icons/Feather';
 import IconMaterial from 'react-native-vector-icons/MaterialIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Drawer from 'react-native-drawer';
 import styled from 'styled-components/native';
 import GraphDrawer from './GraphDrawer';
@@ -512,7 +513,7 @@ class GraphScreen extends Component {
           onPress={() => {
             this.setFilterVisibility(true);
           }}>
-          <IconFeather name="search" size={25} />
+          <IconMaterial name="search" size={25} />
         </TouchableOpacity>
       );
     } else {
@@ -619,7 +620,7 @@ class GraphScreen extends Component {
               onPress={() => {
                 this.clearChanges(!this.state.savePosition);
               }}>
-              <IconFeather name="move" size={25} />
+              <IconSimpleLineIcons name="cursor-move" size={25} />
             </TouchableOpacity>
           ) : null}
 
@@ -630,7 +631,7 @@ class GraphScreen extends Component {
                 onPress={() => {
                   this.saveChanges();
                 }}>
-                <IconFeather name="save" size={25} />
+                <IconFontAwesome name="save" size={25} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.floatinBtn5}

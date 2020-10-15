@@ -12,6 +12,11 @@ import {
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import IconEntypo from 'react-native-vector-icons/AntDesign';
+import IconMaterial from 'react-native-vector-icons/MaterialIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 
 class RegisterScreen extends Component {
   constructor(props) {
@@ -255,7 +260,7 @@ class RegisterScreen extends Component {
               />
               {this.state.check_inputChange ? (
                 <Animatable.View animation="rubberBand">
-                  <Feather name="check-circle" color="green" size={20} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
@@ -287,7 +292,7 @@ class RegisterScreen extends Component {
 
               {this.state.checkSname ? (
                 <Animatable.View animation="rubberBand">
-                  <Feather name="check-circle" color="green" size={20} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
@@ -308,7 +313,7 @@ class RegisterScreen extends Component {
               Password
             </Text>
             <View style={styles.mover}>
-              <Feather name="lock" color="#05375a" size={20} />
+              <IconSimpleLineIcons name="lock" size={21} />
               <TextInput
                 placeholder="Password"
                 secureTextEntry={this.state.hiddenText ? true : false}
@@ -318,9 +323,9 @@ class RegisterScreen extends Component {
               />
               <TouchableOpacity onPress={this.updateHiddenText}>
                 {this.state.hiddenText ? (
-                  <Feather name="eye-off" color="grey" size={20} />
+                  <FontAwesome name="eye-slash" color="grey" size={21} />
                 ) : (
-                  <Feather name="eye" color="grey" size={20} />
+                  <FontAwesome name="eye" color="black" size={21} />
                 )}
               </TouchableOpacity>
             </View>
@@ -342,7 +347,7 @@ class RegisterScreen extends Component {
             )}
             <Text style={[styles.text_footer, {marginTop: 35}]}>Email</Text>
             <View style={styles.mover}>
-              <FontAwesome name="paper-plane" color="#05375a" size={20} />
+              <FontAwesome name="envelope-o" color="#05375a" size={21} />
               <TextInput
                 placeholder="Email"
                 style={styles.inputT}
@@ -351,7 +356,7 @@ class RegisterScreen extends Component {
               />
               {this.state.check_emailInputChange ? (
                 <Animatable.View animation="pulse">
-                  <Feather name="check-circle" color="#296d98" size={20} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>

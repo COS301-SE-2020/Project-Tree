@@ -59,7 +59,7 @@ class NotificationList extends React.Component {
     if (type === "auto") {
       return (
         <img
-          class="circular"
+          className="circular"
           src="https://i.ibb.co/wRrd1gN/project-Tree.png"
           alt="user"
           width="70"
@@ -72,7 +72,7 @@ class NotificationList extends React.Component {
       if (parseInt(users[x].id) === parseInt(profileId[0])) {
         return (
           <img
-            class="circular"
+            className="circular"
             src={users[x].profilePicture}
             alt="user"
             width="70"

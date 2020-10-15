@@ -55,7 +55,7 @@ export class Register extends React.Component {
   }
 
   validateEmail(text) {
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let reg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(text.email) === false) {
       return false;
     } else {
@@ -91,7 +91,7 @@ export class Register extends React.Component {
       }).fail(() => {
         alert("Unable to create User");
       });
-    } else if (p != true) {
+    } else if (p !== true) {
       alert("Email format is not valid. Please check again.");
     } else {
       this.setState({ passwordError: arr[0] });

@@ -16,6 +16,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import IconEntypo from 'react-native-vector-icons/AntDesign';
+import IconMaterial from 'react-native-vector-icons/MaterialIcons';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 class UserSettings extends Component {
   constructor(props) {
@@ -365,7 +369,7 @@ class UserSettings extends Component {
               />
               {this.state.check_textInputChange ? (
                 <Animatable.View animation="rubberBand">
-                  <Feather name="check-circle" color="green" size={16} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
@@ -395,7 +399,7 @@ class UserSettings extends Component {
               Surname
             </Text>
             <View style={styleUser.action}>
-              <FontAwesome name="user-o" color="#05375a" size={16} />
+              <FontAwesome name="user-o" color="#05375a" size={20} />
               <TextInput
                 placeholder="Surname"
                 style={styleUser.textInput}
@@ -406,7 +410,7 @@ class UserSettings extends Component {
               />
               {this.state.checkSname ? (
                 <Animatable.View animation="rubberBand">
-                  <Feather name="check-circle" color="green" size={16} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
@@ -429,7 +433,7 @@ class UserSettings extends Component {
               />
               {this.state.check_emailInputChange ? (
                 <Animatable.View animation="pulse">
-                  <Feather name="check-circle" color="#296d98" size={20} />
+                  <IconSimpleLineIcons name="check" color="green" size={20} />
                 </Animatable.View>
               ) : null}
             </View>
@@ -467,7 +471,7 @@ class UserSettings extends Component {
                     Current Password
                   </Text>
                   <View style={styles.mover}>
-                    <Feather name="lock" color="#05375a" size={20} />
+                    <IconSimpleLineIcons name="lock" size={21} />
                     <TextInput
                       placeholder="Password"
                       secureTextEntry={this.state.hiddenText ? true : false}
@@ -477,9 +481,9 @@ class UserSettings extends Component {
                     />
                     <TouchableOpacity onPress={this.updateHiddenText}>
                       {this.state.hiddenText ? (
-                        <Feather name="eye-off" color="grey" size={20} />
+                        <FontAwesome name="eye-slash" color="grey" size={21} />
                       ) : (
-                        <Feather name="eye" color="grey" size={20} />
+                        <FontAwesome name="eye" color="black" size={21} />
                       )}
                     </TouchableOpacity>
                   </View>
@@ -494,7 +498,7 @@ class UserSettings extends Component {
                     New Password
                   </Text>
                   <View style={styles.mover}>
-                    <Feather name="lock" color="#05375a" size={20} />
+                    <IconSimpleLineIcons name="lock" size={21} />
                     <TextInput
                       placeholder="Password"
                       secureTextEntry={this.state.hiddenText ? true : false}
@@ -504,9 +508,9 @@ class UserSettings extends Component {
                     />
                     <TouchableOpacity onPress={this.updateHiddenText}>
                       {this.state.hiddenText ? (
-                        <Feather name="eye-off" color="grey" size={20} />
+                        <FontAwesome name="eye-slash" color="grey" size={21} />
                       ) : (
-                        <Feather name="eye" color="grey" size={20} />
+                        <FontAwesome name="eye" color="black" size={21} />
                       )}
                     </TouchableOpacity>
                   </View>
