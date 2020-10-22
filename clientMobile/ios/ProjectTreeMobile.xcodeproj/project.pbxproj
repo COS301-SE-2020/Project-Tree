@@ -19,7 +19,6 @@
 		A06F8FA7B1EB1447FE82C46B /* libPods-ProjectTreeMobile-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C30BCC818D9DD74FD0D415 /* libPods-ProjectTreeMobile-tvOSTests.a */; };
 		AF9C3BC3E3B68847554C311C /* libPods-ProjectTreeMobile-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9774AB2582C2D0EEF28E41F0 /* libPods-ProjectTreeMobile-tvOS.a */; };
 		F44EAC33252B790700CE5F8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F44EAC32252B790600CE5F8F /* Assets.xcassets */; };
-		F44EAC35252B7DDB00CE5F8F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F44EAC34252B7DDB00CE5F8F /* GoogleService-Info.plist */; };
 		F49C864D251369560042636F /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF62A68B452C4654BECBEFDC /* Roboto_medium.ttf */; };
 		F49C864E251369560042636F /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC2FF13FE56E42E4A8A9127F /* Roboto.ttf */; };
 		F49C864F251369560042636F /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7148C3B658C7452EB889A873 /* rubicon-icon-font.ttf */; };
@@ -99,7 +98,6 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F44EAC32252B790600CE5F8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../Desktop/Assets.xcassets; sourceTree = "<group>"; };
-		F44EAC34252B7DDB00CE5F8F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F49C8631251368520042636F /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = ../android/app/src/main/assets/fonts/FontAwesome.ttf; sourceTree = "<group>"; };
 		F49C8632251368530042636F /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Regular.ttf; path = ../android/app/src/main/assets/fonts/FontAwesome5_Regular.ttf; sourceTree = "<group>"; };
 		F49C8633251368530042636F /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = ../android/app/src/main/assets/fonts/Feather.ttf; sourceTree = "<group>"; };
@@ -171,7 +169,6 @@
 				F44EAC32252B790600CE5F8F /* Assets.xcassets */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				F44EAC34252B7DDB00CE5F8F /* GoogleService-Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
@@ -410,7 +407,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F44EAC33252B790700CE5F8F /* Assets.xcassets in Resources */,
-				F44EAC35252B7DDB00CE5F8F /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
