@@ -344,7 +344,7 @@ export default class App extends Component {
                       )}
                       options={{
                         tabBarIcon: ({focused, color}) => (
-                          <FeatherTabBarIcon
+                          <AntTabBarIcon
                             focused={focused}
                             tintColor={color}
                             name="home"
@@ -394,10 +394,10 @@ export default class App extends Component {
                       children={() => <Settings setLogout={this.setLogout} />}
                       options={{
                         tabBarIcon: ({focused, color}) => (
-                          <FeatherTabBarIcon
+                          <AntTabBarIcon
                             focused={focused}
                             tintColor={color}
-                            name="settings"
+                            name="setting"
                           />
                         ),
                       }}
