@@ -7,6 +7,14 @@
 
 The project entails the development of a project management system. The system represents a project visually as a tree structure, with each “leaf” being a project task, and each branch being a task dependency. The core idea of the system is to allow for all task dependencies to be captured accurately and clearly, to ensure effective project management.
 
+## Contact us
+
+thebteam.project@gmail.com 
+
+## Latest
+
+Project-Tree mobile is now available on iOS! Please send us an email if you would like to download and use our application on your iOS device and we will send you the link.
+
 ## Links
 
 | Document                      | Links                                                                                                                        |
