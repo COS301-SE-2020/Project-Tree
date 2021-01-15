@@ -169,8 +169,8 @@ Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
 
 <details><summary>Profile Links</summary>
 
-- [GitHub Profile](https://github.com/u18021353)
-- [CV](https://u18021353.github.io)
+- [GitHub Profile](https://github.com/brrassassin)
+- [CV](https://brrassassin.github.io)
 - [LinkedIn](https://www.linkedin.com/in/brandon-robinson-6ab4751a5/)
 
 </details>
