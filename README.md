@@ -165,12 +165,12 @@ Final year undergraduate student studying Computer Science at The University of 
 
 #### Description
 
-Studying - BSc. Information and Knowledge Systems at the University of Pretoria.
+BSc. Information and Knowledge Systems at the University of Pretoria with distinction.
 
 <details><summary>Profile Links</summary>
 
-- [GitHub Profile](https://github.com/brrassassin)
-- [CV](https://brrassassin.github.io)
+- [GitHub Profile](https://github.com/brrobinson)
+- [CV](https://brrobinson.github.io)
 - [LinkedIn](https://www.linkedin.com/in/brandon-robinson-6ab4751a5/)
 
 </details>
